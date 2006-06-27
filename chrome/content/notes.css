@@ -1,0 +1,17 @@
+body
+{
+  margin-top: 0;
+  font-family: sans;
+  }
+
+ul
+{
+  padding: 1em;
+  margin: 0;
+  }
+
+li
+{
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  }

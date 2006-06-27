@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<!DOCTYPE window>
+<window id="mozeskine" title="Mozeskine"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        xmlns:hy="http://hyperstruct.net/"
+        xmlns:html="http://www.w3.org/1999/xhtml"
+        onload="init(event);"
+        onunload="finish(event);"
+        orient="vertical"
+        width="800" height="600">
+
+  <script type="application/x-javascript" src="module_manager.js"/>
+  <script type="application/x-javascript" src="mozeskine.js"/>
+
+  <commandset>
+    <command id="connect" label="Connect" accesskey="C" oncommand="connect();"/>
+    <command id="disconnect" label="Disconnect" accesskey="D" oncommand="disconnect();"/>
+  </commandset>
+
+  <hbox flex="1">
+    <tabbox flex="1" selectedIndex="0" id="main-panel">
+      <tabs>
+        <tab label="Connection"/>
+        <tab label="Chat"/>
+      </tabs>
+
+      <tabpanels flex="1">
+        <tabpanel orient="vertical">
+          <grid>
+            <columns>
+              <column flex="0"/>
+              <column flex="1"/>
+            </columns>
+
+            <rows>
+              <row>
+                <label value="User:" accesskey="U" control="user-jid"/>
+                <textbox id="user-jid" flex="1"/>              
+              </row>
+
+              <row>
+                <label value="Password:" accesskey="P" control="user-password"/>
+                <textbox id="user-password" type="password" flex="1"/>              
+              </row>
+
+              <row>
+                <label value="Room:"/>
+                <textbox id="room-jid" flex="1"/>              
+              </row>
+
+              <row>
+                <label value="Nick:"/>
+                <textbox id="room-nick" flex="1"/>              
+              </row>
+            </rows>
+          </grid>
+
+          <hbox pack="center">
+            <button command="connect"/>
+            <button command="disconnect"/>          
+          </hbox>
+        </tabpanel>
+
+        <tabpanel orient="horizontal">
+          <vbox flex="1">
+            <iframe id="chat-output" src="chat.html" flex="3" class="box-inset"/>
+
+            <splitter/>
+            
+            <hbox>
+              <textbox id="chat-input" flex="1" class="box-inset" multiline="true"/>
+              <vbox>
+                <label value="Participants" class="header"/>
+                <listbox id="participants" flex="1"/>
+              </vbox>
+            </hbox>
+          </vbox>
+
+          <splitter/>
+          
+          <vbox flex="1">
+            <label value="Notes" class="header"/>
+            <iframe id="notes" src="notes.html" class="box-inset" flex="1"/>
+          </vbox>
+        </tabpanel>
+      </tabpanels>
+    </tabbox>
+
+    <splitter collapse="after" state="collapsed"/>
+
+    <vbox>
+      <label class="header" value="Jabber Debug"/>
+  
+      <textbox id="jabber-debug"
+               multiline="true" flex="1"
+               style="font-family: mono; font-size: x-small;"/>
+    </vbox>
+  </hbox>
+</window>

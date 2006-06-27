@@ -1,0 +1,40 @@
+
+Context:
+
+[XMLJS: fixed global variable into function name.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060627221002] 
+
+[Client: it is now possible to specify an action to undertake after sign on.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060627220928] 
+
+[Several architectural changes (see long comment).
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060627074026
+ 
+ - Dismissed element wrappers.
+ 
+ - Session only handles data and stanzas between user and transport,
+   e.g. associating iq's with correct reply handlers; tasks such as
+   roster request, presence subscription etc. are now in the client
+   level.
+ 
+ - Client handles multiple sessions.
+ 
+] 
+
+[Renamed "element" to "stanza" throughout.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060610215002] 
+
+[Session, Element: Received elements remember the session the come from.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060610213431] 
+
+[Session: source cleanup.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060610212527] 
+
+[Package: removed unnecessary entries.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060610211120] 
+
+[Package: removed legacy elementNG and with construct.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060610210101] 
+
+[Extracted from SamePlace and imported into its own repository.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060601170033] 
