@@ -91,10 +91,16 @@
 
     <vbox>
       <label class="header" value="Jabber Debug"/>
-  
-      <textbox id="jabber-debug"
-               multiline="true" flex="1"
-               style="font-family: mono; font-size: x-small;"/>
+
+      <richlistbox id="jabber-debug" flex="1"
+                   class="box-inset"
+                   style="font-family: mono; font-size: x-small;"/>
     </vbox>
   </hbox>
+
+  <box hidden="true" id="blueprints">
+    <richlistitem style="width: 100%;" role="debug-line">
+      <description flex="1" role="content"/>
+    </richlistitem>
+  </box>
 </window>

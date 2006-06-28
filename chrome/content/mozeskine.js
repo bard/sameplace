@@ -44,9 +44,7 @@ function init(event) {
     client = new Client();
     client.on(
         {tag: 'data'}, function(data) {
-            _('jabber-debug').value +=
-                data.direction + '/DATA:\n' + data.content + '\n\n';
-            scrollTextBox(_('jabber-debug'));
+            jabberDebug(data.direction + '/DATA:\n' + data.content);
         });
     client.on(
         {tag: 'message', direction: 'in', stanza: function(s) {
@@ -87,6 +85,20 @@ function showChat() {
     _('main-panel').selectedIndex = 1;
 }
 
+function cloneBlueprint(name) {
+    return document
+        .getElementById('blueprints')
+        .getElementsByAttribute('role', name)[0]
+        .cloneNode(true);
+}
+
+function jabberDebug(text) {
+    var debugLine = cloneBlueprint('debug-line');
+    debugLine.getElementsByAttribute('role', 'content')[0].textContent = text;
+    
+    _('jabber-debug').appendChild(debugLine);
+    _('jabber-debug').ensureElementIsVisible(debugLine);
+}
 
 // ----------------------------------------------------------------------
 // GUI REACTIONS
