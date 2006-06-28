@@ -35,8 +35,8 @@
 
             <rows>
               <row>
-                <label value="User:" accesskey="U" control="user-jid"/>
-                <textbox id="user-jid" flex="1" onkeyup="updateUserServer();"/>
+                <label value="User:" accesskey="U" control="user-address"/>
+                <textbox id="user-address" flex="1" onkeyup="updateUserServer(this.value);"/>
               </row>
 
               <row>
@@ -51,7 +51,7 @@
 
               <row>
                 <label value="Room:"/>
-                <textbox id="room-jid" flex="1"/>              
+                <textbox id="room-address" flex="1"/>              
               </row>
 
               <row>

@@ -9,7 +9,7 @@ var muc = new Namespace('http://jabber.org/protocol/muc#user');
 // ----------------------------------------------------------------------
 // GLOBAL STATE
 
-var client, userJid, roomJid, roomNick;
+var client, userJid, roomAddress, roomNick;
 
 
 // ----------------------------------------------------------------------
@@ -23,11 +23,12 @@ function init(event) {
         .classes["@mozilla.org/preferences-service;1"]
         .getService(Components.interfaces.nsIPrefBranch);
 
-    _('user-jid').value      = pref.getCharPref('extensions.mozeskine.userJid');
+    _('user-address').value  = pref.getCharPref('extensions.mozeskine.userAddress');
     _('user-password').value = pref.getCharPref('extensions.mozeskine.userPassword');
-    _('room-jid').value      = pref.getCharPref('extensions.mozeskine.roomJid');
+    _('room-address').value  = pref.getCharPref('extensions.mozeskine.roomAddress');
     _('room-nick').value     = pref.getCharPref('extensions.mozeskine.roomNick');
-    updateUserServer();
+    updateUserServer(_('user-address').value);
+
 
     _('chat-input').addEventListener(
         'keypress', function(event) {
@@ -112,7 +113,7 @@ function saveActionClick(event) {
         child = child.nextSibling;
 
     if(child) {
-        var packet = <message to={roomJid} type="groupchat"/>;
+        var packet = <message to={roomAddress} type="groupchat"/>;
         packet.moz::x.append = child.textContent;
         client.send(userJid, packet);                                          
     }
@@ -135,8 +136,8 @@ function chatInputKeypress(event) {
     }
 }
 
-function updateUserServer() {
-    var m = _('user-jid').value.match(/@(.+)$/);
+function updateUserServer(userAddress) {
+    var m = userAddress.match(/@(.+)$/);
     if(m) 
         _('user-server').value =
             (m[1] == 'gmail.com') ?
@@ -149,15 +150,15 @@ function updateUserServer() {
 // XMPP SESSION START/STOP
 
 function connect() {
-    userJid = _('user-jid').value + '/Mozeskine';
-    roomJid = _('room-jid').value;
+    userJid = _('user-address').value + '/Mozeskine';
+    roomAddress = _('room-address').value;
     roomNick = _('room-nick').value;
     
     client.signOn(
         userJid, _('user-password').value,
         {server: _('user-server').value, continuation: 
             function() {
-                client.send(userJid, <presence to={roomJid + '/' + roomNick}/>);
+                client.send(userJid, <presence to={roomAddress + '/' + roomNick}/>);
                 showChat();
             }});
 }
@@ -173,7 +174,7 @@ function disconnect() {
 function sendMessage(text) {
     client.send(
         userJid,
-        <message to={roomJid} type="groupchat">
+        <message to={roomAddress} type="groupchat">
         <body>{text}</body>
         </message>);
 }
