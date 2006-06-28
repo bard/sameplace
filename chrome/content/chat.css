@@ -56,7 +56,7 @@ a:hover
 
 .body
 {
-  white-space: pre;
+  white-space: -moz-pre-wrap;
   }
 
 .actions
