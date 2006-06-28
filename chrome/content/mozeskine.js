@@ -1,16 +1,3 @@
-/*
-<presence from='test@places.sameplace.cc/jam' to='jam@jabber.sameplace.cc/Mozeskine' id='1003'>
-<x xmlns='http://jabber.org/protocol/muc#user'>
-<item affiliation='none' role='participant'/></x>
-</presence>
-<presence from='test@places.sameplace.cc/foo' to='jam@jabber.sameplace.cc/Mozeskine'>
-<x xmlns='http://jabber.org/protocol/muc#user'>
-<item affiliation='owner' role='moderator'/></x>
-</presence>
-
-*/
-
-
 // ----------------------------------------------------------------------
 // GLOBAL DEFINITIONS
 
