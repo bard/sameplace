@@ -36,9 +36,14 @@
             <rows>
               <row>
                 <label value="User:" accesskey="U" control="user-jid"/>
-                <textbox id="user-jid" flex="1"/>              
+                <textbox id="user-jid" flex="1" onkeyup="updateUserServer();"/>
               </row>
 
+              <row>
+                <label value="Server:" accesskey="S" control="user-server"/>
+                <textbox id="user-server" flex="1"/>
+              </row>
+              
               <row>
                 <label value="Password:" accesskey="P" control="user-password"/>
                 <textbox id="user-password" type="password" flex="1"/>              

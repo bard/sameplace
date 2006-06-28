@@ -1,6 +1,9 @@
 
 Context:
 
+[Client: use SSL and port 5223 unless told otherwise.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060628151840] 
+
 [XMLJS: fixed global variable into function name.
 Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060627221002] 
 

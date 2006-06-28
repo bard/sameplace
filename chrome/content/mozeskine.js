@@ -27,9 +27,7 @@ function init(event) {
     _('user-password').value = pref.getCharPref('extensions.mozeskine.userPassword');
     _('room-jid').value      = pref.getCharPref('extensions.mozeskine.roomJid');
     _('room-nick').value     = pref.getCharPref('extensions.mozeskine.roomNick');
-
-    if(!_('user-jid').value.match(/\//))
-        _('user-jid').value += '/Mozeskine';
+    updateUserServer();
 
     _('chat-input').addEventListener(
         'keypress', function(event) {
@@ -137,18 +135,27 @@ function chatInputKeypress(event) {
     }
 }
 
+function updateUserServer() {
+    var m = _('user-jid').value.match(/@(.+)$/);
+    if(m) 
+        _('user-server').value =
+            (m[1] == 'gmail.com') ?
+            'talk.google.com' :
+             m[1];
+}
+
 
 // ----------------------------------------------------------------------
 // XMPP SESSION START/STOP
 
 function connect() {
-    userJid = _('user-jid').value;
+    userJid = _('user-jid').value + '/Mozeskine';
     roomJid = _('room-jid').value;
     roomNick = _('room-nick').value;
     
     client.signOn(
         userJid, _('user-password').value,
-        {continuation: 
+        {server: _('user-server').value, continuation: 
             function() {
                 client.send(userJid, <presence to={roomJid + '/' + roomNick}/>);
                 showChat();
