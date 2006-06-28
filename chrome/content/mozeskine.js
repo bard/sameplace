@@ -27,8 +27,9 @@ function init(event) {
     _('user-password').value = pref.getCharPref('extensions.mozeskine.userPassword');
     _('room-address').value  = pref.getCharPref('extensions.mozeskine.roomAddress');
     _('room-nick').value     = pref.getCharPref('extensions.mozeskine.roomNick');
-    updateUserServer(_('user-address').value);
-
+    _('user-server').value   = pref.getCharPref('extensions.mozeskine.connectionServer');
+    if(!_('user-server').value)
+        updateUserServer(_('user-address').value);
 
     _('chat-input').addEventListener(
         'keypress', function(event) {
@@ -145,6 +146,17 @@ function updateUserServer(userAddress) {
              m[1];
 }
 
+function savePrefs() {
+    var pref = Components
+        .classes["@mozilla.org/preferences-service;1"]
+        .getService(Components.interfaces.nsIPrefBranch);
+
+    pref.setCharPref('extensions.mozeskine.userAddress', _('user-address').value);
+    pref.setCharPref('extensions.mozeskine.connectionServer', _('user-server').value);
+    pref.setCharPref('extensions.mozeskine.roomAddress', _('room-address').value);
+    pref.setCharPref('extensions.mozeskine.roomNick', _('room-nick').value);    
+}
+
 
 // ----------------------------------------------------------------------
 // XMPP SESSION START/STOP
@@ -153,13 +165,14 @@ function connect() {
     userJid = _('user-address').value + '/Mozeskine';
     roomAddress = _('room-address').value;
     roomNick = _('room-nick').value;
-    
+
     client.signOn(
         userJid, _('user-password').value,
         {server: _('user-server').value, continuation: 
             function() {
                 client.send(userJid, <presence to={roomAddress + '/' + roomNick}/>);
                 showChat();
+                savePrefs();
             }});
 }
 
