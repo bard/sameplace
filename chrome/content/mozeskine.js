@@ -212,12 +212,23 @@ function receiveMessage(message) {
 
 function receivePresence(presence) {
     var nick = presence.stanza.@from.toString().match(/\/(.+)$/)[1];
-    if(presence.stanza.@type.toString() == 'unavailable') {
-        var item = _('participants').getElementsByAttribute('label', nick)[0];
-        if(item)
+    var item = _('participants').getElementsByAttribute('label', nick)[0];
+    if(item) {
+        switch(presence.stanza.@type.toString()) {
+        case 'unavailable':
             _('participants').removeChild(item);
-    } else
-        _('participants').appendItem(nick);
+            break;
+        default:
+            break;
+        }
+    } else {
+        switch(presence.stanza.@type.toString()) {
+        case 'unavailable':
+            break;
+        default:
+            _('participants').appendItem(nick);
+        }
+    }
 }
 
 function receiveAction(message) {
