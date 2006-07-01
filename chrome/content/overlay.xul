@@ -25,14 +25,46 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
 <overlay id="samepage-overlay"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
+  <!-- SCRIPTS -->
+
+  <script type="application/x-javascript" src="overlay.js"/>
+
+  <!-- COMMANDS -->
+
   <commandset id="mainCommandSet">
     <command id="mozeskine-command-open"
              label="Open Mozeskine..."
              accesskey="s"
-             oncommand="window.open('chrome://mozeskine/content/mozeskine.xul', 'confclient', 'chrome');"/>
+             oncommand="window.open('chrome://mozeskine/content/mozeskine.xul', 'mozeskine', 'chrome');"/>
   </commandset>
+
+  <!-- MENUS -->
 
   <menupopup id="menu_ToolsPopup">
     <menuitem position="1" command="mozeskine-command-open"/>
   </menupopup>
+
+  <!-- TOOLBAR -->
+ 
+  <toolbox id="navigator-toolbox">
+    
+    <toolbar id="mozeskine-toolbar" toolbarname="Mozeskine Toolbar" 
+             class="chromeclass-toolbar" context="toolbar-context-menu" 
+             hidden="false" persist="hidden"
+             fullscreentoolbar="true">
+            
+      <toolbarbutton class="chromeclass-toolbar-additional" id="mozeskine-open"
+                     label="Open Mozeskine..."
+                     tooltiptext="Open Mozeskine" command="mozeskine-command-open"
+                     flex="0"/>
+
+      <toolbarseparator/>
+
+      <toolbaritem flex="0" align="center">
+        <label id="mozeskine-last-message"/>
+      </toolbaritem>
+      
+      <toolbarspring/>
+    </toolbar>
+  </toolbox>
 </overlay>

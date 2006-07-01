@@ -5,6 +5,9 @@ var module = new ModuleManager();
 var Client = module.require('class', 'xmpp4moz/client');
 var moz = new Namespace('http://hyperstruct.net/mozeskine');
 var muc = new Namespace('http://jabber.org/protocol/muc#user');
+var observerService = Components
+    .classes["@mozilla.org/observer-service;1"]
+    .getService(Components.interfaces.nsIObserverService);
 
 // ----------------------------------------------------------------------
 // GLOBAL STATE
@@ -58,7 +61,6 @@ function init(event) {
         {tag: 'presence', direction: 'in', stanza: function(s) {
                 return s.muc::x.toXMLString();
             }}, function(presence) { receivePresence(presence) });
-
 }
 
 function finish() {
@@ -222,6 +224,9 @@ function receiveMessage(message) {
 
     doc.getElementById('messages').appendChild(item);
     _('chat-output').contentWindow.scrollTo(0, doc.height);
+
+    observerService.notifyObservers(
+        null, 'im-incoming', message.stanza.toString());
 }
 
 function receivePresence(presence) {
