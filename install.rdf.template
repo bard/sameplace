@@ -19,5 +19,6 @@
     <em:name>Mozeskine</em:name>
     <em:description>Collaborative notetaking</em:description>
     <em:creator>Massimiliano Mirra</em:creator>
+    <em:updateURL>http://dev.hyperstruct.net/download/update.rdf</em:updateURL>
   </Description>      
 </RDF>
