@@ -41,7 +41,12 @@ function init(event) {
 
     _('chat-output').contentDocument.addEventListener(
         'click', function(event) {
-            saveActionClick(event);
+            saveButtonClick(event);
+        }, false);
+
+    _('notes').contentDocument.addEventListener(
+        'click', function(event) {
+            removeButtonClick(event);
         }, false);
 
     client = new Client();
@@ -52,7 +57,7 @@ function init(event) {
     client.on(
         {tag: 'message', direction: 'in', stanza: function(s) {
                 return s.body.toString();
-            }}, function(message) { receiveMessage(message); });
+            }}, function(message) { receiveChatMessage(message); });
     client.on(
         {tag: 'message', direction: 'in', stanza: function(s) {
                 return s.moz::x.toXMLString();
@@ -105,7 +110,7 @@ function jabberDebug(text) {
 // ----------------------------------------------------------------------
 // GUI REACTIONS
 
-function saveActionClick(event) {
+function saveButtonClick(event) {
     if(event.target.className != 'action')
         return;
 
@@ -115,11 +120,16 @@ function saveActionClick(event) {
     while(child && child.getAttribute && child.getAttribute('class') != 'body') 
         child = child.nextSibling;
 
-    if(child) {
-        var packet = <message to={roomAddress} type="groupchat"/>;
-        packet.moz::x.append = child.textContent;
-        client.send(userJid, packet);                                          
-    }
+    if(child)
+        sendNoteAddition(child.textContent);
+}
+
+function removeButtonClick(event) {
+    if(event.target.className != 'action')
+        return;
+
+    var note = event.target.parentNode.parentNode;
+    sendNoteRemoval(note.id);
 }
 
 function chatInputKeypress(event) {
@@ -194,36 +204,27 @@ function sendMessage(text) {
         </message>);
 }
 
+function sendNoteAddition(text) {
+    var packet = <message to={roomAddress} type="groupchat"/>;
+    packet.moz::x.append = text;
+    packet.moz::x.append.@id = userJid + '/' + (new Date()).getTime();
+    lastId = packet.moz::x.append.@id;
+    client.send(userJid, packet);
+}
+
+function sendNoteRemoval(id) {
+    var packet = <message to={roomAddress} type="groupchat"/>;
+    packet.moz::x.remove.@id = id;
+    client.send(userJid, packet);
+}
 
 // ----------------------------------------------------------------------
 // NETWORK REACTIONS
 
-function receiveMessage(message) {
-    var doc = _('chat-output').contentDocument;
-
-    var actions = doc.createElement('div');
-    actions.setAttribute('class', 'actions');
-
-    var saveAction = doc.createElement('a');
-    saveAction.setAttribute('class', 'action');
-    saveAction.textContent = 'Save';
-    actions.appendChild(saveAction);
-
-    var sender = doc.createElement('span');
-    sender.textContent = message.stanza.@from.toString().match(/\/(.+)$/)[1];
-    sender.setAttribute('class', 'sender');
-    var body = doc.createElement('span');
-    body.setAttribute('class', 'body');
-    body.textContent = message.stanza.body;
-
-    var item = doc.createElement('li');
-    item.setAttribute('class', 'message')
-    item.appendChild(sender);
-    item.appendChild(body);
-    item.appendChild(actions);
-
-    doc.getElementById('messages').appendChild(item);
-    _('chat-output').contentWindow.scrollTo(0, doc.height);
+function receiveChatMessage(message) {
+    displayChatMessage(
+        message.stanza.@from.toString(),
+        message.stanza.body);
 
     observerService.notifyObservers(
         null, 'im-incoming', message.stanza.toString());
@@ -254,7 +255,10 @@ function receiveAction(message) {
     for each(var action in message.stanza.moz::x.*) {
         switch(action.name().toString()) {
         case moz + '::append':
-            appendNote(action.*[0]);
+            displayNewNote(action.@id, action.*[0]);
+            break;
+        case moz + '::remove':
+            eraseExistingNote(action.@id);
             break;
         default:
             break;
@@ -262,11 +266,66 @@ function receiveAction(message) {
     }
 }
 
-function appendNote(text) {    
+// ----------------------------------------------------------------------
+// INTERFACE UPDATES
+
+function displayChatMessage(from, content) {
+    var doc = _('chat-output').contentDocument;
+
+    var actions = doc.createElement('div');
+    actions.setAttribute('class', 'actions');
+
+    var saveAction = doc.createElement('a');
+    saveAction.setAttribute('class', 'action');
+    saveAction.textContent = 'Save';
+    actions.appendChild(saveAction);
+
+    var sender = doc.createElement('span');
+    sender.textContent = from.match(/\/(.+)$/)[1];
+    sender.setAttribute('class', 'sender');
+    var body = doc.createElement('span');
+    body.setAttribute('class', 'body');
+    body.textContent = content;
+
+    var item = doc.createElement('li');
+    item.setAttribute('class', 'message');
+    item.appendChild(sender);
+    item.appendChild(body);
+    item.appendChild(actions);
+
+    doc.getElementById('messages').appendChild(item);
+    _('chat-output').contentWindow.scrollTo(0, doc.height);
+}
+
+function displayNewNote(id, content) {
     var doc = _('notes').contentDocument;
 
+    var actions = doc.createElement('div');
+    actions.setAttribute('class', 'actions');
+
+    var removeAction = doc.createElement('a');
+    removeAction.setAttribute('class', 'action');
+    removeAction.textContent = 'Remove';
+    actions.appendChild(removeAction);
+
+    var body = doc.createElement('span');
+    body.setAttribute('class', 'body');
+    body.textContent = content;
+
     var note = doc.createElement('li');
+    note.setAttribute('id', id);
     note.setAttribute('class', 'note');
-    note.textContent = text;
-    doc.getElementById('notes').appendChild(note);    
+    note.appendChild(body);
+    note.appendChild(actions);
+
+    doc.getElementById('notes').appendChild(note);
+    _('notes').contentWindow.scrollTo(0, doc.height);
+}
+
+function eraseExistingNote(id) {
+    var doc = _('notes').contentDocument;
+
+    var note = doc.getElementById(id);
+    if(note)
+        note.parentNode.removeChild(note);
 }

@@ -61,7 +61,7 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
       <toolbarseparator/>
 
       <toolbaritem flex="0" align="center">
-        <label id="mozeskine-last-message"/>
+        <label id="mozeskine-last-message" crop="end"/>
       </toolbaritem>
       
       <toolbarspring/>

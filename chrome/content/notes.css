@@ -2,6 +2,7 @@ body
 {
   margin-top: 0;
   font-family: sans;
+  font-size: smaller;
   }
 
 ul
@@ -14,4 +15,38 @@ li
 {
   padding-top: 0.2em;
   padding-bottom: 0.2em;
+  }
+
+li:hover 
+{
+  background-color: #f2f2ff;
+  }
+
+.note
+{
+  position: relative;
+  }
+
+.body
+{
+  white-space: -moz-pre-wrap;
+  }
+
+.actions
+{
+  position: absolute;
+  right: 0;
+  top: -0.1em;
+  border: 1px solid blue;
+  visibility: hidden;
+  background: white;
+  }
+.actions:hover
+{
+  cursor: pointer;
+  }
+
+li:hover>.actions
+{
+  visibility: visible;
   }
