@@ -211,10 +211,12 @@ function receiveChatMessage(message) {
 function receivePresence(presence) {
     var nick = presence.stanza.@from.toString().match(/\/(.+)$/)[1];
     var item = _('participants').getElementsByAttribute('label', nick)[0];
+
     if(item) {
         switch(presence.stanza.@type.toString()) {
         case 'unavailable':
             _('participants').removeChild(item);
+            displayEvent(nick + ' left the room', 'leave');
             break;
         default:
             break;
@@ -225,6 +227,7 @@ function receivePresence(presence) {
             break;
         default:
             _('participants').appendItem(nick);
+            displayEvent(nick + ' joined the room', 'join');
         }
     }
 }
@@ -273,6 +276,23 @@ function displayChatMessage(from, content) {
     item.appendChild(actions);
 
     doc.getElementById('messages').appendChild(item);
+    _('chat-output').contentWindow.scrollTo(0, doc.height);
+}
+
+function displayEvent(content, additionalClass) {
+    var doc = _('chat-output').contentDocument;
+
+    var body = doc.createElement('span');
+    body.setAttribute('class', 'body');
+    body.textContent = content;
+
+    var event = doc.createElement('li');
+    event.setAttribute('class', additionalClass ?
+                       'event ' + additionalClass :
+                       'event');
+    event.appendChild(body);
+
+    doc.getElementById('messages').appendChild(event);
     _('chat-output').contentWindow.scrollTo(0, doc.height);
 }
 

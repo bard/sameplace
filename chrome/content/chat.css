@@ -39,6 +39,20 @@ a:hover
   position: relative;
   }
 
+.event>.body
+{
+  position: relative;
+  font-style: italic;
+  }
+.event.join>.body:before
+{
+  content: "» "
+  }
+.event.leave>.body:before
+{
+  content: "« "
+  }
+
 .sender 
 {
   font-weight: bold;
