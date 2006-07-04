@@ -3,7 +3,6 @@
 <!DOCTYPE window>
 <window id="mozeskine" title="Mozeskine"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-        xmlns:hy="http://hyperstruct.net/"
         xmlns:html="http://www.w3.org/1999/xhtml"
         onload="init(event);"
         onunload="finish(event);"
@@ -16,6 +15,7 @@
   <commandset>
     <command id="connect" label="Connect" accesskey="C" oncommand="connect();"/>
     <command id="disconnect" label="Disconnect" accesskey="D" oncommand="disconnect();"/>
+    <command id="debug" label="Debug" accesskey="b" oncommand="debug();"/>
   </commandset>
 
   <hbox flex="1">
@@ -29,7 +29,8 @@
           <textbox id="chat-input" flex="1" class="box-inset" multiline="true"/>
           <hbox pack="center">
             <button command="connect"/>
-            <button command="disconnect"/>            
+            <button command="disconnect"/>
+            <button command="debug"/>
           </hbox>
         </vbox>
 
@@ -46,21 +47,5 @@
       <label value="Notes" class="header"/>
       <iframe id="notes" src="notes.html" class="box-inset" flex="1"/>
     </vbox>
-
-    <splitter collapse="after" state="collapsed"/>
-
-    <vbox>
-      <label class="header" value="Jabber Debug"/>
-
-      <richlistbox id="jabber-debug" flex="1"
-                   class="box-inset"
-                   style="font-family: mono; font-size: x-small;"/>
-    </vbox>
   </hbox>
-
-  <box hidden="true" id="blueprints">
-    <richlistitem style="width: 100%;" role="debug-line">
-      <description flex="1" role="content"/>
-    </richlistitem>
-  </box>
 </window>

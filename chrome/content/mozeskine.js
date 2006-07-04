@@ -42,10 +42,6 @@ function init(event) {
     
     client = new Client();
     client.on(
-        {tag: 'data'}, function(data) {
-            jabberDebug(data.direction + '/DATA:\n' + data.content);
-        });
-    client.on(
         {tag: 'message', direction: 'in', stanza: function(s) {
                 return s.body.toString();
             }}, function(message) { receiveChatMessage(message); });
@@ -98,13 +94,6 @@ function scrollingOnlyIfAtBottom(window, action) {
     action();
     if(scroll)
         window.scrollTo(0, window.document.height);
-}
-
-function cloneBlueprint(name) {
-    return document
-        .getElementById('blueprints')
-        .getElementsByAttribute('role', name)[0]
-        .cloneNode(true);
 }
 
 
@@ -276,7 +265,7 @@ function pressedKeyInChatInput(event) {
 
 
 // ----------------------------------------------------------------------
-// XMPP SESSION START/STOP
+// XMPP SESSION START/STOP/DISPLAY
 
 function connect() {
     var connectionParams = {
@@ -311,6 +300,21 @@ function disconnect() {
     client.signOff(userJid);
 }
 
+function debug() {
+    var debugWindow = window.open('debug.xul', 'mozeskine-debug', 'chrome,alwaysRaised');
+
+    client.on(
+        {tag: 'data'}, function(data) {
+            if(!debugWindow.closed)
+                debugWindow.display(data.direction + '/DATA:\n' + data.content);
+        });
+
+    // TODO when client will support removal of listeners:
+    //     debugWindow.addEventListener(
+    //         'unload', function(event) {
+    //             client.forget({tag: 'data'}, listenerReference);
+    //         }, false);
+}
 
 // ----------------------------------------------------------------------
 // NETWORK ACTIONS
