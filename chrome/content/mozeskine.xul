@@ -20,11 +20,22 @@
 
   <hbox flex="1">
     <vbox flex="1">
-      <iframe id="chat-output" src="chat.html" flex="3" class="box-inset"/>
+      <hbox flex="10">
+        <vbox flex="1">
+          <label value="Participants" class="header"/>
+          <richlistbox id="participants" flex="1"
+                       class="box-inset"/>
+        </vbox>
+
+        <splitter/>
+
+        <iframe id="chat-output" src="chat.html" flex="3" class="box-inset"/>
+      </hbox>
+
 
       <splitter/>
       
-      <hbox>
+      <hbox flex="1">
         <vbox flex="1">
           <textbox id="chat-input" flex="1" class="box-inset" multiline="true"/>
           <hbox pack="center">
@@ -34,10 +45,7 @@
           </hbox>
         </vbox>
 
-        <vbox>
-          <label value="Participants" class="header"/>
-          <listbox id="participants" flex="1"/>
-        </vbox>
+
       </hbox>
     </vbox>
 

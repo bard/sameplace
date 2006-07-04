@@ -3,11 +3,14 @@
 
 var module = new ModuleManager();
 var Client = module.require('class', 'xmpp4moz/client');
-var moz = new Namespace('http://hyperstruct.net/mozeskine#0.1.4');
-var muc = new Namespace('http://jabber.org/protocol/muc#user');
 var observerService = Components
     .classes["@mozilla.org/observer-service;1"]
     .getService(Components.interfaces.nsIObserverService);
+
+var ns_notes = new Namespace('http://hyperstruct.net/mozeskine/protocol/0.1.4#notes');
+var ns_agent = new Namespace('http://hyperstruct.net/mozeskine/protocol/0.1.4#agent');
+var ns_muc = new Namespace('http://jabber.org/protocol/muc#user');
+var ns_xul = new Namespace('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul');
 
 
 // ----------------------------------------------------------------------
@@ -39,7 +42,6 @@ function init(event) {
                 roomTopic);
         }, false);
         
-    
     client = new Client();
     client.on(
         {tag: 'message', direction: 'in', stanza: function(s) {
@@ -47,7 +49,7 @@ function init(event) {
             }}, function(message) { receiveChatMessage(message); });
     client.on(
         {tag: 'message', direction: 'in', stanza: function(s) {
-                return s.moz::x.toXMLString();
+                return s.ns_notes::x.toXMLString();
             }}, function(message) { receiveAction(message); });
     client.on(
         {tag: 'message', direction: 'in', stanza: function(s) {
@@ -55,7 +57,7 @@ function init(event) {
             }}, function(message) { receiveRoomTopic(message); });
     client.on(
         {tag: 'presence', direction: 'in', stanza: function(s) {
-                return s.muc::x.toXMLString();
+                return s.ns_muc::x.toXMLString();
             }}, function(presence) { receivePresence(presence) });
 }
 
@@ -329,15 +331,15 @@ function sendMessage(text) {
 
 function sendNoteAddition(text) {
     var packet = <message to={roomAddress} type="groupchat"/>;
-    packet.moz::x.append = text;
-    packet.moz::x.append.@id = userJid + '/' + (new Date()).getTime();
-    lastId = packet.moz::x.append.@id;
+    packet.ns_notes::x.append = text;
+    packet.ns_notes::x.append.@id = userJid + '/' + (new Date()).getTime();
+    lastId = packet.ns_notes::x.append.@id;
     client.send(userJid, packet);
 }
 
 function sendNoteRemoval(id) {
     var packet = <message to={roomAddress} type="groupchat"/>;
-    packet.moz::x.remove.@id = id;
+    packet.ns_notes::x.remove.@id = id;
     client.send(userJid, packet);
 }
 
@@ -363,7 +365,7 @@ function receiveRoomTopic(message) {
 
 function receivePresence(presence) {
     var nick = presence.stanza.@from.toString().match(/\/(.+)$/)[1];
-    var item = _('participants').getElementsByAttribute('label', nick)[0];
+    var item = _('participants').getElementsByAttribute('nick', nick)[0];
 
     if(item) {
         switch(presence.stanza.@type.toString()) {
@@ -379,19 +381,24 @@ function receivePresence(presence) {
         case 'unavailable':
             break;
         default:
-            _('participants').appendItem(nick);
+            item = document.createElement('richlistitem');
+            item.setAttribute('nick', nick);
+            var label = document.createElement('label');
+            label.setAttribute('value', nick);
+            item.appendChild(label);
+            _('participants').appendChild(item);
             displayEvent(nick + ' entered the room', 'join');
         }
     }
 }
 
 function receiveAction(message) {
-    for each(var action in message.stanza.moz::x.*) {
+    for each(var action in message.stanza.ns_notes::x.*) {
         switch(action.name().toString()) {
-        case moz + '::append':
+        case ns_notes + '::append':
             displayNewNote(action.@id, action.*[0]);
             break;
-        case moz + '::remove':
+        case ns_notes + '::remove':
             eraseExistingNote(action.@id);
             break;
         default:
