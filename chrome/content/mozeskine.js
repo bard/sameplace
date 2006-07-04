@@ -23,20 +23,12 @@ function init(event) {
     if(!event.target)
         return;
                   
-    _('chat-input').addEventListener(
-        'keypress', function(event) {
-            chatInputKeypress(event);
-        }, false);
-
-    _('chat-output').contentDocument.addEventListener(
-        'click', function(event) {
-            saveButtonClick(event);
-        }, false);
-
-    _('notes').contentDocument.addEventListener(
-        'click', function(event) {
-            removeButtonClick(event);
-        }, false);
+    _('chat-input')
+        .addEventListener('keypress', pressedKeyInChatInput, false);
+    _('chat-output').contentDocument
+        .addEventListener('click', clickedSaveButton, false);
+    _('notes').contentDocument
+        .addEventListener('click', clickedRemoveButton, false);
 
     client = new Client();
     client.on(
@@ -92,11 +84,89 @@ function jabberDebug(text) {
     _('jabber-debug').ensureElementIsVisible(debugLine);
 }
 
+function displayChatMessage(from, content) {
+    var doc = _('chat-output').contentDocument;
+
+    var actions = doc.createElement('div');
+    actions.setAttribute('class', 'actions');
+
+    var saveAction = doc.createElement('a');
+    saveAction.setAttribute('class', 'action');
+    saveAction.textContent = 'Save';
+    actions.appendChild(saveAction);
+
+    var sender = doc.createElement('span');
+    sender.textContent = from.match(/\/(.+)$/)[1];
+    sender.setAttribute('class', 'sender');
+    var body = doc.createElement('span');
+    body.setAttribute('class', 'body');
+    body.textContent = content;
+
+    var item = doc.createElement('li');
+    item.setAttribute('class', 'message');
+    item.appendChild(sender);
+    item.appendChild(body);
+    item.appendChild(actions);
+
+    doc.getElementById('messages').appendChild(item);
+    _('chat-output').contentWindow.scrollTo(0, doc.height);
+}
+
+function displayEvent(content, additionalClass) {
+    var doc = _('chat-output').contentDocument;
+
+    var body = doc.createElement('span');
+    body.setAttribute('class', 'body');
+    body.textContent = content;
+
+    var event = doc.createElement('li');
+    event.setAttribute('class', additionalClass ?
+                       'event ' + additionalClass :
+                       'event');
+    event.appendChild(body);
+
+    doc.getElementById('messages').appendChild(event);
+    _('chat-output').contentWindow.scrollTo(0, doc.height);
+}
+
+function displayNewNote(id, content) {
+    var doc = _('notes').contentDocument;
+
+    var actions = doc.createElement('div');
+    actions.setAttribute('class', 'actions');
+
+    var removeAction = doc.createElement('a');
+    removeAction.setAttribute('class', 'action');
+    removeAction.textContent = 'Remove';
+    actions.appendChild(removeAction);
+
+    var body = doc.createElement('span');
+    body.setAttribute('class', 'body');
+    body.textContent = content;
+
+    var note = doc.createElement('li');
+    note.setAttribute('id', id);
+    note.setAttribute('class', 'note');
+    note.appendChild(body);
+    note.appendChild(actions);
+
+    doc.getElementById('notes').appendChild(note);
+    _('notes').contentWindow.scrollTo(0, doc.height);
+}
+
+function eraseExistingNote(id) {
+    var doc = _('notes').contentDocument;
+
+    var note = doc.getElementById(id);
+    if(note)
+        note.parentNode.removeChild(note);
+}
+
 
 // ----------------------------------------------------------------------
 // GUI REACTIONS
 
-function saveButtonClick(event) {
+function clickedSaveButton(event) {
     if(event.target.className != 'action')
         return;
 
@@ -110,7 +180,7 @@ function saveButtonClick(event) {
         sendNoteAddition(child.textContent);
 }
 
-function removeButtonClick(event) {
+function clickedRemoveButton(event) {
     if(event.target.className != 'action')
         return;
 
@@ -118,7 +188,7 @@ function removeButtonClick(event) {
     sendNoteRemoval(note.id);
 }
 
-function chatInputKeypress(event) {
+function pressedKeyInChatInput(event) {
     if(event.keyCode == KeyEvent.DOM_VK_RETURN) {
         var textBox = event.currentTarget;
         if(event.ctrlKey)
@@ -245,86 +315,4 @@ function receiveAction(message) {
             break;
         }
     }
-}
-
-
-// ----------------------------------------------------------------------
-// INTERFACE UPDATES
-
-function displayChatMessage(from, content) {
-    var doc = _('chat-output').contentDocument;
-
-    var actions = doc.createElement('div');
-    actions.setAttribute('class', 'actions');
-
-    var saveAction = doc.createElement('a');
-    saveAction.setAttribute('class', 'action');
-    saveAction.textContent = 'Save';
-    actions.appendChild(saveAction);
-
-    var sender = doc.createElement('span');
-    sender.textContent = from.match(/\/(.+)$/)[1];
-    sender.setAttribute('class', 'sender');
-    var body = doc.createElement('span');
-    body.setAttribute('class', 'body');
-    body.textContent = content;
-
-    var item = doc.createElement('li');
-    item.setAttribute('class', 'message');
-    item.appendChild(sender);
-    item.appendChild(body);
-    item.appendChild(actions);
-
-    doc.getElementById('messages').appendChild(item);
-    _('chat-output').contentWindow.scrollTo(0, doc.height);
-}
-
-function displayEvent(content, additionalClass) {
-    var doc = _('chat-output').contentDocument;
-
-    var body = doc.createElement('span');
-    body.setAttribute('class', 'body');
-    body.textContent = content;
-
-    var event = doc.createElement('li');
-    event.setAttribute('class', additionalClass ?
-                       'event ' + additionalClass :
-                       'event');
-    event.appendChild(body);
-
-    doc.getElementById('messages').appendChild(event);
-    _('chat-output').contentWindow.scrollTo(0, doc.height);
-}
-
-function displayNewNote(id, content) {
-    var doc = _('notes').contentDocument;
-
-    var actions = doc.createElement('div');
-    actions.setAttribute('class', 'actions');
-
-    var removeAction = doc.createElement('a');
-    removeAction.setAttribute('class', 'action');
-    removeAction.textContent = 'Remove';
-    actions.appendChild(removeAction);
-
-    var body = doc.createElement('span');
-    body.setAttribute('class', 'body');
-    body.textContent = content;
-
-    var note = doc.createElement('li');
-    note.setAttribute('id', id);
-    note.setAttribute('class', 'note');
-    note.appendChild(body);
-    note.appendChild(actions);
-
-    doc.getElementById('notes').appendChild(note);
-    _('notes').contentWindow.scrollTo(0, doc.height);
-}
-
-function eraseExistingNote(id) {
-    var doc = _('notes').contentDocument;
-
-    var note = doc.getElementById(id);
-    if(note)
-        note.parentNode.removeChild(note);
 }
