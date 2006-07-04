@@ -93,6 +93,13 @@ function scrollTextBox(textBox) {
     textArea.scrollTop = textArea.scrollHeight;        
 }
 
+function scrollingOnlyIfAtBottom(window, action) {
+    var scroll = !(window.pageYOffset < window.scrollMaxY);
+    action();
+    if(scroll)
+        window.scrollTo(0, window.document.height);
+}
+
 function cloneBlueprint(name) {
     return document
         .getElementById('blueprints')
@@ -137,10 +144,10 @@ function displayChatMessage(from, content) {
     item.appendChild(body);
     item.appendChild(actions);
 
-    var scroll = !(wnd.pageYOffset < wnd.scrollMaxY);
-    doc.getElementById('messages').appendChild(item);
-    if(scroll)
-        wnd.scrollTo(0, doc.height);
+    scrollingOnlyIfAtBottom(
+        wnd, function() {
+            doc.getElementById('messages').appendChild(item);
+        });
 }
 
 function displayRoomTopic(content) {
@@ -165,10 +172,10 @@ function displayEvent(content, additionalClass) {
                        'event');
     event.appendChild(body);
 
-    var scroll = !(wnd.pageYOffset < wnd.scrollMaxY);
-    doc.getElementById('messages').appendChild(event);
-    if(scroll)
-        wnd.scrollTo(0, doc.height);
+    scrollingOnlyIfAtBottom(
+        wnd, function() {
+            doc.getElementById('messages').appendChild(event);
+        });
 }
 
 function displayNewNote(id, content) {
@@ -193,10 +200,10 @@ function displayNewNote(id, content) {
     note.appendChild(body);
     note.appendChild(actions);
 
-    var scroll = !(wnd.pageYOffset < wnd.scrollMaxY);
-    doc.getElementById('notes').appendChild(note);
-    if(scroll)
-        wnd.scrollTo(0, doc.height);
+    scrollingOnlyIfAtBottom(
+        wnd, function() {
+            doc.getElementById('notes').appendChild(note);
+        });
 }
 
 function eraseExistingNote(id) {
