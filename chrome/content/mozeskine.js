@@ -295,7 +295,7 @@ function connect() {
                 continuation: 
             function() {
                 client.send(userJid, <presence to={roomAddress + '/' + roomNick}/>);
-            }});        
+            }});
 }
 
 function disconnect() {
@@ -382,11 +382,35 @@ function receivePresence(presence) {
             break;
         default:
             item = document.createElement('richlistitem');
-            item.setAttribute('nick', nick);
+            item.setAttribute('nick', nick); // TODO: namespace this
+            item.setAttribute('orient', 'vertical');
             var label = document.createElement('label');
             label.setAttribute('value', nick);
             item.appendChild(label);
+
+            if(presence.stanza.ns_xul::x.length() > 0) {
+                var agentFrame = document.createElement('iframe');
+                agentFrame.setAttribute('class', 'box-inset');
+                
+                item.appendChild(agentFrame);
+            }
+
             _('participants').appendChild(item);
+
+            if(presence.stanza.ns_xul::x.length() > 0) {
+                var agentWidget = 
+                    (new DOMParser())
+                    .parseFromString(presence.stanza.ns_xul::x.*[0], 'text/xml')
+                    .documentElement;
+
+                function addWidget(event) {
+                    agentFrame.contentDocument.documentElement.appendChild(agentWidget);
+                    agentFrame.contentWindow.removeEventListener('load', addWidget, false);
+                }
+                agentFrame.addEventListener('load', addWidget, false);
+                agentFrame.setAttribute('src', 'agent.xul');
+            }
+            
             displayEvent(nick + ' entered the room', 'join');
         }
     }
