@@ -129,15 +129,15 @@ function displayChatMessage(from, content) {
     body.setAttribute('class', 'body');
     body.textContent = content;
 
-    var item = doc.createElement('li');
-    item.setAttribute('class', 'message');
-    item.appendChild(sender);
-    item.appendChild(body);
-    item.appendChild(actions);
+    var message = doc.createElement('li');
+    message.setAttribute('class', 'message');
+    message.appendChild(sender);
+    message.appendChild(body);
+    message.appendChild(actions);
 
     scrollingOnlyIfAtBottom(
         wnd, function() {
-            doc.getElementById('messages').appendChild(item);
+            doc.getElementById('messages').appendChild(message);
         });
 }
 
