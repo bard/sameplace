@@ -13,14 +13,14 @@ function init() {
     _('room-nick').value        = pref.getCharPref('extensions.mozeskine.roomNick');
     _('user-server-host').value = pref.getCharPref('extensions.mozeskine.connectionServer');
     _('user-server-port').value = pref.getIntPref('extensions.mozeskine.connectionPort');
-    if(!_('user-server').value)
-        updateUserServer(_('user-address').value);
+    if(!_('user-server-host').value)
+        updateUserServer(_('user-address-host').value);
 }
 
 function updateUserServer(userAddress) {
     var m = userAddress.match(/@(.+)$/);
     if(m) 
-        _('user-server').value =
+        _('user-server-host').value =
             (m[1] == 'gmail.com') ?
             'talk.google.com' :
              m[1];
