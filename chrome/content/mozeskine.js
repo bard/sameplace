@@ -114,6 +114,7 @@ function jabberDebug(text) {
 
 function displayChatMessage(from, content) {
     var doc = _('chat-output').contentDocument;
+    var wnd = _('chat-output').contentWindow;
 
     var actions = doc.createElement('div');
     actions.setAttribute('class', 'actions');
@@ -136,8 +137,10 @@ function displayChatMessage(from, content) {
     item.appendChild(body);
     item.appendChild(actions);
 
+    var scroll = !(wnd.pageYOffset < wnd.scrollMaxY);
     doc.getElementById('messages').appendChild(item);
-    _('chat-output').contentWindow.scrollTo(0, doc.height);
+    if(scroll)
+        wnd.scrollTo(0, doc.height);
 }
 
 function displayRoomTopic(content) {
@@ -150,6 +153,7 @@ function displayRoomTopic(content) {
 
 function displayEvent(content, additionalClass) {
     var doc = _('chat-output').contentDocument;
+    var wnd = _('chat-output').contentWindow;
 
     var body = doc.createElement('span');
     body.setAttribute('class', 'body');
@@ -161,12 +165,15 @@ function displayEvent(content, additionalClass) {
                        'event');
     event.appendChild(body);
 
+    var scroll = !(wnd.pageYOffset < wnd.scrollMaxY);
     doc.getElementById('messages').appendChild(event);
-    _('chat-output').contentWindow.scrollTo(0, doc.height);
+    if(scroll)
+        wnd.scrollTo(0, doc.height);
 }
 
 function displayNewNote(id, content) {
     var doc = _('notes').contentDocument;
+    var wnd = _('notes').contentWindow;
 
     var actions = doc.createElement('div');
     actions.setAttribute('class', 'actions');
@@ -186,8 +193,10 @@ function displayNewNote(id, content) {
     note.appendChild(body);
     note.appendChild(actions);
 
+    var scroll = !(wnd.pageYOffset < wnd.scrollMaxY);
     doc.getElementById('notes').appendChild(note);
-    _('notes').contentWindow.scrollTo(0, doc.height);
+    if(scroll)
+        wnd.scrollTo(0, doc.height);
 }
 
 function eraseExistingNote(id) {
