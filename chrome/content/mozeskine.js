@@ -123,7 +123,8 @@ function displayChatMessage(from, content) {
     actions.appendChild(saveAction);
 
     var sender = doc.createElement('span');
-    sender.textContent = from.match(/\/(.+)$/)[1];
+    var m = from.match(/\/(.+)$/);
+    sender.textContent = m ? m[1] : from;
     sender.setAttribute('class', 'sender');
     var body = doc.createElement('span');
     body.setAttribute('class', 'body');
@@ -357,7 +358,9 @@ function receiveChatMessage(message) {
 }
 
 function receiveRoomTopic(message) {
-    var nick = message.stanza.@from.toString().match(/\/(.+)$/)[1];
+    var from = message.stanza.@from.toString();
+    var m = from.match(/\/(.+)$/);
+    var nick = m ? m[1] : from;
     
     displayEvent(nick + ' set the topic to "' + message.stanza.subject + '"', 'topic');
     displayRoomTopic(message.stanza.subject.toString());
