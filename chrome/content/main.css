@@ -7,6 +7,7 @@ body
 
 ul#messages
 {
+  margin-top: 2.5em;
   list-style-type: none;
   margin-left: 0;
   padding: 0;
@@ -39,6 +40,42 @@ a:hover
   color: blue;
   }
 
+#header
+{
+  top: 0;
+  left: 0;
+  float: right;
+  padding-top: 0.4em;
+  padding-bottom: 0.6em;
+  position: fixed;
+  z-index: 1000;
+  background: #f1f1f1;
+  width: 100%;
+  }
+#header:hover
+{
+  cursor: pointer;
+  }
+
+h1#topic
+{
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  display: inline;
+  font-size: 120%;
+  font-family: serif;
+  font-weight: normal;
+  white-space: nowrap;
+  font-style: italic;
+  }
+
+h1#topic:before
+{
+  content: "Topic: ";
+  font-style: normal;
+  font-variant: small-caps;
+  font-weight: bold;
+  }
 
 .message, .note, .event
 {
@@ -52,11 +89,16 @@ a:hover
   }
 .event.join>.body:before
 {
-  content: "» "
+  content: "» ";
   }
 .event.leave>.body:before
 {
-  content: "« "
+  content: "« ";
+  }
+.event.topic>.body:before
+{
+  content: "· ";
+  font-weight: bold;
   }
 
 .sender 
