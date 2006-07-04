@@ -266,7 +266,8 @@ function connect() {
     var connectionParams = {
         userAddress: undefined,
         userPassword: undefined,
-        userServer: undefined,
+        userServerHost: undefined,
+        userServerPort: undefined,
         roomAddress: undefined,
         roomNick: undefined,
         confirm: false
@@ -282,7 +283,9 @@ function connect() {
         
     client.signOn(
         userJid, connectionParams.userPassword,
-        {server: connectionParams.userServer, continuation: 
+        {server: connectionParams.userServerHost,
+                port: connectionParams.userServerPort,
+                continuation: 
             function() {
                 client.send(userJid, <presence to={roomAddress + '/' + roomNick}/>);
             }});        

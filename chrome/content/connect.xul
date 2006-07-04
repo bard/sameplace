@@ -20,10 +20,15 @@
       </row>
 
       <row>
-        <label value="Server:" accesskey="S" control="user-server"/>
-        <textbox id="user-server" flex="1"/>
+        <label value="Server:" accesskey="S" control="user-server-host"/>
+        <textbox id="user-server-host" flex="1"/>
       </row>
-      
+
+      <row>
+        <label value="Port:" accesskey="o" control="user-server-port"/>
+        <textbox id="user-server-port" flex="1"/>
+      </row>
+
       <row>
         <label value="Password:" accesskey="P" control="user-password"/>
         <textbox id="user-password" type="password" flex="1"/>              
