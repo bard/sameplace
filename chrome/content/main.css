@@ -2,18 +2,24 @@ body
 {
   font-family: sans;
   font-size: smaller;
+  margin-top: 0;
   }
 
-ul
+ul#messages
 {
   list-style-type: none;
   margin-left: 0;
   padding: 0;
   }
 
+ul#notes
+{
+  padding: 1em;
+  margin: 0;
+  }
+
 li 
 {
-  display: block;
   padding-top: 0.2em;
   padding-bottom: 0.2em;
   }
@@ -34,7 +40,7 @@ a:hover
   }
 
 
-.message
+.message, .note, .event
 {
   position: relative;
   }
