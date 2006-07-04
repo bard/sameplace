@@ -19,78 +19,33 @@
   </commandset>
 
   <hbox flex="1">
-    <tabbox flex="1" selectedIndex="0" id="main-panel">
-      <tabs>
-        <tab label="Connection"/>
-        <tab label="Chat"/>
-      </tabs>
+    <vbox flex="1">
+      <iframe id="chat-output" src="chat.html" flex="3" class="box-inset"/>
 
-      <tabpanels flex="1">
-        <tabpanel orient="vertical">
-          <grid>
-            <columns>
-              <column flex="0"/>
-              <column flex="1"/>
-            </columns>
-
-            <rows>
-              <row>
-                <label value="User:" accesskey="U" control="user-address"/>
-                <textbox id="user-address" flex="1" onkeyup="updateUserServer(this.value);"/>
-              </row>
-
-              <row>
-                <label value="Server:" accesskey="S" control="user-server"/>
-                <textbox id="user-server" flex="1"/>
-              </row>
-              
-              <row>
-                <label value="Password:" accesskey="P" control="user-password"/>
-                <textbox id="user-password" type="password" flex="1"/>              
-              </row>
-
-              <row>
-                <label value="Room:"/>
-                <textbox id="room-address" flex="1"/>              
-              </row>
-
-              <row>
-                <label value="Nick:"/>
-                <textbox id="room-nick" flex="1"/>              
-              </row>
-            </rows>
-          </grid>
-
+      <splitter/>
+      
+      <hbox>
+        <vbox flex="1">
+          <textbox id="chat-input" flex="1" class="box-inset" multiline="true"/>
           <hbox pack="center">
             <button command="connect"/>
-            <button command="disconnect"/>          
+            <button command="disconnect"/>            
           </hbox>
-        </tabpanel>
+        </vbox>
 
-        <tabpanel orient="horizontal">
-          <vbox flex="1">
-            <iframe id="chat-output" src="chat.html" flex="3" class="box-inset"/>
+        <vbox>
+          <label value="Participants" class="header"/>
+          <listbox id="participants" flex="1"/>
+        </vbox>
+      </hbox>
+    </vbox>
 
-            <splitter/>
-            
-            <hbox>
-              <textbox id="chat-input" flex="1" class="box-inset" multiline="true"/>
-              <vbox>
-                <label value="Participants" class="header"/>
-                <listbox id="participants" flex="1"/>
-              </vbox>
-            </hbox>
-          </vbox>
-
-          <splitter/>
-          
-          <vbox flex="1">
-            <label value="Notes" class="header"/>
-            <iframe id="notes" src="notes.html" class="box-inset" flex="1"/>
-          </vbox>
-        </tabpanel>
-      </tabpanels>
-    </tabbox>
+    <splitter/>
+    
+    <vbox flex="1">
+      <label value="Notes" class="header"/>
+      <iframe id="notes" src="notes.html" class="box-inset" flex="1"/>
+    </vbox>
 
     <splitter collapse="after" state="collapsed"/>
 

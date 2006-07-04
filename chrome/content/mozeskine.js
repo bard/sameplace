@@ -9,6 +9,7 @@ var observerService = Components
     .classes["@mozilla.org/observer-service;1"]
     .getService(Components.interfaces.nsIObserverService);
 
+
 // ----------------------------------------------------------------------
 // GLOBAL STATE
 
@@ -22,18 +23,6 @@ function init(event) {
     if(!event.target)
         return;
                   
-    var pref = Components
-        .classes["@mozilla.org/preferences-service;1"]
-        .getService(Components.interfaces.nsIPrefBranch);
-
-    _('user-address').value  = pref.getCharPref('extensions.mozeskine.userAddress');
-    _('user-password').value = pref.getCharPref('extensions.mozeskine.userPassword');
-    _('room-address').value  = pref.getCharPref('extensions.mozeskine.roomAddress');
-    _('room-nick').value     = pref.getCharPref('extensions.mozeskine.roomNick');
-    _('user-server').value   = pref.getCharPref('extensions.mozeskine.connectionServer');
-    if(!_('user-server').value)
-        updateUserServer(_('user-address').value);
-
     _('chat-input').addEventListener(
         'keypress', function(event) {
             chatInputKeypress(event);
@@ -88,10 +77,6 @@ function scrollTextBox(textBox) {
     textArea.scrollTop = textArea.scrollHeight;        
 }
 
-function showChat() {
-    _('main-panel').selectedIndex = 1;
-}
-
 function cloneBlueprint(name) {
     return document
         .getElementById('blueprints')
@@ -106,6 +91,7 @@ function jabberDebug(text) {
     _('jabber-debug').appendChild(debugLine);
     _('jabber-debug').ensureElementIsVisible(debugLine);
 }
+
 
 // ----------------------------------------------------------------------
 // GUI REACTIONS
@@ -149,43 +135,34 @@ function chatInputKeypress(event) {
     }
 }
 
-function updateUserServer(userAddress) {
-    var m = userAddress.match(/@(.+)$/);
-    if(m) 
-        _('user-server').value =
-            (m[1] == 'gmail.com') ?
-            'talk.google.com' :
-             m[1];
-}
-
-function savePrefs() {
-    var pref = Components
-        .classes["@mozilla.org/preferences-service;1"]
-        .getService(Components.interfaces.nsIPrefBranch);
-
-    pref.setCharPref('extensions.mozeskine.userAddress', _('user-address').value);
-    pref.setCharPref('extensions.mozeskine.connectionServer', _('user-server').value);
-    pref.setCharPref('extensions.mozeskine.roomAddress', _('room-address').value);
-    pref.setCharPref('extensions.mozeskine.roomNick', _('room-nick').value);    
-}
-
 
 // ----------------------------------------------------------------------
 // XMPP SESSION START/STOP
 
 function connect() {
-    userJid = _('user-address').value + '/Mozeskine';
-    roomAddress = _('room-address').value;
-    roomNick = _('room-nick').value;
+    var connectionParams = {
+        userAddress: undefined,
+        userPassword: undefined,
+        userServer: undefined,
+        roomAddress: undefined,
+        roomNick: undefined,
+        confirm: false
+    };
+    window.openDialog('connect.xul', 'connect', 'chrome,modal,centerscreen', connectionParams);
 
+    if(!connectionParams.confirm)
+        return;
+
+    userJid     = connectionParams.userAddress + '/Mozeskine';
+    roomAddress = connectionParams.roomAddress;
+    roomNick    = connectionParams.roomNick;
+        
     client.signOn(
-        userJid, _('user-password').value,
-        {server: _('user-server').value, continuation: 
+        userJid, connectionParams.userPassword,
+        {server: connectionParams.userServer, continuation: 
             function() {
                 client.send(userJid, <presence to={roomAddress + '/' + roomNick}/>);
-                showChat();
-                savePrefs();
-            }});
+            }});        
 }
 
 function disconnect() {
@@ -217,6 +194,7 @@ function sendNoteRemoval(id) {
     packet.moz::x.remove.@id = id;
     client.send(userJid, packet);
 }
+
 
 // ----------------------------------------------------------------------
 // NETWORK REACTIONS
@@ -265,6 +243,7 @@ function receiveAction(message) {
         }
     }
 }
+
 
 // ----------------------------------------------------------------------
 // INTERFACE UPDATES
