@@ -3,7 +3,7 @@
 
 var module = new ModuleManager();
 var Client = module.require('class', 'xmpp4moz/client');
-var moz = new Namespace('http://hyperstruct.net/mozeskine');
+var moz = new Namespace('http://hyperstruct.net/mozeskine#0.1.4');
 var muc = new Namespace('http://jabber.org/protocol/muc#user');
 var observerService = Components
     .classes["@mozilla.org/observer-service;1"]
