@@ -6,6 +6,9 @@ var Client = module.require('class', 'xmpp4moz/client');
 var observerService = Components
     .classes["@mozilla.org/observer-service;1"]
     .getService(Components.interfaces.nsIObserverService);
+var mediatorService = Components
+    .classes["@mozilla.org/appshell/window-mediator;1"]
+    .getService(Components.interfaces.nsIWindowMediator);
 
 var ns_notes = new Namespace('http://hyperstruct.net/mozeskine/protocol/0.1.4#notes');
 var ns_agent = new Namespace('http://hyperstruct.net/mozeskine/protocol/0.1.4#agent');
@@ -32,14 +35,12 @@ function init(event) {
         .addEventListener('click', clickedSaveButton, false);
     _('chat-output').contentDocument
         .addEventListener('click', clickedHeader, false);
+    _('chat-output').contentWindow.
+        addEventListener(
+            'resize', function(event) {
+                displayRoomTopic();
+            }, false);
 
-    _('chat-output').contentWindow.addEventListener(
-        'resize', function(event) {
-            setCroppedContent(
-                _('chat-output').contentDocument.getElementById('topic'),
-                roomTopic);
-        }, false);
-        
     client = new Client();
     client.on(
         {tag: 'message', direction: 'in', stanza: function(s) {
@@ -57,18 +58,14 @@ function init(event) {
         {tag: 'presence', direction: 'in', stanza: function(s) {
                 return s.ns_muc::x.toXMLString();
             }}, function(presence) { receivePresence(presence) });
-
-    var mediator = Components
-        .classes["@mozilla.org/appshell/window-mediator;1"]
-        .getService(Components.interfaces.nsIWindowMediator);
     client.on(
         {tag: 'data'}, function(data) {
-            var enumerator = mediator.getEnumerator('');
-            while(enumerator.hasMoreElements()) {
-                var window = enumerator.getNext();
-                if(window.name == 'mozeskine-debug')
-                    window.display(data.direction + '/DATA:\n' + data.content);
-            }});
+            withDebugWindow(
+                function(window) {
+                    window.display(data.direction +
+                                   '/DATA:\n' + data.content);
+                });
+            });
 }
 
 function finish() {
@@ -121,9 +118,23 @@ function findBrowser(url) {
     }
 }
 
+function findWindow(name) {
+    var enumerator = mediatorService.getEnumerator('');
+    while(enumerator.hasMoreElements()) {
+        var window = enumerator.getNext();
+        if(window.name == name)
+            return window;
+    }
+}
 
 // ----------------------------------------------------------------------
 // GUI ACTIONS
+
+function withDebugWindow(code) {
+    var debugWindow = findWindow('mozeskine-debug');
+    if(debugWindow)
+        code(window);
+}
 
 function withNotesWindow(code) {
     var browser = findBrowser('chrome://mozeskine/content/notes.html');
@@ -183,7 +194,7 @@ function displayChatMessage(from, content) {
 }
 
 function displayRoomTopic(content) {
-    roomTopic = content;
+    roomTopic = roomTopic || content || '';
 
     setCroppedContent(
         _('chat-output').contentDocument.getElementById('topic'),
