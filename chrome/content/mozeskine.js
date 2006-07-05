@@ -16,7 +16,7 @@ var ns_xul = new Namespace('http://www.mozilla.org/keymaster/gatekeeper/there.is
 // ----------------------------------------------------------------------
 // GLOBAL STATE
 
-var client, userJid, roomAddress, roomNick, roomTopic = '';
+var client, userJid, roomAddress, roomNick, notesWindow, roomTopic = '';
 
 
 // ----------------------------------------------------------------------
@@ -25,15 +25,13 @@ var client, userJid, roomAddress, roomNick, roomTopic = '';
 function init(event) {
     if(!event.target)
         return;
-                  
+
     _('chat-input')
         .addEventListener('keypress', pressedKeyInChatInput, false);
     _('chat-output').contentDocument
         .addEventListener('click', clickedSaveButton, false);
     _('chat-output').contentDocument
         .addEventListener('click', clickedHeader, false);
-    _('notes').contentDocument
-        .addEventListener('click', clickedRemoveButton, false);
 
     _('chat-output').contentWindow.addEventListener(
         'resize', function(event) {
@@ -114,6 +112,18 @@ function scrollingOnlyIfAtBottom(window, action) {
 // ----------------------------------------------------------------------
 // GUI ACTIONS
 
+function openNotes() {
+    var tabBrowser = window.top.gBrowser;
+
+    if(tabBrowser.currentURI.spec != 'about:blank') 
+        tabBrowser.selectedTab = tabBrowser.addTab();
+
+    var browser = tabBrowser.selectedBrowser;
+    browser.loadURI('chrome://mozeskine/content/notes.html');
+    browser.addEventListener('click', clickedRemoveButton, false);
+    notesWindow = browser.contentWindow;    
+}
+
 function jabberDebug(text) {
     var debugLine = cloneBlueprint('debug-line');
     debugLine.getElementsByAttribute('role', 'content')[0].textContent = text;
@@ -183,8 +193,8 @@ function displayEvent(content, additionalClass) {
 }
 
 function displayNewNote(id, content) {
-    var doc = _('notes').contentDocument;
-    var wnd = _('notes').contentWindow;
+    var wnd = notesWindow;
+    var doc = notesWindow.document;
 
     var actions = doc.createElement('div');
     actions.setAttribute('class', 'actions');
@@ -211,7 +221,7 @@ function displayNewNote(id, content) {
 }
 
 function eraseExistingNote(id) {
-    var doc = _('notes').contentDocument;
+    var doc = notesWindow.document;
 
     var note = doc.getElementById(id);
     if(note)

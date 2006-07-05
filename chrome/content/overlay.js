@@ -7,6 +7,19 @@ var mozeskineObserver = {
     }
 };
 
+function mozeskineToggleSidebar() {
+    var sidebar = document.getElementById('mozeskine-sidebar');
+    var splitter = document.getElementById('mozeskine-splitter');
+
+    if(sidebar.collapsed) {
+        sidebar.collapsed = false;
+        splitter.hidden = false;
+    } else {
+        sidebar.collapsed = true;
+        splitter.hidden = true;
+    }
+}
+
 window.addEventListener(
     'load', function() {
         Components

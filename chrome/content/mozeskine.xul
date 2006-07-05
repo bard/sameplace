@@ -1,59 +1,55 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <!DOCTYPE window>
-<window id="mozeskine" title="Mozeskine"
-        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-        xmlns:html="http://www.w3.org/1999/xhtml"
-        onload="init(event);"
-        onunload="finish(event);"
-        orient="vertical"
-        width="800" height="600">
+<page id="mozeskine" title="Mozeskine"
+      xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+      onload="init(event);"
+      onunload="finish(event);"
+      orient="vertical">
+
+  <!-- SCRIPTS -->
 
   <script type="application/x-javascript" src="module_manager.js"/>
   <script type="application/x-javascript" src="mozeskine.js"/>
 
+  <!-- COMMANDS -->
+  
   <commandset>
     <command id="connect" label="Connect" accesskey="C" oncommand="connect();"/>
     <command id="disconnect" label="Disconnect" accesskey="D" oncommand="disconnect();"/>
+    <command id="notes" label="Notes" accesskey="N" oncommand="openNotes();"/>
     <command id="debug" label="Debug" accesskey="b" oncommand="debug();"/>
   </commandset>
+  
+  <vbox flex="1">
 
-  <hbox flex="1">
-    <vbox flex="1">
-      <hbox flex="10">
-        <vbox flex="1">
-          <label value="Participants" class="header"/>
-          <richlistbox id="participants" flex="1"
-                       class="box-inset"/>
-        </vbox>
+    <!-- MENU -->
 
-        <splitter/>
+    <!-- CONVERSATION AREA -->
 
-        <iframe id="chat-output" src="chat.html" flex="3" class="box-inset"/>
-      </hbox>
-
+    <hbox flex="10">
+      <vbox flex="1">
+        <label value="Participants" class="header"/>
+        <richlistbox id="participants" flex="1"
+                     class="box-inset"/>
+      </vbox>
 
       <splitter/>
-      
-      <hbox flex="1">
-        <vbox flex="1">
-          <textbox id="chat-input" flex="1" class="box-inset" multiline="true"/>
-          <hbox pack="center">
-            <button command="connect"/>
-            <button command="disconnect"/>
-            <button command="debug"/>
-          </hbox>
-        </vbox>
 
-
-      </hbox>
-    </vbox>
+      <iframe id="chat-output" src="chat.html" flex="3" class="box-inset"/>
+    </hbox>
 
     <splitter/>
     
-    <vbox flex="1">
-      <label value="Notes" class="header"/>
-      <iframe id="notes" src="notes.html" class="box-inset" flex="1"/>
-    </vbox>
-  </hbox>
-</window>
+    <textbox id="chat-input" flex="1" class="box-inset" multiline="true"/>
+
+    <toolbox>
+      <toolbar fullscreentoolbar="true">
+        <toolbarbutton command="connect"/>
+        <toolbarbutton command="disconnect"/>
+        <toolbarbutton command="debug"/>
+        <toolbarbutton command="notes"/>
+      </toolbar>
+    </toolbox>
+  </vbox>
+</page>

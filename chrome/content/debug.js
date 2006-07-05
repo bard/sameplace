@@ -1,5 +1,5 @@
 function init() {
-    
+
 }
 
 function finish() {

@@ -32,17 +32,58 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
   <!-- COMMANDS -->
 
   <commandset id="mainCommandSet">
+    <command id="mozeskine-command-toggle-sidebar"
+             label="Toggle Mozeskine"
+             oncommand="mozeskineToggleSidebar();"/>
+    <command id="mozeskine-command-reload-application"
+             label="Reload Mozeskine"
+             oncommand="document
+                        .getElementById('mozeskine-sidebar')
+                        .firstChild
+                        .contentDocument
+                        .location.href = 'chrome://mozeskine/content/mozeskine.xul'"/>
     <command id="mozeskine-command-open"
-             label="Open Mozeskine..."
+             label="Open/Close Mozeskine..."
              accesskey="s"
              oncommand="window.open('chrome://mozeskine/content/mozeskine.xul', 'mozeskine', 'chrome');"/>
   </commandset>
 
+  <!-- KEYS -->
+
+  <keyset id="mainKeyset">
+    <key keycode="VK_F12" modifiers="shift" command="mozeskine-command-toggle-sidebar"/>
+    <key keycode="VK_F12" command="mozeskine-command-reload-application"/>
+  </keyset>
+
   <!-- MENUS -->
 
   <menupopup id="menu_ToolsPopup">
-    <menuitem position="1" command="mozeskine-command-open"/>
+    <menuitem position="1" command="mozeskine-command-toggle-sidebar"/>
   </menupopup>
+
+  <!-- SIDEBAR OVERLAY -->
+
+  <hbox id="browser">
+    <vbox id="mozeskine-sidebar"
+          insertbefore="appcontent"
+          class="chromeclass-extracontent"
+          collapsed="false"
+          persist="width collapsed"
+          width="500">
+      <iframe src="chrome://mozeskine/content/"
+              class="box-inset"
+              flex="1"/>
+    </vbox>
+
+    <splitter id="mozeskine-splitter"
+              insertbefore="appcontent"
+              state="open"
+              collapse="before"
+              resizebefore="closest"
+              resizeafter="closest"
+              class="chromeclass-extracontent"
+              hidden="false"/>
+  </hbox>
 
   <!-- TOOLBAR -->
  
@@ -51,13 +92,10 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
     <toolbar id="mozeskine-toolbar" toolbarname="Mozeskine Toolbar" 
              class="chromeclass-toolbar" context="toolbar-context-menu" 
              hidden="false" persist="hidden"
-             fullscreentoolbar="true">
-            
-      <toolbarbutton class="chromeclass-toolbar-additional" id="mozeskine-open"
-                     label="Open Mozeskine..."
-                     tooltiptext="Open Mozeskine" command="mozeskine-command-open"
+             fullscreentoolbar="true">            
+      <toolbarbutton class="chromeclass-toolbar-additional"
+                     command="mozeskine-command-toggle-sidebar"
                      flex="0"/>
-
       <toolbarseparator/>
 
       <toolbaritem flex="0" align="center">

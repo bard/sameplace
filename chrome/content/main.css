@@ -3,6 +3,7 @@ body
   font-family: sans;
   font-size: smaller;
   margin-top: 0;
+  background: white;
   }
 
 ul#messages
@@ -57,7 +58,7 @@ a:hover
   cursor: pointer;
   }
 
-h1#topic
+#header>h1
 {
   padding-left: 0.5em;
   padding-right: 0.5em;
@@ -68,6 +69,7 @@ h1#topic
   white-space: nowrap;
   font-style: italic;
   }
+
 
 h1#topic:before
 {
