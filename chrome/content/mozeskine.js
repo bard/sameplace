@@ -16,7 +16,7 @@ var ns_xul = new Namespace('http://www.mozilla.org/keymaster/gatekeeper/there.is
 // ----------------------------------------------------------------------
 // GLOBAL STATE
 
-var client, userJid, roomAddress, roomNick, notesWindow, roomTopic = '';
+var client, userJid, roomAddress, roomNick, roomTopic = '';
 
 
 // ----------------------------------------------------------------------
@@ -108,28 +108,46 @@ function scrollingOnlyIfAtBottom(window, action) {
         window.scrollTo(0, window.document.height);
 }
 
+function findBrowser(url) {
+    var tabBrowser = window.top.getBrowser();
+    var browser;
+    var numTabs = tabBrowser.mPanelContainer.childNodes.length;
+    var index = 0;
+    while (index < numTabs) {
+        browser = tabBrowser.getBrowserAtIndex(index);
+        if (url == browser.currentURI.spec)
+            return browser;
+        index++;
+    }
+}
+
 
 // ----------------------------------------------------------------------
 // GUI ACTIONS
 
-function openNotes() {
-    var tabBrowser = window.top.gBrowser;
+function withNotesWindow(code) {
+    var browser = findBrowser('chrome://mozeskine/content/notes.html');
+        
+    if(browser)
+        code(browser.contentWindow);
+    else {
+        var tabBrowser = window.top.getBrowser();
 
-    if(tabBrowser.currentURI.spec != 'about:blank') 
-        tabBrowser.selectedTab = tabBrowser.addTab();
+        if(tabBrowser.currentURI.spec != 'about:blank') 
+            tabBrowser.selectedTab = tabBrowser.addTab();
+        
+        browser = tabBrowser.selectedBrowser;
 
-    var browser = tabBrowser.selectedBrowser;
-    browser.loadURI('chrome://mozeskine/content/notes.html');
-    browser.addEventListener('click', clickedRemoveButton, false);
-    notesWindow = browser.contentWindow;    
-}
+        browser.addEventListener(
+            'click', clickedRemoveButton, false);
 
-function jabberDebug(text) {
-    var debugLine = cloneBlueprint('debug-line');
-    debugLine.getElementsByAttribute('role', 'content')[0].textContent = text;
-    
-    _('jabber-debug').appendChild(debugLine);
-    _('jabber-debug').ensureElementIsVisible(debugLine);
+        browser.addEventListener(
+            'load', function(event) {
+                code(browser.contentWindow);
+            }, true);
+        
+        browser.loadURI('chrome://mozeskine/content/notes.html');        
+    } 
 }
 
 function displayChatMessage(from, content) {
@@ -193,39 +211,43 @@ function displayEvent(content, additionalClass) {
 }
 
 function displayNewNote(id, content) {
-    var wnd = notesWindow;
-    var doc = notesWindow.document;
+    withNotesWindow(
+        function(window) {
+            var doc = window.document;
 
-    var actions = doc.createElement('div');
-    actions.setAttribute('class', 'actions');
+            var actions = doc.createElement('div');
+            actions.setAttribute('class', 'actions');
 
-    var removeAction = doc.createElement('a');
-    removeAction.setAttribute('class', 'action');
-    removeAction.textContent = 'Remove';
-    actions.appendChild(removeAction);
+            var removeAction = doc.createElement('a');
+            removeAction.setAttribute('class', 'action');
+            removeAction.textContent = 'Remove';
+            actions.appendChild(removeAction);
 
-    var body = doc.createElement('span');
-    body.setAttribute('class', 'body');
-    body.textContent = content;
+            var body = doc.createElement('span');
+            body.setAttribute('class', 'body');
+            body.textContent = content;
 
-    var note = doc.createElement('li');
-    note.setAttribute('id', id);
-    note.setAttribute('class', 'note');
-    note.appendChild(body);
-    note.appendChild(actions);
+            var note = doc.createElement('li');
+            note.setAttribute('id', id);
+            note.setAttribute('class', 'note');
+            note.appendChild(body);
+            note.appendChild(actions);
 
-    scrollingOnlyIfAtBottom(
-        wnd, function() {
-            doc.getElementById('notes').appendChild(note);
+            scrollingOnlyIfAtBottom(
+                window, function() {
+                    doc.getElementById('notes').appendChild(note);
+                });            
         });
 }
 
 function eraseExistingNote(id) {
-    var doc = notesWindow.document;
-
-    var note = doc.getElementById(id);
-    if(note)
-        note.parentNode.removeChild(note);
+    withNotesWindow(
+        function(window) {
+            var doc = window.document;
+            var note = doc.getElementById(id);
+            if(note)
+                note.parentNode.removeChild(note);            
+        });
 }
 
 
