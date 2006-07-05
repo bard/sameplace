@@ -307,6 +307,7 @@ function connect() {
                 port: connectionParams.userServerPort,
                 continuation: 
             function() {
+                _('chat-input').focus();
                 client.send(userJid, <presence to={roomAddress + '/' + roomNick}/>);
             }});
 }
