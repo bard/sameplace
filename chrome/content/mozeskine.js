@@ -9,6 +9,7 @@ var observerService = Components
 var mediatorService = Components
     .classes["@mozilla.org/appshell/window-mediator;1"]
     .getService(Components.interfaces.nsIWindowMediator);
+var urlRegexp = new RegExp('(http:\/\/|www.)[^ \\t\\n\\f\\r"<>|()]*[^ \\t\\n\\f\\r"<>|,.!?(){}]');
 
 var ns_notes = new Namespace('http://hyperstruct.net/mozeskine/protocol/0.1.4#notes');
 var ns_agent = new Namespace('http://hyperstruct.net/mozeskine/protocol/0.1.4#agent');
@@ -66,6 +67,11 @@ function init(event) {
                                    '/DATA:\n' + data.content);
                 });
             });
+    client.on(
+        {tag: 'message', direction: 'in', stanza: function(s) {
+                return (s.body.toString() &&
+                        s.body.toString().search(urlRegexp) != -1);
+            }}, function(message) { receiveMessageWithURL(message); });
 }
 
 function finish() {
@@ -399,6 +405,14 @@ function receiveChatMessage(message) {
 
     observerService.notifyObservers(
         null, 'im-incoming', message.stanza.toString());
+}
+
+function receiveMessageWithURL(message) {
+    if(!_('follow-mode').checked)
+        return;
+    
+    var url = message.stanza.body.toString().match(urlRegexp)[0];
+    window.top.getBrowser().addTab(url);
 }
 
 function receiveRoomTopic(message) {
