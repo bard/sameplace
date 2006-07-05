@@ -1,0 +1,14 @@
+* [command="connect"]
+{
+  list-style-image: url("connect.png");
+  }
+
+* [command="disconnect"]
+{
+  list-style-image: url("disconnect.png");
+  }
+
+* [command="debug"]
+{
+  list-style-image: url("debug.png");
+  }

@@ -1,3 +1,4 @@
 content mozeskine chrome/content/
+skin mozeskine classic/1.0 chrome/skin/classic/
 
 overlay chrome://browser/content/browser.xul chrome://mozeskine/content/overlay.xul
