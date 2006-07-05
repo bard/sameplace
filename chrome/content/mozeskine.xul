@@ -26,7 +26,7 @@
     <!-- CONVERSATION AREA -->
 
     <hbox flex="10">
-      <vbox flex="1">
+      <vbox flex="1" persist="width">
         <label value="Participants" class="header"/>
         <richlistbox id="participants" flex="1"
                      class="box-inset"/>

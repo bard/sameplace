@@ -444,9 +444,13 @@ function receivePresence(presence) {
         default:
             item = document.createElement('richlistitem');
             item.setAttribute('nick', nick); // TODO: namespace this
-            item.setAttribute('orient', 'vertical');
+            item.setAttribute('orient', 'horizontal');
+            item.setAttribute('align', 'center');
+            item.setAttribute('class', 'participant');
+            var image = document.createElement('image');
             var label = document.createElement('label');
             label.setAttribute('value', nick);
+            item.appendChild(image);
             item.appendChild(label);
 
             if(presence.stanza.ns_xul::x.length() > 0) {

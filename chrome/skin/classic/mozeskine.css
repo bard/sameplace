@@ -12,3 +12,13 @@
 {
   list-style-image: url("debug.png");
   }
+
+richlistitem.participant
+{
+  padding: 0.2em;
+  }
+
+richlistitem.participant>image
+{
+  list-style-image: url("user.png");
+  }
