@@ -59,6 +59,18 @@ function init(event) {
         {tag: 'presence', direction: 'in', stanza: function(s) {
                 return s.ns_muc::x.toXMLString();
             }}, function(presence) { receivePresence(presence) });
+
+    var mediator = Components
+        .classes["@mozilla.org/appshell/window-mediator;1"]
+        .getService(Components.interfaces.nsIWindowMediator);
+    client.on(
+        {tag: 'data'}, function(data) {
+            var enumerator = mediator.getEnumerator('');
+            while(enumerator.hasMoreElements()) {
+                var window = enumerator.getNext();
+                if(window.name == 'mozeskine-debug')
+                    window.display(data.direction + '/DATA:\n' + data.content);
+            }});
 }
 
 function finish() {
@@ -304,19 +316,7 @@ function disconnect() {
 }
 
 function debug() {
-    var debugWindow = window.open('debug.xul', 'mozeskine-debug', 'chrome,alwaysRaised');
-
-    client.on(
-        {tag: 'data'}, function(data) {
-            if(!debugWindow.closed)
-                debugWindow.display(data.direction + '/DATA:\n' + data.content);
-        });
-
-    // TODO when client will support removal of listeners:
-    //     debugWindow.addEventListener(
-    //         'unload', function(event) {
-    //             client.forget({tag: 'data'}, listenerReference);
-    //         }, false);
+    var debugWindow = window.open('debug.xul', 'mozeskine-debug', 'chrome,alwaysRaised');    
 }
 
 // ----------------------------------------------------------------------
