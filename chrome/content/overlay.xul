@@ -1,5 +1,4 @@
 <?xml version="1.0"?>
-<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 
 <!--
 Copyright (C) 2006 by Massimiliano Mirra
@@ -98,8 +97,8 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
                      flex="0"/>
       <toolbarseparator/>
 
-      <toolbaritem flex="0" align="center">
-        <label id="mozeskine-last-message" crop="end"/>
+      <toolbaritem flex="1" align="center">
+        <label id="mozeskine-last-message" crop="end" value="" flex="1"/>
       </toolbaritem>
       
       <toolbarspring/>

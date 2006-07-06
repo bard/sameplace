@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://mozeskine/skin/mozeskine.css" type="text/css"?>
-<!DOCTYPE window>
+<!DOCTYPE page>
 <page id="mozeskine" title="Mozeskine"
       xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
       onload="init(event);"
