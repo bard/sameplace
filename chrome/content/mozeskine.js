@@ -1,12 +1,18 @@
 // ----------------------------------------------------------------------
 // GLOBAL DEFINITIONS
 
-var observerService = Components
-    .classes["@mozilla.org/observer-service;1"]
-    .getService(Components.interfaces.nsIObserverService);
-var mediatorService = Components
-    .classes["@mozilla.org/appshell/window-mediator;1"]
-    .getService(Components.interfaces.nsIWindowMediator);
+const Cc = Components.classes;
+const Ci = Components.interfaces;
+
+const pref = Cc['@mozilla.org/preferences-service;1']
+    .getService(Ci.nsIPrefBranch);
+const observerService = Cc['@mozilla.org/observer-service;1']
+    .getService(Ci.nsIObserverService);
+const mediatorService = Cc['@mozilla.org/appshell/window-mediator;1']
+    .getService(Ci.nsIWindowMediator);
+const loader = Cc['@mozilla.org/moz/jssubscript-loader;1']
+    .getService(Ci.mozIJSSubScriptLoader);
+
 var urlRegexp = new RegExp('(http:\/\/|www.)[^ \\t\\n\\f\\r"<>|()]*[^ \\t\\n\\f\\r"<>|,.!?(){}]');
 
 var ns_notes = new Namespace('http://hyperstruct.net/mozeskine/protocol/0.1.4#notes');
@@ -27,9 +33,6 @@ var client, userJid, roomTopic = '';
 function init(event) {
     if(!event.target)
         return;
-
-    var pref = Components.classes['@mozilla.org/preferences-service;1']
-        .getService(Components.interfaces.nsIPrefBranch);
 
     _('chat-input')
         .addEventListener('keypress', pressedKeyInChatInput, false);
@@ -339,9 +342,6 @@ function pressedKeyInChatInput(event) {
 // XMPP SESSION START/STOP/DISPLAY
 
 function connect() {
-    var pref = Components.classes['@mozilla.org/preferences-service;1']
-        .getService(Components.interfaces.nsIPrefBranch);
-
     var connectionParams = {
         userAddress: undefined,
         userPassword: undefined,
@@ -373,9 +373,6 @@ function debug() {
 // NETWORK ACTIONS
 
 function joinRoom(roomAddress, roomNick) {
-    var pref = Components.classes['@mozilla.org/preferences-service;1']
-        .getService(Components.interfaces.nsIPrefBranch);
-
     client.send(
         userJid,
         <presence to={roomAddress + '/' + roomNick}/>);
