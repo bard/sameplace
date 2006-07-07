@@ -1,0 +1,14 @@
+* [command="mozeskine-command-connect"]
+{
+  list-style-image: url("connect.png");
+  }
+
+* [command="mozeskine-command-disconnect"]
+{
+  list-style-image: url("disconnect.png");
+  }
+
+* [command="mozeskine-command-debug"]
+{
+  list-style-image: url("debug.png");
+  }

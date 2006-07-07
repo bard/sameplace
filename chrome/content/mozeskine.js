@@ -25,7 +25,7 @@ var ns_xul = new Namespace('http://www.mozilla.org/keymaster/gatekeeper/there.is
 // ----------------------------------------------------------------------
 // GLOBAL STATE
 
-var userJid, roomTopic = '';
+var channel, userJid, roomTopic = '';
 
 
 // ----------------------------------------------------------------------
@@ -49,7 +49,7 @@ function init(event) {
     _('room-address').value = pref.getCharPref('extensions.mozeskine.roomAddress');
     _('room-nick').value    = pref.getCharPref('extensions.mozeskine.roomNick');
 
-    var channel = XMPP.createChannel();
+    channel = XMPP.createChannel();
 
     channel.on(
         {event: 'message', direction: 'in', stanza: function(s) {
@@ -71,14 +71,14 @@ function init(event) {
         {event: 'presence', direction: 'in', stanza: function(s) {
                 return s.ns_muc::x.toXMLString();
             }}, function(presence) { receivePresence(presence) });
-    channel.on(
-        {event: 'data'}, function(data) {
-            withDebugWindow(
-                function(window) {
-                    window.display(data.direction +
-                                   '/DATA:\n' + data.content);
-                });
-            });
+//     channel.on(
+//         {event: 'data'}, function(data) {
+//             withDebugWindow(
+//                 function(window) {
+//                     window.display(data.direction +
+//                                    '/DATA:\n' + data.content);
+//                 });
+//             });
     channel.on(
         {event: 'message', direction: 'in', stanza: function(s) {
                 return (s.body.toString() &&
@@ -87,7 +87,7 @@ function init(event) {
 }
 
 function finish() {
-    disconnect();
+    channel.release();
 }
 
 
@@ -148,11 +148,11 @@ function findWindow(name) {
 // ----------------------------------------------------------------------
 // GUI ACTIONS
 
-function withDebugWindow(code) {
-    var debugWindow = findWindow('mozeskine-debug');
-    if(debugWindow)
-        code(window);
-}
+// function withDebugWindow(code) {
+//     var debugWindow = findWindow('mozeskine-debug');
+//     if(debugWindow)
+//         code(window);
+// }
 
 function withNotesWindow(code) {
     var browser = findBrowser('chrome://mozeskine/content/notes.html');
@@ -341,41 +341,11 @@ function pressedKeyInChatInput(event) {
 
 
 // ----------------------------------------------------------------------
-// XMPP SESSION START/STOP/DISPLAY
-
-function connect() {
-    var connectionParams = {
-        userAddress: undefined,
-        userPassword: undefined,
-        userServerHost: undefined,
-        userServerPort: undefined,
-        confirm: false
-    };
-    window.openDialog('connect.xul', 'connect', 'chrome,modal,centerscreen', connectionParams);
-
-    if(!connectionParams.confirm)
-        return;
-
-    userJid = connectionParams.userAddress + '/Mozeskine';
-        
-    XMPP.up(
-        userJid, { password: connectionParams.userPassword,
-                server: connectionParams.userServerHost,
-                port: connectionParams.userServerPort });
-}
-
-function disconnect() {
-    XMPP.down(userJid);
-}
-
-function debug() {
-    var debugWindow = window.open('debug.xul', 'mozeskine-debug', 'chrome,alwaysRaised');    
-}
-
-// ----------------------------------------------------------------------
 // NETWORK ACTIONS
 
 function joinRoom(roomAddress, roomNick) {
+    userJid = XMPP.accounts[0];
+
     XMPP.send(
         userJid,
         <presence to={roomAddress + '/' + roomNick}/>);

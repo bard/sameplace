@@ -1,6 +1,27 @@
 
 Context:
 
+[Client, XMPP: return list of connected accounts.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060707205230] 
+
+[Session: was sending DOM instead of E4X element to ad-hoc reply handler. Fixed, but needs more rational handling, this is a shortcut.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060707205107] 
+
+[Client: multiple observers now supported.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060707201322] 
+
+[Session: simplified event handling, only handling events after processing.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060707200605] 
+
+[Client: was using session's private _stanza() instead of more appropriate receive(). Fixed.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060707200518] 
+
+[Session, XMPP: data surfacing from client should be XPCOM, not JS-specific. Having client return DOM instead of E4X data.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060707195534] 
+
+[Client: removed event handling by pattern matching, now done by XPCOM wrapper.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060707185740] 
+
 [Added Javascript-friendly front-end to XPCOM service.
 Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060707160904] 
 

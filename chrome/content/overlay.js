@@ -1,3 +1,9 @@
+
+Components
+.classes['@mozilla.org/moz/jssubscript-loader;1']
+.getService(Components.interfaces.mozIJSSubScriptLoader)
+.loadSubScript('chrome://mozeskine/content/xmpp4moz/xmpp.js');
+
 var mozeskineObserver = {
     observe: function(subject, topic, data) {
         var message = new XML(data);
@@ -18,6 +24,37 @@ function mozeskineToggleSidebar() {
         sidebar.collapsed = true;
         splitter.hidden = true;
     }
+}
+
+function mozeskineConnect() {
+    var connectionParams = {
+        userAddress: undefined,
+        userPassword: undefined,
+        userServerHost: undefined,
+        userServerPort: undefined,
+        confirm: false
+    };
+    window.openDialog(
+        'chrome://mozeskine/content/connect.xul', 'connect',
+        'chrome,modal,centerscreen', connectionParams);
+
+    if(!connectionParams.confirm)
+        return;
+
+    userJid = connectionParams.userAddress + '/Mozeskine';
+        
+    XMPP.up(
+        userJid, { password: connectionParams.userPassword,
+                server: connectionParams.userServerHost,
+                port: connectionParams.userServerPort });
+}
+
+function mozeskineDisconnect() {
+    XMPP.down(XMPP.accounts[0]);
+}
+
+function mozeskineDebug() {
+    window.open('chrome://mozeskine/content/debug.xul', 'mozeskine-debug', 'chrome,alwaysRaised');
 }
 
 window.addEventListener(
