@@ -43,10 +43,18 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
              label="Open/Close Mozeskine..."
              accesskey="s"
              oncommand="window.open('chrome://mozeskine/content/mozeskine.xul', 'mozeskine', 'chrome');"/>
-    <command id="mozeskine-command-toggle-sidebar" label="Toggle" oncommand="mozeskineToggleSidebar();"/>
-    <command id="mozeskine-command-connect" label="Connect" accesskey="C" oncommand="mozeskineConnect();"/>
-    <command id="mozeskine-command-disconnect" label="Disconnect" accesskey="D" oncommand="mozeskineDisconnect();"/>
-    <command id="mozeskine-command-debug" label="Debug" accesskey="b" oncommand="mozeskineDebug();"/>
+    <command id="mozeskine-command-toggle-sidebar"
+             label="Toggle"
+             oncommand="mozeskineToggleSidebar();"/>
+    <command id="mozeskine-command-connect"
+             label="Connect"
+             accesskey="C" oncommand="mozeskineConnect();"/>
+    <command id="mozeskine-command-disconnect"
+             label="Disconnect"
+             accesskey="D" oncommand="mozeskineDisconnect();"/>
+    <command id="mozeskine-command-debug"
+             label="Debug"
+             accesskey="b" oncommand="mozeskineDebug();"/>
   </commandset>
 
   <!-- KEYS -->

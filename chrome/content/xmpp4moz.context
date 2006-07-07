@@ -1,6 +1,9 @@
 
 Context:
 
+[Session, XMPP: sending out 'data' events; 'tag' in event objects renamed to 'event'.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060707220358] 
+
 [Client, XMPP: return list of connected accounts.
 Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060707205230] 
 

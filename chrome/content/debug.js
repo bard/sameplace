@@ -1,9 +1,17 @@
-function init() {
+var channel;
 
+function init() {
+    channel = XMPP.createChannel();
+
+    channel.on(
+        {event: 'data'}, function(data) {
+            display(data.direction +
+                    '/DATA:\n' + data.content);
+        });
 }
 
 function finish() {
-    
+    channel.release();
 }
 
 // ----------------------------------------------------------------------

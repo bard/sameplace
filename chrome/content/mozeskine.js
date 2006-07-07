@@ -71,14 +71,6 @@ function init(event) {
         {event: 'presence', direction: 'in', stanza: function(s) {
                 return s.ns_muc::x.toXMLString();
             }}, function(presence) { receivePresence(presence) });
-//     channel.on(
-//         {event: 'data'}, function(data) {
-//             withDebugWindow(
-//                 function(window) {
-//                     window.display(data.direction +
-//                                    '/DATA:\n' + data.content);
-//                 });
-//             });
     channel.on(
         {event: 'message', direction: 'in', stanza: function(s) {
                 return (s.body.toString() &&
@@ -147,12 +139,6 @@ function findWindow(name) {
 
 // ----------------------------------------------------------------------
 // GUI ACTIONS
-
-// function withDebugWindow(code) {
-//     var debugWindow = findWindow('mozeskine-debug');
-//     if(debugWindow)
-//         code(window);
-// }
 
 function withNotesWindow(code) {
     var browser = findBrowser('chrome://mozeskine/content/notes.html');

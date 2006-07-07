@@ -10,6 +10,7 @@
         width="320" height="640">
 
   <script type="application/x-javascript" src="debug.js"/>
+  <script type="application/x-javascript" src="xmpp4moz/xmpp.js"/>
 
   <label class="header" value="XMPP Session Trace"/>
   
