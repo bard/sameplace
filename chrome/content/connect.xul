@@ -33,16 +33,6 @@
         <label value="Password:" accesskey="P" control="user-password"/>
         <textbox id="user-password" type="password" flex="1"/>              
       </row>
-
-      <row>
-        <label value="Room:"/>
-        <textbox id="room-address" flex="1"/>              
-      </row>
-
-      <row>
-        <label value="Nick:"/>
-        <textbox id="room-nick" flex="1"/>              
-      </row>
     </rows>
   </grid>
 </dialog>

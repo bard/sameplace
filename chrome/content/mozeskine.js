@@ -18,7 +18,7 @@ var ns_xul = new Namespace('http://www.mozilla.org/keymaster/gatekeeper/there.is
 // ----------------------------------------------------------------------
 // GLOBAL STATE
 
-var client, userJid, roomAddress, roomNick, roomTopic = '';
+var client, userJid, roomTopic = '';
 
 
 // ----------------------------------------------------------------------
@@ -27,6 +27,9 @@ var client, userJid, roomAddress, roomNick, roomTopic = '';
 function init(event) {
     if(!event.target)
         return;
+
+    var pref = Components.classes['@mozilla.org/preferences-service;1']
+        .getService(Components.interfaces.nsIPrefBranch);
 
     _('chat-input')
         .addEventListener('keypress', pressedKeyInChatInput, false);
@@ -39,6 +42,9 @@ function init(event) {
             'resize', function(event) {
                 displayRoomTopic();
             }, false);
+    _('room-address').value = pref.getCharPref('extensions.mozeskine.roomAddress');
+    _('room-nick').value    = pref.getCharPref('extensions.mozeskine.roomNick');
+
 
     client = Components
         .classes['@hyperstruct.net/mozeskine/xmppservice;1']
@@ -333,13 +339,14 @@ function pressedKeyInChatInput(event) {
 // XMPP SESSION START/STOP/DISPLAY
 
 function connect() {
+    var pref = Components.classes['@mozilla.org/preferences-service;1']
+        .getService(Components.interfaces.nsIPrefBranch);
+
     var connectionParams = {
         userAddress: undefined,
         userPassword: undefined,
         userServerHost: undefined,
         userServerPort: undefined,
-        roomAddress: undefined,
-        roomNick: undefined,
         confirm: false
     };
     window.openDialog('connect.xul', 'connect', 'chrome,modal,centerscreen', connectionParams);
@@ -347,19 +354,11 @@ function connect() {
     if(!connectionParams.confirm)
         return;
 
-    userJid     = connectionParams.userAddress + '/Mozeskine';
-    roomAddress = connectionParams.roomAddress;
-    roomNick    = connectionParams.roomNick;
+    userJid = connectionParams.userAddress + '/Mozeskine';
         
     client.signOn(
         userJid, connectionParams.userPassword,
-        {server: connectionParams.userServerHost,
-                port: connectionParams.userServerPort,
-                continuation: 
-            function() {
-                _('chat-input').focus();
-                client.send(userJid, <presence to={roomAddress + '/' + roomNick}/>);
-            }});
+        {server: connectionParams.userServerHost, port: connectionParams.userServerPort });
 }
 
 function disconnect() {
@@ -372,6 +371,19 @@ function debug() {
 
 // ----------------------------------------------------------------------
 // NETWORK ACTIONS
+
+function joinRoom(roomAddress, roomNick) {
+    var pref = Components.classes['@mozilla.org/preferences-service;1']
+        .getService(Components.interfaces.nsIPrefBranch);
+
+    client.send(
+        userJid,
+        <presence to={roomAddress + '/' + roomNick}/>);
+    _('chat-input').focus();
+
+    pref.setCharPref('extensions.mozeskine.roomAddress', _('room-address').value);
+    pref.setCharPref('extensions.mozeskine.roomNick', _('room-nick').value);    
+}
 
 function sendMessage(text) {
     client.send(

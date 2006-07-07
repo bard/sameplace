@@ -19,11 +19,27 @@
     <command id="connect" label="Connect" accesskey="C" oncommand="connect();"/>
     <command id="disconnect" label="Disconnect" accesskey="D" oncommand="disconnect();"/>
     <command id="debug" label="Debug" accesskey="b" oncommand="debug();"/>
+    <command id="join" label="Join" accesskey="J"
+             oncommand="joinRoom(_('room-address').value, _('room-nick').value);"/>
   </commandset>
   
   <vbox flex="1">
 
     <!-- CONVERSATION AREA -->
+
+    <toolbox>
+      <toolbar fullscreentoolbar="true">
+        <toolbaritem align="center" flex="1">
+          <label value="Room:" accesskey="R" control="room-address"/>
+          <textbox id="room-address" flex="1"/>
+        </toolbaritem>
+        <toolbaritem align="center" flex="1">
+          <label value="Nick:" accesskey="N" control="room-nick"/>
+          <textbox id="room-nick" flex="1"/>
+        </toolbaritem>
+        <toolbarbutton command="join"/>
+      </toolbar>
+    </toolbox>
 
     <hbox flex="10">
       <vbox flex="1" persist="width">
