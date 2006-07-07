@@ -343,12 +343,13 @@ function pressedKeyInChatInput(event) {
 // ----------------------------------------------------------------------
 // NETWORK ACTIONS
 
-function joinRoom(roomAddress, roomNick) {
+function joinRoom(address, nick) {
     userJid = XMPP.accounts[0];
+    roomAddress = address;
 
     XMPP.send(
         userJid,
-        <presence to={roomAddress + '/' + roomNick}/>);
+        <presence to={address + '/' + nick}/>);
     _('chat-input').focus();
 
     pref.setCharPref('extensions.mozeskine.roomAddress', _('room-address').value);
