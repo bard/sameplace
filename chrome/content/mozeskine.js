@@ -13,6 +13,7 @@ const mediatorService = Cc['@mozilla.org/appshell/window-mediator;1']
 const loader = Cc['@mozilla.org/moz/jssubscript-loader;1']
     .getService(Ci.mozIJSSubScriptLoader);
 
+loader.loadSubScript('chrome://mozeskine/content/xmpp4moz/xmpp.js');
 var urlRegexp = new RegExp('(http:\/\/|www.)[^ \\t\\n\\f\\r"<>|()]*[^ \\t\\n\\f\\r"<>|,.!?(){}]');
 
 var ns_notes = new Namespace('http://hyperstruct.net/mozeskine/protocol/0.1.4#notes');
@@ -24,7 +25,7 @@ var ns_xul = new Namespace('http://www.mozilla.org/keymaster/gatekeeper/there.is
 // ----------------------------------------------------------------------
 // GLOBAL STATE
 
-var client, userJid, roomTopic = '';
+var userJid, roomTopic = '';
 
 
 // ----------------------------------------------------------------------
@@ -48,37 +49,38 @@ function init(event) {
     _('room-address').value = pref.getCharPref('extensions.mozeskine.roomAddress');
     _('room-nick').value    = pref.getCharPref('extensions.mozeskine.roomNick');
 
+    var channel = XMPP.createChannel();
 
-    client = Components
-        .classes['@hyperstruct.net/mozeskine/xmppservice;1']
-        .getService(Components.interfaces.nsIMozeskineXMPPService)
-        .wrappedJSObject;
-    client.on(
-        {tag: 'message', direction: 'in', stanza: function(s) {
+    channel.on(
+        {event: 'message', direction: 'in', stanza: function(s) {
                 return s.body.toString();
             }}, function(message) { receiveChatMessage(message); });
-    client.on(
-        {tag: 'message', direction: 'in', stanza: function(s) {
+    channel.on(
+        {event: 'message', direction: 'in', stanza: function(s) {
                 return s.ns_notes::x.toXMLString();
             }}, function(message) { receiveAction(message); });
-    client.on(
-        {tag: 'message', direction: 'in', stanza: function(s) {
-                return s.@type == 'groupchat' && s.subject.toString();
-            }}, function(message) { receiveRoomTopic(message); });
-    client.on(
-        {tag: 'presence', direction: 'in', stanza: function(s) {
+    channel.on(
+        {event: 'presence', direction: 'in', stanza: function(s) {
                 return s.ns_muc::x.toXMLString();
             }}, function(presence) { receivePresence(presence) });
-    client.on(
-        {tag: 'data'}, function(data) {
+    channel.on(
+        {event: 'message', direction: 'in', stanza: function(s) {
+                return s.@type == 'groupchat' && s.subject.toString();
+            }}, function(message) { receiveRoomTopic(message); });
+    channel.on(
+        {event: 'presence', direction: 'in', stanza: function(s) {
+                return s.ns_muc::x.toXMLString();
+            }}, function(presence) { receivePresence(presence) });
+    channel.on(
+        {event: 'data'}, function(data) {
             withDebugWindow(
                 function(window) {
                     window.display(data.direction +
                                    '/DATA:\n' + data.content);
                 });
             });
-    client.on(
-        {tag: 'message', direction: 'in', stanza: function(s) {
+    channel.on(
+        {event: 'message', direction: 'in', stanza: function(s) {
                 return (s.body.toString() &&
                         s.body.toString().search(urlRegexp) != -1);
             }}, function(message) { receiveMessageWithURL(message); });
@@ -305,7 +307,7 @@ function clickedHeader(event) {
        .classes["@mozilla.org/embedcomp/prompt-service;1"]
        .getService(Components.interfaces.nsIPromptService)
        .prompt(null, 'Mozeskine', 'Set topic for this room:', input, null, check))
-        client.send(
+        XMPP.send(
             userJid,
             <message to={roomAddress} type="groupchat">
             <subject>{input.value}</subject>
@@ -356,13 +358,14 @@ function connect() {
 
     userJid = connectionParams.userAddress + '/Mozeskine';
         
-    client.signOn(
-        userJid, connectionParams.userPassword,
-        {server: connectionParams.userServerHost, port: connectionParams.userServerPort });
+    XMPP.up(
+        userJid, { password: connectionParams.userPassword,
+                server: connectionParams.userServerHost,
+                port: connectionParams.userServerPort });
 }
 
 function disconnect() {
-    client.signOff(userJid);
+    XMPP.down(userJid);
 }
 
 function debug() {
@@ -373,7 +376,7 @@ function debug() {
 // NETWORK ACTIONS
 
 function joinRoom(roomAddress, roomNick) {
-    client.send(
+    XMPP.send(
         userJid,
         <presence to={roomAddress + '/' + roomNick}/>);
     _('chat-input').focus();
@@ -383,7 +386,8 @@ function joinRoom(roomAddress, roomNick) {
 }
 
 function sendMessage(text) {
-    client.send(
+    var roomAddress = _('room-address').value;
+    XMPP.send(
         userJid,
         <message to={roomAddress} type="groupchat">
         <body>{text}</body>
@@ -395,13 +399,13 @@ function sendNoteAddition(text) {
     packet.ns_notes::x.append = text;
     packet.ns_notes::x.append.@id = userJid + '/' + (new Date()).getTime();
     lastId = packet.ns_notes::x.append.@id;
-    client.send(userJid, packet);
+    XMPP.send(userJid, packet);
 }
 
 function sendNoteRemoval(id) {
     var packet = <message to={roomAddress} type="groupchat"/>;
     packet.ns_notes::x.remove.@id = id;
-    client.send(userJid, packet);
+    XMPP.send(userJid, packet);
 }
 
 

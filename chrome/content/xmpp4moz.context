@@ -1,6 +1,9 @@
 
 Context:
 
+[Added Javascript-friendly front-end to XPCOM service.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060707160904] 
+
 [Added XPCOM bridge to make a client available application-wide, as a service.
 Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060706213127] 
 
