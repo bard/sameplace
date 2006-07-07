@@ -1,6 +1,33 @@
 
 Context:
 
+[Added XPCOM bridge to make a client available application-wide, as a service.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060706213127] 
+
+[Session: using XPCOM service instead of predefined XMLSerializer object so code works in XPCOM too.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060706190729] 
+
+[Socket: was importing event_handling as class instead of package, fixed.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060701154444] 
+
+[Session, Parser, Socket: replaced EventHelper with EventManager -- single class, two event styles.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060701153051] 
+
+[Event Manager mixin: supports plain string as event objects to accommodate "handle('foo', data)" style.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060701152606] 
+
+[Mixin: can now forward to arbitrarily named method on destination object.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060701152326] 
+
+[README: Included reference to XML for <SCRIPT>.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060701152835] 
+
+[Added minimal README.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060627094007] 
+
+[Moved files related to old wrappers in attic.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060627090038] 
+
 [Client: use SSL and port 5223 unless told otherwise.
 Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060628151840] 
 

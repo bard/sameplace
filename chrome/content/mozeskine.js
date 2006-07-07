@@ -1,8 +1,6 @@
 // ----------------------------------------------------------------------
 // GLOBAL DEFINITIONS
 
-var module = new ModuleManager();
-var Client = module.require('class', 'xmpp4moz/client');
 var observerService = Components
     .classes["@mozilla.org/observer-service;1"]
     .getService(Components.interfaces.nsIObserverService);
@@ -42,7 +40,10 @@ function init(event) {
                 displayRoomTopic();
             }, false);
 
-    client = new Client();
+    client = Components
+        .classes['@hyperstruct.net/mozeskine/xmppservice;1']
+        .getService(Components.interfaces.nsIMozeskineXMPPService)
+        .wrappedJSObject;
     client.on(
         {tag: 'message', direction: 'in', stanza: function(s) {
                 return s.body.toString();
