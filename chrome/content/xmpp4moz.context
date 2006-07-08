@@ -1,6 +1,9 @@
 
 Context:
 
+[XMPP: channel was not calling removeObserver on where it belongs, fixed.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060708083047] 
+
 [XMPP, Client, Session: session name now stored in session, not client; rationalized parameters of notifications (session is always the subject).
 Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060708081625] 
 
