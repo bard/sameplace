@@ -1,6 +1,12 @@
 
 Context:
 
+[XMPP, Client, Session: session name now stored in session, not client; rationalized parameters of notifications (session is always the subject).
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060708081625] 
+
+[Session: can be given a name at construction time (usually the JID it will authenticate as).
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060708081324] 
+
 [Session, XMPP: sending out 'data' events; 'tag' in event objects renamed to 'event'.
 Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060707220358] 
 

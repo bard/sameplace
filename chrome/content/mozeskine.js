@@ -330,7 +330,7 @@ function pressedKeyInChatInput(event) {
 // NETWORK ACTIONS
 
 function joinRoom(address, nick) {
-    userJid = XMPP.accounts[0];
+    userJid = XMPP.activeSessionNames[0];
     roomAddress = address;
 
     XMPP.send(

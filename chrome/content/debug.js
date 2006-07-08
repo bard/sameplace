@@ -5,7 +5,8 @@ function init() {
 
     channel.on(
         {event: 'data'}, function(data) {
-            display(data.direction +
+            display('\t' + data.session.name + '\n' +
+                    data.direction +
                     '/DATA:\n' + data.content);
         });
 }

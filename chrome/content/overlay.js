@@ -50,7 +50,7 @@ function mozeskineConnect() {
 }
 
 function mozeskineDisconnect() {
-    XMPP.down(XMPP.accounts[0]);
+    XMPP.down(XMPP.activeSessionNames[0]);
 }
 
 function mozeskineDebug() {
