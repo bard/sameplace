@@ -1,7 +1,7 @@
 #include "nsISupports.idl"
 
 [scriptable, uuid(6dd44497-a4d9-4590-a629-5116a30b54b3)]
-interface nsIMozeskineXMPPService: nsISupports
+interface nsIXMPPClientService: nsISupports
 {
     void reload();
 };  

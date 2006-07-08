@@ -1,6 +1,6 @@
 IDLC=/usr/lib/firefox/xpidl
 INC=/usr/share/idl/mozilla/
-XPTS=MozeskineXMPPService.xpt
+XPTS=XMPPClientService.xpt
 
 all: $(XPTS)
 

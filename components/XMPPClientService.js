@@ -5,7 +5,7 @@ const CLASS_ID = Components.ID('{6dd44497-a4d9-4590-a629-5116a30b54b3}');
 const CLASS_NAME = 'XMPP Service';
 const CONTRACT_ID = '@hyperstruct.net/mozeskine/xmppservice;1';
 const SOURCE = 'chrome://mozeskine/content/xmpp4moz/xpcom.js';
-const INTERFACE = Components.interfaces.nsIMozeskineXMPPService;
+const INTERFACE = Components.interfaces.nsIXMPPClientService;
 
 /* ---------------------------------------------------------------------- */
 /*                           Template code                                */
