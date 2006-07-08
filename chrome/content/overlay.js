@@ -4,18 +4,18 @@ Components
 .getService(Components.interfaces.mozIJSSubScriptLoader)
 .loadSubScript('chrome://mozeskine/content/xmpp4moz/xmpp.js');
 
-var mozeskineChannel = XMPP.createChannel();
-mozeskineChannel.on(
+var xmppChannel = XMPP.createChannel();
+xmppChannel.on(
     { event: 'message', direction: 'in', stanza: function(s) { return s.body && s.body.toString(); }},
     function(message) {
         document
-            .getElementById('mozeskine-last-message')
+            .getElementById('xmpp-last-message')
             .value = message.stanza.@from + ': ' + message.stanza.body;
     });
 
-function mozeskineToggleSidebar() {
-    var sidebar = document.getElementById('mozeskine-sidebar');
-    var splitter = document.getElementById('mozeskine-splitter');
+function xmppToggleSidebar() {
+    var sidebar = document.getElementById('xmpp-sidebar');
+    var splitter = document.getElementById('xmpp-splitter');
 
     if(sidebar.collapsed) {
         sidebar.collapsed = false;
@@ -26,7 +26,7 @@ function mozeskineToggleSidebar() {
     }
 }
 
-function mozeskineConnect() {
+function xmppConnect() {
     var connectionParams = {
         userAddress: undefined,
         userPassword: undefined,
@@ -41,7 +41,7 @@ function mozeskineConnect() {
     if(!connectionParams.confirm)
         return;
 
-    userJid = connectionParams.userAddress + '/Mozeskine';
+    userJid = connectionParams.userAddress + '/Mozilla';
         
     XMPP.up(
         userJid, { password: connectionParams.userPassword,
@@ -49,10 +49,10 @@ function mozeskineConnect() {
                 port: connectionParams.userServerPort });
 }
 
-function mozeskineDisconnect() {
+function xmppDisconnect() {
     XMPP.down(XMPP.activeSessionNames[0]);
 }
 
-function mozeskineDebug() {
-    window.open('chrome://mozeskine/content/debug.xul', 'mozeskine-debug', 'chrome,alwaysRaised');
+function xmppDebug() {
+    window.open('chrome://mozeskine/content/debug.xul', 'xmpp-debug', 'chrome,alwaysRaised');
 }

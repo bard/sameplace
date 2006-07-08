@@ -22,7 +22,7 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
 -->
 
 <!DOCTYPE overlay>
-<overlay id="samepage-overlay"
+<overlay id="xmpp-overlay"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
   <!-- SCRIPTS -->
@@ -32,48 +32,48 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
   <!-- COMMANDS -->
 
   <commandset id="mainCommandSet">
-    <command id="mozeskine-command-reload-application"
-             label="Reload Mozeskine"
+    <command id="xmpp-command-reload-application"
+             label="Reload XMPP Application"
              oncommand="document
-                        .getElementById('mozeskine-sidebar')
+                        .getElementById('xmpp-sidebar')
                         .firstChild
                         .contentDocument
                         .location.href = 'chrome://mozeskine/content/mozeskine.xul'"/>
-    <command id="mozeskine-command-open"
-             label="Open/Close Mozeskine..."
+    <command id="xmpp-command-open"
+             label="Open/Close XMPP Application..."
              accesskey="s"
              oncommand="window.open('chrome://mozeskine/content/mozeskine.xul', 'mozeskine', 'chrome');"/>
-    <command id="mozeskine-command-toggle-sidebar"
+    <command id="xmpp-command-toggle-sidebar"
              label="Toggle"
-             oncommand="mozeskineToggleSidebar();"/>
-    <command id="mozeskine-command-connect"
+             oncommand="xmppToggleSidebar();"/>
+    <command id="xmpp-command-connect"
              label="Connect"
-             accesskey="C" oncommand="mozeskineConnect();"/>
-    <command id="mozeskine-command-disconnect"
+             accesskey="C" oncommand="xmppConnect();"/>
+    <command id="xmpp-command-disconnect"
              label="Disconnect"
-             accesskey="D" oncommand="mozeskineDisconnect();"/>
-    <command id="mozeskine-command-debug"
+             accesskey="D" oncommand="xmppDisconnect();"/>
+    <command id="xmpp-command-debug"
              label="Debug"
-             accesskey="b" oncommand="mozeskineDebug();"/>
+             accesskey="b" oncommand="xmppDebug();"/>
   </commandset>
 
   <!-- KEYS -->
 
   <keyset id="mainKeyset">
-    <key keycode="VK_F12" modifiers="shift" command="mozeskine-command-toggle-sidebar"/>
-    <key keycode="VK_F12" command="mozeskine-command-reload-application"/>
+    <key keycode="VK_F12" modifiers="shift" command="xmpp-command-toggle-sidebar"/>
+    <key keycode="VK_F12" command="xmpp-command-reload-application"/>
   </keyset>
 
   <!-- MENUS -->
 
   <menupopup id="menu_ToolsPopup">
-    <menuitem position="1" command="mozeskine-command-toggle-sidebar"/>
+    <menuitem position="1" command="xmpp-command-toggle-sidebar"/>
   </menupopup>
 
   <!-- SIDEBAR OVERLAY -->
 
   <hbox id="browser">
-    <vbox id="mozeskine-sidebar"
+    <vbox id="xmpp-sidebar"
           insertbefore="appcontent"
           class="chromeclass-extracontent"
           collapsed="false"
@@ -84,7 +84,7 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
               flex="1"/>
     </vbox>
 
-    <splitter id="mozeskine-splitter"
+    <splitter id="xmpp-splitter"
               insertbefore="appcontent"
               state="open"
               collapse="before"
@@ -98,30 +98,30 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
  
   <toolbox id="navigator-toolbox">
     
-    <toolbar id="mozeskine-toolbar" toolbarname="Mozeskine Toolbar" 
+    <toolbar id="xmpp-toolbar" toolbarname="Xmpp Toolbar" 
              class="chromeclass-toolbar" context="toolbar-context-menu" 
              hidden="false" persist="hidden"
              fullscreentoolbar="true">            
 
       <toolbaritem flex="0" align="center">
-        <label value="[Mozeskine]" style="font-weight: bold;"/>
+        <label value="[XMPP]" style="font-weight: bold;"/>
       </toolbaritem>
 
       <toolbarbutton class="chromeclass-toolbar-additional"
-                     command="mozeskine-command-toggle-sidebar"
+                     command="xmpp-command-toggle-sidebar"
                      flex="0"/>
       <toolbarbutton class="chromeclass-toolbar-additional"
-                     command="mozeskine-command-connect"
+                     command="xmpp-command-connect"
                      flex="0"/>
       <toolbarbutton class="chromeclass-toolbar-additional"
-                     command="mozeskine-command-disconnect"
+                     command="xmpp-command-disconnect"
                      flex="0"/>
       <toolbarbutton class="chromeclass-toolbar-additional"
-                     command="mozeskine-command-debug"
+                     command="xmpp-command-debug"
                      flex="0"/>
 
       <toolbaritem flex="1" align="center">
-        <textbox readonly="true" id="mozeskine-last-message" crop="end" value="" flex="1"/>
+        <textbox readonly="true" id="xmpp-last-message" crop="end" value="" flex="1"/>
       </toolbaritem>
     </toolbar>
   </toolbox>

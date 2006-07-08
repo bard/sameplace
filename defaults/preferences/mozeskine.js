@@ -1,9 +1,9 @@
-pref("extensions.mozeskine.userAddress", "jam@jabber.sameplace.cc");
-pref("extensions.mozeskine.userPassword", "");
-pref("extensions.mozeskine.roomAddress", "mozeskine-dev@places.sameplace.cc");
-pref("extensions.mozeskine.connectionServer", "jabber.sameplace.cc");
-pref("extensions.mozeskine.connectionPort", 5223);
+pref("extensions.xmpp.userAddress", "jam@jabber.sameplace.cc");
+pref("extensions.xmpp.userPassword", "");
+pref("extensions.xmpp.connectionServer", "jabber.sameplace.cc");
+pref("extensions.xmpp.connectionPort", 5223);
 pref("extensions.mozeskine.roomNick", "jam");
+pref("extensions.mozeskine.roomAddress", "mozeskine-dev@places.sameplace.cc");
 
 
 

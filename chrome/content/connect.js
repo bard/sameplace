@@ -7,10 +7,10 @@ function init() {
         .classes["@mozilla.org/preferences-service;1"]
         .getService(Components.interfaces.nsIPrefBranch);
 
-    _('user-address').value     = pref.getCharPref('extensions.mozeskine.userAddress');
-    _('user-password').value    = pref.getCharPref('extensions.mozeskine.userPassword');
-    _('user-server-host').value = pref.getCharPref('extensions.mozeskine.connectionServer');
-    _('user-server-port').value = pref.getIntPref('extensions.mozeskine.connectionPort');
+    _('user-address').value     = pref.getCharPref('extensions.xmpp.userAddress');
+    _('user-password').value    = pref.getCharPref('extensions.xmpp.userPassword');
+    _('user-server-host').value = pref.getCharPref('extensions.xmpp.connectionServer');
+    _('user-server-port').value = pref.getIntPref('extensions.xmpp.connectionPort');
     if(!_('user-server-host').value)
         updateUserServer(_('user-address-host').value);
 }
@@ -29,9 +29,9 @@ function savePrefs() {
         .classes["@mozilla.org/preferences-service;1"]
         .getService(Components.interfaces.nsIPrefBranch);
 
-    pref.setCharPref('extensions.mozeskine.userAddress', _('user-address').value);
-    pref.setCharPref('extensions.mozeskine.connectionServer', _('user-server-host').value);
-    pref.setIntPref('extensions.mozeskine.connectionPort', _('user-server-port').value);
+    pref.setCharPref('extensions.xmpp.userAddress', _('user-address').value);
+    pref.setCharPref('extensions.xmpp.connectionServer', _('user-server-host').value);
+    pref.setIntPref('extensions.xmpp.connectionPort', _('user-server-port').value);
 }
 
 function doOk() {
