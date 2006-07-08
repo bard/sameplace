@@ -10,7 +10,6 @@
 
   <!-- SCRIPTS -->
 
-  <script type="application/x-javascript" src="module_manager.js"/>
   <script type="application/x-javascript" src="mozeskine.js"/>
 
   <!-- COMMANDS -->

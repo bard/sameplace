@@ -1,6 +1,12 @@
 
 Context:
 
+[Removed references to Mozeskine; now XMPP-application agnostic.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060708102709] 
+
+[Made into an independent XPI package.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060708094115] 
+
 [XMPP: channel was not calling removeObserver on where it belongs, fixed.
 Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060708083047] 
 

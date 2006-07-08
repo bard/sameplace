@@ -22,107 +22,35 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
 -->
 
 <!DOCTYPE overlay>
-<overlay id="xmpp-overlay"
+<overlay id="mozeskine-overlay"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-
-  <!-- SCRIPTS -->
-
-  <script type="application/x-javascript" src="overlay.js"/>
 
   <!-- COMMANDS -->
 
   <commandset id="mainCommandSet">
-    <command id="xmpp-command-reload-application"
-             label="Reload XMPP Application"
+    <command id="mozeskine-command-load-sidebar"
+             label="(Re)Load Mozeskine in XMPP Sidebar"
              oncommand="document
                         .getElementById('xmpp-sidebar')
                         .firstChild
                         .contentDocument
                         .location.href = 'chrome://mozeskine/content/mozeskine.xul'"/>
-    <command id="xmpp-command-open"
-             label="Open/Close XMPP Application..."
+    <command id="mozeskine-command-open-window"
+             label="Open Mozeskine in External Window..."
              accesskey="s"
              oncommand="window.open('chrome://mozeskine/content/mozeskine.xul', 'mozeskine', 'chrome');"/>
-    <command id="xmpp-command-toggle-sidebar"
-             label="Toggle"
-             oncommand="xmppToggleSidebar();"/>
-    <command id="xmpp-command-connect"
-             label="Connect"
-             accesskey="C" oncommand="xmppConnect();"/>
-    <command id="xmpp-command-disconnect"
-             label="Disconnect"
-             accesskey="D" oncommand="xmppDisconnect();"/>
-    <command id="xmpp-command-debug"
-             label="Debug"
-             accesskey="b" oncommand="xmppDebug();"/>
   </commandset>
 
   <!-- KEYS -->
 
   <keyset id="mainKeyset">
-    <key keycode="VK_F12" modifiers="shift" command="xmpp-command-toggle-sidebar"/>
-    <key keycode="VK_F12" command="xmpp-command-reload-application"/>
+    <key keycode="VK_F12" modifiers="shift" command="mozeskine-command-load-sidebar"/>
   </keyset>
 
   <!-- MENUS -->
 
   <menupopup id="menu_ToolsPopup">
-    <menuitem position="1" command="xmpp-command-toggle-sidebar"/>
+    <menuitem position="1" command="mozeskine-command-load-sidebar"/>
+    <menuitem position="1" command="mozeskine-command-open-window"/>
   </menupopup>
-
-  <!-- SIDEBAR OVERLAY -->
-
-  <hbox id="browser">
-    <vbox id="xmpp-sidebar"
-          insertbefore="appcontent"
-          class="chromeclass-extracontent"
-          collapsed="false"
-          persist="width collapsed"
-          width="500">
-      <iframe src="chrome://mozeskine/content/"
-              class="box-inset"
-              flex="1"/>
-    </vbox>
-
-    <splitter id="xmpp-splitter"
-              insertbefore="appcontent"
-              state="open"
-              collapse="before"
-              resizebefore="closest"
-              resizeafter="closest"
-              class="chromeclass-extracontent"
-              hidden="false"/>
-  </hbox>
-
-  <!-- TOOLBAR -->
- 
-  <toolbox id="navigator-toolbox">
-    
-    <toolbar id="xmpp-toolbar" toolbarname="Xmpp Toolbar" 
-             class="chromeclass-toolbar" context="toolbar-context-menu" 
-             hidden="false" persist="hidden"
-             fullscreentoolbar="true">            
-
-      <toolbaritem flex="0" align="center">
-        <label value="[XMPP]" style="font-weight: bold;"/>
-      </toolbaritem>
-
-      <toolbarbutton class="chromeclass-toolbar-additional"
-                     command="xmpp-command-toggle-sidebar"
-                     flex="0"/>
-      <toolbarbutton class="chromeclass-toolbar-additional"
-                     command="xmpp-command-connect"
-                     flex="0"/>
-      <toolbarbutton class="chromeclass-toolbar-additional"
-                     command="xmpp-command-disconnect"
-                     flex="0"/>
-      <toolbarbutton class="chromeclass-toolbar-additional"
-                     command="xmpp-command-debug"
-                     flex="0"/>
-
-      <toolbaritem flex="1" align="center">
-        <textbox readonly="true" id="xmpp-last-message" crop="end" value="" flex="1"/>
-      </toolbaritem>
-    </toolbar>
-  </toolbox>
 </overlay>

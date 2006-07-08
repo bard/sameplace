@@ -11,7 +11,7 @@ const mediatorService = Cc['@mozilla.org/appshell/window-mediator;1']
 const loader = Cc['@mozilla.org/moz/jssubscript-loader;1']
     .getService(Ci.mozIJSSubScriptLoader);
 
-loader.loadSubScript('chrome://mozeskine/content/xmpp4moz/xmpp.js');
+loader.loadSubScript('chrome://xmpp4moz/content/xmpp.js');
 var urlRegexp = new RegExp('(http:\/\/|www.)[^ \\t\\n\\f\\r"<>|()]*[^ \\t\\n\\f\\r"<>|,.!?(){}]');
 
 var ns_notes = new Namespace('http://hyperstruct.net/mozeskine/protocol/0.1.4#notes');
