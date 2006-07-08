@@ -4,14 +4,14 @@ Components
 .getService(Components.interfaces.mozIJSSubScriptLoader)
 .loadSubScript('chrome://mozeskine/content/xmpp4moz/xmpp.js');
 
-var mozeskineObserver = {
-    observe: function(subject, topic, data) {
-        var message = new XML(data);
+var mozeskineChannel = XMPP.createChannel();
+mozeskineChannel.on(
+    { event: 'message', direction: 'in', stanza: function(s) { return s.body && s.body.toString(); }},
+    function(message) {
         document
-        .getElementById('mozeskine-last-message')
-        .value = message.@from + ': ' + message.body;
-    }
-};
+            .getElementById('mozeskine-last-message')
+            .value = message.stanza.@from + ': ' + message.stanza.body;
+    });
 
 function mozeskineToggleSidebar() {
     var sidebar = document.getElementById('mozeskine-sidebar');
@@ -56,19 +56,3 @@ function mozeskineDisconnect() {
 function mozeskineDebug() {
     window.open('chrome://mozeskine/content/debug.xul', 'mozeskine-debug', 'chrome,alwaysRaised');
 }
-
-window.addEventListener(
-    'load', function() {
-        Components
-            .classes["@mozilla.org/observer-service;1"]
-            .getService(Components.interfaces.nsIObserverService)
-            .addObserver(mozeskineObserver, 'im-incoming', false);
-    }, false);
-
-window.addEventListener(
-    'unload', function() {
-        Components
-            .classes["@mozilla.org/observer-service;1"]
-            .getService(Components.interfaces.nsIObserverService)
-            .removeObserver(mozeskineObserver, 'im-incoming');            
-    }, false);

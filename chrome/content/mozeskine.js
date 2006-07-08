@@ -6,8 +6,6 @@ const Ci = Components.interfaces;
 
 const pref = Cc['@mozilla.org/preferences-service;1']
     .getService(Ci.nsIPrefBranch);
-const observerService = Cc['@mozilla.org/observer-service;1']
-    .getService(Ci.nsIObserverService);
 const mediatorService = Cc['@mozilla.org/appshell/window-mediator;1']
     .getService(Ci.nsIWindowMediator);
 const loader = Cc['@mozilla.org/moz/jssubscript-loader;1']
@@ -373,9 +371,6 @@ function receiveChatMessage(message) {
     displayChatMessage(
         message.stanza.@from.toString(),
         message.stanza.body);
-
-    observerService.notifyObservers(
-        null, 'im-incoming', message.stanza.toString());
 }
 
 function receiveMessageWithURL(message) {
