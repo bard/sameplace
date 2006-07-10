@@ -1,6 +1,24 @@
 
 Context:
 
+[Added apps menu.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060710190345] 
+
+[Added account handling in the preference pane.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060710185334] 
+
+[Added multiple account handling.  Hidden old connect and disconnect commands.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060710150431] 
+
+[Renamed overlay.{js|xul} to xmpp4moz.{js|xul} for respect to traditions.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060710144915] 
+
+[Toolbar: added toggle icon and separated message sender from body.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060708105312] 
+
+[Manifest was not importing skin, fixed.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060708103838] 
+
 [Removed references to Mozeskine; now XMPP-application agnostic.
 Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060708102709] 
 

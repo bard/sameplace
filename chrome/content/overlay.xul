@@ -29,14 +29,14 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
 
   <commandset id="mainCommandSet">
     <command id="mozeskine-command-load-sidebar"
-             label="(Re)Load Mozeskine in XMPP Sidebar"
+             label="Mozeskine (sidebar)"
              oncommand="document
                         .getElementById('xmpp-sidebar')
                         .firstChild
                         .contentDocument
                         .location.href = 'chrome://mozeskine/content/mozeskine.xul'"/>
     <command id="mozeskine-command-open-window"
-             label="Open Mozeskine in External Window..."
+             label="Mozeskine (window)"
              accesskey="s"
              oncommand="window.open('chrome://mozeskine/content/mozeskine.xul', 'mozeskine', 'chrome');"/>
   </commandset>
@@ -50,7 +50,16 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
   <!-- MENUS -->
 
   <menupopup id="menu_ToolsPopup">
-    <menuitem position="1" command="mozeskine-command-load-sidebar"/>
-    <menuitem position="1" command="mozeskine-command-open-window"/>
+    <menu label="Mozeskine" position="1">
+      <menupopup>
+        <menuitem position="1" command="mozeskine-command-load-sidebar"/>
+        <menuitem position="1" command="mozeskine-command-open-window"/>        
+      </menupopup>
+    </menu>
+  </menupopup>
+
+  <menupopup id="xmpp-menu-apps">
+    <menuitem command="mozeskine-command-load-sidebar"/>
+    <menuitem command="mozeskine-command-open-window"/>
   </menupopup>
 </overlay>
