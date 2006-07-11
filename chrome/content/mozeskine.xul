@@ -15,8 +15,8 @@
   <!-- COMMANDS -->
   
   <commandset>
-    <command id="join" label="Join" accesskey="J"
-             oncommand="joinRoom(_('room-address').value, _('room-nick').value);"/>
+    <command id="open-conversation" label="Open Conversation..." accesskey="O"
+             oncommand="openConversation();"/>
   </commandset>
   
   <vbox flex="1">
@@ -25,31 +25,22 @@
 
     <toolbox>
       <toolbar fullscreentoolbar="true">
-        <toolbaritem align="center" flex="1">
-          <label value="Room:" accesskey="R" control="room-address"/>
-          <textbox id="room-address" flex="1"/>
-        </toolbaritem>
-
-        <toolbaritem align="center" flex="1">
-          <label value="Nick:" accesskey="N" control="room-nick"/>
-          <textbox id="room-nick" flex="1"/>
-        </toolbaritem>
-        <toolbarbutton command="join"/>
+        <toolbarbutton command="open-conversation"/>
       </toolbar>
     </toolbox>
 
     <hbox flex="10">
-      <vbox flex="1">
-        <richlistbox id="contact-info" flex="1"
-                     persist="width"
->
-          <richlistitem flex="1" orient="vertical">
-            <label value="Participants" class="header" flex="1"/>
-            <richlistbox id="participants" flex="1" style="padding-left: 0.5em"/>
+      <vbox>
+        <richlistbox id="contact-info" flex="1">
+
+          <richlistitem orient="vertical">
+            <label value="Topic" class="header" flex="1" onclick="clickedTopic();"/>
+            <label id="topic" style="font-size: smaller;"/>
           </richlistitem>
 
-          <richlistitem flex="1" orient="vertical">
-            <label value="Information" class="header" flex="1"/>
+          <richlistitem orient="vertical">
+            <label value="Participants" class="header" flex="1"/>
+            <richlistbox id="participants" flex="1" style="padding-left: 0.5em"/>
           </richlistitem>
         </richlistbox>
 

@@ -23,7 +23,7 @@ var ns_xul = new Namespace('http://www.mozilla.org/keymaster/gatekeeper/there.is
 // ----------------------------------------------------------------------
 // GLOBAL STATE
 
-var channel, userJid, roomTopic = '';
+var channel, userJid, roomAddress;
 
 
 // ----------------------------------------------------------------------
@@ -33,19 +33,15 @@ function init(event) {
     if(!event.target)
         return;
 
+    _('contact-list').selectedIndex = -1;
+    _('contact-info').selectedIndex = -1;
+
     _('chat-input')
         .addEventListener('keypress', pressedKeyInChatInput, false);
     _('chat-output').contentDocument
         .addEventListener('click', clickedSaveButton, false);
     _('chat-output').contentDocument
-        .addEventListener('click', clickedHeader, false);
-    _('chat-output').contentWindow.
-        addEventListener(
-            'resize', function(event) {
-                displayRoomTopic();
-            }, false);
-    _('room-address').value = pref.getCharPref('extensions.mozeskine.roomAddress');
-    _('room-nick').value    = pref.getCharPref('extensions.mozeskine.roomNick');
+        .addEventListener('click', clickedTopic, false);
 
     channel = XMPP.createChannel();
 
@@ -196,11 +192,9 @@ function displayChatMessage(from, content) {
 }
 
 function displayRoomTopic(content) {
-    roomTopic = roomTopic || content || '';
-
-    setCroppedContent(
-        _('chat-output').contentDocument.getElementById('topic'),
-        roomTopic);
+    var w = _('contact-info').boxObject.width;
+    _('topic').textContent = content;
+    _('contact-info').width = w;
 }
 
 function displayEvent(content, additionalClass) {
@@ -281,10 +275,7 @@ function clickedSaveButton(event) {
         sendNoteAddition(child.textContent);
 }
 
-function clickedHeader(event) {
-    if(event.target.id != 'header' && event.target.id != 'topic')
-        return;
-
+function clickedTopic() {
     var input = { value: '' };
     var check = { value: false };
     if(Components
@@ -327,29 +318,36 @@ function pressedKeyInChatInput(event) {
 // ----------------------------------------------------------------------
 // NETWORK ACTIONS
 
-function joinRoom(address, nick) {
-    function whenOnline() {
-        roomAddress = address;
+function openConversation() {
+    var params = {
+        contactId: undefined,
+        isRoom: false,
+        roomNick: undefined,
+        confirm: false
+    };
 
-        XMPP.send(
-            userJid,
-            <presence to={address + '/' + nick}/>);
-        _('chat-input').focus();
+    window.openDialog(
+        'chrome://mozeskine/content/open.xul',
+        'mozeskine-open-conversation', 'modal,centerscreen',
+        params);
 
-        pref.setCharPref('extensions.mozeskine.roomAddress', _('room-address').value);
-        pref.setCharPref('extensions.mozeskine.roomNick', _('room-nick').value);            
+    if(params.confirm) {
+        XMPP.up(null, {
+            requester: 'Mozeskine', continuation: function(jid) {
+                        userJid = jid;
+                        roomAddress = params.contactId;
+                        var nick = params.roomNick;
+                        
+                        XMPP.send(
+                            userJid,
+                            <presence to={roomAddress + '/' + nick}/>);
+                        
+                        _('chat-input').focus();
+                    }});
     }
-
-    XMPP.up(null, {
-        requester: 'Mozeskine',
-        continuation: function(jid) {
-                    userJid = jid;
-                    whenOnline();
-                }});
 }
 
 function sendMessage(text) {
-    var roomAddress = _('room-address').value;
     XMPP.send(
         userJid,
         <message to={roomAddress} type="groupchat">

@@ -8,7 +8,6 @@ body
 
 ul#messages
 {
-  margin-top: 2.5em;
   list-style-type: none;
   margin-left: 0;
   padding: 0;
@@ -43,6 +42,7 @@ a:hover
 
 #header
 {
+  display: none;
   top: 0;
   left: 0;
   float: right;

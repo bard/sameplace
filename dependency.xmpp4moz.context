@@ -2,7 +2,7 @@
 Context:
 
 [XMPP: forward requester app to SignOn dialog; don't connect but reuse session if it already up.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060711111956] 
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060711124614] 
 
 [SignOn dialog: display password field only for offline accounts.
 Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060711111918] 

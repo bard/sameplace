@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<dialog id="main" title="Open Conversation"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        ondialogaccept="return doOk();"
+        ondialogcancel="return doCancel();"
+        onload="init();">
+  <script type="application/x-javascript" src="open.js"/>
+
+  <grid>
+    <columns>
+      <column/>
+      <column/>
+    </columns>
+
+    <rows>
+      <row align="center">
+        <label value="Contact:" control="contact" accesskey="C"/>
+        <textbox id="contact"/>
+      </row>
+
+      <row align="center">
+        <spacer/>
+        <checkbox id="room" label="Contact is a chat room" checked="false" accesskey="r"
+                  oncommand="_('nick').disabled = _('nick').previousSibling.disabled =
+                             !this.checked"/>
+      </row>
+
+      <row align="center">
+        <label value="Nick:" control="nick" disabled="true" accesskey="N"/>
+        <textbox id="nick" disabled="true"/>
+      </row>
+    </rows>
+  </grid>
+</dialog>
