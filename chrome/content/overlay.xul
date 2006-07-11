@@ -34,31 +34,22 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
                         .getElementById('livebar')
                         .firstChild
                         .contentDocument
-                        .location.href = 'chrome://mozeskine/content/mozeskine.xul'"/>
+                        .location.href = 'chrome://mozeskine/content/mozeskine.xul'"
+             accesskey="M"/>
     <command id="mozeskine-command-open-window"
              label="Mozeskine (window)"
-             accesskey="s"
+             accesskey="M"
              oncommand="window.open('chrome://mozeskine/content/mozeskine.xul', 'mozeskine', 'chrome');"/>
   </commandset>
 
-  <!-- KEYS -->
-
-  <keyset id="mainKeyset">
-    <key keycode="VK_F12" modifiers="shift" command="mozeskine-command-load-livebar"/>
-  </keyset>
-
   <!-- MENUS -->
 
-  <menupopup id="menu_ToolsPopup">
-    <menu label="Mozeskine" position="1">
-      <menupopup>
-        <menuitem position="1" command="mozeskine-command-load-livebar"/>
-        <menuitem position="1" command="mozeskine-command-open-window"/>        
-      </menupopup>
-    </menu>
+  <menupopup id="xmpp-tools-menu-apps">
+    <menuitem command="mozeskine-command-load-livebar"/>
+    <menuitem command="mozeskine-command-open-window"/>        
   </menupopup>
 
-  <menupopup id="xmpp-menu-apps">
+  <menupopup id="xmpp-toolbar-menu-apps">
     <menuitem command="mozeskine-command-load-livebar"/>
     <menuitem command="mozeskine-command-open-window"/>
   </menupopup>

@@ -339,7 +339,7 @@ function joinRoom(address, nick) {
         pref.setCharPref('extensions.mozeskine.roomAddress', _('room-address').value);
         pref.setCharPref('extensions.mozeskine.roomNick', _('room-nick').value);            
     }
-    
+
     XMPP.up(null, {
         requester: 'Mozeskine',
         continuation: function(jid) {

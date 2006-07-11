@@ -39,20 +39,43 @@
     </toolbox>
 
     <hbox flex="10">
-      <vbox flex="1" persist="width">
-        <label value="Participants" class="header"/>
-        <richlistbox id="participants" flex="1"
-                     class="box-inset"/>
+      <vbox flex="1">
+        <richlistbox id="contact-info" flex="1"
+                     persist="width"
+>
+          <richlistitem flex="1" orient="vertical">
+            <label value="Participants" class="header" flex="1"/>
+            <richlistbox id="participants" flex="1" style="padding-left: 0.5em"/>
+          </richlistitem>
+
+          <richlistitem flex="1" orient="vertical">
+            <label value="Information" class="header" flex="1"/>
+          </richlistitem>
+        </richlistbox>
+
+        <splitter/>
+
+        <richlistbox id="contact-list" flex="1">
+          <richlistitem>
+            <label value="Sample Contact #1"/>
+          </richlistitem>
+          <richlistitem>
+            <label value="Sample Contact #2"/>
+          </richlistitem>
+          <richlistitem>
+            <label value="Sample Contact #3"/>
+          </richlistitem>
+        </richlistbox>
       </vbox>
 
       <splitter/>
-
-      <iframe id="chat-output" src="chat.html" flex="3" class="box-inset"/>
+      
+      <vbox flex="2">
+        <iframe id="chat-output" src="chat.html" flex="3" class="box-inset"/>        
+        <splitter/>
+        <textbox id="chat-input" flex="1" class="box-inset" multiline="true"/>
+      </vbox>
     </hbox>
-
-    <splitter/>
-    
-    <textbox id="chat-input" flex="1" class="box-inset" multiline="true"/>
 
     <toolbox>
       <toolbar fullscreentoolbar="true">
