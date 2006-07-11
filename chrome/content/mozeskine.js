@@ -328,16 +328,24 @@ function pressedKeyInChatInput(event) {
 // NETWORK ACTIONS
 
 function joinRoom(address, nick) {
-    userJid = XMPP.activeSessionNames[0];
-    roomAddress = address;
+    function whenOnline() {
+        roomAddress = address;
 
-    XMPP.send(
-        userJid,
-        <presence to={address + '/' + nick}/>);
-    _('chat-input').focus();
+        XMPP.send(
+            userJid,
+            <presence to={address + '/' + nick}/>);
+        _('chat-input').focus();
 
-    pref.setCharPref('extensions.mozeskine.roomAddress', _('room-address').value);
-    pref.setCharPref('extensions.mozeskine.roomNick', _('room-nick').value);    
+        pref.setCharPref('extensions.mozeskine.roomAddress', _('room-address').value);
+        pref.setCharPref('extensions.mozeskine.roomNick', _('room-nick').value);            
+    }
+    
+    XMPP.up(null, {
+        requester: 'Mozeskine',
+        continuation: function(jid) {
+                    userJid = jid;
+                    whenOnline();
+                }});
 }
 
 function sendMessage(text) {

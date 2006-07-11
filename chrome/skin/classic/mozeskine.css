@@ -1,7 +1,6 @@
 * [command="join"]
 {
-  list-style-image: url(chrome://browser/skin/Go.png);
-  -moz-image-region: rect(0px, 22px, 22px, 0px);
+  list-style-image: url("join.png");
   }
 
 richlistitem.participant

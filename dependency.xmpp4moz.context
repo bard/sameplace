@@ -1,6 +1,30 @@
 
 Context:
 
+[XMPP: forward requester app to SignOn dialog; don't connect but reuse session if it already up.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060711111956] 
+
+[SignOn dialog: display password field only for offline accounts.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060711111918] 
+
+[SignOn dialog: only show option to make a connection the default for an application, if application identified itself.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060711111829] 
+
+[XMPP: choked when requested a session and not given a continuation.  Fixed.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060711110117] 
+
+[XMPP: when requested a session without jid or password, shows connection dialog.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060711110113] 
+
+[Toolbar: shows connection status, list accounts in Tools menu, and other cleanups.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060711104415] 
+
+[XMPP: passing after-signon continuation to service.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060711104155] 
+
+[Session, XMPP: added information on direction of opening/closing stream.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060711104002] 
+
 [Toolbar and source cleanup.  Live sidebar renamed to livebar.
 Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060711092105] 
 
