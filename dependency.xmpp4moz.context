@@ -1,6 +1,21 @@
 
 Context:
 
+[Toolbar and source cleanup.  Live sidebar renamed to livebar.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060711092105] 
+
+[Toolbar: scoping too wide resulted in associating the same account to all menu items.  Fixed.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060711090930] 
+
+[Removed obsolete connection dialog.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060711090853] 
+
+[Preferences: was requiring nsIPrefBranch insteaf of nsIPrefService, fixed.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060710225026] 
+
+[Client: was not removing session from session list after closing, temporary workaround.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060710203906] 
+
 [Added apps menu.
 Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060710190345] 
 

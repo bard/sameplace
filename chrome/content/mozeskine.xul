@@ -29,6 +29,7 @@
           <label value="Room:" accesskey="R" control="room-address"/>
           <textbox id="room-address" flex="1"/>
         </toolbaritem>
+
         <toolbaritem align="center" flex="1">
           <label value="Nick:" accesskey="N" control="room-nick"/>
           <textbox id="room-nick" flex="1"/>

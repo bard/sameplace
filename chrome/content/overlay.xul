@@ -28,10 +28,10 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
   <!-- COMMANDS -->
 
   <commandset id="mainCommandSet">
-    <command id="mozeskine-command-load-sidebar"
-             label="Mozeskine (sidebar)"
+    <command id="mozeskine-command-load-livebar"
+             label="Mozeskine (livebar)"
              oncommand="document
-                        .getElementById('xmpp-sidebar')
+                        .getElementById('livebar')
                         .firstChild
                         .contentDocument
                         .location.href = 'chrome://mozeskine/content/mozeskine.xul'"/>
@@ -44,7 +44,7 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
   <!-- KEYS -->
 
   <keyset id="mainKeyset">
-    <key keycode="VK_F12" modifiers="shift" command="mozeskine-command-load-sidebar"/>
+    <key keycode="VK_F12" modifiers="shift" command="mozeskine-command-load-livebar"/>
   </keyset>
 
   <!-- MENUS -->
@@ -52,14 +52,14 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
   <menupopup id="menu_ToolsPopup">
     <menu label="Mozeskine" position="1">
       <menupopup>
-        <menuitem position="1" command="mozeskine-command-load-sidebar"/>
+        <menuitem position="1" command="mozeskine-command-load-livebar"/>
         <menuitem position="1" command="mozeskine-command-open-window"/>        
       </menupopup>
     </menu>
   </menupopup>
 
   <menupopup id="xmpp-menu-apps">
-    <menuitem command="mozeskine-command-load-sidebar"/>
+    <menuitem command="mozeskine-command-load-livebar"/>
     <menuitem command="mozeskine-command-open-window"/>
   </menupopup>
 </overlay>
