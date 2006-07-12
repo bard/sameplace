@@ -19,9 +19,9 @@
   
   <commandset>
     <command id="open-conversation" label="Open Conversation..." accesskey="O"
-             oncommand="openConversation();"/>
+             oncommand="requestedOpenConversation();"/>
     <command id="close-conversation" label="Close" accesskey="C"
-             oncommand="closeConversation();"/>
+             oncommand="requestedCloseConversation();"/>
   </commandset>
   
   <vbox flex="1">

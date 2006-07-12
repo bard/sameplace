@@ -47,7 +47,7 @@ function init(event) {
     channel.on(
         {event: 'message', direction: 'in', stanza: function(s) {
                 return s.ns_notes::x.toXMLString();
-            }}, function(message) { receiveAction(message); });
+            }}, function(message) { receiveNoteAction(message); });
     channel.on(
         {event: 'message', direction: 'in', stanza: function(s) {
                 return s.@type == 'groupchat' && s.subject.toString();
@@ -65,7 +65,28 @@ function finish() {
 
 
 // ----------------------------------------------------------------------
-// GUI UTILITIES
+// UTILITIES
+
+function JID(string) {
+    var m = string.match(/^(.+?)@(.+?)(?:\/|$)(.*$)/);
+    var jid = {
+        username: m[1],
+        hostname: m[2],
+        resource: m[3],
+        nick: m[3],
+        address: m[1] + '@' + m[2],
+        full: m[3] ? string : null
+    }
+
+    return jid;
+}
+
+
+// ----------------------------------------------------------------------
+// GUI UTILITIES (GENERIC)
+
+// Note: only place here functions that will work with any GUI.  See
+// GUI UTILITIES (SPECIFIC) for functions specific to this GUI.
 
 function getAncestorAttribute(element, attributeName) {
     while(element.parentNode) {
@@ -147,22 +168,39 @@ function findWindow(name) {
     }
 }
 
+
 // ----------------------------------------------------------------------
-// OTHER UTILITIES
+// GUI UTILITIES (SPECIFIC)
 
-function JID(string) {
-    var m = string.match(/^(.+?)@(.+?)(?:\/|$)(.*$)/);
-    var jid = {
-        username: m[1],
-        hostname: m[2],
-        resource: m[3],
-        nick: m[3],
-        address: m[1] + '@' + m[2],
-        full: m[3] ? string : null
-    }
+function withNotesWindow(code) {
+    var browser = findBrowser('chrome://mozeskine/content/notes.html');
+        
+    if(browser)
+        code(browser.contentWindow);
+    else {
+        var tabBrowser = window.top.getBrowser();
 
-    return jid;
+        if(tabBrowser.currentURI.spec != 'about:blank') 
+            tabBrowser.selectedTab = tabBrowser.addTab();
+        
+        browser = tabBrowser.selectedBrowser;
+
+        browser.addEventListener(
+            'click', clickedRemoveButton, false);
+
+        browser.addEventListener(
+            'load', function(event) {
+                code(browser.contentWindow);
+            }, true);
+        
+        browser.loadURI('chrome://mozeskine/content/notes.html');        
+    } 
 }
+
+function withContactInfoOf(address, action) {
+    action(_('contact-infos').getElementsByAttribute('address', address)[0]);
+}
+
 
 // ----------------------------------------------------------------------
 // GUI ACTIONS
@@ -198,31 +236,6 @@ function ensureContactInfoIsOpen(address, resource, type) {
         _('contact-infos').selectedPanel = contactInfo;
     }
     return contactInfo;
-}
-
-function withNotesWindow(code) {
-    var browser = findBrowser('chrome://mozeskine/content/notes.html');
-        
-    if(browser)
-        code(browser.contentWindow);
-    else {
-        var tabBrowser = window.top.getBrowser();
-
-        if(tabBrowser.currentURI.spec != 'about:blank') 
-            tabBrowser.selectedTab = tabBrowser.addTab();
-        
-        browser = tabBrowser.selectedBrowser;
-
-        browser.addEventListener(
-            'click', clickedRemoveButton, false);
-
-        browser.addEventListener(
-            'load', function(event) {
-                code(browser.contentWindow);
-            }, true);
-        
-        browser.loadURI('chrome://mozeskine/content/notes.html');        
-    } 
 }
 
 function displayChatMessage(from, content) {
@@ -262,10 +275,6 @@ function displayChatMessage(from, content) {
                     doc.getElementById('messages').appendChild(message);
                 });            
         });
-}
-
-function withContactInfoOf(address, action) {
-    action(_('contact-infos').getElementsByAttribute('address', address)[0]);
 }
 
 function displayEvent(content, additionalClass) {
@@ -339,6 +348,27 @@ function eraseExistingNote(id) {
 // ----------------------------------------------------------------------
 // GUI REACTIONS
 
+function requestedCloseConversation() {
+    alert('Not implemented yet.');
+}
+
+function requestedOpenConversation() {
+    var params = {
+        contactId: undefined,
+        isRoom: false,
+        roomNick: undefined,
+        confirm: false
+    };
+
+    window.openDialog(
+        'chrome://mozeskine/content/open.xul',
+        'mozeskine-open-conversation', 'modal,centerscreen',
+        params);
+
+    if(params.confirm)
+        _openConversation(params.contactId, params.roomNick);
+}
+
 function clickedSaveButton(event) {
     if(event.target.className != 'action')
         return;
@@ -389,7 +419,7 @@ function pressedKeyInChatInput(event) {
                 return;
 
             var roomAddress = getAncestorAttribute(textBox, 'address');
-            sendMessage(roomAddress, textBox.value);
+            sendChatMessage(roomAddress, textBox.value);
             textBox.value = '';
         }
     }
@@ -399,38 +429,28 @@ function pressedKeyInChatInput(event) {
 // ----------------------------------------------------------------------
 // NETWORK ACTIONS
 
-function closeConversation() {
-    alert('Not implemented yet.');
+// Note: these should *not* contain code to fetch information from the
+// GUI, a separate function should do that instead and pass
+// information here via function parameters.
+
+function closeConversation(roomAddress) {
+
 }
 
-function openConversation() {
-    var params = {
-        contactId: undefined,
-        isRoom: false,
-        roomNick: undefined,
-        confirm: false
-    };
-
-    window.openDialog(
-        'chrome://mozeskine/content/open.xul',
-        'mozeskine-open-conversation', 'modal,centerscreen',
-        params);
-
-    if(params.confirm) 
-        XMPP.up(userJid, {
-            requester: 'Mozeskine', continuation: function(jid) {
-                        userJid = jid;
-                        var roomAddress = params.contactId;
-                        var nick = params.roomNick;
+function openConversation(roomAddress, roomNick) {
+    XMPP.up(userJid, {
+        requester: 'Mozeskine', continuation: function(jid) {
+                    userJid = jid;
+                    var roomAddress = params.contactId;
+                    var nick = params.roomNick;
                         
-                        XMPP.send(
-                            userJid,
-                            <presence to={roomAddress + '/' + nick}/>);
-                    }});
-
+                    XMPP.send(
+                        userJid,
+                        <presence to={roomAddress + '/' + nick}/>);
+                }});
 }
 
-function sendMessage(roomAddress, text) {
+function sendChatMessage(roomAddress, text) {
     XMPP.send(
         userJid,
         <message to={roomAddress} type="groupchat">
@@ -544,7 +564,7 @@ function receiveMUCPresence(presence) {
     }
 }
 
-function receiveAction(message) {
+function receiveNoteAction(message) {
     for each(var action in message.stanza.ns_notes::x.*) {
         switch(action.name().toString()) {
         case ns_notes + '::append':
