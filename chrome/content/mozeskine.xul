@@ -28,18 +28,7 @@
 
     <hbox flex="1">
       <vbox flex="1">
-        <richlistbox id="contact-info" flex="1">
-
-          <richlistitem orient="vertical">
-            <label value="Topic" class="header" flex="1" onclick="clickedTopic();"/>
-            <label id="topic" style="font-size: smaller; padding-left: 0.5em;" value="[None]"/>
-          </richlistitem>
-
-          <richlistitem orient="vertical">
-            <label value="Participants" class="header" flex="1"/>
-            <richlistbox id="participants" flex="1" style="padding-left: 0.5em"/>
-          </richlistitem>
-        </richlistbox>
+        <deck id="contact-infos" flex="1"/>
 
         <splitter/>
 
@@ -66,6 +55,18 @@
           <splitter/>
           <textbox role="chat-input" flex="1" class="box-inset" multiline="true"/>
         </vbox>
+
+        <richlistbox role="contact-info" address="" resource="" type="" flex="1">
+          <richlistitem orient="vertical">
+            <label value="Topic" class="header" flex="1" onclick="clickedTopic();"/>
+            <label role="topic" style="font-size: smaller; padding-left: 0.5em;">[None]</label>
+          </richlistitem>
+
+          <richlistitem orient="vertical">
+            <label value="Participants" class="header" flex="1"/>
+            <richlistbox role="participants" flex="1" style="padding-left: 0.5em"/>
+          </richlistitem>
+        </richlistbox>
       </box>
     </hbox>
 

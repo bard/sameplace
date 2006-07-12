@@ -31,7 +31,6 @@ function init(event) {
         return;
 
     _('contact-list').selectedIndex = -1;
-    _('contact-info').selectedIndex = -1;
 
     channel = XMPP.createChannel();
 
@@ -146,6 +145,8 @@ function ensureConversationIsOpen(address, resource, type) {
     if(!conversation) {
         conversation = cloneBlueprint('conversation');
         conversation.setAttribute('address', address);
+        conversation.setAttribute('resource', resource);
+        conversation.setAttribute('type', type);
         _('conversations').appendChild(conversation);
         _('conversations').selectedPanel = conversation;
 
@@ -158,6 +159,19 @@ function ensureConversationIsOpen(address, resource, type) {
             .focus();
     }
     return conversation;
+}
+
+function ensureContactInfoIsOpen(address, resource, type) {
+    var contactInfo = _('contact-infos').getElementsByAttribute('address', address)[0];
+    if(!contactInfo) {
+        contactInfo = cloneBlueprint('contact-info');
+        contactInfo.setAttribute('address', address);
+        contactInfo.setAttribute('resource', resource);
+        contactInfo.setAttribute('type', type);
+        _('contact-infos').appendChild(contactInfo);
+        _('contact-infos').selectedPanel = contactInfo;
+    }
+    return contactInfo;
 }
 
 function withNotesWindow(code) {
@@ -439,14 +453,16 @@ function receiveMUCPresence(presence) {
     var m = jid.match(/^(.+)\/(.+)$/);
     var address = m[1];
     var nick = m[2];
-    var participant = _('participants').getElementsByAttribute('nick', nick)[0];
 
-    ensureConversationIsOpen(address);
+    var conversation = ensureConversationIsOpen(address);
+    var contactInfo = ensureContactInfoIsOpen(address);
+    var participants = contactInfo.getElementsByAttribute('role', 'participants')[0];
+    var participant = participants.getElementsByAttribute('nick', nick)[0];
 
     if(participant) {
         switch(presence.stanza.@type.toString()) {
         case 'unavailable':
-            _('participants').removeChild(participant);
+            participants.removeChild(participant);
             displayEvent(nick + ' left the room', 'leave');
             break;
         default:
@@ -476,7 +492,7 @@ function receiveMUCPresence(presence) {
                 participant.appendChild(agentFrame);
             }
 
-            _('participants').appendChild(participant);
+            participants.appendChild(participant);
 
             if(presence.stanza.ns_xul::x.length() > 0) {
                 var agentWidget = 
