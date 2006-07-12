@@ -6,8 +6,10 @@ const Ci = Components.interfaces;
 
 const pref = Cc['@mozilla.org/preferences-service;1']
     .getService(Ci.nsIPrefBranch);
-const mediatorService = Cc['@mozilla.org/appshell/window-mediator;1']
+const mediator = Cc['@mozilla.org/appshell/window-mediator;1']
     .getService(Ci.nsIWindowMediator);
+const prompts = Cc["@mozilla.org/embedcomp/prompt-service;1"]
+    .getService(Ci.nsIPromptService);
 
 var urlRegexp = new RegExp('(http:\/\/|www.)[^ \\t\\n\\f\\r"<>|()]*[^ \\t\\n\\f\\r"<>|,.!?(){}]');
 
@@ -20,7 +22,7 @@ var ns_xul = new Namespace('http://www.mozilla.org/keymaster/gatekeeper/there.is
 // ----------------------------------------------------------------------
 // GLOBAL STATE
 
-var channel, userJid, roomAddress;
+var channel, userJid;
 
 
 // ----------------------------------------------------------------------
@@ -64,6 +66,14 @@ function finish() {
 
 // ----------------------------------------------------------------------
 // GUI UTILITIES
+
+function getAncestorAttribute(element, attributeName) {
+    while(element.parentNode) {
+        if(element.parentNode.hasAttribute(attributeName))
+            return element.parentNode.getAttribute(attributeName);
+        element = element.parentNode;
+    }
+}
 
 function withDocumentOf(window, action) {
     if(window.document.location.href == 'about:blank' ||
@@ -129,7 +139,7 @@ function findBrowser(url) {
 }
 
 function findWindow(name) {
-    var enumerator = mediatorService.getEnumerator('');
+    var enumerator = mediator.getEnumerator('');
     while(enumerator.hasMoreElements()) {
         var window = enumerator.getNext();
         if(window.name == name)
@@ -170,8 +180,7 @@ function ensureConversationIsOpen(address, resource, type) {
         conversation.getElementsByAttribute('role', 'chat-input')[0]
             .addEventListener('keypress', pressedKeyInChatInput, false);
         conversation.getElementsByAttribute('role', 'chat-output')[0]
-            .contentDocument
-            .addEventListener('click', clickedSaveButton, false);
+            .addEventListener('click', clickedSaveButton, true);
         conversation.getElementsByAttribute('role', 'chat-output')[0]
             .focus();
     }
@@ -219,6 +228,7 @@ function withNotesWindow(code) {
 function displayChatMessage(from, content) {
     // TODO REFACTOR
     var chatOutput = _('conversations')
+        .getElementsByAttribute('address', JID(from).address)[0]
         .getElementsByAttribute('role', 'chat-output')[0];
     
     var doc = chatOutput.contentDocument;
@@ -333,6 +343,8 @@ function clickedSaveButton(event) {
     if(event.target.className != 'action')
         return;
 
+    var roomAddress = getAncestorAttribute(event.currentTarget, 'address');
+
     var messageItem = event.target.parentNode.parentNode;
 
     var child = messageItem.firstChild;
@@ -340,16 +352,16 @@ function clickedSaveButton(event) {
         child = child.nextSibling;
 
     if(child)
-        sendNoteAddition(child.textContent);
+        sendNoteAddition(roomAddress, child.textContent);
 }
 
-function clickedTopic() {
+function clickedTopic(event) {
+    var roomAddress = getAncestorAttribute(event.target, 'address');
+    
     var input = { value: '' };
     var check = { value: false };
-    if(Components
-       .classes["@mozilla.org/embedcomp/prompt-service;1"]
-       .getService(Components.interfaces.nsIPromptService)
-       .prompt(null, 'Mozeskine', 'Set topic for this room:', input, null, check))
+
+    if(prompts.prompt(null, 'Mozeskine', 'Set topic for this room:', input, null, check))
         XMPP.send(
             userJid,
             <message to={roomAddress} type="groupchat">
@@ -373,11 +385,12 @@ function pressedKeyInChatInput(event) {
         else {
             event.preventDefault();
                 
-            if(event.currentTarget.value.match(/^\s*$/))
+            if(textBox.value.match(/^\s*$/))
                 return;
-                    
-            sendMessage(event.currentTarget.value);
-            event.currentTarget.value = '';
+
+            var roomAddress = getAncestorAttribute(textBox, 'address');
+            sendMessage(roomAddress, textBox.value);
+            textBox.value = '';
         }
     }
 }
@@ -403,21 +416,21 @@ function openConversation() {
         'mozeskine-open-conversation', 'modal,centerscreen',
         params);
 
-    if(params.confirm) {
-        XMPP.up(null, {
+    if(params.confirm) 
+        XMPP.up(userJid, {
             requester: 'Mozeskine', continuation: function(jid) {
                         userJid = jid;
-                        roomAddress = params.contactId;
+                        var roomAddress = params.contactId;
                         var nick = params.roomNick;
                         
                         XMPP.send(
                             userJid,
                             <presence to={roomAddress + '/' + nick}/>);
                     }});
-    }
+
 }
 
-function sendMessage(text) {
+function sendMessage(roomAddress, text) {
     XMPP.send(
         userJid,
         <message to={roomAddress} type="groupchat">
@@ -425,7 +438,7 @@ function sendMessage(text) {
         </message>);
 }
 
-function sendNoteAddition(text) {
+function sendNoteAddition(roomAddress, text) {
     var packet = <message to={roomAddress} type="groupchat"/>;
     packet.ns_notes::x.append = text;
     packet.ns_notes::x.append.@id = userJid + '/' + (new Date()).getTime();
@@ -433,7 +446,7 @@ function sendNoteAddition(text) {
     XMPP.send(userJid, packet);
 }
 
-function sendNoteRemoval(id) {
+function sendNoteRemoval(roomAddress, id) {
     var packet = <message to={roomAddress} type="groupchat"/>;
     packet.ns_notes::x.remove.@id = id;
     XMPP.send(userJid, packet);

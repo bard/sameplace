@@ -70,7 +70,7 @@
 
         <richlistbox role="contact-info" address="" resource="" type="" flex="1">
           <richlistitem orient="vertical">
-            <label value="Topic" class="header" flex="1" onclick="clickedTopic();"/>
+            <label value="Topic" class="header" flex="1" onclick="clickedTopic(event);"/>
             <label role="topic" style="font-size: smaller; padding-left: 0.5em;">[None]</label>
           </richlistitem>
 
