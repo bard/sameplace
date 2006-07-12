@@ -138,6 +138,23 @@ function findWindow(name) {
 }
 
 // ----------------------------------------------------------------------
+// OTHER UTILITIES
+
+function JID(string) {
+    var m = string.match(/^(.+?)@(.+?)(?:\/|$)(.*$)/);
+    var jid = {
+        username: m[1],
+        hostname: m[2],
+        resource: m[3],
+        nick: m[3],
+        address: m[1] + '@' + m[2],
+        full: m[3] ? string : null
+    }
+
+    return jid;
+}
+
+// ----------------------------------------------------------------------
 // GUI ACTIONS
 
 function ensureConversationIsOpen(address, resource, type) {
@@ -216,8 +233,7 @@ function displayChatMessage(from, content) {
     actions.appendChild(saveAction);
 
     var sender = doc.createElement('span');
-    var m = from.match(/\/(.+)$/);
-    sender.textContent = m ? m[1] : from;
+    sender.textContent = JID(from).resource || JID(from).address;
     sender.setAttribute('class', 'sender');
     var body = doc.createElement('span');
     body.setAttribute('class', 'body');
@@ -440,30 +456,27 @@ function receiveMessageWithURL(message) {
 }
 
 function receiveRoomTopic(message) {
-    var from = message.stanza.@from.toString();
-    var m = from.match(/\/(.+)$/);
-    var nick = m ? m[1] : from;
+    var from = JID(message.stanza.@from);
+    displayEvent(from.nick + ' set the topic to "' +
+                 message.stanza.subject + '"', 'topic');
     
     displayEvent(nick + ' set the topic to "' + message.stanza.subject + '"', 'topic');
     displayRoomTopic(message.stanza.subject.toString());
 }
 
 function receiveMUCPresence(presence) {
-    var jid = presence.stanza.@from.toString();
-    var m = jid.match(/^(.+)\/(.+)$/);
-    var address = m[1];
-    var nick = m[2];
+    var from = JID(presence.stanza.@from);
 
-    var conversation = ensureConversationIsOpen(address);
-    var contactInfo = ensureContactInfoIsOpen(address);
+    var conversation = ensureConversationIsOpen(from.address);
+    var contactInfo = ensureContactInfoIsOpen(from.address);
     var participants = contactInfo.getElementsByAttribute('role', 'participants')[0];
-    var participant = participants.getElementsByAttribute('nick', nick)[0];
+    var participant = participants.getElementsByAttribute('nick', from.nick)[0];
 
     if(participant) {
         switch(presence.stanza.@type.toString()) {
         case 'unavailable':
             participants.removeChild(participant);
-            displayEvent(nick + ' left the room', 'leave');
+            displayEvent(from.nick + ' left the room', 'leave');
             break;
         default:
             break;
@@ -474,13 +487,13 @@ function receiveMUCPresence(presence) {
             break;
         default:
             participant = document.createElement('richlistitem');
-            participant.setAttribute('nick', nick); // TODO: namespace this
+            participant.setAttribute('nick', from.nick); // TODO: namespace this
             participant.setAttribute('orient', 'horizontal');
             participant.setAttribute('align', 'center');
             participant.setAttribute('class', 'participant');
             var image = document.createElement('image');
             var label = document.createElement('label');
-            label.setAttribute('value', nick);
+            label.setAttribute('value', from.nick);
             participant.appendChild(image);
             participant.appendChild(label);
 
@@ -508,7 +521,7 @@ function receiveMUCPresence(presence) {
                 agentFrame.setAttribute('src', 'agent.xul');
             }
             
-            displayEvent(nick + ' entered the room', 'join');
+            displayEvent(from.nick + ' entered the room', 'join');
         }
     }
 }
