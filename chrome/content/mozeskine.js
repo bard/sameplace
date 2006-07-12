@@ -22,7 +22,7 @@ var ns_xul = new Namespace('http://www.mozilla.org/keymaster/gatekeeper/there.is
 // ----------------------------------------------------------------------
 // GLOBAL STATE
 
-var channel, userJid;
+var channel, account = {};
 
 
 // ----------------------------------------------------------------------
@@ -349,7 +349,7 @@ function eraseExistingNote(id) {
 // GUI REACTIONS
 
 function requestedCloseConversation() {
-    alert('Not implemented yet.');
+    closeConversation(_('conversations').selectedPanel.getAttribute('address'));
 }
 
 function requestedOpenConversation() {
@@ -366,7 +366,7 @@ function requestedOpenConversation() {
         params);
 
     if(params.confirm)
-        _openConversation(params.contactId, params.roomNick);
+        openConversation(params.contactId, params.roomNick);
 }
 
 function clickedSaveButton(event) {
@@ -392,11 +392,10 @@ function clickedTopic(event) {
     var check = { value: false };
 
     if(prompts.prompt(null, 'Mozeskine', 'Set topic for this room:', input, null, check))
-        XMPP.send(
-            userJid,
-            <message to={roomAddress} type="groupchat">
-            <subject>{input.value}</subject>
-            </message>);
+        XMPP.send(account, 
+                  <message to={roomAddress} type="groupchat">
+                  <subject>{input.value}</subject>
+                  </message>);
 }
 
 function clickedRemoveButton(event) {
@@ -434,42 +433,33 @@ function pressedKeyInChatInput(event) {
 // information here via function parameters.
 
 function closeConversation(roomAddress) {
-
+    XMPP.send(account, <presence to={roomAddress + '/' + nick}/>);
 }
 
 function openConversation(roomAddress, roomNick) {
-    XMPP.up(userJid, {
-        requester: 'Mozeskine', continuation: function(jid) {
-                    userJid = jid;
-                    var roomAddress = params.contactId;
-                    var nick = params.roomNick;
-                        
-                    XMPP.send(
-                        userJid,
-                        <presence to={roomAddress + '/' + nick}/>);
-                }});
+    XMPP.send(account, <presence to={roomAddress + '/' + roomNick}/>);
 }
 
 function sendChatMessage(roomAddress, text) {
-    XMPP.send(
-        userJid,
-        <message to={roomAddress} type="groupchat">
-        <body>{text}</body>
-        </message>);
+    alert(account.jid)
+    XMPP.send(account,
+              <message to={roomAddress} type="groupchat">
+              <body>{text}</body>
+              </message>);
 }
 
 function sendNoteAddition(roomAddress, text) {
     var packet = <message to={roomAddress} type="groupchat"/>;
     packet.ns_notes::x.append = text;
-    packet.ns_notes::x.append.@id = userJid + '/' + (new Date()).getTime();
+    packet.ns_notes::x.append.@id = account.jid + '/' + (new Date()).getTime();
     lastId = packet.ns_notes::x.append.@id;
-    XMPP.send(userJid, packet);
+    XMPP.send(account, packet);
 }
 
 function sendNoteRemoval(roomAddress, id) {
     var packet = <message to={roomAddress} type="groupchat"/>;
     packet.ns_notes::x.remove.@id = id;
-    XMPP.send(userJid, packet);
+    XMPP.send(account, packet);
 }
 
 

@@ -1,6 +1,27 @@
 
 Context:
 
+[XMPP: removed internal reference to service to _xmpp for consistency with other referenced services.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060712185407] 
+
+[XMPP: moved user prompt code in separate function.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060712184604] 
+
+[XMPP: isUp(), up(), down() & send() now accept string or {jid: string} as account parameter. send() causes connection if passed null or unconnected account.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060712183216] 
+
+[XMPP: removed obsolete activeSessionNames getter.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060712182949] 
+
+[Overlay: renamed xmpp-menu-apps of toolbar to avoid ambiguity with menu's, and moved account menu in tools menu below apps.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060712182533] 
+
+[XMPP: not bringing up dialog if a specific account has been requested and session is already up.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060712112231] 
+
+[Client: catching exceptions that happen in observers.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060712112144] 
+
 [XMPP: forward requester app to SignOn dialog; don't connect but reuse session if it already up.
 Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060711124614] 
 
