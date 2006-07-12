@@ -6,10 +6,13 @@
       xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
       onload="init(event);"
       onunload="finish(event);"
-      orient="vertical">
+      orient="vertical"
+      width="640"
+      height="480">
 
   <!-- SCRIPTS -->
 
+  <script type="application/x-javascript" src="chrome://xmpp4moz/content/xmpp.js"/>
   <script type="application/x-javascript" src="mozeskine.js"/>
 
   <!-- COMMANDS -->
@@ -23,19 +26,13 @@
 
     <!-- CONVERSATION AREA -->
 
-    <toolbox>
-      <toolbar fullscreentoolbar="true">
-        <toolbarbutton command="open-conversation"/>
-      </toolbar>
-    </toolbox>
-
-    <hbox flex="10">
-      <vbox>
+    <hbox flex="1">
+      <vbox flex="1">
         <richlistbox id="contact-info" flex="1">
 
           <richlistitem orient="vertical">
             <label value="Topic" class="header" flex="1" onclick="clickedTopic();"/>
-            <label id="topic" style="font-size: smaller;"/>
+            <label id="topic" style="font-size: smaller; padding-left: 0.5em;" value="[None]"/>
           </richlistitem>
 
           <richlistitem orient="vertical">
@@ -60,16 +57,21 @@
       </vbox>
 
       <splitter/>
+
+      <deck flex="4" id="conversations"/>
       
-      <vbox flex="2">
-        <iframe id="chat-output" src="chat.html" flex="3" class="box-inset"/>        
-        <splitter/>
-        <textbox id="chat-input" flex="1" class="box-inset" multiline="true"/>
-      </vbox>
+      <box hidden="true" id="blueprints">
+        <vbox role="conversation" address="" resource="" type="">
+          <iframe role="chat-output" src="chat.html" flex="5" class="box-inset"/>
+          <splitter/>
+          <textbox role="chat-input" flex="1" class="box-inset" multiline="true"/>
+        </vbox>
+      </box>
     </hbox>
 
     <toolbox>
       <toolbar fullscreentoolbar="true">
+        <toolbarbutton command="open-conversation"/>
         <toolbarspring/>
         <toolbaritem>
           <checkbox id="follow-mode" label="Follow URLs" accesskey="F" checked="false"/>

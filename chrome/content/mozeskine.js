@@ -8,10 +8,7 @@ const pref = Cc['@mozilla.org/preferences-service;1']
     .getService(Ci.nsIPrefBranch);
 const mediatorService = Cc['@mozilla.org/appshell/window-mediator;1']
     .getService(Ci.nsIWindowMediator);
-const loader = Cc['@mozilla.org/moz/jssubscript-loader;1']
-    .getService(Ci.mozIJSSubScriptLoader);
 
-loader.loadSubScript('chrome://xmpp4moz/content/xmpp.js');
 var urlRegexp = new RegExp('(http:\/\/|www.)[^ \\t\\n\\f\\r"<>|()]*[^ \\t\\n\\f\\r"<>|,.!?(){}]');
 
 var ns_notes = new Namespace('http://hyperstruct.net/mozeskine/protocol/0.1.4#notes');
@@ -36,15 +33,12 @@ function init(event) {
     _('contact-list').selectedIndex = -1;
     _('contact-info').selectedIndex = -1;
 
-    _('chat-input')
-        .addEventListener('keypress', pressedKeyInChatInput, false);
-    _('chat-output').contentDocument
-        .addEventListener('click', clickedSaveButton, false);
-    _('chat-output').contentDocument
-        .addEventListener('click', clickedTopic, false);
-
     channel = XMPP.createChannel();
 
+    channel.on(
+        {event: 'presence', direction: 'in', stanza: function(s) {
+                return s.ns_muc::x.toXMLString();
+            }}, function(presence) { receiveMUCPresence(presence) });
     channel.on(
         {event: 'message', direction: 'in', stanza: function(s) {
                 return s.body.toString();
@@ -54,17 +48,9 @@ function init(event) {
                 return s.ns_notes::x.toXMLString();
             }}, function(message) { receiveAction(message); });
     channel.on(
-        {event: 'presence', direction: 'in', stanza: function(s) {
-                return s.ns_muc::x.toXMLString();
-            }}, function(presence) { receivePresence(presence) });
-    channel.on(
         {event: 'message', direction: 'in', stanza: function(s) {
                 return s.@type == 'groupchat' && s.subject.toString();
             }}, function(message) { receiveRoomTopic(message); });
-    channel.on(
-        {event: 'presence', direction: 'in', stanza: function(s) {
-                return s.ns_muc::x.toXMLString();
-            }}, function(presence) { receivePresence(presence) });
     channel.on(
         {event: 'message', direction: 'in', stanza: function(s) {
                 return (s.body.toString() &&
@@ -80,26 +66,47 @@ function finish() {
 // ----------------------------------------------------------------------
 // GUI UTILITIES
 
-function setCroppedContent(element, content) {
-    element.textContent = content;
-    var containerWidth = element.parentNode.offsetWidth;
+function withDocumentOf(window, action) {
+    if(window.document.location.href == 'about:blank' ||
+       !window.document.getElementsByTagName('body'))
+        window.addEventListener(
+            'load', function(event) {
+                action(event.target);
+            }, false);
+    else
+        action(window.document);
+}
+withDocumentOf.doc = 'Execute an action if document has loaded, \
+otherwise schedule it for when it has finished loading.';
 
-    while(element.offsetWidth > containerWidth) {
-        content = content.substring(0, content.length-1);
-        element.textContent = content + '\u2026';
+function x() {
+    var contextNode, path;
+    if(arguments[0] instanceof XULElement) {
+        contextNode = arguments[0];
+        path = arguments[1];
     }
-} 
+    else {
+        path = arguments[0];
+        contextNode = document;
+    }
+
+    function resolver(prefix) {
+        return prefix == 'xul' ? 
+            'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul' : null;
+    }
+
+    return document.evaluate(
+        path, contextNode, resolver, XPathResult.ANY_UNORDERED_NODE_TYPE, null).
+        singleNodeValue;
+}
+
+function cloneBlueprint(role) {
+    return x('//*[@id="blueprints"]/*[@role="' + role + '"]').
+        cloneNode(true);
+}
 
 function _(id) {
     return document.getElementById(id);
-}
-
-function scrollTextBox(textBox) {
-    var textArea = textBox
-        .ownerDocument
-        .getAnonymousNodes(textBox)[0]
-        .firstChild;
-    textArea.scrollTop = textArea.scrollHeight;        
 }
 
 function scrollingOnlyIfAtBottom(window, action) {
@@ -134,6 +141,25 @@ function findWindow(name) {
 // ----------------------------------------------------------------------
 // GUI ACTIONS
 
+function ensureConversationIsOpen(address, resource, type) {
+    var conversation = _('conversations').getElementsByAttribute('address', address)[0];
+    if(!conversation) {
+        conversation = cloneBlueprint('conversation');
+        conversation.setAttribute('address', address);
+        _('conversations').appendChild(conversation);
+        _('conversations').selectedPanel = conversation;
+
+        conversation.getElementsByAttribute('role', 'chat-input')[0]
+            .addEventListener('keypress', pressedKeyInChatInput, false);
+        conversation.getElementsByAttribute('role', 'chat-output')[0]
+            .contentDocument
+            .addEventListener('click', clickedSaveButton, false);
+        conversation.getElementsByAttribute('role', 'chat-output')[0]
+            .focus();
+    }
+    return conversation;
+}
+
 function withNotesWindow(code) {
     var browser = findBrowser('chrome://mozeskine/content/notes.html');
         
@@ -160,8 +186,12 @@ function withNotesWindow(code) {
 }
 
 function displayChatMessage(from, content) {
-    var doc = _('chat-output').contentDocument;
-    var wnd = _('chat-output').contentWindow;
+    // TODO REFACTOR
+    var chatOutput = _('conversations')
+        .getElementsByAttribute('role', 'chat-output')[0];
+    
+    var doc = chatOutput.contentDocument;
+    var wnd = chatOutput.contentWindow;
 
     var actions = doc.createElement('div');
     actions.setAttribute('class', 'actions');
@@ -185,9 +215,12 @@ function displayChatMessage(from, content) {
     message.appendChild(body);
     message.appendChild(actions);
 
-    scrollingOnlyIfAtBottom(
-        wnd, function() {
-            doc.getElementById('messages').appendChild(message);
+    withDocumentOf(
+        wnd, function(doc) {
+            scrollingOnlyIfAtBottom(
+                wnd, function() {
+                    doc.getElementById('messages').appendChild(message);
+                });            
         });
 }
 
@@ -198,8 +231,12 @@ function displayRoomTopic(content) {
 }
 
 function displayEvent(content, additionalClass) {
-    var doc = _('chat-output').contentDocument;
-    var wnd = _('chat-output').contentWindow;
+    // TODO REFACTOR
+    var chatOutput = _('conversations')
+        .getElementsByAttribute('role', 'chat-output')[0];
+    
+    var doc = chatOutput.contentDocument;
+    var wnd = chatOutput.contentWindow;
 
     var body = doc.createElement('span');
     body.setAttribute('class', 'body');
@@ -211,9 +248,12 @@ function displayEvent(content, additionalClass) {
                        'event');
     event.appendChild(body);
 
-    scrollingOnlyIfAtBottom(
-        wnd, function() {
-            doc.getElementById('messages').appendChild(event);
+    withDocumentOf(
+        wnd, function(doc) {
+            scrollingOnlyIfAtBottom(
+                wnd, function() {
+                    doc.getElementById('messages').appendChild(event);
+                });            
         });
 }
 
@@ -341,8 +381,6 @@ function openConversation() {
                         XMPP.send(
                             userJid,
                             <presence to={roomAddress + '/' + nick}/>);
-                        
-                        _('chat-input').focus();
                     }});
     }
 }
@@ -396,14 +434,19 @@ function receiveRoomTopic(message) {
     displayRoomTopic(message.stanza.subject.toString());
 }
 
-function receivePresence(presence) {
-    var nick = presence.stanza.@from.toString().match(/\/(.+)$/)[1];
-    var item = _('participants').getElementsByAttribute('nick', nick)[0];
+function receiveMUCPresence(presence) {
+    var jid = presence.stanza.@from.toString();
+    var m = jid.match(/^(.+)\/(.+)$/);
+    var address = m[1];
+    var nick = m[2];
+    var participant = _('participants').getElementsByAttribute('nick', nick)[0];
 
-    if(item) {
+    ensureConversationIsOpen(address);
+
+    if(participant) {
         switch(presence.stanza.@type.toString()) {
         case 'unavailable':
-            _('participants').removeChild(item);
+            _('participants').removeChild(participant);
             displayEvent(nick + ' left the room', 'leave');
             break;
         default:
@@ -414,25 +457,26 @@ function receivePresence(presence) {
         case 'unavailable':
             break;
         default:
-            item = document.createElement('richlistitem');
-            item.setAttribute('nick', nick); // TODO: namespace this
-            item.setAttribute('orient', 'horizontal');
-            item.setAttribute('align', 'center');
-            item.setAttribute('class', 'participant');
+            participant = document.createElement('richlistitem');
+            participant.setAttribute('nick', nick); // TODO: namespace this
+            participant.setAttribute('orient', 'horizontal');
+            participant.setAttribute('align', 'center');
+            participant.setAttribute('class', 'participant');
             var image = document.createElement('image');
             var label = document.createElement('label');
             label.setAttribute('value', nick);
-            item.appendChild(image);
-            item.appendChild(label);
+            participant.appendChild(image);
+            participant.appendChild(label);
 
+            // EXPERIMENTAL
             if(presence.stanza.ns_xul::x.length() > 0) {
                 var agentFrame = document.createElement('iframe');
                 agentFrame.setAttribute('class', 'box-inset');
                 
-                item.appendChild(agentFrame);
+                participant.appendChild(agentFrame);
             }
 
-            _('participants').appendChild(item);
+            _('participants').appendChild(participant);
 
             if(presence.stanza.ns_xul::x.length() > 0) {
                 var agentWidget = 

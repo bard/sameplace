@@ -22,8 +22,9 @@
       <row align="center">
         <spacer/>
         <checkbox id="room" label="Contact is a chat room" checked="false" accesskey="r"
-                  oncommand="_('nick').disabled = _('nick').previousSibling.disabled =
-                             !this.checked"/>
+                  oncommand="_('nick').disabled = !this.checked;
+                             _('nick').previousSibling.disabled = !this.checked;
+                             _('nick').focus();"/>
       </row>
 
       <row align="center">
