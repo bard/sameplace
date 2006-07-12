@@ -20,6 +20,8 @@
   <commandset>
     <command id="open-conversation" label="Open Conversation..." accesskey="O"
              oncommand="openConversation();"/>
+    <command id="close-conversation" label="Close" accesskey="C"
+             oncommand="closeConversation();"/>
   </commandset>
   
   <vbox flex="1">
@@ -51,6 +53,16 @@
       
       <box hidden="true" id="blueprints">
         <vbox role="conversation" address="" resource="" type="">
+          <toolbox>
+            <toolbar fullscreentoolbar="true">
+              <toolbarbutton command="close-conversation"/>
+              <toolbarspring/>
+              <toolbaritem>
+                <checkbox id="follow-mode" label="Follow URLs" accesskey="F" checked="false"/>
+              </toolbaritem>
+            </toolbar>
+          </toolbox>
+
           <iframe role="chat-output" src="chat.html" flex="5" class="box-inset"/>
           <splitter/>
           <textbox role="chat-input" flex="1" class="box-inset" multiline="true"/>
@@ -73,10 +85,6 @@
     <toolbox>
       <toolbar fullscreentoolbar="true">
         <toolbarbutton command="open-conversation"/>
-        <toolbarspring/>
-        <toolbaritem>
-          <checkbox id="follow-mode" label="Follow URLs" accesskey="F" checked="false"/>
-        </toolbaritem>
       </toolbar>
     </toolbox>
   </vbox>

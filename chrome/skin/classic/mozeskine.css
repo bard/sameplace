@@ -3,6 +3,11 @@
   list-style-image: url("join.png");
   }
 
+* [command="close-conversation"]
+{
+  list-style-image: url("close.png");
+  }
+
 richlistitem.participant
 {
   padding: 0.2em;

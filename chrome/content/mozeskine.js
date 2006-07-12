@@ -386,6 +386,10 @@ function pressedKeyInChatInput(event) {
 // ----------------------------------------------------------------------
 // NETWORK ACTIONS
 
+function closeConversation() {
+    alert('Not implemented yet.');
+}
+
 function openConversation() {
     var params = {
         contactId: undefined,
