@@ -254,10 +254,8 @@ function displayChatMessage(from, content) {
         });
 }
 
-function displayRoomTopic(content) {
-    var w = _('contact-info').boxObject.width;
-    _('topic').textContent = content;
-    _('contact-info').width = w;
+function withContactInfoOf(address, action) {
+    action(_('contact-infos').getElementsByAttribute('address', address)[0]);
 }
 
 function displayEvent(content, additionalClass) {
@@ -460,8 +458,11 @@ function receiveRoomTopic(message) {
     displayEvent(from.nick + ' set the topic to "' +
                  message.stanza.subject + '"', 'topic');
     
-    displayEvent(nick + ' set the topic to "' + message.stanza.subject + '"', 'topic');
-    displayRoomTopic(message.stanza.subject.toString());
+    withContactInfoOf(
+        from.address, function(info) {
+            info.getElementsByAttribute('role', 'topic')[0].textContent =
+                message.stanza.subject.toString();
+        });
 }
 
 function receiveMUCPresence(presence) {
