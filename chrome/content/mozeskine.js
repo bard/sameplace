@@ -97,8 +97,7 @@ function getAncestorAttribute(element, attributeName) {
 }
 
 function withDocumentOf(window, action) {
-    if(window.document.location.href == 'about:blank' ||
-       !window.document.getElementsByTagName('body'))
+    if(!window.document.getElementById('loaded'))
         window.addEventListener(
             'load', function(event) {
                 action(event.target);

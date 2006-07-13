@@ -147,6 +147,10 @@ li:hover>.actions
   display: none;
   }
 
+#loaded
+{
+  display: none;
+  }
 
 
 /* .info  */
