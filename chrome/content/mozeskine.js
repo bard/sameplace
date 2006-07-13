@@ -134,8 +134,16 @@ function cloneBlueprint(role) {
         cloneNode(true);
 }
 
-function _(id) {
-    return document.getElementById(id);
+function _(element, descendantQuery) {
+    if(typeof(element) == 'string') 
+        element = document.getElementById(element); 
+
+    if(typeof(descendantQuery) == 'object') 
+        for(var attrName in descendantQuery) 
+            element = element.getElementsByAttribute(
+                attrName, descendantQuery[attrName])[0];
+
+    return element;
 }
 
 function scrollingOnlyIfAtBottom(window, action) {
@@ -197,7 +205,7 @@ function withNotesWindow(code) {
 }
 
 function withContactInfoOf(address, action) {
-    action(_('contact-infos').getElementsByAttribute('address', address)[0]);
+    action(_('contact-infos', {address: address}));
 }
 
 
@@ -205,7 +213,7 @@ function withContactInfoOf(address, action) {
 // GUI ACTIONS
 
 function ensureConversationIsOpen(address, resource, type) {
-    var conversation = _('conversations').getElementsByAttribute('address', address)[0];
+    var conversation = _('conversations', {address: address});
     if(!conversation) {
         conversation = cloneBlueprint('conversation');
         conversation.setAttribute('address', address);
@@ -214,18 +222,17 @@ function ensureConversationIsOpen(address, resource, type) {
         _('conversations').appendChild(conversation);
         _('conversations').selectedPanel = conversation;
 
-        conversation.getElementsByAttribute('role', 'chat-input')[0]
-            .addEventListener('keypress', pressedKeyInChatInput, false);
-        conversation.getElementsByAttribute('role', 'chat-output')[0]
-            .addEventListener('click', clickedSaveButton, true);
-        conversation.getElementsByAttribute('role', 'chat-output')[0]
-            .focus();
+        _(conversation, {role: 'chat-input'}).addEventListener(
+            'keypress', pressedKeyInChatInput, false);
+        _(conversation, {role: 'chat-output'}).addEventListener(
+            'click', clickedSaveButton, true);
+        _(conversation, {role: 'chat-output'}).focus();
     }
     return conversation;
 }
 
 function ensureContactInfoIsOpen(address, resource, type) {
-    var contactInfo = _('contact-infos').getElementsByAttribute('address', address)[0];
+    var contactInfo = _('contact-infos', {address: address});
     if(!contactInfo) {
         contactInfo = cloneBlueprint('contact-info');
         contactInfo.setAttribute('address', address);
@@ -238,66 +245,59 @@ function ensureContactInfoIsOpen(address, resource, type) {
 }
 
 function displayChatMessage(from, content) {
-    // TODO REFACTOR
-    var chatOutput = _('conversations')
-        .getElementsByAttribute('address', JID(from).address)[0]
-        .getElementsByAttribute('role', 'chat-output')[0];
-    
-    var doc = chatOutput.contentDocument;
-    var wnd = chatOutput.contentWindow;
-
-    var actions = doc.createElement('div');
-    actions.setAttribute('class', 'actions');
-
-    var saveAction = doc.createElement('a');
-    saveAction.setAttribute('class', 'action');
-    saveAction.textContent = 'Save';
-    actions.appendChild(saveAction);
-
-    var sender = doc.createElement('span');
-    sender.textContent = JID(from).resource || JID(from).address;
-    sender.setAttribute('class', 'sender');
-    var body = doc.createElement('span');
-    body.setAttribute('class', 'body');
-    body.textContent = content;
-
-    var message = doc.createElement('li');
-    message.setAttribute('class', 'message');
-    message.appendChild(sender);
-    message.appendChild(body);
-    message.appendChild(actions);
+    var chatOutputWindow = _('conversations',
+                             {address: JID(from).address, role: 'chat-output'})
+        .contentWindow;
 
     withDocumentOf(
-        wnd, function(doc) {
+        chatOutputWindow, function(doc) {
+            var actions = doc.createElement('div');
+            actions.setAttribute('class', 'actions');
+
+            var saveAction = doc.createElement('a');
+            saveAction.setAttribute('class', 'action');
+            saveAction.textContent = 'Save';
+            actions.appendChild(saveAction);
+
+            var sender = doc.createElement('span');
+            sender.textContent = JID(from).resource || JID(from).address;
+            sender.setAttribute('class', 'sender');
+            var body = doc.createElement('span');
+            body.setAttribute('class', 'body');
+            body.textContent = content;
+
+            var message = doc.createElement('li');
+            message.setAttribute('class', 'message');
+            message.appendChild(sender);
+            message.appendChild(body);
+            message.appendChild(actions);
+
             scrollingOnlyIfAtBottom(
-                wnd, function() {
+                chatOutputWindow, function() {
                     doc.getElementById('messages').appendChild(message);
                 });            
         });
 }
 
-function displayEvent(content, additionalClass) {
-    // TODO REFACTOR
-    var chatOutput = _('conversations')
-        .getElementsByAttribute('role', 'chat-output')[0];
+function displayEvent(from, content, additionalClass) {
+    var chatOutputWindow = _('conversations',
+                             {address: JID(from).address, role: 'chat-output'})
+        .contentWindow;
     
-    var doc = chatOutput.contentDocument;
-    var wnd = chatOutput.contentWindow;
-
-    var body = doc.createElement('span');
-    body.setAttribute('class', 'body');
-    body.textContent = content;
-
-    var event = doc.createElement('li');
-    event.setAttribute('class', additionalClass ?
-                       'event ' + additionalClass :
-                       'event');
-    event.appendChild(body);
-
     withDocumentOf(
-        wnd, function(doc) {
+        chatOutputWindow, function(doc) {
+            var body = doc.createElement('span');
+            body.setAttribute('class', 'body');
+            body.textContent = content;
+
+            var event = doc.createElement('li');
+            event.setAttribute('class', additionalClass ?
+                               'event ' + additionalClass :
+                               'event');
+            event.appendChild(body);
+
             scrollingOnlyIfAtBottom(
-                wnd, function() {
+                chatOutputWindow, function() {
                     doc.getElementById('messages').appendChild(event);
                 });            
         });
@@ -440,7 +440,6 @@ function openConversation(roomAddress, roomNick) {
 }
 
 function sendChatMessage(roomAddress, text) {
-    alert(account.jid)
     XMPP.send(account,
               <message to={roomAddress} type="groupchat">
               <body>{text}</body>
@@ -472,17 +471,18 @@ function receiveChatMessage(message) {
 }
 
 function receiveMessageWithURL(message) {
-    if(!_('follow-mode').checked)
-        return;
-    
-    var url = message.stanza.body.toString().match(urlRegexp)[0];
-    window.top.getBrowser().addTab(url);
+    if(_('conversations', {address: JID(message.stanza.@from).address, role: 'follow-mode'}).checked) {
+        var url = message.stanza.body.toString().match(urlRegexp)[0];
+        window.top.getBrowser().addTab(url);   
+    }
 }
 
 function receiveRoomTopic(message) {
     var from = JID(message.stanza.@from);
-    displayEvent(from.nick + ' set the topic to "' +
-                 message.stanza.subject + '"', 'topic');
+    displayEvent(
+        message.stanza.@from.toString(),
+        from.nick + ' set the topic to "' +
+        message.stanza.subject + '"', 'topic');
     
     withContactInfoOf(
         from.address, function(info) {
@@ -503,7 +503,8 @@ function receiveMUCPresence(presence) {
         switch(presence.stanza.@type.toString()) {
         case 'unavailable':
             participants.removeChild(participant);
-            displayEvent(from.nick + ' left the room', 'leave');
+            displayEvent(presence.stanza.@from.toString(),
+                         from.nick + ' left the room', 'leave');
             break;
         default:
             break;
@@ -548,7 +549,7 @@ function receiveMUCPresence(presence) {
                 agentFrame.setAttribute('src', 'agent.xul');
             }
             
-            displayEvent(from.nick + ' entered the room', 'join');
+            displayEvent(presence.stanza.@from.toString(), from.nick + ' entered the room', 'join');
         }
     }
 }

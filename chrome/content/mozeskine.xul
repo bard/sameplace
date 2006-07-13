@@ -58,7 +58,7 @@
               <toolbarbutton command="close-conversation"/>
               <toolbarspring/>
               <toolbaritem>
-                <checkbox id="follow-mode" label="Follow URLs" accesskey="F" checked="false"/>
+                <checkbox role="follow-mode" label="Follow URLs" accesskey="F" checked="false"/>
               </toolbaritem>
             </toolbar>
           </toolbox>
