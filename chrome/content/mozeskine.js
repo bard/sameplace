@@ -22,7 +22,7 @@ var ns_xul = new Namespace('http://www.mozilla.org/keymaster/gatekeeper/there.is
 // ----------------------------------------------------------------------
 // GLOBAL STATE
 
-var channel, account = {};
+var channel;
 
 
 // ----------------------------------------------------------------------
@@ -215,12 +215,19 @@ function withContactInfoOf(address, action) {
 // ----------------------------------------------------------------------
 // GUI ACTIONS
 
-function focusConversation(address) {
-    _('conversations').selectedPanel = _('conversations', {address: address});
+function focusConversation(account, address) {
+    _('conversations').selectedPanel =
+        x('//*[@id="conversations"]/*[' +
+          '@address="' + address + '" and ' +
+          '@account="' + account + '"]');
 }
 
 function ensureConversationIsOpen(account, address, resource, type) {
-    var conversation = _('conversations', {address: address});
+    var conversation = 
+        x('//*[@id="conversations"]/*[' +
+          '@address="' + address + '" and ' +
+          '@account="' + account + '"]');
+        
     if(!conversation) { 
         conversation = cloneBlueprint('conversation');
         conversation.setAttribute('address', address);
@@ -252,9 +259,13 @@ function ensureContactInfoIsOpen(address, resource, type) {
     return contactInfo;
 }
 
-function displayChatMessage(from, content) {
-    var chatOutputWindow = _('conversations',
-                             {address: JID(from).address, role: 'chat-output'})
+function displayChatMessage(account, from, content) {
+    var chatOutputWindow = x(
+        '//*[' +
+        '@role="conversation" and ' +
+        '@account="' + account + '" and ' +
+        '@address="' + JID(from).address + '"]' +
+        '//*[@role="chat-output"]')
         .contentWindow;
 
     withDocumentOf(
@@ -287,9 +298,13 @@ function displayChatMessage(from, content) {
         });
 }
 
-function displayEvent(from, content, additionalClass) {
-    var chatOutputWindow = _('conversations',
-                             {address: JID(from).address, role: 'chat-output'})
+function displayEvent(account, from, content, additionalClass) {
+    var chatOutputWindow = x(
+        '//*[' +
+        '@role="conversation" and ' +
+        '@account="' + account + '" and ' +
+        '@address="' + JID(from).address + '"]' +
+        '//*[@role="chat-output"]')
         .contentWindow;
     
     withDocumentOf(
@@ -356,7 +371,8 @@ function eraseExistingNote(id) {
 // GUI REACTIONS
 
 function selectedContact(event) {
-    focusConversation(event.target.selectedItem.getAttribute('address'));
+    var contact = event.target.selectedItem;        
+    focusConversation(contact.getAttribute('account'), contact.getAttribute('address'));
 }
 
 function requestedExitRoom() {
@@ -486,6 +502,7 @@ function sendNoteRemoval(roomAddress, id) {
 
 function receiveChatMessage(message) {
     displayChatMessage(
+        message.session.name,
         message.stanza.@from.toString(),
         message.stanza.body);
 }
@@ -500,6 +517,7 @@ function receiveMessageWithURL(message) {
 function receiveRoomTopic(message) {
     var from = JID(message.stanza.@from);
     displayEvent(
+        message.session.name,
         message.stanza.@from.toString(),
         from.nick + ' set the topic to "' +
         message.stanza.subject + '"', 'topic');
@@ -513,19 +531,20 @@ function receiveRoomTopic(message) {
 
 function receivePresence(presence) {
     var from = JID(presence.stanza.@from);
-    var contactItem = _('contact-list', {address: from.address});
+    var contact = x('//*[@id="contact-list"]//*[' +
+                    '@address="' + from.address + '" and ' +
+                    '@account="' + presence.session.name + '"]');
 
-    item = contactItem;
-
-    if(presence.stanza.@type == 'unavailable' && contactItem) 
-        _('contact-list').removeChild(contactItem);
-    else if(!contactItem) {
-        contactItem = document.createElement('richlistitem');
-        contactItem.setAttribute('address', from.address);
+    if(presence.stanza.@type == 'unavailable' && contact) 
+        _('contact-list').removeChild(contact);
+    else if(!contact) {
+        contact = document.createElement('richlistitem');
+        contact.setAttribute('address', from.address);
+        contact.setAttribute('account', presence.session.name);
         var contactLabel = document.createElement('label');
         contactLabel.setAttribute('value', from.address);
-        contactItem.appendChild(contactLabel);
-        _('contact-list').appendChild(contactItem);
+        contact.appendChild(contactLabel);
+        _('contact-list').appendChild(contact);
     }            
 }
 
@@ -541,7 +560,8 @@ function receiveMUCPresence(presence) {
         switch(presence.stanza.@type.toString()) {
         case 'unavailable':
             participants.removeChild(participant);
-            displayEvent(presence.stanza.@from.toString(),
+            displayEvent(presence.session.name,
+                         presence.stanza.@from.toString(),
                          from.nick + ' left the room', 'leave');
             break;
         default:
@@ -587,7 +607,9 @@ function receiveMUCPresence(presence) {
                 agentFrame.setAttribute('src', 'agent.xul');
             }
             
-            displayEvent(presence.stanza.@from.toString(), from.nick + ' entered the room', 'join');
+            displayEvent(presence.session.name,
+                         presence.stanza.@from.toString(),
+                         from.nick + ' entered the room', 'join');
         }
     }
 }
