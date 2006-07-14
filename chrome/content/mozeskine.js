@@ -37,6 +37,9 @@ function init(event) {
     channel = XMPP.createChannel();
 
     channel.on(
+        {event: 'presence', direction: 'in' },
+        function(presence) { receivePresence(presence) });
+    channel.on(
         {event: 'presence', direction: 'in', stanza: function(s) {
                 return s.ns_muc::x.toXMLString();
             }}, function(presence) { receiveMUCPresence(presence) });
@@ -212,6 +215,10 @@ function withContactInfoOf(address, action) {
 // ----------------------------------------------------------------------
 // GUI ACTIONS
 
+function focusConversation(address) {
+    _('conversations').selectedPanel = _('conversations', {address: address});
+}
+
 function ensureConversationIsOpen(address, resource, type) {
     var conversation = _('conversations', {address: address});
     if(!conversation) {
@@ -347,11 +354,15 @@ function eraseExistingNote(id) {
 // ----------------------------------------------------------------------
 // GUI REACTIONS
 
-function requestedCloseConversation() {
+function selectedContact(event) {
+    focusConversation(event.target.selectedItem.getAttribute('address'));
+}
+
+function requestedExitRoom() {
     closeConversation(_('conversations').selectedPanel.getAttribute('address'));
 }
 
-function requestedOpenConversation() {
+function requestedJoinRoom() {
     var params = {
         contactId: undefined,
         isRoom: false,
@@ -365,7 +376,7 @@ function requestedOpenConversation() {
         params);
 
     if(params.confirm)
-        openConversation(params.contactId, params.roomNick);
+        joinRoom(params.contactId, params.roomNick);
 }
 
 function clickedSaveButton(event) {
@@ -431,12 +442,17 @@ function pressedKeyInChatInput(event) {
 // GUI, a separate function should do that instead and pass
 // information here via function parameters.
 
-function closeConversation(roomAddress) {
-    XMPP.send(account, <presence to={roomAddress + '/' + nick}/>);
+function exitRoom(roomAddress, roomNick) {
+    XMPP.send(account,
+              <presence to={roomAddress + '/' + roomNick} type="unavailable"/>);
+    
 }
 
-function openConversation(roomAddress, roomNick) {
-    XMPP.send(account, <presence to={roomAddress + '/' + roomNick}/>);
+function joinRoom(roomAddress, roomNick) {
+    XMPP.send(account,
+              <presence to={roomAddress + '/' + roomNick}>
+              <x xmlns='http://jabber.org/protocol/muc'/>
+              </presence>);
 }
 
 function sendChatMessage(roomAddress, text) {
@@ -489,6 +505,24 @@ function receiveRoomTopic(message) {
             info.getElementsByAttribute('role', 'topic')[0].textContent =
                 message.stanza.subject.toString();
         });
+}
+
+function receivePresence(presence) {
+    var from = JID(presence.stanza.@from);
+    var contactItem = _('contact-list', {address: from.address});
+
+    item = contactItem;
+
+    if(presence.@type == 'unavailable' && contactItem) 
+        _('contact-list').removeChild(contactItem);
+    else if(!contactItem) {
+        contactItem = document.createElement('richlistitem');
+        contactItem.setAttribute('address', from.address);
+        var contactLabel = document.createElement('label');
+        contactLabel.setAttribute('value', from.address);
+        contactItem.appendChild(contactLabel);
+        _('contact-list').appendChild(contactItem);
+    }            
 }
 
 function receiveMUCPresence(presence) {

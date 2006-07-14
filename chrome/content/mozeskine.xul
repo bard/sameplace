@@ -18,10 +18,10 @@
   <!-- COMMANDS -->
   
   <commandset>
-    <command id="open-conversation" label="Open Conversation..." accesskey="O"
-             oncommand="requestedOpenConversation();"/>
-    <command id="close-conversation" label="Close" accesskey="C"
-             oncommand="requestedCloseConversation();"/>
+    <command id="join-room" label="Join Room..." accesskey="O"
+             oncommand="requestedJoinRoom();"/>
+    <command id="exit-room" label="Close" accesskey="C"
+             oncommand="requestedExitRoom();"/>
   </commandset>
   
   <vbox flex="1">
@@ -30,21 +30,21 @@
 
     <hbox flex="1">
       <vbox flex="1">
-        <deck id="contact-infos" flex="1"/>
+        <vbox flex="0">
+          <button label="Conversation Partner"
+                  oncommand="this.nextSibling.collapsed = !this.nextSibling.collapsed;"
+                  style="font-size: 75%; margin: 0;"/>
+          <deck id="contact-infos" flex="1"/>
+        </vbox>
 
         <splitter/>
 
-        <richlistbox id="contact-list" flex="1">
-          <richlistitem>
-            <label value="Sample Contact #1"/>
-          </richlistitem>
-          <richlistitem>
-            <label value="Sample Contact #2"/>
-          </richlistitem>
-          <richlistitem>
-            <label value="Sample Contact #3"/>
-          </richlistitem>
-        </richlistbox>
+        <vbox flex="1">
+          <button label="Contacts"
+                  oncommand="this.nextSibling.collapsed = !this.nextSibling.collapsed;"
+                  style="font-size: 75%; margin: 0;"/>
+          <richlistbox id="contact-list" flex="1" onselect="selectedContact(event);"/>
+        </vbox>
       </vbox>
 
       <splitter/>
@@ -55,7 +55,7 @@
         <vbox role="conversation" address="" resource="" type="">
           <toolbox>
             <toolbar fullscreentoolbar="true">
-              <toolbarbutton command="close-conversation"/>
+              <toolbarbutton command="exit-room"/>
               <toolbarspring/>
               <toolbaritem>
                 <checkbox role="follow-mode" label="Follow URLs" accesskey="F" checked="false"/>
@@ -84,7 +84,7 @@
 
     <toolbox>
       <toolbar fullscreentoolbar="true">
-        <toolbarbutton command="open-conversation"/>
+        <toolbarbutton command="join-room"/>
       </toolbar>
     </toolbox>
   </vbox>
