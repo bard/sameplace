@@ -1,14 +1,23 @@
-var params;
+// ----------------------------------------------------------------------
+// GLOBAL STATE
+
+var request;
+
+// ----------------------------------------------------------------------
+// INITIALIZATION
 
 function init() {
-    params = window.arguments[0];
+    request = window.arguments[0];
 }
 
+// ----------------------------------------------------------------------
+// GUI ACTIONS
+
 function doOk() {
-    params.contactId = _('contact').value;
-    params.isRoom = _('room').checked;
-    params.roomNick = _('nick').value;
-    params.confirm = true;
+    request.contactId = _('contact').value;
+    request.isRoom = _('room').checked;
+    request.roomNick = _('nick').value;
+    request.confirm = true;
     return true;
 }
 
@@ -21,4 +30,11 @@ function doCancel() {
 
 function _(id) {
     return document.getElementById(id);
+}
+
+// ----------------------------------------------------------------------
+// HOOKS
+
+function xmppSelectedAccount(accountJid) {
+    request.account = accountJid;
 }

@@ -1,16 +1,19 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xul-overlay href="chrome://xmpp4moz/content/accounts.xul"?>
 <dialog id="main" title="Open Conversation"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
         ondialogaccept="return doOk();"
         ondialogcancel="return doCancel();"
         onload="init();">
+
+  <script type="application/x-javascript" src="chrome://xmpp4moz/content/xmpp.js"/>
   <script type="application/x-javascript" src="open.js"/>
 
-  <grid>
+  <grid flex="1">
     <columns>
       <column/>
-      <column/>
+      <column flex="1"/>
     </columns>
 
     <rows>
@@ -30,6 +33,13 @@
       <row align="center">
         <label value="Nick:" control="nick" disabled="true" accesskey="N"/>
         <textbox id="nick" disabled="true"/>
+      </row>
+
+      <row align="center">
+        <label value="Account" control="accounts" accesskey="A"/>
+        <menulist id="accounts" flex="1" label="" sizetopopup="none">
+          <menupopup id="xmpp-menu-accounts"/>
+        </menulist>
       </row>
     </rows>
   </grid>

@@ -219,13 +219,14 @@ function focusConversation(address) {
     _('conversations').selectedPanel = _('conversations', {address: address});
 }
 
-function ensureConversationIsOpen(address, resource, type) {
+function ensureConversationIsOpen(account, address, resource, type) {
     var conversation = _('conversations', {address: address});
-    if(!conversation) {
+    if(!conversation) { 
         conversation = cloneBlueprint('conversation');
         conversation.setAttribute('address', address);
         conversation.setAttribute('resource', resource);
         conversation.setAttribute('type', type);
+        conversation.setAttribute('account', account);
         _('conversations').appendChild(conversation);
         _('conversations').selectedPanel = conversation;
 
@@ -363,20 +364,21 @@ function requestedExitRoom() {
 }
 
 function requestedJoinRoom() {
-    var params = {
+    var request = {
         contactId: undefined,
         isRoom: false,
         roomNick: undefined,
-        confirm: false
+        confirm: false,
+        account: undefined
     };
 
     window.openDialog(
         'chrome://mozeskine/content/open.xul',
         'mozeskine-open-conversation', 'modal,centerscreen',
-        params);
+        request);
 
-    if(params.confirm)
-        joinRoom(params.contactId, params.roomNick);
+    if(request.confirm)
+        joinRoom(request.account, request.contactId, request.roomNick);
 }
 
 function clickedSaveButton(event) {
@@ -427,8 +429,10 @@ function pressedKeyInChatInput(event) {
             if(textBox.value.match(/^\s*$/))
                 return;
 
-            var roomAddress = getAncestorAttribute(textBox, 'address');
-            sendChatMessage(roomAddress, textBox.value);
+            sendChatMessage(
+                getAncestorAttribute(textBox, 'account'),
+                getAncestorAttribute(textBox, 'address'),
+                textBox.value);
             textBox.value = '';
         }
     }
@@ -448,14 +452,14 @@ function exitRoom(roomAddress, roomNick) {
     
 }
 
-function joinRoom(roomAddress, roomNick) {
+function joinRoom(account, roomAddress, roomNick) {
     XMPP.send(account,
               <presence to={roomAddress + '/' + roomNick}>
               <x xmlns='http://jabber.org/protocol/muc'/>
               </presence>);
 }
 
-function sendChatMessage(roomAddress, text) {
+function sendChatMessage(account, roomAddress, text) {
     XMPP.send(account,
               <message to={roomAddress} type="groupchat">
               <body>{text}</body>
@@ -513,7 +517,7 @@ function receivePresence(presence) {
 
     item = contactItem;
 
-    if(presence.@type == 'unavailable' && contactItem) 
+    if(presence.stanza.@type == 'unavailable' && contactItem) 
         _('contact-list').removeChild(contactItem);
     else if(!contactItem) {
         contactItem = document.createElement('richlistitem');
@@ -528,7 +532,7 @@ function receivePresence(presence) {
 function receiveMUCPresence(presence) {
     var from = JID(presence.stanza.@from);
 
-    var conversation = ensureConversationIsOpen(from.address);
+    var conversation = ensureConversationIsOpen(presence.session.name, from.address);
     var contactInfo = ensureContactInfoIsOpen(from.address);
     var participants = contactInfo.getElementsByAttribute('role', 'participants')[0];
     var participant = participants.getElementsByAttribute('nick', from.nick)[0];
