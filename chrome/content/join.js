@@ -17,6 +17,7 @@ function doOk() {
     request.roomAddress = _('address').value;
     request.roomNick = _('nick').value;
     request.confirm = true;
+    request.account = _('accounts').value;
     return true;
 }
 
@@ -34,6 +35,11 @@ function _(id) {
 // ----------------------------------------------------------------------
 // HOOKS
 
-function xmppSelectedAccount(accountJid) {
-    request.account = accountJid;
+function xmppLoadedAccounts() {
+    for each(var account in XMPP.accounts) {
+        if(XMPP.isUp(account.jid)) {
+            _('accounts').value = account.jid;
+            break;
+        }
+    }
 }

@@ -85,6 +85,7 @@
       <toolbar fullscreentoolbar="true">
         <toolbarbutton command="join-room"/>
         <toolbarbutton command="exit-room"/>
+        <toolbarspring/>
         <toolbarbutton command="devel-dwim"/>
       </toolbar>
     </toolbox>

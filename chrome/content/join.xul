@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xul-overlay href="chrome://xmpp4moz/content/accounts.xul"?>
-<dialog id="main" title="Open Conversation"
+<dialog id="main" title="Join Room"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
         ondialogaccept="return doOk();"
         ondialogcancel="return doCancel();"
@@ -29,7 +29,7 @@
 
       <row align="center">
         <label value="Account" control="accounts" accesskey="A"/>
-        <menulist id="accounts" flex="1" label="" sizetopopup="none">
+        <menulist id="accounts" flex="1" label="" sizetopopup="none" class="menulist-compact">
           <menupopup id="xmpp-menu-accounts"/>
         </menulist>
       </row>

@@ -1,6 +1,30 @@
 
 Context:
 
+[Accounts overlay: added hook called just after overlay has been loaded and accounts have been refreshed.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060716130440] 
+
+[Using 16px instead of 20px icons for toolbar and menus.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060716114054] 
+
+[Renamed xmpp-splitter to livebar-splitter. Removed function to open tracer, moved code to XUL.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060716114035] 
+
+[Session instead of session name passed as subject of stream notifications.  Moved connection indicator to status bar.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060716113752] 
+
+[Browser overlay: using accounts overlay to generate/handle account menu.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060716113713] 
+
+[Accounts overlay: added secondary element (duplicate of first) for interfaces that need two accounts lists (like the browser overlay).
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060714200125] 
+
+[XMPP: accounts now have a (generated) jid field.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060714195052] 
+
+[Added overlay that applications can include to provide the user a menulist to choose an account from.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060714194841] 
+
 [XMPP: removed internal reference to service to _xmpp for consistency with other referenced services.
 Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060712185407] 
 
