@@ -146,9 +146,9 @@ function _(element, descendantQuery) {
 }
 
 function scrollingOnlyIfAtBottom(window, action) {
-    var scroll = !(window.pageYOffset < window.scrollMaxY);
+    var shouldScroll = ((window.scrollMaxY - window.pageYOffset) < 10);
     action();
-    if(scroll)
+    if(shouldScroll)
         window.scrollTo(0, window.document.height);
 }
 
