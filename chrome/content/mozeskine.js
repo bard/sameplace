@@ -232,10 +232,11 @@ function ensureConversationIsOpen(account, address, resource, type) {
     return conversation;
 }
 
-function ensureContactInfoIsOpen(address, resource, type) {
+function ensureContactInfoIsOpen(account, address, resource, type) {
     var contactInfo = _('contact-infos', {address: address});
     if(!contactInfo) {
         contactInfo = cloneBlueprint('contact-info');
+        contactInfo.setAttribute('account', account);
         contactInfo.setAttribute('address', address);
         contactInfo.setAttribute('resource', resource);
         contactInfo.setAttribute('type', type);
@@ -346,16 +347,13 @@ function requestedJoinRoom() {
 }
 
 function clickedTopic(event) {
-    var roomAddress = getAncestorAttribute(event.target, 'address');
-    
     var input = { value: '' };
     var check = { value: false };
 
     if(prompts.prompt(null, 'Mozeskine', 'Set topic for this room:', input, null, check))
-        XMPP.send(account, 
-                  <message to={roomAddress} type="groupchat">
-                  <subject>{input.value}</subject>
-                  </message>);
+        setRoomTopic(getAncestorAttribute(event.target, 'account'),
+                     getAncestorAttribute(event.target, 'address'),
+                     input.value);
 }
 
 function pressedKeyInChatInput(event) {
@@ -397,6 +395,13 @@ function joinRoom(account, roomAddress, roomNick) {
               <presence to={roomAddress + '/' + roomNick}>
               <x xmlns='http://jabber.org/protocol/muc'/>
               </presence>);
+}
+
+function setRoomTopic(account, roomAddress, content) {
+    XMPP.send(account, 
+              <message to={roomAddress} type="groupchat">
+              <subject>{content}</subject>
+              </message>);
 }
 
 function sendChatMessage(account, roomAddress, text) {
@@ -463,7 +468,7 @@ function receiveMUCPresence(presence) {
     var from = JID(presence.stanza.@from);
 
     var conversation = ensureConversationIsOpen(presence.session.name, from.address, from.resource);
-    var contactInfo = ensureContactInfoIsOpen(from.address);
+    var contactInfo = ensureContactInfoIsOpen(presence.session.name, from.address);
     var participants = contactInfo.getElementsByAttribute('role', 'participants')[0];
     var participant = participants.getElementsByAttribute('nick', from.nick)[0];
 
