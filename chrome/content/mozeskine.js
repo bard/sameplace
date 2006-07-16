@@ -50,7 +50,7 @@ var smileyRegexp;
 // ----------------------------------------------------------------------
 // GLOBAL STATE
 
-var channel;
+var channel, hooks = {};
 
 
 // ----------------------------------------------------------------------
@@ -106,6 +106,19 @@ function JID(string) {
     }
 
     return jid;
+}
+
+function addHook(hookName, handler) {
+    if(!hooks[hookName])
+        hooks[hookName] = [];
+
+    hooks[hookName].push(handler);
+}
+
+function callHook(hookName, param) {
+    if(hooks[hookName])
+        for each(hookHandler in hooks[hookName])
+            hookHandler(param);
 }
 
 
@@ -307,10 +320,7 @@ function ensureConversationIsOpen(account, address, resource, type) {
         _(conversation, {role: 'chat-input'}).addEventListener(
             'keypress', function(event) { pressedKeyInChatInput(event); }, false);
         _(conversation, {role: 'chat-input'}).focus();
-        // TODO: clickedSaveButton lives in the notetaking
-        // overlay, do the following there, as well
-        _(conversation, {role: 'chat-output'}).addEventListener(
-            'click', function(event) { clickedSaveButton(event); }, true);
+        callHook('open conversation', conversation);
     }
     return conversation;
 }

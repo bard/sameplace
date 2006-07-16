@@ -12,7 +12,12 @@ window.addEventListener(
         channel.on(
             {event: 'message', direction: 'in', stanza: function(s) {
                     return s.ns_notes::x.toXMLString();
-                }}, function(message) { receiveNoteAction(message); });        
+                }}, function(message) { receiveNoteAction(message); });
+
+        addHook('open conversation', function(conversation) {
+                    _(conversation, {role: 'chat-output'}).addEventListener(
+                        'click', function(event) { clickedSaveButton(event); }, true);                    
+                });
     }, false);
 
 
