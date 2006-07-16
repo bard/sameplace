@@ -1,9 +1,9 @@
-* [command="open-conversation"]
+* [command="join-room"]
 {
   list-style-image: url("join.png");
   }
 
-* [command="close-conversation"]
+* [command="exit-room"]
 {
   list-style-image: url("close.png");
   }

@@ -222,6 +222,17 @@ function focusConversation(account, address) {
           '@account="' + account + '"]');
 }
 
+function closeConversation(account, address, resource) {
+    var conversation =
+        x('//*[' +
+          '@role="conversation" and ' +
+          '@account="' + account + '" and ' +
+          '@address="' + address + '" and ' +
+          '@resource="' + resource + '"]');
+    if(conversation)
+        conversation.parentNode.removeChild(conversation);
+}
+
 function ensureConversationIsOpen(account, address, resource, type) {
     var conversation = 
         x('//*[@id="conversations"]/*[' +
@@ -376,7 +387,10 @@ function selectedContact(event) {
 }
 
 function requestedExitRoom() {
-    closeConversation(_('conversations').selectedPanel.getAttribute('address'));
+    var conversation = _('conversations').selectedPanel;
+    var address = conversation.getAttribute('address');
+    var account = conversation.getAttribute('account');
+    exitRoom(account, address);
 }
 
 function requestedJoinRoom() {
@@ -462,7 +476,7 @@ function pressedKeyInChatInput(event) {
 // GUI, a separate function should do that instead and pass
 // information here via function parameters.
 
-function exitRoom(roomAddress, roomNick) {
+function exitRoom(account, roomAddress, roomNick) {
     XMPP.send(account,
               <presence to={roomAddress + '/' + roomNick} type="unavailable"/>);
     
@@ -551,7 +565,7 @@ function receivePresence(presence) {
 function receiveMUCPresence(presence) {
     var from = JID(presence.stanza.@from);
 
-    var conversation = ensureConversationIsOpen(presence.session.name, from.address);
+    var conversation = ensureConversationIsOpen(presence.session.name, from.address, from.resource);
     var contactInfo = ensureContactInfoIsOpen(from.address);
     var participants = contactInfo.getElementsByAttribute('role', 'participants')[0];
     var participant = participants.getElementsByAttribute('nick', from.nick)[0];
@@ -563,6 +577,9 @@ function receiveMUCPresence(presence) {
             displayEvent(presence.session.name,
                          presence.stanza.@from.toString(),
                          from.nick + ' left the room', 'leave');
+
+            closeConversation(presence.session.name, from.address, from.resource);
+
             break;
         default:
             break;
