@@ -14,8 +14,7 @@ function init() {
 // GUI ACTIONS
 
 function doOk() {
-    request.contactId = _('contact').value;
-    request.isRoom = _('room').checked;
+    request.roomAddress = _('address').value;
     request.roomNick = _('nick').value;
     request.confirm = true;
     return true;

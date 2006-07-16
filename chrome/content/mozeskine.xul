@@ -18,9 +18,9 @@
   <!-- COMMANDS -->
   
   <commandset>
-    <command id="join-room" label="Join Room..." accesskey="O"
+    <command id="join-room" label="Join..." accesskey="O"
              oncommand="requestedJoinRoom();"/>
-    <command id="exit-room" label="Close" accesskey="C"
+    <command id="exit-room" label="Leave" accesskey="L"
              oncommand="requestedExitRoom();"/>
   </commandset>
   
@@ -55,7 +55,6 @@
         <vbox role="conversation" address="" resource="" type="">
           <toolbox>
             <toolbar fullscreentoolbar="true">
-              <toolbarbutton command="exit-room"/>
               <toolbarspring/>
               <toolbaritem>
                 <checkbox role="follow-mode" label="Follow URLs" accesskey="F" checked="false"/>
@@ -85,6 +84,8 @@
     <toolbox>
       <toolbar fullscreentoolbar="true">
         <toolbarbutton command="join-room"/>
+        <toolbarbutton command="exit-room"/>
+        <toolbarbutton command="devel-dwim"/>
       </toolbar>
     </toolbox>
   </vbox>

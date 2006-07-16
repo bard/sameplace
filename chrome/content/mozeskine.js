@@ -395,20 +395,19 @@ function requestedExitRoom() {
 
 function requestedJoinRoom() {
     var request = {
-        contactId: undefined,
-        isRoom: false,
+        roomAddress: undefined,
         roomNick: undefined,
         confirm: false,
         account: undefined
     };
 
     window.openDialog(
-        'chrome://mozeskine/content/open.xul',
-        'mozeskine-open-conversation', 'modal,centerscreen',
+        'chrome://mozeskine/content/join.xul',
+        'mozeskine-join-room', 'modal,centerscreen',
         request);
 
     if(request.confirm)
-        joinRoom(request.account, request.contactId, request.roomNick);
+        joinRoom(request.account, request.roomAddress, request.roomNick);
 }
 
 function clickedSaveButton(event) {
