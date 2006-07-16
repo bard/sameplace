@@ -156,14 +156,16 @@ function scrollingOnlyIfAtBottom(window, action) {
         window.scrollTo(0, window.document.height);
 }
 
-function findBrowser(url) {
+function findBrowser(account, address, url) {
     var tabBrowser = window.top.getBrowser();
     var browser;
     var numTabs = tabBrowser.mPanelContainer.childNodes.length;
     var index = 0;
     while (index < numTabs) {
         browser = tabBrowser.getBrowserAtIndex(index);
-        if (url == browser.currentURI.spec)
+        if(browser.currentURI.spec == url &&
+           browser.getAttribute('account') == account &&
+           browser.getAttribute('address') == address)
             return browser;
         index++;
     }
@@ -182,9 +184,9 @@ function findWindow(name) {
 // ----------------------------------------------------------------------
 // GUI UTILITIES (SPECIFIC)
 
-function withNotesWindow(code) {
-    var browser = findBrowser('chrome://mozeskine/content/notes.html');
-        
+function withNotesWindow(account, address, code) {
+    var browser = findBrowser(account, address, 'chrome://mozeskine/content/notes.html');
+    
     if(browser)
         code(browser.contentWindow);
     else {
@@ -196,14 +198,16 @@ function withNotesWindow(code) {
         browser = tabBrowser.selectedBrowser;
 
         browser.addEventListener(
-            'click', clickedRemoveButton, false);
+            'click', function(event) { clickedRemoveButton(event); }, false);
 
         browser.addEventListener(
             'load', function(event) {
                 code(browser.contentWindow);
             }, true);
         
-        browser.loadURI('chrome://mozeskine/content/notes.html');        
+        browser.loadURI('chrome://mozeskine/content/notes.html');
+        browser.setAttribute('account', account);
+        browser.setAttribute('address', address);
     } 
 }
 
@@ -337,8 +341,9 @@ function displayEvent(account, from, content, additionalClass) {
         });
 }
 
-function displayNewNote(account, roomAddress, id, content) {
+function displayNewNote(account, address, id, content) {
     withNotesWindow(
+        account, address,
         function(window) {
             var doc = window.document;
 
@@ -367,8 +372,9 @@ function displayNewNote(account, roomAddress, id, content) {
         });
 }
 
-function eraseExistingNote(id) {
+function eraseExistingNote(account, address, id) {
     withNotesWindow(
+        account, address,
         function(window) {
             var doc = window.document;
             var note = doc.getElementById(id);
@@ -445,7 +451,11 @@ function clickedRemoveButton(event) {
         return;
 
     var note = event.target.parentNode.parentNode;
-    sendNoteRemoval(note.id);
+
+    sendNoteRemoval(
+        event.currentTarget.getAttribute('account'),
+        event.currentTarget.getAttribute('address'),
+        note.id);
 }
 
 function pressedKeyInChatInput(event) {
@@ -505,7 +515,7 @@ function sendNoteAddition(account, roomAddress, roomNick, text) {
     XMPP.send(account, packet);
 }
 
-function sendNoteRemoval(roomAddress, id) {
+function sendNoteRemoval(account, roomAddress, id) {
     var packet = <message to={roomAddress} type="groupchat"/>;
     packet.ns_notes::x.remove.@id = id;
     XMPP.send(account, packet);
@@ -633,13 +643,20 @@ function receiveMUCPresence(presence) {
 }
 
 function receiveNoteAction(message) {
+    var account = message.session.name;
+    var address = JID(message.stanza.@from).address;
+
     for each(var action in message.stanza.ns_notes::x.*) {
         switch(action.name().toString()) {
         case ns_notes + '::append':
-            displayNewNote(action.@id, action.*[0]);
+            displayNewNote(
+                account, address,
+                action.@id, action.*[0]);
             break;
         case ns_notes + '::remove':
-            eraseExistingNote(action.@id);
+            eraseExistingNote(
+                account, address,
+                action.@id);
             break;
         default:
             break;
