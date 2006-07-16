@@ -1,6 +1,12 @@
 
 Context:
 
+[Reworked signon dialog to use overlay and to not allow choice if opener already specified account.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060716180309] 
+
+[Interface cleanup.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060716161543] 
+
 [Accounts overlay: added hook called just after overlay has been loaded and accounts have been refreshed.
 Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060716130440] 
 

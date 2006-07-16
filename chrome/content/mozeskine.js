@@ -11,12 +11,40 @@ const mediator = Cc['@mozilla.org/appshell/window-mediator;1']
 const prompts = Cc["@mozilla.org/embedcomp/prompt-service;1"]
     .getService(Ci.nsIPromptService);
 
-var urlRegexp = new RegExp('(http:\/\/|www.)[^ \\t\\n\\f\\r"<>|()]*[^ \\t\\n\\f\\r"<>|,.!?(){}]');
-
 var ns_notes = new Namespace('http://hyperstruct.net/mozeskine/protocol/0.1.4#notes');
 var ns_agent = new Namespace('http://hyperstruct.net/mozeskine/protocol/0.1.4#agent');
 var ns_muc = new Namespace('http://jabber.org/protocol/muc#user');
 var ns_xul = new Namespace('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul');
+
+var urlRegexp = new RegExp('(http:\/\/|www.)[^ \\t\\n\\f\\r"<>|()]*[^ \\t\\n\\f\\r"<>|,.!?(){}]');
+var smileyMap = {
+    '0:-)':  'angel',
+    ':\'(':  'crying',
+    '>:-)':  'devil-grin',
+    '>:-(':  'devil-sad',
+    'B-)':   'glasses',
+    ':-*':   'kiss',
+    ':-(|)': 'monkey',
+    ':-|':   'plain',
+    ':-(':   'sad',
+    ':-)':   'smile',
+    ':-D':   'smile-big',
+    ':-!':   'smirk',
+    ':-0':  'surprise',
+    ';-)':   'wink'
+};
+var smileyRegexp;
+
+(function() {
+    var smileySymbols = [];
+    for(var symbol in smileyMap)
+        smileySymbols.push(symbol);
+
+    smileyRegexp = smileySymbols.map(
+        function(symbol) {
+            return symbol.replace(/(\(|\)|\*|\|)/g, '\\$1');
+        }).join('|');
+})();
 
 
 // ----------------------------------------------------------------------
@@ -86,6 +114,58 @@ function JID(string) {
 
 // Note: only place here functions that will work with any GUI.  See
 // GUI UTILITIES (SPECIFIC) for functions specific to this GUI.
+         
+function textToHTML(doc, text) {
+    text = text.toString();
+    var container = doc.createElement('span');
+    
+    var rx = new RegExp([urlRegexp.source, smileyRegexp].join('|'), 'g');
+    
+    var start = 0;
+    var match = rx.exec(text);
+    while(match) {
+        container.appendChild(
+            doc.createTextNode(
+                text.substring(start, match.index)));
+
+        start = rx.lastIndex;
+
+        var translatedElement;
+        if(match[0].match(smileyRegexp)) {
+            translatedElement = doc.createElement('img');
+            translatedElement.setAttribute('class', 'emoticon');
+            translatedElement.
+                setAttribute('src',
+                             'chrome://mozeskine/skin/emoticons/' +
+                             smileyMap[match[0]] +
+                             '.png');
+        } else {
+            //translatedElement = doc.createElement('a');
+            //translatedElement.textContent = match[0];
+            translatedElement = doc.createTextNode(match[0]);
+        }
+        container.appendChild(translatedElement);
+
+        match = rx.exec(text);
+    }
+    container.appendChild(
+        doc.createTextNode(
+            text.substring(start, text.length)));
+/*
+  var links = container.getElementsByTagName('a');
+  var link;
+  for(var i=0; link = links[i]; i++)
+  link.addEventListener(
+  'click', function(event) {
+  var url = event.target.textContent;
+  if(url.match(/^www\./))
+  url = 'http://' + url;
+  window.top.content.location = url;
+  }, false);
+*/
+
+    return container;
+}
 
 function getAncestorAttribute(element, attributeName) {
     while(element.parentNode) {
@@ -93,6 +173,7 @@ function getAncestorAttribute(element, attributeName) {
             return element.parentNode.getAttribute(attributeName);
         element = element.parentNode;
     }
+    return null;
 }
 
 function withDocumentOf(window, action) {
@@ -165,6 +246,7 @@ function findBrowser(account, address, url) {
             return browser;
         index++;
     }
+    return null;
 }
 
 function findWindow(name) {
@@ -174,6 +256,7 @@ function findWindow(name) {
         if(window.name == name)
             return window;
     }
+    return null;
 }
 
 
@@ -268,9 +351,8 @@ function displayChatMessage(account, address, resource, content) {
             var sender = doc.createElement('span');
             sender.textContent = resource || address;
             sender.setAttribute('class', 'sender');
-            var body = doc.createElement('span');
+            var body = textToHTML(doc, content);
             body.setAttribute('class', 'body');
-            body.textContent = content;
 
             var message = doc.createElement('li');
             message.setAttribute('class', 'message');
