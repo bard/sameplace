@@ -223,11 +223,11 @@ function ensureConversationIsOpen(account, address, resource, type) {
 
         _(conversation, {role: 'chat-input'}).addEventListener(
             'keypress', function(event) { pressedKeyInChatInput(event); }, false);
+        _(conversation, {role: 'chat-input'}).focus();
         // TODO: clickedSaveButton lives in the notetaking
         // overlay, do the following there, as well
         _(conversation, {role: 'chat-output'}).addEventListener(
             'click', function(event) { clickedSaveButton(event); }, true);
-        _(conversation, {role: 'chat-output'}).focus();
     }
     return conversation;
 }
