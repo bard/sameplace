@@ -34,7 +34,8 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
                         .getElementById('livebar')
                         .firstChild
                         .contentDocument
-                        .location.href = 'chrome://mozeskine/content/mozeskine.xul'"
+                        .location.href = 'chrome://mozeskine/content/mozeskine.xul';
+                        xmppShowLivebar();"
              accesskey="M"/>
     <command id="mozeskine-command-open-window"
              label="Mozeskine (window)"
