@@ -424,7 +424,8 @@ function receiveChatMessage(message) {
 }
 
 function receiveMessageWithURL(message) {
-    if(_('conversations', {address: JID(message.stanza.@from).address, role: 'follow-mode'}).checked) {
+    if(_('conversations', {address: JID(message.stanza.@from).address, role: 'follow'})
+       .getAttribute('checked') == 'true') {
         var url = message.stanza.body.toString().match(urlRegexp)[0];
         window.top.getBrowser().addTab(url);   
     }

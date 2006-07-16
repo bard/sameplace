@@ -57,9 +57,14 @@
           <toolbox>
             <toolbar fullscreentoolbar="true">
               <toolbarspring/>
-              <toolbaritem>
-                <checkbox role="follow-mode" label="Follow URLs" accesskey="F" checked="false"/>
-              </toolbaritem>
+              <toolbarbutton label="Options "
+                             type="menu" tooltiptext="Options for this conversation"
+                             accesskey="p">
+                <menupopup role="options">
+                  <menuitem label="Follow URLs" role="follow"
+                            checked="false" accesskey="F" type="checkbox"/>
+                </menupopup>
+              </toolbarbutton>
             </toolbar>
           </toolbox>
 
