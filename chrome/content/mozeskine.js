@@ -245,12 +245,12 @@ function ensureContactInfoIsOpen(address, resource, type) {
     return contactInfo;
 }
 
-function displayChatMessage(account, from, content) {
+function displayChatMessage(account, address, resource, content) {
     var chatOutputWindow = x(
         '//*[' +
         '@role="conversation" and ' +
         '@account="' + account + '" and ' +
-        '@address="' + JID(from).address + '"]' +
+        '@address="' + address + '"]' +
         '//*[@role="chat-output"]')
         .contentWindow;
 
@@ -265,7 +265,7 @@ function displayChatMessage(account, from, content) {
             actions.appendChild(saveAction);
 
             var sender = doc.createElement('span');
-            sender.textContent = JID(from).resource || JID(from).address;
+            sender.textContent = resource || address;
             sender.setAttribute('class', 'sender');
             var body = doc.createElement('span');
             body.setAttribute('class', 'body');
@@ -284,12 +284,12 @@ function displayChatMessage(account, from, content) {
         });
 }
 
-function displayEvent(account, from, content, additionalClass) {
+function displayEvent(account, address, resource, content, additionalClass) {
     var chatOutputWindow = x(
         '//*[' +
         '@role="conversation" and ' +
         '@account="' + account + '" and ' +
-        '@address="' + JID(from).address + '"]' +
+        '@address="' + address + '"]' +
         '//*[@role="chat-output"]')
         .contentWindow;
     
@@ -411,9 +411,10 @@ function sendChatMessage(account, roomAddress, text) {
 // NETWORK REACTIONS
 
 function receiveChatMessage(message) {
+    var from = JID(message.stanza.@from);
     displayChatMessage(
         message.session.name,
-        message.stanza.@from.toString(),
+        from.address, from.resource,
         message.stanza.body);
 }
 
@@ -428,7 +429,7 @@ function receiveRoomTopic(message) {
     var from = JID(message.stanza.@from);
     displayEvent(
         message.session.name,
-        message.stanza.@from.toString(),
+        from.address, from.resource,
         from.nick + ' set the topic to "' +
         message.stanza.subject + '"', 'topic');
     
@@ -471,7 +472,7 @@ function receiveMUCPresence(presence) {
         case 'unavailable':
             participants.removeChild(participant);
             displayEvent(presence.session.name,
-                         presence.stanza.@from.toString(),
+                         from.address, from.resource,
                          from.nick + ' left the room', 'leave');
 
             closeConversation(presence.session.name, from.address, from.resource);
@@ -521,7 +522,7 @@ function receiveMUCPresence(presence) {
             }
             
             displayEvent(presence.session.name,
-                         presence.stanza.@from.toString(),
+                         from.address, from.resource,
                          from.nick + ' entered the room', 'join');
         }
     }
