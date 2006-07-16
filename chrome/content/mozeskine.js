@@ -249,9 +249,9 @@ function ensureConversationIsOpen(account, address, resource, type) {
         _('conversations').selectedPanel = conversation;
 
         _(conversation, {role: 'chat-input'}).addEventListener(
-            'keypress', pressedKeyInChatInput, false);
+            'keypress', function(event) { pressedKeyInChatInput(event); }, false);
         _(conversation, {role: 'chat-output'}).addEventListener(
-            'click', clickedSaveButton, true);
+            'click', function(event) { clickedSaveButton(event); }, true);
         _(conversation, {role: 'chat-output'}).focus();
     }
     return conversation;
@@ -337,7 +337,7 @@ function displayEvent(account, from, content, additionalClass) {
         });
 }
 
-function displayNewNote(id, content) {
+function displayNewNote(account, roomAddress, id, content) {
     withNotesWindow(
         function(window) {
             var doc = window.document;
@@ -414,8 +414,6 @@ function clickedSaveButton(event) {
     if(event.target.className != 'action')
         return;
 
-    var roomAddress = getAncestorAttribute(event.currentTarget, 'address');
-
     var messageItem = event.target.parentNode.parentNode;
 
     var child = messageItem.firstChild;
@@ -423,7 +421,10 @@ function clickedSaveButton(event) {
         child = child.nextSibling;
 
     if(child)
-        sendNoteAddition(roomAddress, child.textContent);
+        sendNoteAddition(getAncestorAttribute(event.currentTarget, 'account'),
+                         getAncestorAttribute(event.currentTarget, 'address'),
+                         getAncestorAttribute(event.currentTarget, 'resource'),
+                         child.textContent);
 }
 
 function clickedTopic(event) {
@@ -495,10 +496,11 @@ function sendChatMessage(account, roomAddress, text) {
               </message>);
 }
 
-function sendNoteAddition(roomAddress, text) {
+function sendNoteAddition(account, roomAddress, roomNick, text) {
     var packet = <message to={roomAddress} type="groupchat"/>;
     packet.ns_notes::x.append = text;
-    packet.ns_notes::x.append.@id = account.jid + '/' + (new Date()).getTime();
+    packet.ns_notes::x.append.@id = roomAddress + '/' + roomNick +
+        '/' + (new Date()).getTime();
     lastId = packet.ns_notes::x.append.@id;
     XMPP.send(account, packet);
 }
