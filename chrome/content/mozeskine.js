@@ -289,6 +289,10 @@ function focusConversation(account, address) {
         x('//*[@id="conversations"]/*[' +
           '@address="' + address + '" and ' +
           '@account="' + account + '"]');
+    _('contact-infos').selectedPanel =
+        x('//*[@id="contact-infos"]/*[' +
+          '@address="' + address + '" and ' +
+          '@account="' + account + '"]');
 }
 
 function closeConversation(account, address, resource) {
@@ -300,6 +304,10 @@ function closeConversation(account, address, resource) {
           '@resource="' + resource + '"]');
     if(conversation)
         conversation.parentNode.removeChild(conversation);
+    var contactInfo = 
+        x('//*[@id="contact-infos"]/*[' +
+          '@account="' + account + '" and ' +
+          '@address="' + address + '"]');
 }
 
 function ensureConversationIsOpen(account, address, resource, type) {
@@ -410,7 +418,7 @@ function displayEvent(account, address, resource, content, additionalClass) {
 // GUI REACTIONS
 
 function selectedContact(event) {
-    var contact = event.target.selectedItem;        
+    var contact = event.target.selectedItem;
     focusConversation(contact.getAttribute('account'), contact.getAttribute('address'));
 }
 
