@@ -24,6 +24,8 @@
              oncommand="requestedJoinRoom();"/>
     <command id="exit-room" label="Leave" accesskey="L"
              oncommand="requestedExitRoom();"/>
+    <command id="sidebar-visible" label="Sidebar" accesskey="S"
+             oncommand="requestedToggleSidebar(event);" checked="true"/>
   </commandset>
   
   <vbox flex="1">
@@ -31,7 +33,7 @@
     <!-- CONVERSATION AREA -->
 
     <hbox flex="1">
-      <vbox flex="1">
+      <vbox flex="1" id="sidebar">
         <vbox flex="0">
           <button label="Conversation Partner"
                   oncommand="this.nextSibling.collapsed = !this.nextSibling.collapsed;"
@@ -49,7 +51,7 @@
         </vbox>
       </vbox>
 
-      <splitter/>
+      <splitter id="splitter-sidebar"/>
 
       <deck flex="4" id="conversations"/>
       
@@ -90,6 +92,7 @@
 
     <toolbox>
       <toolbar fullscreentoolbar="true">
+        <toolbarbutton command="sidebar-visible"/>
         <toolbarbutton command="join-room"/>
         <toolbarbutton command="exit-room"/>
         <toolbarspring/>

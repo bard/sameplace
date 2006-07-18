@@ -8,6 +8,16 @@
   list-style-image: url("close.png");
   }
 
+* [command="sidebar-visible"][checked="true"]
+{
+  list-style-image: url("hide-sidebar.png");
+  }
+
+* [command="sidebar-visible"][checked="false"]
+{
+  list-style-image: url("show-sidebar.png");
+  }
+
 richlistitem.participant
 {
   padding: 0.2em;

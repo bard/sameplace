@@ -284,6 +284,18 @@ function withContactInfoOf(address, action) {
 // ----------------------------------------------------------------------
 // GUI ACTIONS
 
+function showSideBar() {
+    _('sidebar-visible').setAttribute('checked', 'true');
+    _('sidebar').collapsed = false;
+    _('splitter-sidebar').hidden = false;    
+}
+
+function hideSideBar() {
+    _('sidebar-visible').setAttribute('checked', 'false');
+    _('sidebar').collapsed = true;
+    _('splitter-sidebar').hidden = true;    
+}
+
 function focusConversation(account, address) {
     _('conversations').selectedPanel =
         x('//*[@id="conversations"]/*[' +
@@ -416,6 +428,13 @@ function displayEvent(account, address, resource, content, additionalClass) {
 
 // ----------------------------------------------------------------------
 // GUI REACTIONS
+
+function requestedToggleSidebar(command) {
+    if(_('splitter-sidebar').hidden) 
+        showSideBar();
+    else
+        hideSideBar();
+}
 
 function selectedContact(event) {
     var contact = event.target.selectedItem;
