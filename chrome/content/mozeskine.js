@@ -87,6 +87,11 @@ function init(event) {
 }
 
 function finish() {
+    var conversations = _('conversations').childNodes;
+    for(var i=0, l=conversations.length; i<l; i++) 
+        XMPP.send(conversations[i].getAttribute('account'),
+                  <presence type="unavailable" to={conversations[i].getAttribute('address')}/>);
+            
     channel.release();
 }
 
