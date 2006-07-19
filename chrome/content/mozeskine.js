@@ -319,12 +319,15 @@ function closeConversation(account, address, resource) {
           '@account="' + account + '" and ' +
           '@address="' + address + '" and ' +
           '@resource="' + resource + '"]');
-    if(conversation)
+    if(conversation) 
         conversation.parentNode.removeChild(conversation);
     var contactInfo = 
-        x('//*[@id="contact-infos"]/*[' +
+        x('//*[' +
+          '@id="contact-infos"]/*[' +
           '@account="' + account + '" and ' +
           '@address="' + address + '"]');
+    if(contactInfo) 
+        contactInfo.parentNode.removeChild(contactInfo);
 }
 
 function ensureConversationIsOpen(account, address, resource, type) {
@@ -335,10 +338,10 @@ function ensureConversationIsOpen(account, address, resource, type) {
         
     if(!conversation) { 
         conversation = cloneBlueprint('conversation');
+        conversation.setAttribute('account', account);
         conversation.setAttribute('address', address);
         conversation.setAttribute('resource', resource);
         conversation.setAttribute('type', type);
-        conversation.setAttribute('account', account);
         _('conversations').appendChild(conversation);
         _('conversations').selectedPanel = conversation;
 
@@ -351,7 +354,11 @@ function ensureConversationIsOpen(account, address, resource, type) {
 }
 
 function ensureContactInfoIsOpen(account, address, resource, type) {
-    var contactInfo = _('contact-infos', {address: address});
+    var contactInfo =
+        x('//*[@id="contacti-infos"]/*[' +
+          '@address="' + address + '" and ' +
+          '@account="' + account + '"]');
+
     if(!contactInfo) {
         contactInfo = cloneBlueprint('contact-info');
         contactInfo.setAttribute('account', account);
@@ -597,63 +604,61 @@ function receiveMUCPresence(presence) {
     var participants = contactInfo.getElementsByAttribute('role', 'participants')[0];
     var participant = participants.getElementsByAttribute('nick', from.nick)[0];
 
-    if(participant) {
-        switch(presence.stanza.@type.toString()) {
-        case 'unavailable':
+    switch(presence.stanza.@type.toString()) {
+    case 'unavailable':
+        displayEvent(presence.session.name,
+                     from.address, from.resource,
+                     from.nick + ' left the room', 'leave');
+
+        if(participant) 
             participants.removeChild(participant);
-            displayEvent(presence.session.name,
-                         from.address, from.resource,
-                         from.nick + ' left the room', 'leave');
 
-            closeConversation(presence.session.name, from.address, from.resource);
+        closeConversation(presence.session.name, from.address, from.resource);
+        closeContactInfo(presence.session.name, from.address, from.resource);
 
-            break;
-        default:
-            break;
-        }
-    } else {
-        switch(presence.stanza.@type.toString()) {
-        case 'unavailable':
-            break;
-        default:
-            participant = document.createElement('richlistitem');
-            participant.setAttribute('nick', from.nick); // TODO: namespace this
-            participant.setAttribute('orient', 'horizontal');
-            participant.setAttribute('align', 'center');
-            participant.setAttribute('class', 'participant');
-            var image = document.createElement('image');
-            var label = document.createElement('label');
-            label.setAttribute('value', from.nick);
-            participant.appendChild(image);
-            participant.appendChild(label);
+        break;
 
-            // EXPERIMENTAL
-            if(presence.stanza.ns_xul::x.length() > 0) {
-                var agentFrame = document.createElement('iframe');
-                agentFrame.setAttribute('class', 'box-inset');
+    default:
+        displayEvent(presence.session.name,
+                     from.address, from.resource,
+                     from.nick + ' entered the room', 'join');
+
+        participant = document.createElement('richlistitem');
+        participant.setAttribute('nick', from.nick); // TODO: namespace this
+        participant.setAttribute('orient', 'horizontal');
+        participant.setAttribute('align', 'center');
+        participant.setAttribute('class', 'participant');
+        var image = document.createElement('image');
+        var label = document.createElement('label');
+        label.setAttribute('value', from.nick);
+        participant.appendChild(image);
+        participant.appendChild(label);
+
+        // EXPERIMENTAL
+        if(presence.stanza.ns_xul::x.length() > 0) {
+            var agentFrame = document.createElement('iframe');
+            agentFrame.setAttribute('class', 'box-inset');
                 
-                participant.appendChild(agentFrame);
-            }
-
-            participants.appendChild(participant);
-
-            if(presence.stanza.ns_xul::x.length() > 0) {
-                var agentWidget = 
-                    (new DOMParser())
-                    .parseFromString(presence.stanza.ns_xul::x.*[0], 'text/xml')
-                    .documentElement;
-
-                function addWidget(event) {
-                    agentFrame.contentDocument.documentElement.appendChild(agentWidget);
-                    agentFrame.contentWindow.removeEventListener('load', addWidget, false);
-                }
-                agentFrame.addEventListener('load', addWidget, false);
-                agentFrame.setAttribute('src', 'agent.xul');
-            }
-            
-            displayEvent(presence.session.name,
-                         from.address, from.resource,
-                         from.nick + ' entered the room', 'join');
+            participant.appendChild(agentFrame);
         }
+
+        participants.appendChild(participant);
+
+        // EXPERIMENTAL
+        if(presence.stanza.ns_xul::x.length() > 0) {
+            var agentWidget = 
+                (new DOMParser())
+                .parseFromString(presence.stanza.ns_xul::x.*[0], 'text/xml')
+                .documentElement;
+
+            function addWidget(event) {
+                agentFrame.contentDocument.documentElement.appendChild(agentWidget);
+                agentFrame.contentWindow.removeEventListener('load', addWidget, false);
+            }
+            agentFrame.addEventListener('load', addWidget, false);
+            agentFrame.setAttribute('src', 'agent.xul');
+        }
+            
+        break;
     }
 }
