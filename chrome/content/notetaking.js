@@ -42,6 +42,7 @@ function withNotesWindow(account, address, code) {
 
         browser.addEventListener(
             'load', function(event) {
+                browser.contentDocument.title = 'Notes: ' + address;
                 code(browser.contentWindow);
             }, true);
         
