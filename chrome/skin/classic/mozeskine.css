@@ -3,7 +3,7 @@
   list-style-image: url("join.png");
   }
 
-* [command="exit-room"]
+[command="exit-room"]
 {
   list-style-image: url("close.png");
   }

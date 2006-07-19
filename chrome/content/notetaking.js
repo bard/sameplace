@@ -12,11 +12,11 @@ window.addEventListener(
         channel.on(
             {event: 'message', direction: 'in', stanza: function(s) {
                     return s.ns_notes::x.toXMLString();
-                }}, function(message) { receiveNoteAction(message); });
+                }}, function(message) { noteReceiveAction(message); });
 
         addHook('open conversation', function(conversation) {
                     _(conversation, {role: 'chat-output'}).addEventListener(
-                        'click', function(event) { clickedSaveButton(event); }, true);                    
+                        'click', function(event) { noteRequestedSave(event); }, true);
                 });
     }, false);
 
@@ -38,7 +38,7 @@ function withNotesWindow(account, address, code) {
         browser = tabBrowser.selectedBrowser;
 
         browser.addEventListener(
-            'click', function(event) { clickedRemoveButton(event); }, false);
+            'click', function(event) { noteRequestedRemoval(event); }, false);
 
         browser.addEventListener(
             'load', function(event) {
@@ -55,7 +55,7 @@ function withNotesWindow(account, address, code) {
 // ----------------------------------------------------------------------
 // GUI ACTIONS
 
-function displayNewNote(account, address, id, content) {
+function noteDisplay(account, address, id, content) {
     withNotesWindow(
         account, address,
         function(window) {
@@ -86,7 +86,7 @@ function displayNewNote(account, address, id, content) {
         });
 }
 
-function eraseExistingNote(account, address, id) {
+function noteErase(account, address, id) {
     withNotesWindow(
         account, address,
         function(window) {
@@ -101,7 +101,7 @@ function eraseExistingNote(account, address, id) {
 // ----------------------------------------------------------------------
 // GUI REACTIONS
 
-function clickedSaveButton(event) {
+function noteRequestedSave(event) {
     if(event.target.className != 'action')
         return;
 
@@ -112,19 +112,19 @@ function clickedSaveButton(event) {
         child = child.nextSibling;
 
     if(child)
-        sendNoteAddition(getAncestorAttribute(event.currentTarget, 'account'),
+        noteSendAddition(getAncestorAttribute(event.currentTarget, 'account'),
                          getAncestorAttribute(event.currentTarget, 'address'),
                          getAncestorAttribute(event.currentTarget, 'resource'),
                          child.textContent);
 }
 
-function clickedRemoveButton(event) {
+function noteRequestedRemoval(event) {
     if(event.target.className != 'action')
         return;
 
     var note = event.target.parentNode.parentNode;
 
-    sendNoteRemoval(
+    noteSendRemoval(
         event.currentTarget.getAttribute('account'),
         event.currentTarget.getAttribute('address'),
         note.id);
@@ -134,7 +134,7 @@ function clickedRemoveButton(event) {
 // ----------------------------------------------------------------------
 // NETWORK ACTIONS
 
-function sendNoteAddition(account, roomAddress, roomNick, text) {
+function noteSendAddition(account, roomAddress, roomNick, text) {
     var packet = <message to={roomAddress} type="groupchat"/>;
     packet.ns_notes::x.append = text;
     packet.ns_notes::x.append.@id = roomAddress + '/' + roomNick +
@@ -143,7 +143,7 @@ function sendNoteAddition(account, roomAddress, roomNick, text) {
     XMPP.send(account, packet);
 }
 
-function sendNoteRemoval(account, roomAddress, id) {
+function noteSendRemoval(account, roomAddress, id) {
     var packet = <message to={roomAddress} type="groupchat"/>;
     packet.ns_notes::x.remove.@id = id;
     XMPP.send(account, packet);
@@ -153,19 +153,19 @@ function sendNoteRemoval(account, roomAddress, id) {
 // ----------------------------------------------------------------------
 // NETWORK REACTIONS
 
-function receiveNoteAction(message) {
+function noteReceiveAction(message) {
     var account = message.session.name;
     var address = JID(message.stanza.@from).address;
 
     for each(var action in message.stanza.ns_notes::x.*) {
         switch(action.name().toString()) {
         case ns_notes + '::append':
-            displayNewNote(
+            noteDisplay(
                 account, address,
                 action.@id, action.*[0]);
             break;
         case ns_notes + '::remove':
-            eraseExistingNote(
+            noteErase(
                 account, address,
                 action.@id);
             break;

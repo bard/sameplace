@@ -382,6 +382,7 @@ function displayChatMessage(account, address, resource, content) {
 
     withDocumentOf(
         chatOutputWindow, function(doc) {
+            // TODO: action part should be moved in specific overlay
             var actions = doc.createElement('div');
             actions.setAttribute('class', 'actions');
 
@@ -614,10 +615,8 @@ function receiveMUCPresence(presence) {
             participants.removeChild(participant);
 
         closeConversation(presence.session.name, from.address, from.resource);
-        closeContactInfo(presence.session.name, from.address, from.resource);
 
         break;
-
     default:
         displayEvent(presence.session.name,
                      from.address, from.resource,
