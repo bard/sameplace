@@ -1,4 +1,4 @@
-* [command="join-room"]
+[command="join-room"]
 {
   list-style-image: url("join.png");
   }
@@ -8,12 +8,12 @@
   list-style-image: url("close.png");
   }
 
-* [command="sidebar-visible"][checked="true"]
+[command="sidebar-visible"][checked="true"]
 {
   list-style-image: url("hide-sidebar.png");
   }
 
-* [command="sidebar-visible"][checked="false"]
+[command="sidebar-visible"][checked="false"]
 {
   list-style-image: url("show-sidebar.png");
   }
@@ -27,3 +27,4 @@ richlistitem.participant>image
 {
   list-style-image: url("user.png");
   }
+
