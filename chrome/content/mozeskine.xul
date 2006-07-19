@@ -58,7 +58,7 @@
       <box hidden="true" id="blueprints">
         <vbox role="conversation" address="" resource="" type="">
           <toolbox>
-            <toolbar fullscreentoolbar="true">
+            <toolbar id="conversation-toolbar" fullscreentoolbar="true">
               <toolbarspring/>
               <toolbarbutton label="Options "
                              type="menu" tooltiptext="Options for this conversation"

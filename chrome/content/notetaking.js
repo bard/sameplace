@@ -104,6 +104,12 @@ function noteErase(account, address, id) {
 // ----------------------------------------------------------------------
 // GUI REACTIONS
 
+function noteRequestedOpenNotes(event) {
+    withNotesWindow(getAncestorAttribute(event.currentTarget, 'account'),
+                    getAncestorAttribute(event.currentTarget, 'address'),
+                    function(window) { });
+}
+
 function noteRequestedSave(event) {
     if(event.target.className != 'action')
         return;

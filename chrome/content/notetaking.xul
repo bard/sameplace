@@ -23,4 +23,10 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
 <overlay id="mozeskine-notetaking-overlay"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script type="application/x-javascript" src="notetaking.js"/>
+
+  <toolbar id="conversation-toolbar">
+    <toolbarbutton label="Notes" accesskey="N"
+                   oncommand="noteRequestedOpenNotes(event);"
+                   position="1"/>
+  </toolbar>
 </overlay>
