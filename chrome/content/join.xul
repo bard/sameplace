@@ -29,7 +29,7 @@
       </row>
 
       <row align="center">
-        <label value="Account" control="accounts" accesskey="A"/>
+        <label value="Account:" control="accounts" accesskey="A"/>
         <menulist id="accounts" flex="1" label="" sizetopopup="none" class="menulist-compact">
           <menupopup id="xmpp-menu-accounts"/>
         </menulist>

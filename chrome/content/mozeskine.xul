@@ -95,8 +95,6 @@
         <toolbarbutton command="sidebar-visible"/>
         <toolbarbutton command="join-room"/>
         <toolbarbutton command="exit-room"/>
-        <toolbarspring/>
-        <toolbarbutton command="devel-dwim"/>
       </toolbar>
     </toolbox>
   </vbox>
