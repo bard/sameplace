@@ -2,6 +2,7 @@
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://mozeskine/skin/mozeskine.css" type="text/css"?>
 <?xul-overlay href="chrome://mozeskine/content/notetaking.xul"?>
+<?xul-overlay href="chrome://mozeskine/content/samepage.xul"?>
 
 <!DOCTYPE page>
 <page id="mozeskine" title="Mozeskine"

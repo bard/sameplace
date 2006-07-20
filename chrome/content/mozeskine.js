@@ -132,7 +132,34 @@ function callHook(hookName, param) {
 
 // Note: only place here functions that will work with any GUI.  See
 // GUI UTILITIES (SPECIFIC) for functions specific to this GUI.
-         
+
+function withContent(account, address, url, code) {
+    var tabBrowser = window.top.getBrowser();
+    var browser = findBrowser(account, address, url);
+
+    if(browser) {
+        code(browser.contentWindow);        
+    } else {
+        if(tabBrowser.currentURI.spec != 'about:blank') 
+            tabBrowser.selectedTab = tabBrowser.addTab();
+        
+        browser = tabBrowser.selectedBrowser;
+
+        browser.addEventListener(
+            'load', function(event) {
+                if(!event.target)
+                    return;
+
+                if(event.target.location.href == browser.contentDocument.location.href)
+                    code(browser.contentWindow); 
+            }, true);
+        
+        browser.loadURI(url);
+        browser.setAttribute('account', account);
+        browser.setAttribute('address', address);
+    }    
+}
+
 function textToHTML(doc, text) {
     text = text.toString();
     var container = doc.createElement('span');
@@ -252,6 +279,12 @@ function scrollingOnlyIfAtBottom(window, action) {
 }
 
 function findBrowser(account, address, url) {
+    var index = findBrowserIndex(account, address, url);
+    if(index != -1)
+        return window.top.getBrowser().getBrowserAtIndex(index);
+}
+
+function findBrowserIndex(account, address, url) {
     var tabBrowser = window.top.getBrowser();
     var browser;
     var numTabs = tabBrowser.mPanelContainer.childNodes.length;
@@ -261,10 +294,10 @@ function findBrowser(account, address, url) {
         if(browser.currentURI.spec == url &&
            browser.getAttribute('account') == account &&
            browser.getAttribute('address') == address)
-            return browser;
+            return index;
         index++;
     }
-    return null;
+    return -1;
 }
 
 function findWindow(name) {
