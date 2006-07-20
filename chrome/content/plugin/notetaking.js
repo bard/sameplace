@@ -25,7 +25,8 @@ window.addEventListener(
 // GUI UTILITIES (SPECIFIC)
 
 function withNotesWindow(account, address, code) {
-    var browser = findBrowser(account, address, 'chrome://mozeskine/content/notes.html');
+    var url = 'chrome://mozeskine/content/plugin/notetaking.html'
+    var browser = findBrowser(account, address, url);
     
     if(browser)
         code(browser.contentWindow);
@@ -48,7 +49,7 @@ function withNotesWindow(account, address, code) {
                 code(browser.contentWindow);
             }, true);
         
-        browser.loadURI('chrome://mozeskine/content/notes.html');
+        browser.loadURI(url);
         browser.setAttribute('account', account);
         browser.setAttribute('address', address);
     } 
