@@ -22,7 +22,7 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
 <!DOCTYPE overlay>
 <overlay id="mozeskine-notetaking-overlay"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-  <script type="application/x-javascript" src="notetaking.js"/>
+  <script type="application/x-javascript" src="roomnotes.js"/>
 
   <toolbar id="conversation-toolbar">
     <toolbarbutton label="Notes" accesskey="N"

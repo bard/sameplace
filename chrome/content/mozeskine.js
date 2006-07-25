@@ -134,30 +134,28 @@ function callHook(hookName, param) {
 // GUI UTILITIES (SPECIFIC) for functions specific to this GUI.
 
 function withContent(account, address, url, code) {
-    var tabBrowser = window.top.getBrowser();
     var browser = findBrowser(account, address, url);
-
+    
     if(browser) {
         code(browser.contentWindow);        
     } else {
-        if(tabBrowser.currentURI.spec != 'about:blank') 
+        var tabBrowser = top.getBrowser();
+        if(tabBrowser.currentURI.spec != 'about:blank')
             tabBrowser.selectedTab = tabBrowser.addTab();
-        
+
         browser = tabBrowser.selectedBrowser;
+
+        browser.setAttribute('account', account);
+        browser.setAttribute('address', address);
 
         browser.addEventListener(
             'load', function(event) {
-                if(!event.target)
-                    return;
-
-                if(event.target.location.href == browser.contentDocument.location.href)
-                    code(browser.contentWindow); 
+                if(event.target && event.target.location &&
+                   event.target.location.href == url) 
+                    code(browser.contentWindow);
             }, true);
-        
         browser.loadURI(url);
-        browser.setAttribute('account', account);
-        browser.setAttribute('address', address);
-    }    
+    }       
 }
 
 function textToHTML(doc, text) {
@@ -415,15 +413,6 @@ function displayChatMessage(account, address, resource, content) {
 
     withDocumentOf(
         chatOutputWindow, function(doc) {
-            // TODO: action part should be moved in specific overlay
-            var actions = doc.createElement('div');
-            actions.setAttribute('class', 'actions');
-
-            var saveAction = doc.createElement('a');
-            saveAction.setAttribute('class', 'action');
-            saveAction.textContent = 'Save';
-            actions.appendChild(saveAction);
-
             var sender = doc.createElement('span');
             sender.textContent = resource || address;
             sender.setAttribute('class', 'sender');
@@ -434,7 +423,6 @@ function displayChatMessage(account, address, resource, content) {
             message.setAttribute('class', 'message');
             message.appendChild(sender);
             message.appendChild(body);
-            message.appendChild(actions);
 
             scrollingOnlyIfAtBottom(
                 chatOutputWindow, function() {

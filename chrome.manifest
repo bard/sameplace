@@ -1,4 +1,4 @@
-content mozeskine chrome/content/
+content mozeskine chrome/content/ xpcnativewrappers=no
 skin mozeskine classic/1.0 chrome/skin/classic/
 
 overlay chrome://browser/content/browser.xul chrome://mozeskine/content/overlay.xul
