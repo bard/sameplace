@@ -24,6 +24,10 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script type="application/x-javascript" src="roomnotes.js"/>
 
+  <popup id="message-menu">
+    <menuitem label="Note This" accesskey="N" oncommand="noteRequestedSave(event);"/>
+  </popup>
+
   <toolbar id="conversation-toolbar">
     <toolbarbutton label="Notes" accesskey="N"
                    oncommand="noteRequestedOpenNotes(event);"

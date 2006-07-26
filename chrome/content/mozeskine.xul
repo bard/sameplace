@@ -28,7 +28,11 @@
     <command id="sidebar-visible" label="Sidebar" accesskey="S"
              oncommand="requestedToggleSidebar(event);" checked="true"/>
   </commandset>
-  
+
+  <popupset>
+    <popup id="message-menu"/>
+  </popupset>
+
   <vbox flex="1">
 
     <!-- CONVERSATION AREA -->
@@ -72,7 +76,8 @@
             </toolbar>
           </toolbox>
 
-          <iframe role="chat-output" src="chat.html" flex="5" class="box-inset"/>
+          <iframe role="chat-output" src="chat.html" flex="5" class="box-inset"
+                  context="message-menu"/>
           <splitter/>
           <textbox role="chat-input" flex="1" class="box-inset" multiline="true"
                    onkeypress="pressedKeyInChatInput(event);"/>
