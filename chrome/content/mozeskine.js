@@ -50,7 +50,7 @@ var smileyRegexp;
 // ----------------------------------------------------------------------
 // GLOBAL STATE
 
-var channel, hooks = {};
+var channel;
 
 
 // ----------------------------------------------------------------------
@@ -111,19 +111,6 @@ function JID(string) {
     }
 
     return jid;
-}
-
-function addHook(hookName, handler) {
-    if(!hooks[hookName])
-        hooks[hookName] = [];
-
-    hooks[hookName].push(handler);
-}
-
-function callHook(hookName, param) {
-    if(hooks[hookName])
-        for each(hookHandler in hooks[hookName])
-            hookHandler(param);
 }
 
 
@@ -384,7 +371,6 @@ function ensureConversationIsOpen(account, address, resource, type) {
         _('conversations').selectedPanel = conversation;
 
         _(conversation, {role: 'chat-input'}).focus();
-        callHook('open conversation', conversation);
     }
     return conversation;
 }
