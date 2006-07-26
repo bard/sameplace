@@ -321,6 +321,12 @@ function withContactInfoOf(address, action) {
 // ----------------------------------------------------------------------
 // GUI ACTIONS
 
+function focusContent(account, address, url) {
+    top.getBrowser().selectedTab =
+        top.getBrowser().tabContainer.childNodes[
+            findBrowserIndex(account, address, url)];
+}
+
 function showSideBar() {
     _('sidebar-visible').setAttribute('checked', 'true');
     _('sidebar').collapsed = false;

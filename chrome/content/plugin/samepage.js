@@ -9,8 +9,6 @@ function samepageRequestedOpenEditor(event) {
     withContent(
         account, address, url,
         function(window) {
-            top.getBrowser().selectedTab =
-                top.getBrowser().tabContainer.childNodes[
-                    findBrowserIndex(account, address, url)];
+            focusContent(account, address, url);
         });
 }
