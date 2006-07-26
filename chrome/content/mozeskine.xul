@@ -65,6 +65,11 @@
           <toolbox>
             <toolbar id="conversation-toolbar" fullscreentoolbar="true">
               <toolbarspring/>
+              <toolbarbutton label="Plugins "
+                             type="menu" tooltiptext="Available plugins"
+                             accesskey="P">
+                <menupopup role="plugins" id="plugins-menu"/>
+              </toolbarbutton>
               <toolbarbutton label="Options "
                              type="menu" tooltiptext="Options for this conversation"
                              accesskey="p">

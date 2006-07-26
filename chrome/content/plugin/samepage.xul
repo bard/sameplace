@@ -24,9 +24,8 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script type="application/x-javascript" src="samepage.js"/>
 
-  <toolbar id="conversation-toolbar">
-    <toolbarbutton label="SamePage" accesskey="a"
-                  oncommand="samepageRequestedOpenEditor(event);"
-                  position="1"/>
-  </toolbar>
+  <menupopup id="plugins-menu">
+    <menuitem label="SamePage" accesskey="a"
+              oncommand="samepageRequestedOpenEditor(event);"/>    
+  </menupopup>
 </overlay>

@@ -28,9 +28,8 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
     <menuitem label="Note This" accesskey="N" oncommand="noteRequestedSave(event);"/>
   </popup>
 
-  <toolbar id="conversation-toolbar">
-    <toolbarbutton label="Notes" accesskey="N"
-                   oncommand="noteRequestedOpenNotes(event);"
-                   position="1"/>
-  </toolbar>
+  <menupopup id="plugins-menu">
+    <menuitem label="Notes" accesskey="N"
+              oncommand="noteRequestedOpenNotes(event);"/>
+  </menupopup>
 </overlay>
