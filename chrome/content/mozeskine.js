@@ -377,8 +377,6 @@ function ensureConversationIsOpen(account, address, resource, type) {
         _('conversations').appendChild(conversation);
         _('conversations').selectedPanel = conversation;
 
-        _(conversation, {role: 'chat-input'}).addEventListener(
-            'keypress', function(event) { pressedKeyInChatInput(event); }, false);
         _(conversation, {role: 'chat-input'}).focus();
         callHook('open conversation', conversation);
     }

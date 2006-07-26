@@ -74,7 +74,8 @@
 
           <iframe role="chat-output" src="chat.html" flex="5" class="box-inset"/>
           <splitter/>
-          <textbox role="chat-input" flex="1" class="box-inset" multiline="true"/>
+          <textbox role="chat-input" flex="1" class="box-inset" multiline="true"
+                   onkeypress="pressedKeyInChatInput(event);"/>
         </vbox>
 
         <richlistbox role="contact-info" address="" resource="" type="" flex="1">
