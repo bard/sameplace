@@ -9,8 +9,8 @@ function samepageRequestedOpenEditor(event) {
     withContent(
         account, address, url,
         function(window) {
-            var index = findBrowserIndex(account, address, url);
-            top.getBrowser().selectedTab = top.getBrowser().tabContainer.childNodes[index];
-            window.attach(account, address);
+            top.getBrowser().selectedTab =
+                top.getBrowser().tabContainer.childNodes[
+                    findBrowserIndex(account, address, url)];
         });
 }

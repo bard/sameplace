@@ -4,17 +4,14 @@
 function noteRequestedOpenNotes(event) {
     var account = getAncestorAttribute(event.currentTarget, 'account');
     var address = getAncestorAttribute(event.currentTarget, 'address');
-    var nick = getAncestorAttribute(event.currentTarget, 'resource');
-    var url = 'chrome://roomnotes/content/roomnotes.xul' +
-        '?account=' + account +
-        '&address=' + address +
-        '&nick=' + nick;
+    var url = 'chrome://roomnotes/content/roomnotes.xul';
  
-   withContent(
+    withContent(
         account, address, url,
         function(window) {
-            var index = findBrowserIndex(account, address, url);
-            top.getBrowser().selectedTab = top.getBrowser().tabContainer.childNodes[index];
+            top.getBrowser().selectedTab =
+                top.getBrowser().tabContainer.childNodes[
+                    findBrowserIndex(account, address, url)];
         });
 }
 
@@ -40,17 +37,13 @@ function noteRequestedSave(event) {
     
     var account = getAncestorAttribute(event.currentTarget, 'account');
     var address = getAncestorAttribute(event.currentTarget, 'address');
-    var nick = getAncestorAttribute(event.currentTarget, 'resource');
-    var url = 'chrome://roomnotes/content/roomnotes.xul' +
-        '?account=' + account +
-        '&address=' + address +
-        '&nick=' + nick;
+    var url = 'chrome://roomnotes/content/roomnotes.xul';
  
     withContent(
         account, address, url,
         function(window) {
             window.sendNoteAddition(
-                account, address, nick,
+                account, address,
                 event.target.firstChild.nextSibling.textContent);
         });
 }

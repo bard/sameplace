@@ -144,14 +144,14 @@ function withContent(account, address, url, code) {
             tabBrowser.selectedTab = tabBrowser.addTab();
 
         browser = tabBrowser.selectedBrowser;
-
         browser.setAttribute('account', account);
         browser.setAttribute('address', address);
 
         browser.addEventListener(
             'load', function(event) {
                 if(event.target && event.target.location &&
-                   event.target.location.href == url) 
+                   event.target.location.href == url)
+                    browser.contentWindow.attach(account, address);
                     code(browser.contentWindow);
             }, true);
         browser.loadURI(url);
