@@ -1,5 +1,5 @@
-// ----------------------------------------------------------------------
 // GLOBAL DEFINITIONS
+// ----------------------------------------------------------------------
 
 const Cc = Components.classes;
 const Ci = Components.interfaces;
@@ -47,14 +47,14 @@ var smileyRegexp;
 })();
 
 
-// ----------------------------------------------------------------------
 // GLOBAL STATE
+// ----------------------------------------------------------------------
 
 var channel;
 
 
-// ----------------------------------------------------------------------
 // GUI INITIALIZATION
+// ----------------------------------------------------------------------
 
 function init(event) {
     if(!event.target)
@@ -96,8 +96,8 @@ function finish() {
 }
 
 
+// UTILITIES (GENERIC)
 // ----------------------------------------------------------------------
-// UTILITIES
 
 function JID(string) {
     var m = string.match(/^(.+?)@(.+?)(?:\/|$)(.*$)/);
@@ -114,8 +114,8 @@ function JID(string) {
 }
 
 
-// ----------------------------------------------------------------------
 // GUI UTILITIES (GENERIC)
+// ----------------------------------------------------------------------
 
 // Note: only place here functions that will work with any GUI.  See
 // GUI UTILITIES (SPECIFIC) for functions specific to this GUI.
@@ -297,16 +297,16 @@ function findWindow(name) {
 }
 
 
-// ----------------------------------------------------------------------
 // GUI UTILITIES (SPECIFIC)
+// ----------------------------------------------------------------------
 
 function withContactInfoOf(address, action) {
     action(_('contact-infos', {address: address}));
 }
 
 
-// ----------------------------------------------------------------------
 // GUI ACTIONS
+// ----------------------------------------------------------------------
 
 function focusContent(account, address, url) {
     top.getBrowser().selectedTab =
@@ -451,8 +451,8 @@ function displayEvent(account, address, resource, content, additionalClass) {
 }
 
 
-// ----------------------------------------------------------------------
 // GUI REACTIONS
+// ----------------------------------------------------------------------
 
 function requestedToggleSidebar(command) {
     if(_('splitter-sidebar').hidden) 
@@ -521,8 +521,8 @@ function pressedKeyInChatInput(event) {
 }
 
 
-// ----------------------------------------------------------------------
 // NETWORK ACTIONS
+// ----------------------------------------------------------------------
 
 // Note: these should *not* contain code to fetch information from the
 // GUI, a separate function should do that instead and pass
@@ -556,8 +556,8 @@ function sendChatMessage(account, roomAddress, text) {
 }
 
 
-// ----------------------------------------------------------------------
 // NETWORK REACTIONS
+// ----------------------------------------------------------------------
 
 function receiveChatMessage(message) {
     var from = JID(message.stanza.@from);
