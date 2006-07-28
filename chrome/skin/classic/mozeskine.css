@@ -8,14 +8,19 @@
   list-style-image: url("close.png");
   }
 
-[command="sidebar-visible"][checked="true"]
+[command="auxiliary-visible"][checked="true"]
 {
-  list-style-image: url("hide-sidebar.png");
+  list-style-image: url("hide-auxiliary.png");
   }
 
-[command="sidebar-visible"][checked="false"]
+[command="auxiliary-visible"][checked="false"]
 {
-  list-style-image: url("show-sidebar.png");
+  list-style-image: url("show-auxiliary.png");
+  }
+
+[command="switch-layout"]
+{
+  list-style-image: url("switch-layout.png");
   }
 
 richlistitem.participant

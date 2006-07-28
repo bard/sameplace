@@ -25,8 +25,10 @@
              oncommand="requestedJoinRoom();"/>
     <command id="exit-room" label="Leave" accesskey="L"
              oncommand="requestedExitRoom();"/>
-    <command id="sidebar-visible" label="Sidebar" accesskey="S"
-             oncommand="requestedToggleSidebar(event);" checked="true"/>
+    <command id="auxiliary-visible" label="Contacts" accesskey="S"
+             oncommand="requestedToggleAuxiliary(event);" checked="true"/>
+    <command id="switch-layout" label="Layout" accesskey="a"
+             oncommand="switchLayout();"/>
   </commandset>
 
   <popupset>
@@ -37,16 +39,16 @@
 
     <!-- CONVERSATION AREA -->
 
-    <hbox flex="1">
-      <vbox flex="1" id="sidebar">
-        <vbox flex="0">
+    <box flex="1" id="box-main" persist="orient" orient="horizontal">
+      <box flex="1" id="box-auxiliary" persist="orient" orient="vertical">
+        <vbox flex="1">
           <button label="Conversation Partner"
                   oncommand="this.nextSibling.collapsed = !this.nextSibling.collapsed;"
                   style="font-size: 75%; margin: 0;"/>
           <deck id="contact-infos" flex="1"/>
         </vbox>
 
-        <splitter/>
+        <splitter id="splitter-auxiliary" persist="orient" orient="vertical"/>
 
         <vbox flex="1">
           <button label="Contacts"
@@ -54,9 +56,9 @@
                   style="font-size: 75%; margin: 0;"/>
           <richlistbox id="contact-list" flex="1" onselect="selectedContact(event);"/>
         </vbox>
-      </vbox>
+      </box>
 
-      <splitter id="splitter-sidebar"/>
+      <splitter id="splitter-main" persist="orient" orient="horizontal"/>
 
       <deck flex="4" id="conversations"/>
       
@@ -100,11 +102,13 @@
           </richlistitem>
         </richlistbox>
       </box>
-    </hbox>
-
+    </box>
+    
     <toolbox>
       <toolbar fullscreentoolbar="true">
-        <toolbarbutton command="sidebar-visible"/>
+        <toolbarbutton command="auxiliary-visible"/>
+        <toolbarbutton command="switch-layout"/>
+        <toolbarspring/>
         <toolbarbutton command="join-room"/>
         <toolbarbutton command="exit-room"/>
       </toolbar>

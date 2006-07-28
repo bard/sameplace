@@ -314,16 +314,31 @@ function focusContent(account, address, url) {
             findBrowserIndex(account, address, url)];
 }
 
-function showSideBar() {
-    _('sidebar-visible').setAttribute('checked', 'true');
-    _('sidebar').collapsed = false;
-    _('splitter-sidebar').hidden = false;    
+function switchLayout() {
+    // XXX should adjust conversation scroll here or in chat document events
+    if(_('box-main').getAttribute('orient') == 'horizontal') {
+        _('box-main').setAttribute('orient', 'vertical');
+        _('splitter-main').setAttribute('orient', 'vertical');
+        _('box-auxiliary').setAttribute('orient', 'horizontal');
+        _('splitter-auxiliary').setAttribute('orient', 'horizontal');
+    } else {
+        _('box-main').setAttribute('orient', 'horizontal');
+        _('splitter-main').setAttribute('orient', 'horizontal');
+        _('box-auxiliary').setAttribute('orient', 'vertical');
+        _('splitter-auxiliary').setAttribute('orient', 'vertical');
+    }
 }
 
-function hideSideBar() {
-    _('sidebar-visible').setAttribute('checked', 'false');
-    _('sidebar').collapsed = true;
-    _('splitter-sidebar').hidden = true;    
+function showAuxiliary() {
+    _('auxiliary-visible').setAttribute('checked', 'true');
+    _('box-auxiliary').collapsed = false;
+    _('splitter-auxiliary').hidden = false;    
+}
+
+function hideAuxiliary() {
+    _('auxiliary-visible').setAttribute('checked', 'false');
+    _('box-auxiliary').collapsed = true;
+    _('splitter-auxiliary').hidden = true;    
 }
 
 function focusConversation(account, address) {
@@ -479,11 +494,11 @@ function displayEvent(account, address, resource, content, additionalClass) {
 // GUI REACTIONS
 // ----------------------------------------------------------------------
 
-function requestedToggleSidebar(command) {
-    if(_('splitter-sidebar').hidden) 
-        showSideBar();
+function requestedToggleAuxiliary(command) {
+    if(_('splitter-auxiliary').hidden) 
+        showAuxiliary();
     else
-        hideSideBar();
+        hideAuxiliary();
 }
 
 function selectedContact(event) {
