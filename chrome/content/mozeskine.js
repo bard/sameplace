@@ -11,10 +11,11 @@ const mediator = Cc['@mozilla.org/appshell/window-mediator;1']
 const prompts = Cc["@mozilla.org/embedcomp/prompt-service;1"]
     .getService(Ci.nsIPromptService);
 
-var ns_notes = new Namespace('http://hyperstruct.net/mozeskine/protocol/0.1.4#notes');
-var ns_agent = new Namespace('http://hyperstruct.net/mozeskine/protocol/0.1.4#agent');
-var ns_muc = new Namespace('http://jabber.org/protocol/muc#user');
-var ns_xul = new Namespace('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul');
+const ns_notes = new Namespace('http://hyperstruct.net/mozeskine/protocol/0.1.4#notes');
+const ns_agent = new Namespace('http://hyperstruct.net/mozeskine/protocol/0.1.4#agent');
+const ns_muc_user = new Namespace('http://jabber.org/protocol/muc#user');
+const ns_muc = new Namespace('http://jabber.org/protocol/muc');
+const ns_xul = new Namespace('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul');
 
 var urlRegexp = new RegExp('(http:\/\/|www.)[^ \\t\\n\\f\\r"<>|()]*[^ \\t\\n\\f\\r"<>|,.!?(){}]');
 var smileyMap = {
@@ -69,8 +70,12 @@ function init(event) {
         function(presence) { receivePresence(presence) });
     channel.on(
         {event: 'presence', direction: 'in', stanza: function(s) {
-                return s.ns_muc::x.toXMLString();
+                return s.ns_muc_user::x.toXMLString();
             }}, function(presence) { receiveMUCPresence(presence) });
+    channel.on(
+        {event: 'presence', direction: 'out', stanza: function(s) {
+                return s.ns_muc::x.toXMLString() && s.@type != 'unavailable';
+            }}, function(presence) { sentMUCPresence(presence) });
     channel.on(
         {event: 'message', direction: 'in', stanza: function(s) {
                 return s.body.toString();
@@ -352,6 +357,42 @@ function focusConversation(account, address) {
           '@account="' + account + '"]');
 }
 
+function openConversation(account, address, resource, type) {
+    var conversation =
+        x('//*[' +
+          '@role="conversation" and ' +
+          '@account="' + account + '" and ' +
+          '@address="' + address + '"]');
+    var contactInfo = 
+        x('//*[' +
+          '@role="contact-info" and ' +
+          '@account="' + account + '" and ' +
+          '@address="' + address + '"]');
+    
+    if(conversation && contactInfo) {
+        conversation.setAttribute('resource', resource);
+        contactInfo.setAttribute('resource', resource);
+    } else {
+        conversation = cloneBlueprint('conversation');
+        conversation.setAttribute('account', account);
+        conversation.setAttribute('address', address);
+        conversation.setAttribute('resource', resource);
+        conversation.setAttribute('type', type);
+        _('conversations').appendChild(conversation);
+        _('conversations').selectedPanel = conversation;
+
+        contactInfo = cloneBlueprint('contact-info');
+        contactInfo.setAttribute('account', account);
+        contactInfo.setAttribute('address', address);
+        contactInfo.setAttribute('resource', resource);
+        contactInfo.setAttribute('type', type);
+        _('contact-infos').appendChild(contactInfo);
+        _('contact-infos').selectedPanel = contactInfo;
+
+        _(conversation, {role: 'chat-input'}).focus();        
+    } 
+}
+
 function closeConversation(account, address, resource) {
     var conversation =
         x('//*[' +
@@ -363,55 +404,22 @@ function closeConversation(account, address, resource) {
         conversation.parentNode.removeChild(conversation);
     var contactInfo = 
         x('//*[' +
-          '@id="contact-infos"]/*[' +
+          '@role="contact-info" and ' +
           '@account="' + account + '" and ' +
-          '@address="' + address + '"]');
+          '@address="' + address + '" and ' +
+          '@resource="' + resource + '"]');
     if(contactInfo) 
         contactInfo.parentNode.removeChild(contactInfo);
 }
 
-function ensureConversationIsOpen(account, address, resource, type) {
-    var conversation = 
-        x('//*[@id="conversations"]/*[' +
-          '@address="' + address + '" and ' +
-          '@account="' + account + '"]');
-        
-    if(!conversation) { 
-        conversation = cloneBlueprint('conversation');
-        conversation.setAttribute('account', account);
-        conversation.setAttribute('address', address);
-        conversation.setAttribute('resource', resource);
-        conversation.setAttribute('type', type);
-        _('conversations').appendChild(conversation);
-        _('conversations').selectedPanel = conversation;
-
-        _(conversation, {role: 'chat-input'}).focus();
-    }
-    return conversation;
-}
-
-function ensureContactInfoIsOpen(account, address, resource, type) {
+function updateContactInfoParticipants(account, address, participantNick, availability) {
     var contactInfo =
         x('//*[@id="contact-infos"]/*[' +
           '@address="' + address + '" and ' +
           '@account="' + account + '"]');
-
-    if(!contactInfo) {
-        contactInfo = cloneBlueprint('contact-info');
-        contactInfo.setAttribute('account', account);
-        contactInfo.setAttribute('address', address);
-        contactInfo.setAttribute('resource', resource);
-        contactInfo.setAttribute('type', type);
-        _('contact-infos').appendChild(contactInfo);
-        _('contact-infos').selectedPanel = contactInfo;
-    }
-    return contactInfo;
-}
-
-function updateContactInfoParticipants(account, address, resource, availability) {
-    var contactInfo = ensureContactInfoIsOpen(account, address);
+    
     var participants = contactInfo.getElementsByAttribute('role', 'participants')[0];
-    var participant = contactInfo.getElementsByAttribute('nick', resource)[0];
+    var participant = contactInfo.getElementsByAttribute('nick', participantNick)[0];
 
     if(participant) {
         if(availability == 'unavailable') 
@@ -419,13 +427,13 @@ function updateContactInfoParticipants(account, address, resource, availability)
     } else {
         if(availability != 'unavailable') {
             participant = document.createElement('richlistitem');
-            participant.setAttribute('nick', resource); 
+            participant.setAttribute('nick', participantNick); 
             participant.setAttribute('orient', 'horizontal');
             participant.setAttribute('align', 'center');
             participant.setAttribute('class', 'participant');
             var image = document.createElement('image');
             var label = document.createElement('label');
-            label.setAttribute('value', resource);
+            label.setAttribute('value', participantNick);
             participant.appendChild(image);
             participant.appendChild(label);
             participants.appendChild(participant);            
@@ -508,9 +516,9 @@ function selectedContact(event) {
 
 function requestedExitRoom() {
     var conversation = _('conversations').selectedPanel;
-    var address = conversation.getAttribute('address');
-    var account = conversation.getAttribute('account');
-    exitRoom(account, address);
+    exitRoom(conversation.getAttribute('account'),
+             conversation.getAttribute('address'),
+             conversation.getAttribute('resource'));
 }
 
 function requestedJoinRoom() {
@@ -526,7 +534,7 @@ function requestedJoinRoom() {
         'mozeskine-join-room', 'modal,centerscreen',
         request);
 
-    if(request.confirm)
+    if(request.confirm) 
         joinRoom(request.account, request.roomAddress, request.roomNick);
 }
 
@@ -649,10 +657,14 @@ function receivePresence(presence) {
     }            
 }
 
+function sentMUCPresence(presence) {
+    var room = JID(presence.stanza.@to);
+    openConversation(
+        presence.session.name, room.address, room.nick, 'groupchat');
+}
+
 function receiveMUCPresence(presence) {
     var from = JID(presence.stanza.@from);
-
-    var conversation = ensureConversationIsOpen(presence.session.name, from.address, from.resource);
 
     updateContactInfoParticipants(
         presence.session.name, from.address, from.resource,
