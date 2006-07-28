@@ -377,7 +377,7 @@ function ensureConversationIsOpen(account, address, resource, type) {
 
 function ensureContactInfoIsOpen(account, address, resource, type) {
     var contactInfo =
-        x('//*[@id="contacti-infos"]/*[' +
+        x('//*[@id="contact-infos"]/*[' +
           '@address="' + address + '" and ' +
           '@account="' + account + '"]');
 
