@@ -393,6 +393,31 @@ function ensureContactInfoIsOpen(account, address, resource, type) {
     return contactInfo;
 }
 
+function updateContactInfoParticipants(account, address, resource, availability) {
+    var contactInfo = ensureContactInfoIsOpen(account, address);
+    var participants = contactInfo.getElementsByAttribute('role', 'participants')[0];
+    var participant = contactInfo.getElementsByAttribute('nick', resource)[0];
+
+    if(participant) {
+        if(availability == 'unavailable') 
+            participants.removeChild(participant);
+    } else {
+        if(availability != 'unavailable') {
+            participant = document.createElement('richlistitem');
+            participant.setAttribute('nick', resource); 
+            participant.setAttribute('orient', 'horizontal');
+            participant.setAttribute('align', 'center');
+            participant.setAttribute('class', 'participant');
+            var image = document.createElement('image');
+            var label = document.createElement('label');
+            label.setAttribute('value', resource);
+            participant.appendChild(image);
+            participant.appendChild(label);
+            participants.appendChild(participant);            
+        }
+    }
+}
+
 function displayChatMessage(account, address, resource, content) {
     var chatOutputWindow = x(
         '//*[' +
@@ -613,63 +638,51 @@ function receiveMUCPresence(presence) {
     var from = JID(presence.stanza.@from);
 
     var conversation = ensureConversationIsOpen(presence.session.name, from.address, from.resource);
-    var contactInfo = ensureContactInfoIsOpen(presence.session.name, from.address);
-    var participants = contactInfo.getElementsByAttribute('role', 'participants')[0];
-    var participant = participants.getElementsByAttribute('nick', from.nick)[0];
 
-    switch(presence.stanza.@type.toString()) {
-    case 'unavailable':
-        displayEvent(presence.session.name,
-                     from.address, from.resource,
-                     from.nick + ' left the room', 'leave');
+    updateContactInfoParticipants(
+        presence.session.name, from.address, from.resource,
+        presence.stanza.@type.toString());
 
-        if(participant) 
-            participants.removeChild(participant);
+    var eventMessage, eventClass;
+    if(presence.stanza.@type.toString() == 'unavailable') {
+        eventMessage = from.nick + ' left the room';
+        eventClass = 'leave';
+    } else {
+        eventMessage = from.nick + ' entered the room';
+        eventClass = 'join';
+    }
+    
+    displayEvent(
+        presence.session.name, from.address, from.resource,
+        eventMessage, eventClass);
 
+    if(presence.stanza.@type.toString() == 'unavailable')
         closeConversation(presence.session.name, from.address, from.resource);
 
-        break;
-    default:
-        displayEvent(presence.session.name,
-                     from.address, from.resource,
-                     from.nick + ' entered the room', 'join');
-
-        participant = document.createElement('richlistitem');
-        participant.setAttribute('nick', from.nick); // TODO: namespace this
-        participant.setAttribute('orient', 'horizontal');
-        participant.setAttribute('align', 'center');
-        participant.setAttribute('class', 'participant');
-        var image = document.createElement('image');
-        var label = document.createElement('label');
-        label.setAttribute('value', from.nick);
-        participant.appendChild(image);
-        participant.appendChild(label);
-
         // EXPERIMENTAL
-        if(presence.stanza.ns_xul::x.length() > 0) {
-            var agentFrame = document.createElement('iframe');
-            agentFrame.setAttribute('class', 'box-inset');
+//         if(presence.stanza.ns_xul::x.length() > 0) {
+//             var agentFrame = document.createElement('iframe');
+//             agentFrame.setAttribute('class', 'box-inset');
                 
-            participant.appendChild(agentFrame);
-        }
-
-        participants.appendChild(participant);
+//             participant.appendChild(agentFrame);
+//         }
 
         // EXPERIMENTAL
-        if(presence.stanza.ns_xul::x.length() > 0) {
-            var agentWidget = 
-                (new DOMParser())
-                .parseFromString(presence.stanza.ns_xul::x.*[0], 'text/xml')
-                .documentElement;
+//         if(presence.stanza.ns_xul::x.length() > 0) {
+//             var agentWidget = 
+//                 (new DOMParser())
+//                 .parseFromString(presence.stanza.ns_xul::x.*[0], 'text/xml')
+//                 .documentElement;
 
-            function addWidget(event) {
-                agentFrame.contentDocument.documentElement.appendChild(agentWidget);
-                agentFrame.contentWindow.removeEventListener('load', addWidget, false);
-            }
-            agentFrame.addEventListener('load', addWidget, false);
-            agentFrame.setAttribute('src', 'agent.xul');
-        }
-            
-        break;
-    }
+//             function addWidget(event) {
+//                 agentFrame.contentDocument.documentElement.appendChild(agentWidget);
+//                 agentFrame.contentWindow.removeEventListener('load', addWidget, false);
+//             }
+//             agentFrame.addEventListener('load', addWidget, false);
+//             agentFrame.setAttribute('src', 'agent.xul');
+//         }
 }
+
+// DEVELOPER SHORTCUTS
+// ----------------------------------------------------------------------
+
