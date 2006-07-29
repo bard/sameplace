@@ -555,10 +555,20 @@ function pressedKeyInChatInput(event) {
             if(textBox.value.match(/^\s*$/))
                 return;
 
-            sendChatMessage(
-                getAncestorAttribute(textBox, 'account'),
-                getAncestorAttribute(textBox, 'address'),
-                textBox.value);
+            if(getAncestorAttribute(textBox, 'type') == 'groupchat') 
+                sendChatMessage(
+                    getAncestorAttribute(textBox, 'account'),
+                    getAncestorAttribute(textBox, 'address'),
+                    null,
+                    'groupchat',
+                    textBox.value);
+            else
+                sendChatMessage(
+                    getAncestorAttribute(textBox, 'account'),
+                    getAncestorAttribute(textBox, 'address'),
+                    getAncestorAttribute(textBox, 'resource'),
+                    getAncestorAttribute(textBox, 'type'),
+                    textBox.value);
             textBox.value = '';
         }
     }
@@ -592,9 +602,13 @@ function setRoomTopic(account, roomAddress, content) {
               </message>);
 }
 
-function sendChatMessage(account, roomAddress, text) {
+function sendChatMessage(account, address, resource, type, text) {
+    var jid = address;
+    if(resource)
+        jid += '/' + resource;
+    
     XMPP.send(account,
-              <message to={roomAddress} type="groupchat">
+              <message to={jid} type={type}>
               <body>{text}</body>
               </message>);
 }
