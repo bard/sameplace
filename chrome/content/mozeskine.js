@@ -67,11 +67,11 @@ function init(event) {
 
     channel.on(
         {event: 'presence', direction: 'in' },
-        function(presence) { receivePresence(presence) });
+        function(presence) { receivedPresence(presence) });
     channel.on(
         {event: 'presence', direction: 'in', stanza: function(s) {
                 return s.ns_muc_user::x.toXMLString();
-            }}, function(presence) { receiveMUCPresence(presence) });
+            }}, function(presence) { receivedMUCPresence(presence) });
     channel.on(
         {event: 'presence', direction: 'out', stanza: function(s) {
                 return s.ns_muc::x.toXMLString() && s.@type != 'unavailable';
@@ -79,16 +79,16 @@ function init(event) {
     channel.on(
         {event: 'message', direction: 'in', stanza: function(s) {
                 return s.body.toString();
-            }}, function(message) { receiveChatMessage(message); });
+            }}, function(message) { receivedChatMessage(message); });
     channel.on(
         {event: 'message', direction: 'in', stanza: function(s) {
                 return s.@type == 'groupchat' && s.subject.toString();
-            }}, function(message) { receiveRoomTopic(message); });
+            }}, function(message) { receivedRoomTopic(message); });
     channel.on(
         {event: 'message', direction: 'in', stanza: function(s) {
                 return (s.body.toString() &&
                         s.body.toString().search(urlRegexp) != -1);
-            }}, function(message) { receiveMessageWithURL(message); });
+            }}, function(message) { receivedMessageWithURL(message); });
 }
 
 function finish() {
@@ -607,7 +607,7 @@ function sendChatMessage(account, roomAddress, text) {
 // NETWORK REACTIONS
 // ----------------------------------------------------------------------
 
-function receiveChatMessage(message) {
+function receivedChatMessage(message) {
     var from = JID(message.stanza.@from);
     displayChatMessage(
         message.session.name,
@@ -615,7 +615,7 @@ function receiveChatMessage(message) {
         message.stanza.body);
 }
 
-function receiveMessageWithURL(message) {
+function receivedMessageWithURL(message) {
     if(_('conversations', {address: JID(message.stanza.@from).address, role: 'follow'})
        .getAttribute('checked') == 'true') {
         var url = message.stanza.body.toString().match(urlRegexp)[0];
@@ -623,7 +623,7 @@ function receiveMessageWithURL(message) {
     }
 }
 
-function receiveRoomTopic(message) {
+function receivedRoomTopic(message) {
     var from = JID(message.stanza.@from);
     displayEvent(
         message.session.name,
@@ -638,7 +638,7 @@ function receiveRoomTopic(message) {
         });
 }
 
-function receivePresence(presence) {
+function receivedPresence(presence) {
     var from = JID(presence.stanza.@from);
     var contact = x('//*[@id="contact-list"]//*[' +
                     '@address="' + from.address + '" and ' +
@@ -663,7 +663,7 @@ function sentMUCPresence(presence) {
         presence.session.name, room.address, room.nick, 'groupchat');
 }
 
-function receiveMUCPresence(presence) {
+function receivedMUCPresence(presence) {
     var from = JID(presence.stanza.@from);
 
     updateContactInfoParticipants(
