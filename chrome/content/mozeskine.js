@@ -426,16 +426,10 @@ function updateContactInfoParticipants(account, address, participantNick, availa
             participants.removeChild(participant);
     } else {
         if(availability != 'unavailable') {
-            participant = document.createElement('richlistitem');
-            participant.setAttribute('nick', participantNick); 
-            participant.setAttribute('orient', 'horizontal');
-            participant.setAttribute('align', 'center');
-            participant.setAttribute('class', 'participant');
-            var image = document.createElement('image');
-            var label = document.createElement('label');
-            label.setAttribute('value', participantNick);
-            participant.appendChild(image);
-            participant.appendChild(label);
+            participant = cloneBlueprint('participant');
+            participant.setAttribute('nick', participantNick);
+            participant.getElementsByAttribute('role', 'nick')[0]
+                .value = participantNick;
             participants.appendChild(participant);            
         }
     }

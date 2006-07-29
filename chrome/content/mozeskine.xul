@@ -44,7 +44,7 @@
         <vbox flex="1">
           <button label="Conversation Partner"
                   oncommand="this.nextSibling.collapsed = !this.nextSibling.collapsed;"
-                  style="font-size: 75%; margin: 0;"/>
+                  style="font-size: 75%; margin: 0; overflow: hidden;"/>
           <deck id="contact-infos" flex="1"/>
         </vbox>
 
@@ -98,9 +98,16 @@
 
           <richlistitem orient="vertical">
             <label value="Participants" class="header" flex="1"/>
-            <richlistbox role="participants" flex="1" style="padding-left: 0.5em"/>
+            <richlistbox role="participants" flex="1" style="padding-left: 0.5em;"/>
           </richlistitem>
         </richlistbox>
+
+        <richlistitem role="participant" orient="horizontal" align="center"
+                      class="participant" style="overflow: -moz-scrollbars-none;"
+                      nick="">
+          <image/>
+          <label role="nick" value=""/>
+        </richlistitem>
       </box>
     </box>
     
