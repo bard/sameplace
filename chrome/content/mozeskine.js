@@ -89,6 +89,10 @@ function init(event) {
                 return (s.body.toString() &&
                         s.body.toString().search(urlRegexp) != -1);
             }}, function(message) { receivedMessageWithURL(message); });
+    channel.on(
+        {event: 'message', direction: 'out', stanza: function(s) {
+                return s.@type != 'groupchat';
+            }}, function(message) { sentChatMessage(message) });
 }
 
 function finish() {
@@ -309,6 +313,19 @@ function withContactInfoOf(address, action) {
     action(_('contact-infos', {address: address}));
 }
 
+function isConversationOpen() {
+    return getConversation.apply(null, arguments);
+}
+
+function getConversation(account, address, resource, type) {
+    return x('//*[' +
+             '@role="conversation" and ' +
+             '@account="' + account + '" and ' +
+             '@address="' + address + '" and ' +
+             (resource ? '@resource="' + resource + '" and ' : '') +
+             '@type="' + type + '"]');
+}
+
 
 // GUI ACTIONS
 // ----------------------------------------------------------------------
@@ -357,22 +374,14 @@ function focusConversation(account, address) {
           '@account="' + account + '"]');
 }
 
+function changeConversationResource(account, address, resource, type, otherResource) {
+    var conversation = getConversation(account, address, resource, type);
+    if(conversation)
+        conversation.setAttribute('resource', otherResource);
+}
+
 function openConversation(account, address, resource, type) {
-    var conversation =
-        x('//*[' +
-          '@role="conversation" and ' +
-          '@account="' + account + '" and ' +
-          '@address="' + address + '"]');
-    var contactInfo = 
-        x('//*[' +
-          '@role="contact-info" and ' +
-          '@account="' + account + '" and ' +
-          '@address="' + address + '"]');
-    
-    if(conversation && contactInfo) {
-        conversation.setAttribute('resource', resource);
-        contactInfo.setAttribute('resource', resource);
-    } else {
+    function openConversation1(account, address, resource, type) {
         conversation = cloneBlueprint('conversation');
         conversation.setAttribute('account', account);
         conversation.setAttribute('address', address);
@@ -389,12 +398,32 @@ function openConversation(account, address, resource, type) {
         _('contact-infos').appendChild(contactInfo);
         _('contact-infos').selectedPanel = contactInfo;
 
-        _(conversation, {role: 'chat-input'}).focus();        
-    } 
+        _(conversation, {role: 'chat-input'}).focus();
+    }
+
+    switch(type) {
+    case 'headline':
+        break;
+    case 'groupchat':
+        if(!isConversationOpen(account, address, '', type))
+            openConversation1(account, address, '', type);
+        break;
+    case 'normal':
+    case 'chat':
+    default: 
+        if(isConversationOpen(account, address, '',  'groupchat') &&
+           !isConversationOpen(account, address, resource, 'chat'))
+            openConversation1(account, address, resource, 'chat');
+        else if(isConversationOpen(account, address, undefined, 'chat'))
+            changeConversationResource(account, address, undefined, 'chat', resource);
+        else
+            openConversation1(account, address, resource, 'chat');
+        break;
+    }
 }
 
 function closeConversation(account, address, resource) {
-    var conversation =
+    var conversation = 
         x('//*[' +
           '@role="conversation" and ' +
           '@account="' + account + '" and ' +
@@ -435,7 +464,7 @@ function updateContactInfoParticipants(account, address, participantNick, availa
     }
 }
 
-function displayChatMessage(account, address, resource, content) {
+function displayChatMessage(account, address, resource, type, sender, body) {
     var chatOutputWindow = x(
         '//*[' +
         '@role="conversation" and ' +
@@ -446,16 +475,19 @@ function displayChatMessage(account, address, resource, content) {
 
     withDocumentOf(
         chatOutputWindow, function(doc) {
-            var sender = doc.createElement('span');
-            sender.textContent = resource || address;
-            sender.setAttribute('class', 'sender');
-            var body = textToHTML(doc, content);
-            body.setAttribute('class', 'body');
+            var htmlSender = doc.createElement('span');
+            if(type == 'groupchat')
+                htmlSender.textContent = JID(sender).resource || address;
+            else
+                htmlSender.textContent = JID(sender).username;
+            htmlSender.setAttribute('class', 'sender');
+            var htmlBody = textToHTML(doc, body);
+            htmlBody.setAttribute('class', 'body');
 
             var message = doc.createElement('li');
             message.setAttribute('class', 'message');
-            message.appendChild(sender);
-            message.appendChild(body);
+            message.appendChild(htmlSender);
+            message.appendChild(htmlBody);
 
             scrollingOnlyIfAtBottom(
                 chatOutputWindow, function() {
@@ -622,6 +654,18 @@ function receivedChatMessage(message) {
     displayChatMessage(
         message.session.name,
         from.address, from.resource,
+        message.stanza.@type,
+        message.stanza.@from,
+        message.stanza.body);
+}
+
+function sentChatMessage(message) {
+    var from = JID(message.stanza.@to);
+    displayChatMessage(
+        message.session.name,
+        from.address, from.resource,
+        message.stanza.@type,
+        message.session.name,
         message.stanza.body);
 }
 
