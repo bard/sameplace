@@ -508,11 +508,13 @@ function selectedContact(event) {
     focusConversation(contact.getAttribute('account'), contact.getAttribute('address'));
 }
 
-function requestedExitRoom() {
-    var conversation = _('conversations').selectedPanel;
-    exitRoom(conversation.getAttribute('account'),
-             conversation.getAttribute('address'),
-             conversation.getAttribute('resource'));
+function requestedCloseConversation(event) {
+    (getAncestorAttribute(event.target, 'type') == 'groupchat' ?
+        exitRoom :
+        closeConversation).call(null,
+                                getAncestorAttribute(event.target, 'account'),
+                                getAncestorAttribute(event.target, 'address'),
+                                getAncestorAttribute(event.target, 'resource'));
 }
 
 function requestedJoinRoom() {

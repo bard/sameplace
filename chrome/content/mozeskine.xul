@@ -23,8 +23,6 @@
   <commandset>
     <command id="join-room" label="Join..." accesskey="O"
              oncommand="requestedJoinRoom();"/>
-    <command id="exit-room" label="Leave" accesskey="L"
-             oncommand="requestedExitRoom();"/>
     <command id="auxiliary-visible" label="Contacts" accesskey="S"
              oncommand="requestedToggleAuxiliary(event);" checked="true"/>
     <command id="switch-layout" label="Layout" accesskey="a"
@@ -66,6 +64,8 @@
         <vbox role="conversation" address="" resource="" type="">
           <toolbox>
             <toolbar id="conversation-toolbar" fullscreentoolbar="true">
+              <toolbarbutton label="Close" accesskey="C"
+                             oncommand="requestedCloseConversation(event);"/>
               <toolbarspring/>
               <toolbarbutton label="Plugins "
                              type="menu" tooltiptext="Available plugins"
@@ -117,7 +117,6 @@
         <toolbarbutton command="switch-layout"/>
         <toolbarspring/>
         <toolbarbutton command="join-room"/>
-        <toolbarbutton command="exit-room"/>
       </toolbar>
     </toolbox>
   </vbox>
