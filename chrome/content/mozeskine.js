@@ -54,7 +54,7 @@ var smileyRegexp;
 var channel;
 
 
-// GUI INITIALIZATION
+// GUI INITIALIZATION AND FINALIZATION
 // ----------------------------------------------------------------------
 
 function init(event) {
@@ -96,19 +96,20 @@ function init(event) {
 }
 
 function finish() {
-    var conversations = _('conversations').childNodes;
-    for(var i=0, l=conversations.length; i<l; i++)
+    for(var conversation, i=0; conversation = _('conversations').childNodes[i]; i++)
         closeConversation(
-            conversations[i].getAttribute('account'),
-            conversations[i].getAttribute('address'),
-            conversations[i].getAttribute('resource'));
-            
+            conversation.getAttribute('account'),
+            conversation.getAttribute('address'),
+            conversation.getAttribute('resource'),
+            conversation.getAttribute('type'));
+    
     channel.release();
 }
 
 
 // UTILITIES (GENERIC)
 // ----------------------------------------------------------------------
+// Application-independent functions not dealing with user interface.
 
 function JID(string) {
     var m = string.match(/^(.+?)@(.+?)(?:\/|$)(.*$)/);
@@ -127,9 +128,7 @@ function JID(string) {
 
 // GUI UTILITIES (GENERIC)
 // ----------------------------------------------------------------------
-
-// Note: only place here functions that will work with any GUI.  See
-// GUI UTILITIES (SPECIFIC) for functions specific to this GUI.
+// Application-independent functions dealing with user interface.
 
 function withContent(account, address, url, code) {
     var browser = findBrowser(account, address, url);
@@ -310,6 +309,8 @@ function findWindow(name) {
 
 // GUI UTILITIES (SPECIFIC)
 // ----------------------------------------------------------------------
+// Application-dependent functions dealing with interface.  They do
+// not affect the domain directly.
 
 function withContactInfoOf(address, action) {
     action(_('contact-infos', {address: address}));
@@ -340,6 +341,8 @@ function getContactInfo(account, address, resource, type) {
 
 // GUI ACTIONS
 // ----------------------------------------------------------------------
+// Application-dependent functions dealing with user interface.  They
+// affect the domain.
 
 function focusContent(account, address, url) {
     top.getBrowser().selectedTab =
@@ -625,15 +628,15 @@ function pressedKeyInChatInput(event) {
 
 // NETWORK ACTIONS
 // ----------------------------------------------------------------------
-
-// Note: these should *not* contain code to fetch information from the
-// GUI, a separate function should do that instead and pass
-// information here via function parameters.
+// Application-dependent functions dealing with the network.
+//
+// They SHOULD NOT fetch information from the interface, a separate
+// function should instead be created that calls these ones and passes
+// the gathered data via function parameters.
 
 function exitRoom(account, roomAddress, roomNick) {
     XMPP.send(account,
               <presence to={roomAddress + '/' + roomNick} type="unavailable"/>);
-    
 }
 
 function joinRoom(account, roomAddress, roomNick) {
