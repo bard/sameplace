@@ -383,14 +383,17 @@ function changeConversationResource(account, address, resource, type, otherResou
 }
 
 function openConversation(account, address, resource, type) {
-    function openConversation1(account, address, resource, type) {
+    withConversation(account, address, resource, type, function() {});
+}
+
+function withConversation(account, address, resource, type, action) {
+    function openConversation1(account, address, resource, type, action) {
         conversation = cloneBlueprint('conversation');
         conversation.setAttribute('account', account);
         conversation.setAttribute('address', address);
         conversation.setAttribute('resource', resource);
         conversation.setAttribute('type', type);
         _('conversations').appendChild(conversation);
-        _('conversations').selectedPanel = conversation;
 
         contactInfo = cloneBlueprint('contact-info');
         contactInfo.setAttribute('account', account);
@@ -398,30 +401,40 @@ function openConversation(account, address, resource, type) {
         contactInfo.setAttribute('resource', resource);
         contactInfo.setAttribute('type', type);
         _('contact-infos').appendChild(contactInfo);
-        _('contact-infos').selectedPanel = contactInfo;
 
-        _(conversation, {role: 'chat-input'}).focus();
+        _(conversation, {role: 'chat-output'})
+            .addEventListener(
+                'load', function(event) { action(); }, true);
     }
 
+    account = account.toString();
+    address = address.toString();
+    resource = resource.toString();
+    type = type.toString();
+    action = action || function() {};
+    
     switch(type) {
     case 'headline':
         break;
     case 'groupchat':
-        if(!isConversationOpen(account, address, '', type))
-            openConversation1(account, address, '', type);
+        if(!isConversationOpen(account, address, '', type)) 
+            openConversation1(account, address, '', type, action);
+        else
+            action();
         break;
     case 'normal':
     case 'chat':
     default: 
         if(isConversationOpen(account, address, '',  'groupchat') &&
            !isConversationOpen(account, address, resource, 'chat'))
-            openConversation1(account, address, resource, 'chat');
-        else if(isConversationOpen(account, address, undefined, 'chat'))
+            openConversation1(account, address, resource, 'chat', action);
+        else if(isConversationOpen(account, address, undefined, 'chat')) {
             changeConversationResource(account, address, undefined, 'chat', resource);
-        else
-            openConversation1(account, address, resource, 'chat');
+            action();
+        } else
+            openConversation1(account, address, resource, 'chat', action);
         break;
-    }
+    }    
 }
 
 function closeConversation(account, address, resource) {
@@ -653,12 +666,17 @@ function sendChatMessage(account, address, resource, type, text) {
 
 function receivedChatMessage(message) {
     var from = JID(message.stanza.@from);
-    displayChatMessage(
-        message.session.name,
-        from.address, from.resource,
-        message.stanza.@type,
-        message.stanza.@from,
-        message.stanza.body);
+    withConversation(
+        message.session.name, from.address,
+        from.resource, message.stanza.@type,
+        function() {
+            displayChatMessage(
+                message.session.name,
+                from.address, from.resource,
+                message.stanza.@type,
+                message.stanza.@from,
+                message.stanza.body);            
+        });
 }
 
 function sentChatMessage(message) {
