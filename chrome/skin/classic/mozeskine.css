@@ -3,11 +3,6 @@
   list-style-image: url("join.png");
   }
 
-[command="exit-room"]
-{
-  list-style-image: url("close.png");
-  }
-
 [command="auxiliary-visible"][checked="true"]
 {
   list-style-image: url("hide-auxiliary.png");
