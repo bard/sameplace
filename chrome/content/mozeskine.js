@@ -396,8 +396,11 @@ function focusConversation(account, address) {
 
 function changeConversationResource(account, address, resource, type, otherResource) {
     var conversation = getConversation(account, address, resource, type);
-    if(conversation)
+    var contactInfo = getContactInfo(account, address, resource, type);
+    if(conversation && contactInfo) {
         conversation.setAttribute('resource', otherResource);
+        contactInfo.setAttribute('resource', otherResource);        
+    }
 }
 
 function openConversation(account, address, resource, type) {
