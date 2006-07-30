@@ -338,6 +338,12 @@ function getContactInfo(account, address, resource, type) {
              '@type="' + type + '"]');
 }
 
+function getContactItem(account, address) {
+    return x('//*[@id="contact-list"]//*[' +
+             '@address="' + address + '" and ' +
+             '@account="' + account + '"]');
+}
+
 
 // GUI ACTIONS
 // ----------------------------------------------------------------------
@@ -457,6 +463,27 @@ function closeConversation(account, address, resource, type) {
     var contactInfo = getContactInfo(account, address, resource, type);
     if(contactInfo) 
         contactInfo.parentNode.removeChild(contactInfo);
+}
+
+function updateContactList(account, address, resource, type) {
+    account = account.toString();
+    address = address.toString();
+    resource = resource.toString();
+    type = type.toString();
+    
+    var contact = getContactItem(account, address);
+
+    if(type == 'unavailable' && contact) 
+        _('contact-list').removeChild(contact);
+    else if(!contact) {
+        contact = document.createElement('richlistitem');
+        contact.setAttribute('address', address);
+        contact.setAttribute('account', account);
+        var contactLabel = document.createElement('label');
+        contactLabel.setAttribute('value', address);
+        contact.appendChild(contactLabel);
+        _('contact-list').appendChild(contact);
+    }            
 }
 
 function updateContactInfoParticipants(account, address, participantNick, availability) {
@@ -718,21 +745,10 @@ function receivedRoomTopic(message) {
 
 function receivedPresence(presence) {
     var from = JID(presence.stanza.@from);
-    var contact = x('//*[@id="contact-list"]//*[' +
-                    '@address="' + from.address + '" and ' +
-                    '@account="' + presence.session.name + '"]');
-
-    if(presence.stanza.@type == 'unavailable' && contact) 
-        _('contact-list').removeChild(contact);
-    else if(!contact) {
-        contact = document.createElement('richlistitem');
-        contact.setAttribute('address', from.address);
-        contact.setAttribute('account', presence.session.name);
-        var contactLabel = document.createElement('label');
-        contactLabel.setAttribute('value', from.address);
-        contact.appendChild(contactLabel);
-        _('contact-list').appendChild(contact);
-    }            
+    updateContactList(presence.session.name,
+                      from.address,
+                      from.resource,
+                      presence.stanza.@type);    
 }
 
 function sentMUCPresence(presence) {
