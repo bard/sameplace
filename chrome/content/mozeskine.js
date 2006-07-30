@@ -484,12 +484,10 @@ function updateContactList(account, address, resource, availability, inConversat
             _('contact-list').removeChild(contact);
     } else {
         if(availability != 'unavailable') {
-            contact = document.createElement('richlistitem');
+            contact = cloneBlueprint('contact');
             contact.setAttribute('address', address);
             contact.setAttribute('account', account);
-            var contactLabel = document.createElement('label');
-            contactLabel.setAttribute('value', address);
-            contact.appendChild(contactLabel);
+            contact.getElementsByAttribute('role', 'name')[0].setAttribute('value', address);
             _('contact-list').appendChild(contact);            
         }
     }

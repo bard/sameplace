@@ -108,6 +108,11 @@
           <image/>
           <label role="nick" value=""/>
         </richlistitem>
+
+        <richlistitem role="contact"
+                      account="" address="">
+          <label role="name"/>
+        </richlistitem>
       </box>
     </box>
     
