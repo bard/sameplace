@@ -426,6 +426,8 @@ function withConversation(account, address, resource, type, action) {
         _(conversation, {role: 'chat-output'})
             .addEventListener(
                 'load', function(event) { action(); }, true);
+
+        openedConversation(account, address, resource, type);
     }
 
     account = account.toString();
@@ -460,33 +462,44 @@ function withConversation(account, address, resource, type, action) {
 
 function closeConversation(account, address, resource, type) {
     var conversation = getConversation(account, address, resource, type);
-    if(conversation) 
-        conversation.parentNode.removeChild(conversation);
-
     var contactInfo = getContactInfo(account, address, resource, type);
-    if(contactInfo) 
+
+    if(conversation && contactInfo) {
+        conversation.parentNode.removeChild(conversation);
         contactInfo.parentNode.removeChild(contactInfo);
+        closedConversation(account, address, resource, type);
+    }
 }
 
-function updateContactList(account, address, resource, type) {
+function updateContactList(account, address, resource, availability, inConversation) {
     account = account.toString();
     address = address.toString();
     resource = resource.toString();
-    type = type.toString();
+    if(availability)
+        availability = availability.toString();
     
     var contact = getContactItem(account, address);
+    if(contact) {
+        if(availability == 'unavailable')
+            _('contact-list').removeChild(contact);
+    } else {
+        if(availability != 'unavailable') {
+            contact = document.createElement('richlistitem');
+            contact.setAttribute('address', address);
+            contact.setAttribute('account', account);
+            var contactLabel = document.createElement('label');
+            contactLabel.setAttribute('value', address);
+            contact.appendChild(contactLabel);
+            _('contact-list').appendChild(contact);            
+        }
+    }
 
-    if(type == 'unavailable' && contact) 
-        _('contact-list').removeChild(contact);
-    else if(!contact) {
-        contact = document.createElement('richlistitem');
-        contact.setAttribute('address', address);
-        contact.setAttribute('account', account);
-        var contactLabel = document.createElement('label');
-        contactLabel.setAttribute('value', address);
-        contact.appendChild(contactLabel);
-        _('contact-list').appendChild(contact);
-    }            
+    switch(inConversation) {
+    case true: contact.style.fontStyle = 'italic';
+        break;
+    case false: contact.style.fontStyle = null;
+        break;
+    }        
 }
 
 function updateContactInfoParticipants(account, address, participantNick, availability) {
@@ -655,6 +668,14 @@ function pressedKeyInChatInput(event) {
     }
 }
 
+function openedConversation(account, address, resource, type) {
+    updateContactList(account, address, resource, null, true);
+}
+
+function closedConversation(account, address, resource, type) {
+    updateContactList(account, address, resource, null, false);
+}
+
 
 // NETWORK ACTIONS
 // ----------------------------------------------------------------------
@@ -748,10 +769,11 @@ function receivedRoomTopic(message) {
 
 function receivedPresence(presence) {
     var from = JID(presence.stanza.@from);
+
     updateContactList(presence.session.name,
                       from.address,
                       from.resource,
-                      presence.stanza.@type);    
+                      presence.stanza.@type);
 }
 
 function sentMUCPresence(presence) {
