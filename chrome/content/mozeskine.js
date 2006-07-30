@@ -417,8 +417,8 @@ function withConversation(account, address, resource, type, action) {
     case 'headline':
         break;
     case 'groupchat':
-        if(!isConversationOpen(account, address, '', type)) 
-            openConversation1(account, address, '', type, action);
+        if(!isConversationOpen(account, address, resource, 'groupchat')) 
+            openConversation1(account, address, resource, 'groupchat', action);
         else
             action();
         break;
