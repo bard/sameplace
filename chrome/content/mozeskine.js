@@ -328,6 +328,15 @@ function getConversation(account, address, resource, type) {
              '@type="' + type + '"]');
 }
 
+function getContactInfo(account, address, resource, type) {
+    return x('//*[' +
+             '@role="contact-info" and ' +
+             '@account="' + account + '" and ' +
+             '@address="' + address + '" and ' +
+             (resource ? '@resource="' + resource + '" and ' : '') +
+             '@type="' + type + '"]');
+}
+
 
 // GUI ACTIONS
 // ----------------------------------------------------------------------
@@ -437,21 +446,12 @@ function withConversation(account, address, resource, type, action) {
     }    
 }
 
-function closeConversation(account, address, resource) {
-    var conversation = 
-        x('//*[' +
-          '@role="conversation" and ' +
-          '@account="' + account + '" and ' +
-          '@address="' + address + '" and ' +
-          '@resource="' + resource + '"]');
+function closeConversation(account, address, resource, type) {
+    var conversation = getConversation(account, address, resource, type);
     if(conversation) 
         conversation.parentNode.removeChild(conversation);
-    var contactInfo = 
-        x('//*[' +
-          '@role="contact-info" and ' +
-          '@account="' + account + '" and ' +
-          '@address="' + address + '" and ' +
-          '@resource="' + resource + '"]');
+
+    var contactInfo = getContactInfo(account, address, resource, type);
     if(contactInfo) 
         contactInfo.parentNode.removeChild(contactInfo);
 }
@@ -561,7 +561,8 @@ function requestedCloseConversation(event) {
         closeConversation).call(null,
                                 getAncestorAttribute(event.target, 'account'),
                                 getAncestorAttribute(event.target, 'address'),
-                                getAncestorAttribute(event.target, 'resource'));
+                                getAncestorAttribute(event.target, 'resource'),
+                                getAncestorAttribute(event.target, 'type'));
 }
 
 function requestedJoinRoom() {
@@ -758,7 +759,7 @@ function receivedMUCPresence(presence) {
         eventMessage, eventClass);
 
     if(presence.stanza.@type.toString() == 'unavailable')
-        closeConversation(presence.session.name, from.address, from.resource);
+        closeConversation(presence.session.name, from.address, from.resource, 'groupchat');
 
         // EXPERIMENTAL
 //         if(presence.stanza.ns_xul::x.length() > 0) {
