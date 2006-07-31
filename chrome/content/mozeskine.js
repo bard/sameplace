@@ -511,28 +511,27 @@ function closeConversation(account, address, resource, type) {
     }
 }
 
-function updateContactList(account, address, resource, availability, inConversation) {
+function updateContactList(account, address, resource, opts) {
+    opts = opts || {};
     account = account.toString();
     address = address.toString();
     resource = resource.toString();
-    if(availability)
-        availability = availability.toString();
-    
     var contact = getContactItem(account, address);
+  
     if(contact) {
-        if(availability == 'unavailable')
+        if(opts.availability == 'unavailable')
             _('contact-list').removeChild(contact);
     } else {
-        if(availability != 'unavailable') {
+        if(opts.availability != 'unavailable') {
             contact = cloneBlueprint('contact');
             contact.setAttribute('address', address);
             contact.setAttribute('account', account);
-            contact.getElementsByAttribute('role', 'name')[0].setAttribute('value', address);
-            _('contact-list').appendChild(contact);            
+            contact.getElementsByAttribute('role', 'name')[0].setAttribute('value', JID(address).username);
+            _('contact-list').appendChild(contact);
         }
     }
 
-    switch(inConversation) {
+    switch(opts.inConversation) {
     case true: contact.style.fontStyle = 'italic';
         break;
     case false: contact.style.fontStyle = null;
@@ -716,11 +715,11 @@ function pressedKeyInChatInput(event) {
 }
 
 function openedConversation(account, address, resource, type) {
-    updateContactList(account, address, resource, null, true);
+    updateContactList(account, address, resource, {inConversation: true});
 }
 
 function closedConversation(account, address, resource, type) {
-    updateContactList(account, address, resource, null, false);
+    updateContactList(account, address, resource, {inConversation: false});
 }
 
 
@@ -820,7 +819,7 @@ function receivedPresence(presence) {
     updateContactList(presence.session.name,
                       from.address,
                       from.resource,
-                      presence.stanza.@type);
+                      {availability: presence.stanza.@type});
 }
 
 function sentMUCPresence(presence) {
