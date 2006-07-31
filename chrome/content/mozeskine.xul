@@ -40,9 +40,9 @@
     <box flex="1" id="box-main" persist="orient" orient="horizontal">
       <box flex="1" id="box-auxiliary" persist="orient" orient="vertical">
         <vbox flex="1">
-          <button label="Conversation Partner"
+          <button label="Partner"
                   oncommand="this.nextSibling.collapsed = !this.nextSibling.collapsed;"
-                  style="font-size: 75%; margin: 0; overflow: hidden;"/>
+                  style="font-size: smaller; margin: 0; overflow: hidden;"/>
           <deck id="contact-infos" flex="1"/>
         </vbox>
 
@@ -51,7 +51,7 @@
         <vbox flex="1">
           <button label="Contacts"
                   oncommand="this.nextSibling.collapsed = !this.nextSibling.collapsed;"
-                  style="font-size: 75%; margin: 0;"/>
+                  style="font-size: smaller; margin: 0;"/>
           <richlistbox id="contact-list" flex="1"/>
         </vbox>
       </box>
@@ -90,16 +90,17 @@
                    onkeypress="pressedKeyInChatInput(event);"/>
         </vbox>
 
-        <richlistbox role="contact-info" address="" resource="" type="" flex="1">
+        <richlistbox role="contact-info" address="" resource="" type="" flex="1"
+                     style="font-size: smaller;">
           <richlistitem orient="vertical">
             <label value="Address" class="header" flex="1"/>
-            <label role="partner-address" style="font-size: smaller; padding-left: 0.5em;"/>
+            <label role="partner-address" style="padding-left: 0.5em;"/>
           </richlistitem>          
         </richlistbox>
 
         <richlistitem role="room-topic" orient="vertical">
           <label value="Topic" class="header" flex="1" onclick="clickedTopic(event);"/>
-          <label role="topic" style="font-size: smaller; padding-left: 0.5em;">[None]</label>
+          <label role="topic" style="padding-left: 0.5em;">[None]</label>
         </richlistitem>
 
         <richlistitem role="room-participants" orient="vertical">
@@ -111,7 +112,7 @@
                       class="participant" style="overflow: -moz-scrollbars-none;"
                       nick="">
           <image/>
-          <label role="nick" value="" style="font-size: smaller;"/>
+          <label role="nick" value=""/>
         </richlistitem>
 
         <richlistitem role="contact"
