@@ -390,7 +390,10 @@ function focusConversation(account, address) {
     if(conversation && contactInfo) {
         _('conversations').selectedPanel = conversation;
         _('contact-infos').selectedPanel = contactInfo;
-        _(conversation, {role: 'chat-input'}).focus();
+        setTimeout(
+            function() {
+                _(conversation, {role: 'chat-input'}).focus();
+            }, 100);
     }
 }
 
