@@ -311,6 +311,99 @@ function isConversationOpen() {
     return getConversation.apply(null, arguments);
 }
 
+function isConversationCurrent() {
+    return getConversation.apply(null, arguments) == _('conversations').selectedPanel;
+}
+
+function createConversation(account, address, resource, type, action) {
+    account = account.toString();
+    address = address.toString();
+    resource = resource.toString();
+    type = type.toString();
+    action = action || function() {};
+
+    conversation = cloneBlueprint('conversation');
+    conversation.setAttribute('account', account);
+    conversation.setAttribute('address', address);
+    conversation.setAttribute('resource', resource);
+    conversation.setAttribute('type', type);
+    _('conversations').appendChild(conversation);
+
+    contactInfo = cloneBlueprint('contact-info');
+    contactInfo.setAttribute('account', account);
+    contactInfo.setAttribute('address', address);
+    contactInfo.setAttribute('resource', resource);
+    contactInfo.setAttribute('type', type);
+    _(contactInfo, {role: 'partner-address'}).value = address;
+    if(type == 'groupchat') {
+        contactInfo.appendChild(cloneBlueprint('room-topic'));
+        contactInfo.appendChild(cloneBlueprint('room-participants'));
+    }
+    _('contact-infos').appendChild(contactInfo);
+
+    _(conversation, {role: 'chat-output'})
+        .addEventListener(
+            'load', function(event) {
+                openedConversation(account, address, resource, type);
+                action(conversation);
+            }, true);
+    return conversation;
+}
+
+/**
+ * Ensures that the correct conversation for the given combination of
+ * parameters is open, then executes the given action.
+ *
+ * Criteria for selecting the correct conversation:
+ *
+ * - if type is "groupchat", select the conversation with the
+ *   account/address combination, ignoring the resource (since there
+ *   cannot be more than one groupchat conversation for a certain
+ *   account/address combination);
+ *
+ * - if type is "chat" and a conversation of type "groupchat" with
+ *   given account/address exists somewhere, then we have a
+ *   conversation with a room participant.  Open it if not opened
+ *   already, then execute action.
+ *
+ * - if type is "chat" an no conversation of type "groupchat" with
+ *   given account/address exists already, this is a conversation with
+ *   an ordinary contact.  If a conversation of type "chat" with given
+ *   account/address exists already, reuse it changing the resource,
+ *   otherwise create it.
+ *
+ */
+
+function withConversation(account, address, resource, type, action) {
+    var conversation;
+    switch(type.toString()) {
+    case 'headline':
+        break;
+    case 'groupchat':
+        conversation = getConversation(account, address, null, 'groupchat');
+        action(conversation);
+        break;
+    case 'normal':
+    case 'chat':
+    default:
+        var roomConversation = getConversation(account, address, null, 'groupchat');
+        if(roomConversation) {
+            conversation =
+                getConversation(account, address, resource, 'chat') ||
+                createConversation(account, address, resource, 'chat');
+        }
+        else {
+            conversation = getConversation(account, address, null, 'chat');
+            if(conversation) {
+                conversation.setAttribute('resource', resource);
+                action(conversation);
+            } else
+                createConversation(account, address, resource, 'chat', action);
+        }
+        return conversation;
+    }
+}
+
 function getConversation(account, address, resource, type) {
     return x('//*[' +
              '@role="conversation" and ' +
@@ -396,98 +489,6 @@ function changeConversationResource(account, address, resource, type, otherResou
     }
 }
 
-function openConversation(account, address, resource, type, action) {
-    account = account.toString();
-    address = address.toString();
-    resource = resource.toString();
-    type = type.toString();
-    action = action || function() {};
-
-    conversation = cloneBlueprint('conversation');
-    conversation.setAttribute('account', account);
-    conversation.setAttribute('address', address);
-    conversation.setAttribute('resource', resource);
-    conversation.setAttribute('type', type);
-    _('conversations').appendChild(conversation);
-
-    contactInfo = cloneBlueprint('contact-info');
-    contactInfo.setAttribute('account', account);
-    contactInfo.setAttribute('address', address);
-    contactInfo.setAttribute('resource', resource);
-    contactInfo.setAttribute('type', type);
-    _(contactInfo, {role: 'partner-address'}).value = address;
-    if(type == 'groupchat') {
-        contactInfo.appendChild(cloneBlueprint('room-topic'));
-        contactInfo.appendChild(cloneBlueprint('room-participants'));
-    }
-    _('contact-infos').appendChild(contactInfo);
-
-    _(conversation, {role: 'chat-output'})
-        .addEventListener(
-            'load', function(event) {
-                action();
-                openedConversation(account, address, resource, type);
-            }, true);
-}
-
-/**
- * Ensures that the correct conversation for the given combination of
- * parameters is open, then executes the given action.
- *
- * Criteria for selecting the correct conversation:
- *
- * - if type is "groupchat", select the conversation with the
- *   account/address combination, ignoring the resource (since there
- *   cannot be more than one groupchat conversation for a certain
- *   account/address combination);
- *
- * - if type is "chat" and a conversation of type "groupchat" with
- *   given account/address exists somewhere, then we have a
- *   conversation with a room participant.  Open it if not opened
- *   already, then execute action.
- *
- * - if type is "chat" an no conversation of type "groupchat" with
- *   given account/address exists already, this is a conversation with
- *   an ordinary contact.  If a conversation of type "chat" with given
- *   account/address exists already, reuse it changing the resource,
- *   otherwise create it.
- *
- */
-
-function withConversation(account, address, resource, type, action) {
-    account = account.toString();
-    address = address.toString();
-    resource = resource.toString();
-    type = type.toString();
-    action = action || function() {};
-    
-    switch(type) {
-    case 'headline':
-        break;
-    case 'groupchat':
-        if(isConversationOpen(account, address, null, 'groupchat')) 
-            action();
-        break;
-    case 'normal':
-    case 'chat':
-    default: 
-        if(isConversationOpen(account, address, null,  'groupchat')) {
-            if(isConversationOpen(account, address, resource, 'chat'))
-                action();
-            else
-                openConversation(account, address, resource, 'chat', action);
-        }
-        else {
-            if(isConversationOpen(account, address, null, 'chat')) {
-                changeConversationResource(account, address, null, 'chat', resource);
-                action();
-            } else 
-                openConversation(account, address, resource, 'chat', action);
-        }
-        break;
-    }    
-}
-
 function closeConversation(account, address, resource, type) {
     var conversation = getConversation(account, address, resource, type);
     var contactInfo = getContactInfo(account, address, resource, type);
@@ -549,8 +550,8 @@ function updateContactInfoParticipants(account, address, participantNick, availa
 function displayChatMessage(account, address, resource, type, sender, body) {
     withConversation(
         account, address, resource, type,
-        function() {
-            var chatOutputWindow = _(getConversation(account, address), {role: 'chat-output'}).contentWindow;
+        function(conversation) {
+            var chatOutputWindow = _(conversation, {role: 'chat-output'}).contentWindow;
             var doc = chatOutputWindow.document;
 
             var htmlSender = doc.createElement('span');
@@ -577,8 +578,8 @@ function displayChatMessage(account, address, resource, type, sender, body) {
 function displayEvent(account, address, resource, type, content, additionalClass) {
     withConversation(
         account, address, resource, type,
-        function() {
-            var chatOutputWindow = _(getConversation(account, address), {role: 'chat-output'}).contentWindow;
+        function(conversation) {
+            var chatOutputWindow = _(conversation, {role: 'chat-output'}).contentWindow;
             var doc = chatOutputWindow.document;
 
             var body = doc.createElement('span');
@@ -627,13 +628,13 @@ function doubleClickedContact(contact) {
                           contact.getAttribute('address'));
     else {
         withConversation(contact.getAttribute('account'),
-                         contact.getAttribute('address'),
-                         '',
-                         'chat',
-                         function() {
-                             focusConversation(contact.getAttribute('account'),
-                                               contact.getAttribute('address'));
-                         });
+                          contact.getAttribute('address'),
+                          '',
+                          'chat',
+                          function() {
+                              focusConversation(contact.getAttribute('account'),
+                                                contact.getAttribute('address'));
+                          });
     }
 }
 
@@ -810,8 +811,10 @@ function receivedPresence(presence) {
 
 function sentMUCPresence(presence) {
     var room = JID(presence.stanza.@to);
-    openConversation(
-        presence.session.name, room.address, room.nick, 'groupchat');
+    createConversation(presence.session.name,
+                       room.address,
+                       room.nick,
+                       'groupchat');
 }
 
 function receivedMUCPresence(presence) {
