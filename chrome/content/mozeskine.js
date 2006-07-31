@@ -324,19 +324,19 @@ function isConversationOpen() {
 function getConversation(account, address, resource, type) {
     return x('//*[' +
              '@role="conversation" and ' +
-             '@account="' + account + '" and ' +
-             '@address="' + address + '" and ' +
              (resource ? '@resource="' + resource + '" and ' : '') +
-             '@type="' + type + '"]');
+             (type ? '@type="' + type + '" and ': '') +
+             '@account="' + account + '" and ' +
+             '@address="' + address + '"]');
 }
 
 function getContactInfo(account, address, resource, type) {
     return x('//*[' +
              '@role="contact-info" and ' +
-             '@account="' + account + '" and ' +
-             '@address="' + address + '" and ' +
              (resource ? '@resource="' + resource + '" and ' : '') +
-             '@type="' + type + '"]');
+             (type ? '@type="' + type + '" and ' : '') +
+             '@account="' + account + '" and ' +
+             '@address="' + address + '"]');
 }
 
 function getContactItem(account, address) {
