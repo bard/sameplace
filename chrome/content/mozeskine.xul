@@ -90,7 +90,12 @@
                    onkeypress="pressedKeyInChatInput(event);"/>
         </vbox>
 
-        <richlistbox role="contact-info" address="" resource="" type="" flex="1"/>
+        <richlistbox role="contact-info" address="" resource="" type="" flex="1">
+          <richlistitem orient="vertical">
+            <label value="Address" class="header" flex="1"/>
+            <label role="partner-address" style="font-size: smaller; padding-left: 0.5em;"/>
+          </richlistitem>          
+        </richlistbox>
 
         <richlistitem role="room-topic" orient="vertical">
           <label value="Topic" class="header" flex="1" onclick="clickedTopic(event);"/>
@@ -106,7 +111,7 @@
                       class="participant" style="overflow: -moz-scrollbars-none;"
                       nick="">
           <image/>
-          <label role="nick" value=""/>
+          <label role="nick" value="" style="font-size: smaller;"/>
         </richlistitem>
 
         <richlistitem role="contact"

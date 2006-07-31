@@ -424,6 +424,7 @@ function withConversation(account, address, resource, type, action) {
         contactInfo.setAttribute('address', address);
         contactInfo.setAttribute('resource', resource);
         contactInfo.setAttribute('type', type);
+        _(contactInfo, {role: 'partner-address'}).value = address;
         if(type == 'groupchat') {
             contactInfo.appendChild(cloneBlueprint('room-topic'));
             contactInfo.appendChild(cloneBlueprint('room-participants'));
