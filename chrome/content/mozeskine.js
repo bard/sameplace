@@ -69,21 +69,9 @@ function init(event) {
         {event: 'presence', direction: 'in' },
         function(presence) { receivedPresence(presence) });
     channel.on(
-        {event: 'presence', direction: 'in', stanza: function(s) {
-                return s.ns_muc_user::x.toXMLString();
-            }}, function(presence) { receivedMUCPresence(presence) });
-    channel.on(
-        {event: 'presence', direction: 'out', stanza: function(s) {
-                return s.ns_muc::x.toXMLString() && s.@type != 'unavailable';
-            }}, function(presence) { sentMUCPresence(presence) });
-    channel.on(
         {event: 'message', direction: 'in', stanza: function(s) {
                 return s.body.toString();
             }}, function(message) { receivedChatMessage(message); });
-    channel.on(
-        {event: 'message', direction: 'in', stanza: function(s) {
-                return s.@type == 'groupchat' && s.subject.toString();
-            }}, function(message) { receivedRoomTopic(message); });
     channel.on(
         {event: 'message', direction: 'in', stanza: function(s) {
                 return (s.body.toString() &&
@@ -93,6 +81,19 @@ function init(event) {
         {event: 'message', direction: 'out', stanza: function(s) {
                 return s.@type != 'groupchat';
             }}, function(message) { sentChatMessage(message) });
+
+    channel.on(
+        {event: 'presence', direction: 'in', stanza: function(s) {
+                return s.ns_muc_user::x.toXMLString();
+            }}, function(presence) { receivedMUCPresence(presence) });
+    channel.on(
+        {event: 'presence', direction: 'out', stanza: function(s) {
+                return s.ns_muc::x.toXMLString() && s.@type != 'unavailable';
+            }}, function(presence) { sentMUCPresence(presence) });
+    channel.on(
+        {event: 'message', direction: 'in', stanza: function(s) {
+                return s.@type == 'groupchat' && s.subject.toString();
+            }}, function(message) { receivedRoomTopic(message); });
 }
 
 function finish() {
@@ -384,14 +385,13 @@ function hideAuxiliary() {
 }
 
 function focusConversation(account, address) {
-    _('conversations').selectedPanel =
-        x('//*[@id="conversations"]/*[' +
-          '@address="' + address + '" and ' +
-          '@account="' + account + '"]');
-    _('contact-infos').selectedPanel =
-        x('//*[@id="contact-infos"]/*[' +
-          '@address="' + address + '" and ' +
-          '@account="' + account + '"]');
+    var conversation = getConversation(account, address);
+    var contactInfo = getContactInfo(account, address);
+    if(conversation && contactInfo) {
+        _('conversations').selectedPanel = conversation;
+        _('contact-infos').selectedPanel = contactInfo;
+        _(conversation, {role: 'chat-input'}).focus();
+    }
 }
 
 function changeConversationResource(account, address, resource, type, otherResource) {
@@ -505,13 +505,9 @@ function updateContactList(account, address, resource, availability, inConversat
 }
 
 function updateContactInfoParticipants(account, address, participantNick, availability) {
-    var contactInfo =
-        x('//*[@id="contact-infos"]/*[' +
-          '@address="' + address + '" and ' +
-          '@account="' + account + '"]');
-    
-    var participants = contactInfo.getElementsByAttribute('role', 'participants')[0];
-    var participant = contactInfo.getElementsByAttribute('nick', participantNick)[0];
+    var contactInfo = getContactInfo(account, address);
+    var participants = _(contactInfo, {role: 'participants'});
+    var participant = _(contactInfo, {nick: participantNick});
 
     if(participant) {
         if(availability == 'unavailable') 
@@ -528,16 +524,11 @@ function updateContactInfoParticipants(account, address, participantNick, availa
 }
 
 function displayChatMessage(account, address, resource, type, sender, body) {
-    var chatOutputWindow = x(
-        '//*[' +
-        '@role="conversation" and ' +
-        '@account="' + account + '" and ' +
-        '@address="' + address + '"]' +
-        '//*[@role="chat-output"]')
-        .contentWindow;
+    var chatOutputWindow = _(getConversation(account, address), {role: 'chat-output'}).contentWindow;
 
     withDocumentOf(
-        chatOutputWindow, function(doc) {
+        chatOutputWindow,
+        function(doc) {
             var htmlSender = doc.createElement('span');
             if(type == 'groupchat')
                 htmlSender.textContent = JID(sender).resource || address;
@@ -560,16 +551,11 @@ function displayChatMessage(account, address, resource, type, sender, body) {
 }
 
 function displayEvent(account, address, resource, content, additionalClass) {
-    var chatOutputWindow = x(
-        '//*[' +
-        '@role="conversation" and ' +
-        '@account="' + account + '" and ' +
-        '@address="' + address + '"]' +
-        '//*[@role="chat-output"]')
-        .contentWindow;
+    var chatOutputWindow = _(getConversation(account, address), {role: 'chat-output'}).contentWindow;
     
     withDocumentOf(
-        chatOutputWindow, function(doc) {
+        chatOutputWindow,
+        function(doc) {
             var body = doc.createElement('span');
             body.setAttribute('class', 'body');
             body.textContent = content;
