@@ -220,18 +220,6 @@ function getAncestorAttribute(element, attributeName) {
     return null;
 }
 
-function withDocumentOf(window, action) {
-    if(!window.document.getElementById('loaded'))
-        window.addEventListener(
-            'load', function(event) {
-                action(event.target);
-            }, false);
-    else
-        action(window.document);
-}
-withDocumentOf.doc = 'Execute an action if document has loaded, \
-otherwise schedule it for when it has finished loading.';
-
 function x() {
     var contextNode, path;
     if(arguments[0] instanceof XULElement) {
@@ -559,11 +547,12 @@ function updateContactInfoParticipants(account, address, participantNick, availa
 }
 
 function displayChatMessage(account, address, resource, type, sender, body) {
-    var chatOutputWindow = _(getConversation(account, address), {role: 'chat-output'}).contentWindow;
+    withConversation(
+        account, address, resource, type,
+        function() {
+            var chatOutputWindow = _(getConversation(account, address), {role: 'chat-output'}).contentWindow;
+            var doc = chatOutputWindow.document;
 
-    withDocumentOf(
-        chatOutputWindow,
-        function(doc) {
             var htmlSender = doc.createElement('span');
             if(type == 'groupchat')
                 htmlSender.textContent = JID(sender).resource || address;
@@ -582,15 +571,16 @@ function displayChatMessage(account, address, resource, type, sender, body) {
                 chatOutputWindow, function() {
                     doc.getElementById('messages').appendChild(message);
                 });            
-        });
+        });    
 }
 
-function displayEvent(account, address, resource, content, additionalClass) {
-    var chatOutputWindow = _(getConversation(account, address), {role: 'chat-output'}).contentWindow;
-    
-    withDocumentOf(
-        chatOutputWindow,
-        function(doc) {
+function displayEvent(account, address, resource, type, content, additionalClass) {
+    withConversation(
+        account, address, resource, type,
+        function() {
+            var chatOutputWindow = _(getConversation(account, address), {role: 'chat-output'}).contentWindow;
+            var doc = chatOutputWindow.document;
+
             var body = doc.createElement('span');
             body.setAttribute('class', 'body');
             body.textContent = content;
@@ -604,7 +594,7 @@ function displayEvent(account, address, resource, content, additionalClass) {
             scrollingOnlyIfAtBottom(
                 chatOutputWindow, function() {
                     doc.getElementById('messages').appendChild(event);
-                });            
+                });
         });
 }
 
@@ -767,17 +757,12 @@ function sendChatMessage(account, address, resource, type, text) {
 
 function receivedChatMessage(message) {
     var from = JID(message.stanza.@from);
-    withConversation(
-        message.session.name, from.address,
-        from.resource, message.stanza.@type,
-        function() {
-            displayChatMessage(
-                message.session.name,
-                from.address, from.resource,
-                message.stanza.@type,
-                message.stanza.@from,
-                message.stanza.body);            
-        });
+    displayChatMessage(
+        message.session.name,
+        from.address, from.resource,
+        message.stanza.@type,
+        message.stanza.@from,
+        message.stanza.body);
 }
 
 function sentChatMessage(message) {
@@ -803,6 +788,7 @@ function receivedRoomTopic(message) {
     displayEvent(
         message.session.name,
         from.address, from.resource,
+        'groupchat',
         from.nick + ' set the topic to "' +
         message.stanza.subject + '"', 'topic');
     
@@ -845,7 +831,7 @@ function receivedMUCPresence(presence) {
     }
     
     displayEvent(
-        presence.session.name, from.address, from.resource,
+        presence.session.name, from.address, from.resource, 'groupchat',
         eventMessage, eventClass);
 
     if(presence.stanza.@type.toString() == 'unavailable')
