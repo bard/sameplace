@@ -594,9 +594,32 @@ function requestedToggleAuxiliary(command) {
         hideAuxiliary();
 }
 
-function selectedContact(event) {
-    var contact = event.target.selectedItem;
-    focusConversation(contact.getAttribute('account'), contact.getAttribute('address'));
+function selectedContact(contact) {
+    focusConversation(contact.getAttribute('account'),
+                      contact.getAttribute('address'));
+}
+
+function doubleClickedContact(contact) {
+    if(isConversationOpen(contact.getAttribute('account'),
+                          contact.getAttribute('address'),
+                          '',
+                          'groupchat') ||
+       isConversationOpen(contact.getAttribute('account'),
+                          contact.getAttribute('address'),
+                          null,
+                          'chat'))
+        focusConversation(contact.getAttribute('account'),
+                          contact.getAttribute('address'));
+    else {
+        withConversation(contact.getAttribute('account'),
+                         contact.getAttribute('address'),
+                         '',
+                         'chat',
+                         function() {
+                             focusConversation(contact.getAttribute('account'),
+                                               contact.getAttribute('address'));
+                         });
+    }
 }
 
 function requestedCloseConversation(event) {

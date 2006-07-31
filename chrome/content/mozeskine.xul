@@ -52,7 +52,7 @@
           <button label="Contacts"
                   oncommand="this.nextSibling.collapsed = !this.nextSibling.collapsed;"
                   style="font-size: 75%; margin: 0;"/>
-          <richlistbox id="contact-list" flex="1" onselect="selectedContact(event);"/>
+          <richlistbox id="contact-list" flex="1"/>
         </vbox>
       </box>
 
@@ -110,7 +110,9 @@
         </richlistitem>
 
         <richlistitem role="contact"
-                      account="" address="">
+                      account="" address="" 
+                      onclick="selectedContact(this);"
+                      ondblclick="doubleClickedContact(this);">
           <label role="name"/>
         </richlistitem>
       </box>
