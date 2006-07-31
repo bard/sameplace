@@ -66,7 +66,9 @@ function init(event) {
     channel = XMPP.createChannel();
 
     channel.on(
-        {event: 'presence', direction: 'in' },
+        {event: 'presence', direction: 'in', stanza: function(s) {
+                return s.@type != 'error';
+            }},
         function(presence) { receivedPresence(presence) });
     channel.on(
         {event: 'message', direction: 'in', stanza: function(s) {
