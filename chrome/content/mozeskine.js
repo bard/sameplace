@@ -219,7 +219,7 @@ function textToHTML(doc, text) {
 }
 
 function getAncestorAttribute(element, attributeName) {
-    while(element.parentNode) {
+    while(element.parentNode && element.parentNode.hasAttribute) {
         if(element.parentNode.hasAttribute(attributeName))
             return element.parentNode.getAttribute(attributeName);
         element = element.parentNode;
