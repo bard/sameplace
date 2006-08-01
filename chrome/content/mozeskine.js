@@ -116,6 +116,60 @@ function finish() {
     channel.release();
 }
 
+// SUBSYSTEMS
+// ----------------------------------------------------------------------
+
+var contacts = {
+    // interface glue
+
+    get: function(account, address, resource) {
+        return x('//*[@id="contact-list"]//*[' +
+                 (resource ? '@resource="' + resource + '" and ' : '') +
+                 '@address="' + address + '" and ' +
+                 '@account="' + account + '"]');
+    },
+
+    add: function(account, address, resource) {
+        var contact;
+        contact = cloneBlueprint('contact');
+        contact.setAttribute('address', address);
+        contact.setAttribute('account', account);
+//        contact.setAttribute('resource', resource);
+        contact.getElementsByAttribute('role', 'name')[0]
+        .setAttribute('value', JID(address).username);
+        _('contact-list').appendChild(contact);
+        return contact;
+    },
+
+    remove: function(contact) {
+        _('contact-list').removeChild(contact);
+    },
+
+    // domain reactions
+    
+    resourceChangedAvailability: function(account, address, resource, availability) {
+        if(availability == undefined)
+            availability = 'available';
+
+        var contact = this.get(account, address);
+        if(contact && availability == 'unavailable')
+            this.remove(contact);
+        else if(!contact && availability == 'available') 
+            this.add(account, address, resource);
+    },
+
+    startedConversationWith: function(account, address, resource) {
+        var contact = this.get(account, address) || this.add(account, address, resource);
+        contact.style.fontStyle = 'italic';
+    },
+
+    stoppedConversationWith: function(account, address, resource) {
+        var contact = this.get(account, address, resource);
+        if(contact)
+            contact.style.fontStyle = null;
+    }
+};
+
 
 // UTILITIES (GENERIC)
 // ----------------------------------------------------------------------
@@ -429,12 +483,6 @@ function getContactInfo(account, address, resource, type) {
              '@address="' + address + '"]');
 }
 
-function getContactItem(account, address) {
-    return x('//*[@id="contact-list"]//*[' +
-             '@address="' + address + '" and ' +
-             '@account="' + account + '"]');
-}
-
 
 // GUI ACTIONS
 // ----------------------------------------------------------------------
@@ -505,34 +553,6 @@ function closeConversation(account, address, resource, type) {
         contactInfo.parentNode.removeChild(contactInfo);
         closedConversation(account, address, resource, type);
     }
-}
-
-function updateContactList(account, address, resource, opts) {
-    opts = opts || {};
-    account = account.toString();
-    address = address.toString();
-    resource = resource.toString();
-    var contact = getContactItem(account, address);
-  
-    if(contact) {
-        if(opts.availability == 'unavailable')
-            _('contact-list').removeChild(contact);
-    } else {
-        if(opts.availability != 'unavailable') {
-            contact = cloneBlueprint('contact');
-            contact.setAttribute('address', address);
-            contact.setAttribute('account', account);
-            contact.getElementsByAttribute('role', 'name')[0].setAttribute('value', JID(address).username);
-            _('contact-list').appendChild(contact);
-        }
-    }
-
-    switch(opts.inConversation) {
-    case true: contact.style.fontStyle = 'italic';
-        break;
-    case false: contact.style.fontStyle = null;
-        break;
-    }        
 }
 
 function updateContactInfoParticipants(account, address, participantNick, availability) {
@@ -728,13 +748,12 @@ function pressedKeyInChatInput(event) {
 }
 
 function openedConversation(account, address, resource, type) {
-    updateContactList(account, address, resource, {inConversation: true});
+    contacts.startedConversationWith(account, address, resource);
 }
 
 function closedConversation(account, address, resource, type) {
-    updateContactList(account, address, resource, {inConversation: false});
+    contacts.stoppedConversationWith(account, address, resource);
 }
-
 
 // NETWORK ACTIONS
 // ----------------------------------------------------------------------
@@ -825,10 +844,11 @@ function receivedRoomTopic(message) {
 function receivedPresence(presence) {
     var from = JID(presence.stanza.@from);
 
-    updateContactList(presence.session.name,
-                      from.address,
-                      from.resource,
-                      {availability: presence.stanza.@type});
+    contacts.resourceChangedAvailability(
+        presence.session.name,
+        from.address,
+        from.resource,
+        presence.stanza.@type);
 }
 
 function sentMUCPresence(presence) {
@@ -861,6 +881,16 @@ function receivedMUCPresence(presence) {
 
     if(presence.stanza.@type.toString() == 'unavailable')
         closeConversation(presence.session.name, from.address, from.resource, 'groupchat');
+
+    contacts.resourceChangedAvailability(
+        presence.session.name,
+        from.address, 
+        from.resource,
+        presence.stanza.@type);
+
+    if(presence.stanza.@type != 'unavailable')
+        contacts.startedConversationWith(
+            presence.session.name, from.address);
 
         // EXPERIMENTAL
 //         if(presence.stanza.ns_xul::x.length() > 0) {
