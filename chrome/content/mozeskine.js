@@ -52,6 +52,7 @@ var smileyRegexp;
 // ----------------------------------------------------------------------
 
 var channel;
+var debugMode = true;
 
 
 // GUI INITIALIZATION AND FINALIZATION
@@ -96,6 +97,12 @@ function init(event) {
         {event: 'message', direction: 'in', stanza: function(s) {
                 return s.@type == 'groupchat' && s.subject.toString();
             }}, function(message) { receivedRoomTopic(message); });
+
+    if(debugMode)
+        document.addEventListener(
+            'mouseover', function(event) {
+                hoveredMousePointer(event);
+            }, false);
 }
 
 function finish() {
@@ -673,6 +680,21 @@ function clickedTopic(event) {
         setRoomTopic(getAncestorAttribute(event.target, 'account'),
                      getAncestorAttribute(event.target, 'address'),
                      input.value);
+}
+
+function hoveredMousePointer(event) {
+    if(!event.target.hasAttribute)
+        return;
+    
+    var get = (event.target.hasAttribute('account')) ?
+        (function(attributeName) { return event.target.getAttribute(attributeName); }) :
+        (function(attributeName) { return getAncestorAttribute(event.target, attributeName); });
+   
+    window.top.document.getElementById('statusbar-display').label =
+        'Account: <' + get('account') + '>, ' +
+        'Address: <' + get('address') + '>, ' +
+        'Resource: <' + get('resource') + '>, ' +
+        'Type: <' + get('type') + '>';
 }
 
 function pressedKeyInChatInput(event) {
