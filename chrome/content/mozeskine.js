@@ -325,7 +325,7 @@ function scrollingOnlyIfAtBottom(window, action) {
     var shouldScroll = ((window.scrollMaxY - window.pageYOffset) < 24);
     action();
     if(shouldScroll)
-        window.scrollTo(0, window.document.height);
+        window.scrollTo(0, window.scrollMaxY);
 }
 
 function findBrowser(account, address, url) {
