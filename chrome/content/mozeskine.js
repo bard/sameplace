@@ -52,7 +52,7 @@ var smileyRegexp;
 // ----------------------------------------------------------------------
 
 var channel;
-var debugMode = true;
+var debugMode = false;
 
 
 // GUI INITIALIZATION AND FINALIZATION
@@ -98,11 +98,13 @@ function init(event) {
                 return s.@type == 'groupchat' && s.subject.toString();
             }}, function(message) { receivedRoomTopic(message); });
 
-    if(debugMode)
+    if(debugMode) {
         document.addEventListener(
             'mouseover', function(event) {
                 hoveredMousePointer(event);
             }, false);
+        _('devel-shortcut').hidden = false;
+    }
 }
 
 function finish() {
@@ -919,3 +921,9 @@ function receivedMUCPresence(presence) {
 // DEVELOPER SHORTCUTS
 // ----------------------------------------------------------------------
 
+function quickJoin() {
+    XMPP.up('foo@jabber.sameplace.cc/Firefox',
+            {password: 'foo', continuation: function(jid) {
+                    joinRoom(jid, 'a@places.sameplace.cc', 'foobarfoobar');
+                }});
+}

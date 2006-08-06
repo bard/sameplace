@@ -130,6 +130,8 @@
         <toolbarbutton command="switch-layout"/>
         <toolbarspring/>
         <toolbarbutton command="join-room"/>
+        <toolbarbutton id="devel-shortcut" oncommand="quickJoin();"
+                       label="Quick Join" accesskey="Q" hidden="true"/>
       </toolbar>
     </toolbox>
   </vbox>
