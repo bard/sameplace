@@ -120,6 +120,8 @@
                       onclick="selectedContact(this);"
                       ondblclick="doubleClickedContact(this);">
           <label role="name"/>
+          <spacer flex="1"/>
+          <label role="show" style="font-size: smaller"/>
         </richlistitem>
       </box>
     </box>

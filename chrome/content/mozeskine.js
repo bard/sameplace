@@ -149,15 +149,19 @@ var contacts = {
 
     // domain reactions
     
-    resourceChangedAvailability: function(account, address, resource, availability) {
+    resourceChangedPresence: function(account, address, resource, availability, show) {
         if(availability == undefined)
             availability = 'available';
 
         var contact = this.get(account, address);
         if(contact && availability == 'unavailable')
             this.remove(contact);
-        else if(!contact && availability == 'available') 
-            this.add(account, address, resource);
+        else if(availability == 'available') {
+            if(!contact)
+                contact = this.add(account, address, resource);
+
+            contact.getElementsByAttribute('role', 'show')[0].value = show || '';
+        }
     },
 
     startedConversationWith: function(account, address, resource) {
@@ -846,11 +850,12 @@ function receivedRoomTopic(message) {
 function receivedPresence(presence) {
     var from = JID(presence.stanza.@from);
 
-    contacts.resourceChangedAvailability(
+    contacts.resourceChangedPresence(
         presence.session.name,
         from.address,
         from.resource,
-        presence.stanza.@type);
+        presence.stanza.@type,
+        presence.stanza.show);
 }
 
 function sentMUCPresence(presence) {
@@ -884,7 +889,7 @@ function receivedMUCPresence(presence) {
     if(presence.stanza.@type.toString() == 'unavailable')
         closeConversation(presence.session.name, from.address, from.resource, 'groupchat');
 
-    contacts.resourceChangedAvailability(
+    contacts.resourceChangedPresence(
         presence.session.name,
         from.address, 
         from.resource,
