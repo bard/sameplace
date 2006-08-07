@@ -1,5 +1,14 @@
 
 Context:
 
-[TAG 0.1.0
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060716181142] 
+[Rearranged files in ui/, service/ and lib/ parts.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060807191133] 
+
+[Removed forwarding facade to client service.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060807191123] 
+
+[Renamed accountKey to accountId to prevent confusion with accountJid.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060807181833] 
+
+[TAG 0.1.4
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060806164854] 

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-<?xul-overlay href="chrome://xmpp4moz/content/accounts.xul"?>
+<?xul-overlay href="chrome://xmpp4moz/content/ui/accounts.xul"?>
 
 <dialog id="main" title="Join Room"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
