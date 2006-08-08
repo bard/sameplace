@@ -38,7 +38,7 @@
     <!-- CONVERSATION AREA -->
 
     <box flex="1" id="box-main" persist="orient" orient="horizontal">
-      <box flex="1" id="box-auxiliary" persist="orient" orient="vertical">
+      <box id="box-auxiliary" persist="orient height" orient="vertical" height="100">
         <vbox flex="1">
           <button label="Partner"
                   oncommand="this.nextSibling.collapsed = !this.nextSibling.collapsed;"

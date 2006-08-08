@@ -149,25 +149,24 @@ var contacts = {
         return contact;
     },
 
-    remove: function(contact) {
-        _('contact-list').removeChild(contact);
-    },
-
     // domain reactions
     
     resourceChangedPresence: function(account, address, resource, availability, show) {
         if(availability == undefined)
             availability = 'available';
 
-        var contact = this.get(account, address);
-        if(contact && availability == 'unavailable')
-            this.remove(contact);
-        else if(availability == 'available') {
-            if(!contact)
-                contact = this.add(account, address, resource);
+        var contact = this.get(account, address) || this.add(account, address);
 
-            contact.getElementsByAttribute('role', 'show')[0].value = show || '';
-        }
+        contact.setAttribute('availability', availability);
+        contact.setAttribute('show', show);
+        
+        contact.getElementsByAttribute('role', 'show')[0].value = show || '';
+
+        if(availability == 'available')
+            _('contact-list').insertBefore(
+                contact, _('contact-list').firstChild);
+        else
+            _('contact-list').appendChild(contact);
     },
 
     startedConversationWith: function(account, address, resource) {

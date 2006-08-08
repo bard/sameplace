@@ -28,3 +28,12 @@ richlistitem.participant>image
   list-style-image: url("user.png");
   }
 
+richlistitem[role="contact"][availability="available"]
+{
+  }
+
+richlistitem[role="contact"][availability="unavailable"]
+{
+  color: graytext;
+  font-size: smaller;
+  }
