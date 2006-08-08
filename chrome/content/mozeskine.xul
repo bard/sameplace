@@ -38,7 +38,7 @@
     <!-- CONVERSATION AREA -->
 
     <box flex="1" id="box-main" persist="orient" orient="horizontal">
-      <box id="box-auxiliary" persist="orient height" orient="vertical" height="100">
+      <box id="box-auxiliary" persist="orient height" orient="vertical" height="100" flex="1">
         <vbox flex="1">
           <button label="Partner"
                   oncommand="this.nextSibling.collapsed = !this.nextSibling.collapsed;"
@@ -56,10 +56,14 @@
         </vbox>
       </box>
 
-      <splitter id="splitter-main" persist="orient" orient="horizontal"/>
+      <splitter id="splitter-main" persist="orient" orient="horizontal">
+        <button label="Conversations" style="margin: 0; font-size: xx-small"
+                flex="1"
+                oncommand="_('conversations').collapsed = !_('conversations').collapsed;"/>
+      </splitter>
 
       <deck flex="4" id="conversations"/>
-      
+
       <box hidden="true" id="blueprints">
         <vbox role="conversation" address="" resource="" type="">
           <toolbox>
