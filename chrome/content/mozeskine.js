@@ -151,9 +151,13 @@ var contacts = {
 
     // domain reactions
     
-    resourceChangedPresence: function(account, address, resource, availability, show) {
+    resourceChangedPresence: function(account, address, resource, availability, show, status) {
         if(availability == undefined)
             availability = 'available';
+        if(show)
+            show = show.toString();
+        if(status)
+            status = status.toString();
 
         var contact = this.get(account, address) || this.add(account, address);
 
@@ -161,7 +165,11 @@ var contacts = {
         contact.setAttribute('show', show);
         
         contact.getElementsByAttribute('role', 'show')[0].value = show || '';
-
+        if(status)
+            contact.getElementsByAttribute('role', 'status')[0].value = status;
+        else if(contact.getElementsByAttribute('role', 'status')[0].hasAttribute('value'))
+            contact.getElementsByAttribute('role', 'status')[0].removeAttribute('value');
+        
         if(availability == 'available')
             _('contact-list').insertBefore(
                 contact, _('contact-list').firstChild);
@@ -875,7 +883,8 @@ function receivedPresence(presence) {
         from.address,
         from.resource,
         presence.stanza.@type,
-        presence.stanza.show);
+        presence.stanza.show,
+        presence.stanza.status);
 }
 
 function sentMUCPresence(presence) {

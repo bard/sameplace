@@ -118,10 +118,14 @@
         <richlistitem role="contact"
                       account="" address="" 
                       onclick="selectedContact(this);"
-                      ondblclick="doubleClickedContact(this);">
-          <label role="name"/>
-          <spacer flex="1"/>
-          <label role="show" style="font-size: smaller"/>
+                      ondblclick="doubleClickedContact(this);"
+                      orient="vertical">
+          <hbox flex="1">
+            <label role="name"/>
+            <spacer flex="1"/>
+            <label role="show" style="font-size: smaller"/>
+          </hbox>
+          <label role="status" style="font-size: smaller; margin-left: 2em;"/>
         </richlistitem>
       </box>
     </box>
