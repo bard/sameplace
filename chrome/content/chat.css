@@ -89,6 +89,11 @@ img.emoticon
   display: none;
   }
 
+#preload
+{
+  display: none;
+  }
+
 
 /* .info  */
 /* { */
