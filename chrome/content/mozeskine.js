@@ -382,12 +382,11 @@ function isConversationCurrent() {
     return getConversation.apply(null, arguments) == _('conversations').selectedPanel;
 }
 
-function createConversation(account, address, resource, type, action) {
+function createConversation(account, address, resource, type) {
     account = account.toString();
     address = address.toString();
     resource = resource.toString();
     type = type.toString();
-    action = action || function() {};
 
     conversation = cloneBlueprint('conversation');
     conversation.setAttribute('account', account);
@@ -408,12 +407,11 @@ function createConversation(account, address, resource, type, action) {
     }
     _('contact-infos').appendChild(contactInfo);
 
-    _(conversation, {role: 'chat-output'})
-        .addEventListener(
-            'load', function(event) {
-                openedConversation(account, address, resource, type);
-                action(conversation);
-            }, true);
+    _(conversation, {role: 'chat-output'}).addEventListener(
+        'load', function(event) {
+            openedConversation(account, address, resource, type);
+        }, true);
+
     return conversation;
 }
 
@@ -463,9 +461,16 @@ function withConversation(account, address, resource, type, action) {
             conversation = getConversation(account, address, null, 'chat');
             if(conversation) {
                 conversation.setAttribute('resource', resource);
-                action(conversation);
             } else
-                createConversation(account, address, resource, 'chat', action);
+                conversation = createConversation(account, address, resource, 'chat');
+
+            var chatOutput = _(conversation, {role: 'chat-output'});
+
+            if(chatOutput.contentDocument.getElementById('messages'))
+                action(conversation);
+            else
+                chatOutput.addEventListener(
+                    'load', function(event) { action(conversation); }, true);
         }
         return conversation;
     }
@@ -604,7 +609,7 @@ function displayChatMessage(account, address, resource, type, sender, body) {
             scrollingOnlyIfAtBottom(
                 chatOutputWindow, function() {
                     doc.getElementById('messages').appendChild(message);
-                });            
+                });
         });    
 }
 
