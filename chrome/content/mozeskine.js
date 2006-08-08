@@ -16,6 +16,7 @@ const ns_agent = new Namespace('http://hyperstruct.net/mozeskine/protocol/0.1.4#
 const ns_muc_user = new Namespace('http://jabber.org/protocol/muc#user');
 const ns_muc = new Namespace('http://jabber.org/protocol/muc');
 const ns_xul = new Namespace('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul');
+const ns_roster = new Namespace('jabber:iq:roster');
 
 var urlRegexp = new RegExp('(http:\/\/|www.)[^ \\t\\n\\f\\r"<>|()]*[^ \\t\\n\\f\\r"<>|,.!?(){}]');
 var smileyMap = {
@@ -66,6 +67,11 @@ function init(event) {
 
     channel = XMPP.createChannel();
 
+    channel.on(
+        {event: 'iq', direction: 'in', stanza: function(s) {
+                return s.ns_roster::query.length() > 0;
+            }},
+        function(iq) { receivedRoster(iq); });
     channel.on(
         {event: 'presence', direction: 'in', stanza: function(s) {
                 return s.@type != 'error';
@@ -850,6 +856,16 @@ function receivedRoomTopic(message) {
             info.getElementsByAttribute('role', 'topic')[0].textContent =
                 message.stanza.subject.toString();
         });
+}
+
+function receivedRoster(iq) {
+    for each(var item in iq.stanza..ns_roster::item) {
+        contacts.resourceChangedPresence(
+            iq.session.name,
+            JID(item.@jid).address,
+            null,
+            'unavailable');
+    }
 }
 
 function receivedPresence(presence) {
