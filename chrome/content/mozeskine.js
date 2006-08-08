@@ -377,6 +377,10 @@ function findWindow(name) {
     return null;
 }
 
+function growTextBox(textBox) {
+    textBox.setAttribute('rows', parseInt(textBox.getAttribute('rows')) + 1);
+}
+
 
 // GUI UTILITIES (SPECIFIC)
 // ----------------------------------------------------------------------
@@ -767,6 +771,7 @@ function pressedKeyInChatInput(event) {
                     getAncestorAttribute(textBox, 'type'),
                     textBox.value);
             textBox.value = '';
+            textBox.setAttribute('rows', 1);
         }
     }
 }
