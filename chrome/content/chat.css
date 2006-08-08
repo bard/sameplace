@@ -13,19 +13,13 @@ ul#messages
   padding: 0;
   }
 
-ul#notes
-{
-  padding: 1em;
-  margin: 0;
-  }
-
-li 
+ul#messages > li 
 {
   padding-top: 0.2em;
   padding-bottom: 0.2em;
   }
 
-li:hover 
+ul#messages > li:hover 
 {
   background-color: #f2f2ff;
   }
@@ -40,64 +34,25 @@ a:hover
   color: blue;
   }
 
-#header
-{
-  display: none;
-  top: 0;
-  left: 0;
-  float: right;
-  padding-top: 0.4em;
-  padding-bottom: 0.6em;
-  position: fixed;
-  z-index: 1000;
-  background: #e2e2e2;
-  width: 100%;
-  }
-#header:hover
-{
-  cursor: pointer;
-  }
-
-#header>h1
-{
-  padding-left: 0.5em;
-  padding-right: 0.5em;
-  display: inline;
-  font-size: 120%;
-  font-family: serif;
-  font-weight: normal;
-  white-space: nowrap;
-  font-style: italic;
-  }
-
-
-h1#topic:before
-{
-  content: "Topic: ";
-  font-style: normal;
-  font-variant: small-caps;
-  font-weight: bold;
-  }
-
 .message, .note, .event
 {
   position: relative;
   }
 
-.event>.body
+.event > .body
 {
   position: relative;
   font-style: italic;
   }
-.event.join>.body:before
+.event.join > .body:before
 {
   content: "» ";
   }
-.event.leave>.body:before
+.event.leave > .body:before
 {
   content: "« ";
   }
-.event.topic>.body:before
+.event.topic > .body:before
 {
   content: "· ";
   font-weight: bold;
@@ -122,25 +77,6 @@ h1#topic:before
   white-space: -moz-pre-wrap;
   }
 
-.actions
-{
-  position: absolute;
-  right: 0;
-  top: -0.2em;
-  border: 1px solid blue;
-  visibility: hidden;
-  background: white;
-  }
-.actions:hover
-{
-  cursor: pointer;
-  }
-
-li:hover>.actions
-{
-  visibility: visible;
-  }
-
 img.emoticon
 {
   margin: 0 0;
@@ -149,11 +85,6 @@ img.emoticon
   }
 
 #blueprint
-{
-  display: none;
-  }
-
-#loaded
 {
   display: none;
   }
