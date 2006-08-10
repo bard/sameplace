@@ -79,8 +79,12 @@ function init(event) {
         function(presence) { receivedPresence(presence) });
     channel.on(
         {event: 'message', direction: 'in', stanza: function(s) {
-                return s.body.toString();
+                return s.body.length() > 0 && s.@type != 'error';
             }}, function(message) { receivedChatMessage(message); });
+    channel.on(
+        {event: 'message', direction: 'in', stanza: function(s) {
+                return s.@type == 'error';
+            }}, function(message) { receivedErrorMessage(message); });
     channel.on(
         {event: 'message', direction: 'in', stanza: function(s) {
                 return (s.body.toString() &&
@@ -834,6 +838,16 @@ function receivedChatMessage(message) {
         message.stanza.@type,
         message.stanza.@from,
         message.stanza.body);
+}
+
+function receivedErrorMessage(message) {
+    var from = JID(message.stanza.@from);
+    displayEvent(
+        message.session.name,
+        from.address, from.resource,
+        'chat',
+        'Error: code ' + message.stanza.error.@code,
+        'error');
 }
 
 function sentChatMessage(message) {

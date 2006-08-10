@@ -58,6 +58,12 @@ a:hover
   font-weight: bold;
   }
 
+.event.error > .body:before
+{
+  content: "! ";
+  font-weight: bold;
+  }
+
 .sender 
 {
   font-weight: bold;
