@@ -4,6 +4,10 @@
 const Cc = Components.classes;
 const Ci = Components.interfaces;
 
+const prefBranch = Components
+    .classes["@mozilla.org/preferences-service;1"]
+    .getService(Components.interfaces.nsIPrefService)
+    .getBranch('extensions.mozeskine.');
 const pref = Cc['@mozilla.org/preferences-service;1']
     .getService(Ci.nsIPrefBranch);
 const mediator = Cc['@mozilla.org/appshell/window-mediator;1']
@@ -58,6 +62,7 @@ var debugMode = false;
 
 // GUI INITIALIZATION AND FINALIZATION
 // ----------------------------------------------------------------------
+
 
 function init(event) {
     if(!event.target)
@@ -114,6 +119,11 @@ function init(event) {
                 hoveredMousePointer(event);
             }, false);
         _('devel-shortcut').hidden = false;
+    }
+
+    for each(var pluginInfo in prefBranch.getChildList('plugin.', {})) {
+        var pluginOverlayURL = prefBranch.getCharPref(pluginInfo);
+        document.loadOverlay(pluginOverlayURL, null);
     }
 }
 
