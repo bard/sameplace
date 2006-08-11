@@ -2,7 +2,7 @@
 var mozeskine_xmppChannel = XMPP.createChannel();
 
 mozeskine_xmppChannel.on(
-    {event: 'stream', direction: 'out'},
+    {event: 'stream', direction: 'out', state: 'open'},
     function(stream) { mozeskine_loadLivebar(); });
 
 function mozeskine_loadLivebar(force) {
