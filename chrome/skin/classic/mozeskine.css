@@ -37,3 +37,14 @@ richlistitem[role="contact"][availability="unavailable"]
   color: graytext;
   font-size: smaller;
   }
+
+#splitter-main
+{
+  width: 8px;
+  height: 8px;
+  }
+
+#splitter-main:hover
+{
+  background-color: -moz-buttonhoverface;
+  }

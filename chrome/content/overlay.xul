@@ -25,17 +25,17 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
 <overlay id="mozeskine-overlay"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
+  <!-- SCRIPTS -->
+
+  <script type="application/x-javascript" src="chrome://xmpp4moz/content/xmpp.js"/>
+  <script type="application/x-javascript" src="overlay.js"/>
+
   <!-- COMMANDS -->
 
   <commandset id="mainCommandSet">
     <command id="mozeskine-command-load-livebar"
              label="Mozeskine (livebar)"
-             oncommand="document
-                        .getElementById('livebar')
-                        .firstChild
-                        .contentDocument
-                        .location.href = 'chrome://mozeskine/content/mozeskine.xul';
-                        xmppShowLivebar();"
+             oncommand="mozeskine_loadLivebar();"
              accesskey="M"/>
     <command id="mozeskine-command-open-window"
              label="Mozeskine (window)"

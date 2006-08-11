@@ -56,11 +56,8 @@
         </vbox>
       </box>
 
-      <splitter id="splitter-main" persist="orient" orient="horizontal">
-        <button label="Conversations" style="margin: 0; font-size: xx-small"
-                flex="1"
-                oncommand="_('conversations').collapsed = !_('conversations').collapsed;"/>
-      </splitter>
+      <splitter id="splitter-main" persist="orient" orient="horizontal"
+                onclick="_('conversations').collapsed = !_('conversations').collapsed;"/>
 
       <deck flex="4" id="conversations"/>
 
