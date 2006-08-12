@@ -537,33 +537,6 @@ function focusContent(account, address, url) {
             findBrowserIndex(account, address, url)];
 }
 
-function switchLayout() {
-    // XXX should adjust conversation scroll here or in chat document events
-    if(_('box-main').getAttribute('orient') == 'horizontal') {
-        _('box-main').setAttribute('orient', 'vertical');
-        _('splitter-main').setAttribute('orient', 'vertical');
-        _('box-auxiliary').setAttribute('orient', 'horizontal');
-        _('splitter-auxiliary').setAttribute('orient', 'horizontal');
-    } else {
-        _('box-main').setAttribute('orient', 'horizontal');
-        _('splitter-main').setAttribute('orient', 'horizontal');
-        _('box-auxiliary').setAttribute('orient', 'vertical');
-        _('splitter-auxiliary').setAttribute('orient', 'vertical');
-    }
-}
-
-function showAuxiliary() {
-    _('auxiliary-visible').setAttribute('checked', 'true');
-    _('box-auxiliary').collapsed = false;
-    _('splitter-auxiliary').hidden = false;    
-}
-
-function hideAuxiliary() {
-    _('auxiliary-visible').setAttribute('checked', 'false');
-    _('box-auxiliary').collapsed = true;
-    _('splitter-auxiliary').hidden = true;    
-}
-
 function focusConversation(account, address) {
     var conversation = getConversation(account, address);
     var contactInfo = getContactInfo(account, address);
@@ -672,11 +645,48 @@ function displayEvent(account, address, resource, type, content, additionalClass
 // GUI REACTIONS
 // ----------------------------------------------------------------------
 
-function requestedToggleAuxiliary(command) {
-    if(_('splitter-auxiliary').hidden) 
-        showAuxiliary();
-    else
-        hideAuxiliary();
+function requestedOrientLayout() {
+    if(_('box-main').getAttribute('orient') == 'horizontal') {
+        _('box-main').setAttribute('orient', 'vertical');
+        _('splitter-main').setAttribute('orient', 'vertical');
+        _('box-auxiliary').setAttribute('orient', 'horizontal');
+        _('splitter-auxiliary').setAttribute('orient', 'horizontal');
+    } else {
+        _('box-main').setAttribute('orient', 'horizontal');
+        _('splitter-main').setAttribute('orient', 'horizontal');
+        _('box-auxiliary').setAttribute('orient', 'vertical');
+        _('splitter-auxiliary').setAttribute('orient', 'vertical');
+    }
+}
+
+function requestedCycleLayout(command) {
+    if(!_('conversations').collapsed &&
+       !_('box-auxiliary').collapsed) {
+        _('box-auxiliary').collapsed = false;
+        _('conversations').collapsed = true;
+    }
+    else if(_('conversations').collapsed &&
+            !_('box-auxiliary').collapsed) {
+        _('conversations').collapsed = false;
+        _('box-auxiliary').collapsed = true;
+    }
+    else if(_('box-auxiliary').collapsed &&
+            !_('conversations').collapsed) {
+        _('conversations').collapsed = false;
+        _('box-auxiliary').collapsed = false;
+    }
+}
+
+function showAuxiliary() {
+    _('auxiliary-visible').setAttribute('checked', 'true');
+    _('box-auxiliary').collapsed = false;
+    _('splitter-auxiliary').hidden = false;    
+}
+
+function hideAuxiliary() {
+    _('auxiliary-visible').setAttribute('checked', 'false');
+    _('box-auxiliary').collapsed = true;
+    _('splitter-auxiliary').hidden = true;    
 }
 
 function selectedContact(contact) {

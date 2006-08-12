@@ -3,19 +3,14 @@
   list-style-image: url("join.png");
   }
 
-[command="auxiliary-visible"][checked="true"]
+[command="cycle-layout"]
 {
-  list-style-image: url("hide-auxiliary.png");
+  list-style-image: url("cycle-layout.png");
   }
 
-[command="auxiliary-visible"][checked="false"]
+[command="orient-layout"]
 {
-  list-style-image: url("show-auxiliary.png");
-  }
-
-[command="switch-layout"]
-{
-  list-style-image: url("switch-layout.png");
+  list-style-image: url("orient-layout.png");
   }
 
 richlistitem.participant

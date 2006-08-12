@@ -21,10 +21,10 @@
   <commandset>
     <command id="join-room" label="Join..." accesskey="O"
              oncommand="requestedJoinRoom();"/>
-    <command id="auxiliary-visible" label="Contacts" accesskey="S"
-             oncommand="requestedToggleAuxiliary(event);" checked="true"/>
-    <command id="switch-layout" label="Layout" accesskey="a"
-             oncommand="switchLayout();"/>
+    <command id="cycle-layout" label="Cycle" accesskey="C"
+             oncommand="requestedCycleLayout();"/>
+    <command id="orient-layout" label="Horiz./Vert." accesskey="r"
+             oncommand="requestedOrientLayout();"/>
   </commandset>
 
   <popupset>
@@ -132,8 +132,8 @@
     
     <toolbox>
       <toolbar fullscreentoolbar="true">
-        <toolbarbutton command="auxiliary-visible"/>
-        <toolbarbutton command="switch-layout"/>
+        <toolbarbutton command="cycle-layout"/>
+        <toolbarbutton command="orient-layout"/>
         <toolbarspring/>
         <toolbarbutton command="join-room"/>
         <toolbarbutton id="devel-shortcut" oncommand="quickJoin();"
