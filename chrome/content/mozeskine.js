@@ -414,6 +414,17 @@ function isConversationCurrent() {
 }
 
 function createConversation(account, address, resource, type) {
+    function scrolledWindow(window) {
+        window.wantBottom =
+            (Math.abs(window.pageYOffset - window.scrollMaxY) < 24);
+    }
+
+    function resizedWindow(window) {
+        if(window.wantBottom ||
+           window.pageYOffset == 0) 
+            window.scrollTo(window.pageXOffset, window.scrollMaxY);
+    }
+
     account = account.toString();
     address = address.toString();
     resource = resource.toString();
@@ -438,10 +449,22 @@ function createConversation(account, address, resource, type) {
     }
     _('contact-infos').appendChild(contactInfo);
 
-    _(conversation, {role: 'chat-output'}).addEventListener(
+    var output = _(conversation, {role: 'chat-output'});
+
+    output.addEventListener(
         'load', function(event) {
             openedConversation(account, address, resource, type);
         }, true);
+
+    output.contentWindow.addEventListener(
+        'scroll', function(event) {
+            scrolledWindow(event.currentTarget); },
+        false);
+
+    output.contentWindow.addEventListener(
+        'resize', function(event) {
+            resizedWindow(event.currentTarget); },
+        false);
 
     return conversation;
 }
