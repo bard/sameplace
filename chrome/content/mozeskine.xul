@@ -6,7 +6,7 @@
 <page id="mozeskine" title="Mozeskine"
       xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
       onload="init(event);"
-      onbeforeunload="finish(event);"
+      onunload="finish(event);"
       orient="vertical"
       width="640"
       height="480">
