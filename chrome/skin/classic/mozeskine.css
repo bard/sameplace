@@ -33,6 +33,19 @@ richlistitem[role="contact"][availability="unavailable"]
   font-size: smaller;
   }
 
+richlistbox[role="contact-info"]
+{
+  font-size: smaller;
+  background: white url('chrome://mozeskine/skin/contact-info-bg.png') no-repeat bottom right;
+  min-height: 100px;
+  }
+
+#contact-list
+{
+  background: white url('chrome://mozeskine/skin/user-bg.png') bottom right no-repeat;
+  }
+
+
 #splitter-main
 {
   width: 8px;

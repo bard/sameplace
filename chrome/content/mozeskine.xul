@@ -37,19 +37,13 @@
 
     <box flex="1" id="box-main" persist="orient" orient="horizontal">
       <box id="box-auxiliary" persist="orient height" orient="vertical" height="100" flex="1">
-        <vbox flex="1">
-          <button label="Partner"
-                  oncommand="this.nextSibling.collapsed = !this.nextSibling.collapsed;"
-                  style="font-size: smaller; margin: 0; overflow: hidden;"/>
+        <vbox flex="0">
           <deck id="contact-infos" flex="1"/>
         </vbox>
 
         <splitter id="splitter-auxiliary" persist="orient" orient="vertical"/>
 
         <vbox flex="1">
-          <button label="Contacts"
-                  oncommand="this.nextSibling.collapsed = !this.nextSibling.collapsed;"
-                  style="font-size: smaller; margin: 0;"/>
           <richlistbox id="contact-list" flex="1"/>
         </vbox>
       </box>
@@ -90,8 +84,7 @@
                    onoverflow="growTextBox(this);"/>
         </vbox>
 
-        <richlistbox role="contact-info" address="" resource="" type="" flex="1"
-                     style="font-size: smaller;">
+        <richlistbox role="contact-info" address="" resource="" type="" flex="1">
           <richlistitem orient="vertical">
             <label value="Address" class="header" flex="1"/>
             <label role="partner-address" style="padding-left: 0.5em;"/>
