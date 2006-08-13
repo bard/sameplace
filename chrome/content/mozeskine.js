@@ -603,6 +603,9 @@ function focusConversation(account, address) {
     var conversation = getConversation(account, address);
     var contactInfo = getContactInfo(account, address);
     if(conversation && contactInfo) {
+        if(_('conversations').collapsed)
+            displayAuxiliaryAndConversations();
+
         _('conversations').selectedPanel = conversation;
         _('contact-infos').selectedPanel = contactInfo;
         setTimeout(
