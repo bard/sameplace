@@ -21,10 +21,11 @@
   <commandset>
     <command id="join-room" label="Join..." accesskey="O"
              oncommand="requestedJoinRoom();"/>
-    <command id="cycle-layout" label="Cycle" accesskey="C"
-             oncommand="requestedCycleLayout();"/>
+    <command id="cycle-layout" label="Layout" accesskey="L"
+             oncommand="requestedCycleLayout();"
+             tooltiptext="Cycle among different window layouts"/>
     <command id="orient-layout" label="Horiz./Vert." accesskey="r"
-             oncommand="requestedOrientLayout();"/>
+             oncommand="orientToggle();"/>
   </commandset>
 
   <popupset>
@@ -32,6 +33,34 @@
   </popupset>
 
   <vbox flex="1">
+
+    <toolbox>
+      <toolbar fullscreentoolbar="true">
+        <toolbarbutton command="join-room"/>
+
+        <toolbarspring/>
+        <toolbarbutton command="cycle-layout"
+                       type="menu-button">
+          <menupopup>
+            <menuitem type="radio" name="elements" label="Show Contacts Only"
+                      oncommand="maximizeAuxiliary(); event.preventBubble();"/>
+            <menuitem type="radio" name="elements" label="Show Conversations Only"
+                      oncommand="maximizeConversations(); event.preventBubble();"/>
+            <menuitem type="radio" name="elements" label="Show Both"
+                      oncommand="displayAuxiliaryAndConversations(); event.preventBubble();"/>
+            <menuseparator/>
+            <menuitem type="radio" name="orientation" label="Side-by-side Layout"
+                      oncommand="orientHorizontal(); event.preventBubble();"/>
+            <menuitem type="radio" name="orientation" label="Stacked Layout"
+                      oncommand="orientVertical(); event.preventBubble();"/>
+          </menupopup>
+        </toolbarbutton>
+
+
+        <toolbarbutton id="devel-shortcut" oncommand="quickJoin();"
+                       label="Quick Join" accesskey="Q" hidden="true"/>
+      </toolbar>
+    </toolbox>
 
     <!-- CONVERSATION AREA -->
 
@@ -121,17 +150,6 @@
           <label role="status" style="font-size: smaller; margin-left: 2em;"/>
         </richlistitem>
       </box>
-    </box>
-    
-    <toolbox>
-      <toolbar fullscreentoolbar="true">
-        <toolbarbutton command="cycle-layout"/>
-        <toolbarbutton command="orient-layout"/>
-        <toolbarspring/>
-        <toolbarbutton command="join-room"/>
-        <toolbarbutton id="devel-shortcut" oncommand="quickJoin();"
-                       label="Quick Join" accesskey="Q" hidden="true"/>
-      </toolbar>
-    </toolbox>
+    </box>    
   </vbox>
 </page>

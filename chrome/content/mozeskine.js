@@ -554,6 +554,45 @@ function getContactInfo(account, address, resource, type) {
 // Application-dependent functions dealing with user interface.  They
 // affect the domain.
 
+function orientHorizontal() {
+    _('box-main').setAttribute('orient', 'horizontal');
+    _('splitter-main').setAttribute('orient', 'horizontal');
+    _('box-auxiliary').setAttribute('orient', 'vertical');
+    _('splitter-auxiliary').setAttribute('orient', 'vertical');        
+}
+
+function orientVertical() {
+    _('box-main').setAttribute('orient', 'vertical');
+    _('splitter-main').setAttribute('orient', 'vertical');
+    _('box-auxiliary').setAttribute('orient', 'horizontal');
+    _('splitter-auxiliary').setAttribute('orient', 'horizontal');        
+}
+
+function orientToggle() {
+    if(_('box-main').getAttribute('orient') == 'horizontal')
+        orientVertical();
+    else
+        orientHorizontal();
+}
+
+function maximizeAuxiliary() {
+    _('splitter-main').hidden = true;
+    _('box-auxiliary').collapsed = false;
+    _('conversations').collapsed = true;
+}
+
+function maximizeConversations() {
+    _('splitter-main').hidden = true;
+    _('box-auxiliary').collapsed = true;
+    _('conversations').collapsed = false;
+}
+
+function displayAuxiliaryAndConversations() {
+    _('conversations').collapsed = false;
+    _('box-auxiliary').collapsed = false;
+    _('splitter-main').hidden = false;    
+}
+
 function focusContent(account, address, url) {
     top.getBrowser().selectedTab =
         top.getBrowser().tabContainer.childNodes[
@@ -668,48 +707,16 @@ function displayEvent(account, address, resource, type, content, additionalClass
 // GUI REACTIONS
 // ----------------------------------------------------------------------
 
-function requestedOrientLayout() {
-    if(_('box-main').getAttribute('orient') == 'horizontal') {
-        _('box-main').setAttribute('orient', 'vertical');
-        _('splitter-main').setAttribute('orient', 'vertical');
-        _('box-auxiliary').setAttribute('orient', 'horizontal');
-        _('splitter-auxiliary').setAttribute('orient', 'horizontal');
-    } else {
-        _('box-main').setAttribute('orient', 'horizontal');
-        _('splitter-main').setAttribute('orient', 'horizontal');
-        _('box-auxiliary').setAttribute('orient', 'vertical');
-        _('splitter-auxiliary').setAttribute('orient', 'vertical');
-    }
-}
-
 function requestedCycleLayout(command) {
     if(!_('conversations').collapsed &&
-       !_('box-auxiliary').collapsed) {
-        _('box-auxiliary').collapsed = false;
-        _('conversations').collapsed = true;
-    }
+       !_('box-auxiliary').collapsed) 
+        maximizeConversations();
     else if(_('conversations').collapsed &&
-            !_('box-auxiliary').collapsed) {
-        _('conversations').collapsed = false;
-        _('box-auxiliary').collapsed = true;
-    }
+            !_('box-auxiliary').collapsed)
+        displayAuxiliaryAndConversations();
     else if(_('box-auxiliary').collapsed &&
-            !_('conversations').collapsed) {
-        _('conversations').collapsed = false;
-        _('box-auxiliary').collapsed = false;
-    }
-}
-
-function showAuxiliary() {
-    _('auxiliary-visible').setAttribute('checked', 'true');
-    _('box-auxiliary').collapsed = false;
-    _('splitter-auxiliary').hidden = false;    
-}
-
-function hideAuxiliary() {
-    _('auxiliary-visible').setAttribute('checked', 'false');
-    _('box-auxiliary').collapsed = true;
-    _('splitter-auxiliary').hidden = true;    
+            !_('conversations').collapsed)
+        maximizeAuxiliary();
 }
 
 function selectedContact(contact) {
