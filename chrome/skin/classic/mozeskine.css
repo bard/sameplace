@@ -5,11 +5,6 @@
 
 [command="cycle-layout"]
 {
-  list-style-image: url("cycle-layout.png");
-  }
-
-[command="orient-layout"]
-{
   list-style-image: url("orient-layout.png");
   }
 
@@ -36,13 +31,18 @@ richlistitem[role="contact"][availability="unavailable"]
 richlistbox[role="contact-info"]
 {
   font-size: smaller;
-  background: white url('chrome://mozeskine/skin/contact-info-bg.png') no-repeat bottom right;
+  background: white url("contact-info-bg.png") no-repeat bottom right;
   min-height: 100px;
+  }
+
+richlistbox[role="contact-info"] *
+{
+  background: transparent;
   }
 
 #contact-list
 {
-  background: white url('chrome://mozeskine/skin/user-bg.png') bottom right no-repeat;
+  background: white url("user-bg.png") bottom right no-repeat;
   }
 
 
