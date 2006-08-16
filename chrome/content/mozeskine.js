@@ -554,6 +554,10 @@ function getContactInfo(account, address, resource, type) {
 // Application-dependent functions dealing with user interface.  They
 // affect the domain.
 
+function hookContent(account, address, type) {
+    top.xmppEnableContent(account, address, type);
+}
+
 function orientHorizontal() {
     _('box-main').setAttribute('orient', 'horizontal');
     _('splitter-main').setAttribute('orient', 'horizontal');
@@ -709,6 +713,12 @@ function displayEvent(account, address, resource, type, content, additionalClass
 
 // GUI REACTIONS
 // ----------------------------------------------------------------------
+
+function requestedContentHook(event) {
+    hookContent(getAncestorAttribute(event.target, 'account'),
+                getAncestorAttribute(event.target, 'address'),
+                getAncestorAttribute(event.target, 'type'));
+}
 
 function requestedCycleLayout(command) {
     if(!_('conversations').collapsed &&

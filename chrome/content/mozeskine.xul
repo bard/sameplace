@@ -94,6 +94,10 @@
                              accesskey="P">
                 <menupopup role="plugins" id="plugins-menu"/>
               </toolbarbutton>
+
+              <toolbarbutton label="Hook!" accesskey="H"
+                             oncommand="requestedContentHook(event);"/>
+
               <toolbarbutton label="Options "
                              type="menu" tooltiptext="Options for this conversation"
                              accesskey="p">
