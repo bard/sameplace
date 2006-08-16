@@ -77,8 +77,7 @@
         </vbox>
       </box>
 
-      <splitter id="splitter-main" persist="orient" orient="horizontal"
-                onclick="_('conversations').collapsed = !_('conversations').collapsed;"/>
+      <splitter id="splitter-main" persist="orient" orient="horizontal"/>
 
       <deck flex="4" id="conversations"/>
 
