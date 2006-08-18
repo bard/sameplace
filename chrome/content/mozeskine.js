@@ -165,6 +165,15 @@ var contacts = {
 
     // domain reactions
     
+    contactExists: function(account, address) {
+        var contact = this.get(account, address) || this.add(account, address);;
+
+        if(!contact.hasAttribute('availability'))
+            contact.setAttribute('availability', 'unavailable');
+
+        return contact;
+    },
+
     resourceChangedPresence: function(account, address, resource, availability, show, status) {
         if(availability == undefined)
             availability = 'available';
@@ -173,7 +182,7 @@ var contacts = {
         if(status)
             status = status.toString();
 
-        var contact = this.get(account, address) || this.add(account, address);
+        var contact = this.contactExists(account, address);
 
         contact.setAttribute('availability', availability);
         contact.setAttribute('show', show);
@@ -949,11 +958,9 @@ function receivedRoomTopic(message) {
 
 function receivedRoster(iq) {
     for each(var item in iq.stanza..ns_roster::item) {
-        contacts.resourceChangedPresence(
+        contacts.contactExists(
             iq.session.name,
-            JID(item.@jid).address,
-            null,
-            'unavailable');
+            item.@jid);
     }
 }
 
