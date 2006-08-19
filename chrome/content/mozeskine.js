@@ -58,6 +58,7 @@ var smileyRegexp;
 
 var channel;
 var debugMode = false;
+var pendingJoins = {};
 
 
 // GUI INITIALIZATION AND FINALIZATION
@@ -102,11 +103,11 @@ function init(event) {
 
     channel.on(
         {event: 'presence', direction: 'in', stanza: function(s) {
-                return s.ns_muc_user::x.toXMLString();
+                return s.ns_muc_user::x.length() > 0;
             }}, function(presence) { receivedMUCPresence(presence) });
     channel.on(
         {event: 'presence', direction: 'out', stanza: function(s) {
-                return s.ns_muc::x.toXMLString() && s.@type != 'unavailable';
+                return s.ns_muc::x.length() > 0 && s.@type != 'unavailable';
             }}, function(presence) { sentMUCPresence(presence) });
     channel.on(
         {event: 'message', direction: 'in', stanza: function(s) {
@@ -981,14 +982,24 @@ function receivedPresence(presence) {
 
 function sentMUCPresence(presence) {
     var room = JID(presence.stanza.@to);
-    createConversation(presence.session.name,
-                       room.address,
-                       room.nick,
-                       'groupchat');
+    pendingJoins[room.address] = room.nick;
 }
 
 function receivedMUCPresence(presence) {
     var from = JID(presence.stanza.@from);
+
+    if(presence.stanza.@type != 'unavailable') {
+        var from = JID(presence.stanza.@from);
+        if(pendingJoins[from.address] &&
+           pendingJoins[from.address] == from.nick) {
+            createConversation(presence.session.name,
+                               from.address,
+                               from.nick,
+                               'groupchat');    
+            delete pendingJoins[from.address];
+            // XXX handle stanza.@from = bareAddress && type == 'error' to cleanup joins
+        }
+    }
 
     updateContactInfoParticipants(
         presence.session.name, from.address, from.resource,
@@ -1019,6 +1030,7 @@ function receivedMUCPresence(presence) {
     if(presence.stanza.@type != 'unavailable')
         contacts.startedConversationWith(
             presence.session.name, from.address);
+
 
         // EXPERIMENTAL
 //         if(presence.stanza.ns_xul::x.length() > 0) {
