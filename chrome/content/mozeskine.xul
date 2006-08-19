@@ -58,7 +58,7 @@
         <vbox role="conversation" address="" resource="" type="">
           <toolbox>
             <toolbar id="conversation-toolbar" fullscreentoolbar="true">
-              <toolbarspring/>
+
               <toolbarbutton label="Plugins "
                              type="menu" tooltiptext="Available plugins"
                              accesskey="P"
@@ -66,8 +66,8 @@
                 <menupopup role="plugins" id="plugins-menu"/>
               </toolbarbutton>
 
-              <toolbarbutton label="Hook!" accesskey="H"
-                             oncommand="requestedContentHook(event);"/>
+              <toolbarbutton role="close" 
+                             oncommand="requestedCloseConversation(event);"/>
 
               <toolbarbutton label="Options "
                              type="menu" tooltiptext="Options for this conversation"
@@ -78,14 +78,18 @@
                 </menupopup>
               </toolbarbutton>
 
-              <toolbarbutton role="close" 
-                             oncommand="requestedCloseConversation(event);"/>
+              <toolbarspring/>
+
+              <toolbarbutton role="attach" label="Attach " accesskey="A"
+                             oncommand="requestedAttachContent(event);"
+                             dir="reverse"/>
             </toolbar>
           </toolbox>
 
           <iframe role="chat-output" src="chat.html" flex="5" class="box-inset"
                   context="message-menu"/>
           <splitter/>
+
           <textbox role="chat-input" class="box-inset" multiline="true" rows="0"
                    onkeypress="pressedKeyInChatInput(event);"
                    onoverflow="growTextBox(this);"/>

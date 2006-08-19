@@ -82,3 +82,8 @@ richlistbox[role="contact-info"] *
 {
   list-style-image: url(close.png);
   }
+
+[role="attach"]
+{
+  list-style-image: url(attach.png);
+  }
