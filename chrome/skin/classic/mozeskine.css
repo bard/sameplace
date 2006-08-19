@@ -3,7 +3,12 @@
   list-style-image: url("join.png");
   }
 
-[command="cycle-layout"]
+[command="cycle-maximize"]
+{
+  list-style-image: url("view-fullscreen.png");
+  }
+
+[command="cycle-orientation"]
 {
   list-style-image: url("orient-layout.png");
   }
@@ -73,3 +78,7 @@ richlistbox[role="contact-info"] *
   max-height: 16px;
   }
 
+[role="close"]
+{
+  list-style-image: url(close.png);
+  }

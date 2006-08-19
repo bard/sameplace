@@ -581,7 +581,7 @@ function orientVertical() {
     _('splitter-auxiliary').setAttribute('orient', 'horizontal');        
 }
 
-function orientToggle() {
+function cycleOrientation() {
     if(_('box-main').getAttribute('orient') == 'horizontal')
         orientVertical();
     else
@@ -729,7 +729,7 @@ function requestedContentHook(event) {
                 getAncestorAttribute(event.target, 'type'));
 }
 
-function requestedCycleLayout(command) {
+function requestedCycleMaximize(command) {
     if(!_('conversations').collapsed &&
        !_('box-auxiliary').collapsed) 
         maximizeConversations();
