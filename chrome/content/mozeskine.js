@@ -854,10 +854,13 @@ function pressedKeyInChatInput(event) {
 
 function openedConversation(account, address, resource, type) {
     contacts.startedConversationWith(account, address, resource);
+    _('conversations').collapsed = false;
 }
 
 function closedConversation(account, address, resource, type) {
     contacts.stoppedConversationWith(account, address, resource);
+    if(_('conversations').childNodes.length == 0)
+        _('conversations').collapsed = true;
 }
 
 // NETWORK ACTIONS

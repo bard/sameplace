@@ -33,6 +33,7 @@ richlistbox[role="contact-info"]
   font-size: smaller;
   background: white url("contact-info-bg.png") no-repeat bottom right;
   min-height: 100px;
+  min-width: 100px;
   }
 
 richlistbox[role="contact-info"] *
@@ -46,13 +47,29 @@ richlistbox[role="contact-info"] *
   }
 
 
-#splitter-main
+[role="contact"][availability="unavailable"] [role="status-indicator"]
 {
-  width: 8px;
-  height: 8px;
+  list-style-image: url(status-small.png);
+  -moz-image-region: rect(0px 16px 16px 0px);
+  max-width: 16px;
+  max-height: 16px;
   }
 
-#splitter-main:hover
+[role="contact"][availability="available"] [role="status-indicator"]
 {
-  background-color: -moz-buttonhoverface;
+  list-style-image: url(status-small.png);
+  -moz-image-region: rect(16px 16px 32px 0px);
+  max-width: 16px;
+  max-height: 16px;
   }
+
+[role="contact"][show="away"] [role="status-indicator"],
+[role="contact"][show="xa"] [role="status-indicator"],
+[role="contact"][show="dnd"] [role="status-indicator"]
+{
+  list-style-image: url(status-small.png);
+  -moz-image-region: rect(32px 16px 48px 0px);
+  max-width: 16px;
+  max-height: 16px;
+  }
+
