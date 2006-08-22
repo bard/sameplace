@@ -45,13 +45,10 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
 
   <!-- MENUS -->
 
-  <menupopup id="xmpp-tools-menu-apps">
-    <menuitem command="mozeskine-command-load-livebar"/>
-    <menuitem command="mozeskine-command-open-window"/>        
-  </menupopup>
-
-  <menupopup id="xmpp-toolbar-menu-apps">
-    <menuitem command="mozeskine-command-load-livebar"/>
-    <menuitem command="mozeskine-command-open-window"/>
+  <menupopup id="xmpp-menu-accounts">
+    <menuitem command="mozeskine-command-load-livebar"
+              class="menuitem-iconic"/>
+    <menuitem command="mozeskine-command-open-window"
+              class="menuitem-iconic"/>
   </menupopup>
 </overlay>
