@@ -668,7 +668,7 @@ function updateContactInfoParticipants(account, address, participantNick, availa
     }
 }
 
-function displayChatMessage(account, address, resource, type, sender, body) {
+function displayChatMessage(account, address, resource, direction, type, sender, body) {
     withConversation(
         account, address, resource, type,
         function(conversation) {
@@ -680,7 +680,8 @@ function displayChatMessage(account, address, resource, type, sender, body) {
                 htmlSender.textContent = JID(sender).resource || address;
             else
                 htmlSender.textContent = JID(sender).username;
-            htmlSender.setAttribute('class', 'sender');
+            htmlSender.setAttribute(
+                'class', direction == 'in' ? 'contact' : 'user');
             var htmlBody = textToHTML(doc, body);
             htmlBody.setAttribute('class', 'body');
 
@@ -911,6 +912,7 @@ function receivedChatMessage(message) {
     displayChatMessage(
         message.session.name,
         from.address, from.resource,
+        message.direction,
         message.stanza.@type,
         message.stanza.@from,
         message.stanza.body);
@@ -931,6 +933,7 @@ function sentChatMessage(message) {
     displayChatMessage(
         message.session.name,
         from.address, from.resource,
+        message.direction,
         message.stanza.@type,
         message.session.name,
         message.stanza.body);

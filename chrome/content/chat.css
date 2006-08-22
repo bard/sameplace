@@ -64,16 +64,26 @@ a:hover
   font-weight: bold;
   }
 
-.sender 
+.user
+{
+  color: #0c5588;
+  }
+
+.contact
+{
+  color: #9e0909;
+  }
+
+.user, .contact
 {
   font-weight: bold;
   margin-right: 0.5em;
   }
-.sender:before 
+.user:before, .contact:before
 {
   content: "<";
   }
-.sender:after 
+.user:after, .contact:after
 {
   content: ">";
   }
