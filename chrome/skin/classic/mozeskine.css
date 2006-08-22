@@ -68,9 +68,9 @@ richlistbox[role="contact-info"] *
   max-height: 16px;
   }
 
-[role="contact"][show="away"] [role="status-indicator"],
-[role="contact"][show="xa"] [role="status-indicator"],
-[role="contact"][show="dnd"] [role="status-indicator"]
+[role="contact"][availability="available"][show="away"] [role="status-indicator"],
+[role="contact"][availability="available"][show="xa"]   [role="status-indicator"],
+[role="contact"][availability="available"][show="dnd"]  [role="status-indicator"]
 {
   list-style-image: url(status-small.png);
   -moz-image-region: rect(32px 16px 48px 0px);
