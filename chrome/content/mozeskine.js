@@ -64,7 +64,6 @@ var pendingJoins = {};
 // GUI INITIALIZATION AND FINALIZATION
 // ----------------------------------------------------------------------
 
-
 function init(event) {
     if(!event.target)
         return;
@@ -443,14 +442,14 @@ function createConversation(account, address, resource, type) {
     resource = resource.toString();
     type = type.toString();
 
-    conversation = cloneBlueprint('conversation');
+    var conversation = cloneBlueprint('conversation');
     conversation.setAttribute('account', account);
     conversation.setAttribute('address', address);
     conversation.setAttribute('resource', resource);
     conversation.setAttribute('type', type);
     _('conversations').appendChild(conversation);
 
-    contactInfo = cloneBlueprint('contact-info');
+    var contactInfo = cloneBlueprint('contact-info');
     contactInfo.setAttribute('account', account);
     contactInfo.setAttribute('address', address);
     contactInfo.setAttribute('resource', resource);

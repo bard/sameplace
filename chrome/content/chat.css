@@ -19,11 +19,6 @@ ul#messages > li
   padding-bottom: 0.2em;
   }
 
-ul#messages > li:hover 
-{
-  background-color: #f2f2ff;
-  }
-
 a 
 {
   color: darkblue;
