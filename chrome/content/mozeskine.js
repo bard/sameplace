@@ -79,7 +79,7 @@ function init(event) {
         function(iq) { receivedRoster(iq); });
     channel.on(
         {event: 'presence', direction: 'in', stanza: function(s) {
-                return s.@type != 'error';
+                return s.@type == undefined || s.@type == 'unavailable';
             }},
         function(presence) { receivedPresence(presence) });
     channel.on(
