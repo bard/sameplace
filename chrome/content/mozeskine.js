@@ -126,6 +126,9 @@ function init(event) {
         var pluginOverlayURL = prefBranch.getCharPref(pluginInfo);
         document.loadOverlay(pluginOverlayURL, null);
     }
+
+    XMPP.cache.roster.forEach(receivedRoster);
+    XMPP.cache.presence.forEach(receivedPresence);        
 }
 
 function finish() {
