@@ -40,10 +40,6 @@ function _(id) {
 // GUI REACTIONS
 // ----------------------------------------------------------------------
 
-function selectedAccount() {
-    refresh();
-}
-
 function refresh() {
     if(_('accounts').value && _('address').value)
         _('main').getButton('accept').disabled = false;

@@ -5,8 +5,7 @@
 <dialog id="main" title="Add a contact"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
         ondialogaccept="return doOk();"
-        ondialogcancel="return doCancel();"
-        
+        ondialogcancel="return doCancel();"        
         onload="init();">
 
   <script type="application/x-javascript" src="chrome://xmpp4moz/content/xmpp.js"/>
@@ -33,7 +32,7 @@
 
       <row align="center">
         <label value="Account:" control="accounts" accesskey="A"/>
-        <menulist id="accounts" oncommand="selectedAccount();"
+        <menulist id="accounts" oncommand="refresh();"
                   flex="1" label="" sizetopopup="none" class="menulist-compact">
           <menupopup id="xmpp-menu-accounts"/>
         </menulist>
