@@ -59,7 +59,7 @@ richlistbox[role="contact-info"] *
 
 [role="contact"] [role="status-indicator"]
 {
-  list-style-image: url(status-small.png);
+  list-style-image: url("chrome://xmpp4moz/skin/status/all-small.png");
   max-width: 16px;
   max-height: 16px;  
   }
@@ -87,10 +87,10 @@ richlistbox[role="contact-info"] *
 
 [role="close"]
 {
-  list-style-image: url(close.png);
+  list-style-image: url("close.png");
   }
 
 [role="attach"]
 {
-  list-style-image: url(attach.png);
+  list-style-image: url("attach.png");
   }

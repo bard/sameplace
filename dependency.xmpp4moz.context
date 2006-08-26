@@ -1,14 +1,11 @@
 
 Context:
 
-[JS API: presence and roster cache returns XML instead of nsIDOMElement stanzas.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060825050205] 
+[Response to disco queries was forwarded to observers *before* the disco query itself (so response appeared in console before the query). Fixed.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060826174652] 
 
-[Accounts overlay: changed icon for "unavailable" from red to gray.  Red now signals "dnd".
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060825045742] 
+[Status icons cleanup.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060826174523] 
 
-[Overlay: user indicator was incorrectly being set on (never-sent) outgoing unavailable presence, instead of closing stream.  Fixed.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060825040344] 
-
-[TAG 0.2.6
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060825035315] 
+[TAG 0.2.7
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060825183803] 
