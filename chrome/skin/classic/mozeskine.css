@@ -3,9 +3,9 @@
   list-style-image: url("contact-add.png");
   }
 
-[command="join-room"]
+[command="open-conversation"]
 {
-  list-style-image: url("join.png");
+  list-style-image: url("open.png");
   }
 
 [command="cycle-maximize"]

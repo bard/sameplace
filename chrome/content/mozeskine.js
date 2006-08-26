@@ -810,7 +810,7 @@ function requestedCloseConversation(event) {
                                 getAncestorAttribute(event.target, 'type'));
 }
 
-function requestedJoinRoom() {
+function requestedOpenConversation() {
     var request = {
         roomAddress: undefined,
         roomNick: undefined,
@@ -819,8 +819,8 @@ function requestedJoinRoom() {
     };
 
     window.openDialog(
-        'chrome://mozeskine/content/join.xul',
-        'mozeskine-join-room', 'modal,centerscreen',
+        'chrome://mozeskine/content/open.xul',
+        'mozeskine-open-conversation', 'modal,centerscreen',
         request);
 
     if(request.confirm) 

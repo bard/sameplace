@@ -21,8 +21,8 @@
   <commandset>
     <command id="add-contact" oncommand="requestedAddContact();"
              tooltiptext="Add a contact to your contact list"/>
-    <command id="join-room" oncommand="requestedJoinRoom();"
-             tooltiptext="Join a multi-user chat"/>
+    <command id="open-conversation" oncommand="requestedOpenConversation();"
+             tooltiptext="Open a conversation (single or multi-user)"/>
     <command id="cycle-maximize" oncommand="requestedCycleMaximize();"
              tooltiptext="Maximize each panel in turn"/>
     <command id="cycle-orientation" oncommand="cycleOrientation();"
@@ -141,7 +141,9 @@
       <toolbar fullscreentoolbar="true">
         <toolbarspring/>
 
-        <toolbarbutton command="join-room"/>
+        <toolbarbutton command="add-contact"/>
+
+        <toolbarbutton command="open-conversation"/>
 
         <toolbarbutton command="cycle-orientation"/>
 
