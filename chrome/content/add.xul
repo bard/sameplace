@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xul-overlay href="chrome://xmpp4moz/content/ui/accounts.xul"?>
+
+<dialog id="main" title="Add a contact"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        ondialogaccept="return doOk();"
+        ondialogcancel="return doCancel();"
+        
+        onload="init();">
+
+  <script type="application/x-javascript" src="chrome://xmpp4moz/content/xmpp.js"/>
+  <script type="application/x-javascript" src="add.js"/> 
+
+  <grid flex="1">
+    <columns>
+      <column/>
+      <column flex="1"/>
+      <column/>
+    </columns>
+
+    <rows>
+      <row align="center">
+        <label value="Contact:" control="address" accesskey="C"/>
+        <textbox id="address" value="contact@server.org" oninput="refresh();"/>
+      </row>
+
+      <row align="center">
+        <spacer/>
+        <checkbox id="subscribe" label="Show me when this contact is online"
+                  accesskey="S" checked="true"/>
+      </row>
+
+      <row align="center">
+        <label value="Account:" control="accounts" accesskey="A"/>
+        <menulist id="accounts" oncommand="selectedAccount();"
+                  flex="1" label="" sizetopopup="none" class="menulist-compact">
+          <menupopup id="xmpp-menu-accounts"/>
+        </menulist>
+      </row>
+    </rows>
+  </grid>
+</dialog>

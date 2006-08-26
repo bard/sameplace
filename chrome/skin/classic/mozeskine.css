@@ -1,3 +1,8 @@
+[command="add-contact"]
+{
+  list-style-image: url("contact-add.png");
+  }
+
 [command="join-room"]
 {
   list-style-image: url("join.png");

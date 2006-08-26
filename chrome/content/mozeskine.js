@@ -83,6 +83,16 @@ function init(event) {
             }},
         function(presence) { receivedPresence(presence) });
     channel.on(
+        {event: 'presence', direction: 'in', stanza: function(s) {
+                return s.@type == 'subscribed';
+            }},
+        function(presence) { receivedSubscriptionApproval(presence); });
+    channel.on(
+        {event: 'presence', direction: 'in', stanza: function(s) {
+                return s.@type == 'subscribe';
+            }},
+        function(presence) { receivedSubscriptionRequest(presence); });
+    channel.on(
         {event: 'message', direction: 'in', stanza: function(s) {
                 return s.body.length() > 0 && s.@type != 'error';
             }}, function(message) { receivedChatMessage(message); });
@@ -727,6 +737,23 @@ function displayEvent(account, address, resource, type, content, additionalClass
 // GUI REACTIONS
 // ----------------------------------------------------------------------
 
+function requestedAddContact() {
+    var request = {
+        contactAddress: undefined,
+        subscribeToPresence: undefined,
+        confirm: false,
+        account: undefined
+    };
+    
+    window.openDialog(
+        'chrome://mozeskine/content/add.xul',
+        'mozeskine-add-contact', 'modal,centerscreen',
+        request);
+
+    if(request.confirm)
+        addContact(request.account, request.contactAddress, request.subscribeToPresence);
+}
+
 function requestedAttachContent(event) {
     attachContent(getAncestorAttribute(event.target, 'account'),
                   getAncestorAttribute(event.target, 'address'),
@@ -875,6 +902,23 @@ function closedConversation(account, address, resource, type) {
 // function should instead be created that calls these ones and passes
 // the gathered data via function parameters.
 
+function acceptSubscriptionRequest(account, address) {
+    XMPP.send(
+        account,
+        <presence to={address} type="subscribed"/>);
+}
+
+function addContact(account, address, subscribe) {
+    XMPP.send(
+        account,
+        <iq type='set' id='set1'>
+        <query xmlns='jabber:iq:roster'>
+        <item jid={address}/>
+        </query></iq>);
+    
+    XMPP.send(account, <presence to={address} type="subscribe"/>)
+}
+
 function exitRoom(account, roomAddress, roomNick) {
     XMPP.send(account,
               <presence to={roomAddress + '/' + roomNick} type="unavailable"/>);
@@ -908,6 +952,37 @@ function sendChatMessage(account, address, resource, type, text) {
 
 // NETWORK REACTIONS
 // ----------------------------------------------------------------------
+
+function receivedSubscriptionRequest(presence) {
+    var account = presence.session.name;
+    var address = presence.stanza.@from.toString();
+    var accept, reciprocate;
+    if(contacts.get(account, address) == undefined) {
+        var check = {value: true};
+        accept = prompts.confirmCheck(
+            null, 'Contact notification',
+            address + ' wants to add you to his/her contact list.\nDo you accept?',
+            'Also add ' + address + ' to my contact list', check);
+        reciprocate = check.value;        
+    }
+    else {
+        accept = prompts.confirm(
+            null, 'Contact notification',
+            address + ' wants to add you to his/her contact list.\nDo you accept?');
+
+    }
+    if(accept) {
+        acceptSubscriptionRequest(account, address);
+        if(reciprocate)
+            addContact(account, address);
+    }
+}
+
+function receivedSubscriptionApproval(presence) {
+    prompts.alert(
+        null, 'Contact Notification',
+        presence.stanza.@from + ' has accepted to be added to your contact list.');
+}
 
 function receivedChatMessage(message) {
     var from = JID(message.stanza.@from);

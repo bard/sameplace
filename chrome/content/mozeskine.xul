@@ -19,6 +19,8 @@
   <!-- COMMANDS -->
   
   <commandset>
+    <command id="add-contact" oncommand="requestedAddContact();"
+             tooltiptext="Add a contact to your contact list"/>
     <command id="join-room" oncommand="requestedJoinRoom();"
              tooltiptext="Join a multi-user chat"/>
     <command id="cycle-maximize" oncommand="requestedCycleMaximize();"
