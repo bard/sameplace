@@ -19,18 +19,27 @@
 
     <rows>
       <row align="center">
-        <label value="Room:" control="address" accesskey="R"/>
-        <textbox id="address"/>
+        <label value="Address:" control="address" accesskey="A"/>
+        <textbox id="address" value="contact@server.org" oninput="refresh();"/>
       </row>
 
       <row align="center">
-        <label value="Nick:" control="nick" accesskey="N"/>
-        <textbox id="nick"/>
+        <label value="Contact is:" control="type"/>
+        <radiogroup id="type" value="groupchat" orient="horizontal" onselect="refresh();">
+          <radio value="groupchat" label="a chat room" selected="true" accesskey="r"/>
+          <radio value="chat" label="a person" accesskey="p"/>
+        </radiogroup>
+      </row>
+
+      <row align="center">
+        <label value="Nickname:" control="nick" accesskey="N"/>
+        <textbox id="nick" oninput="refresh();"/>
       </row>
 
       <row align="center">
         <label value="Account:" control="accounts" accesskey="A"/>
-        <menulist id="accounts" flex="1" label="" sizetopopup="none" class="menulist-compact">
+        <menulist id="accounts" oncommand="refresh();"
+                  flex="1" label="" sizetopopup="none"> <!-- class="menulist-compact" -->
           <menupopup id="xmpp-menu-accounts"/>
         </menulist>
       </row>

@@ -812,10 +812,11 @@ function requestedCloseConversation(event) {
 
 function requestedOpenConversation() {
     var request = {
-        roomAddress: undefined,
-        roomNick: undefined,
+        address: undefined,
+        nick: undefined,
         confirm: false,
-        account: undefined
+        account: undefined,
+        type: undefined
     };
 
     window.openDialog(
@@ -823,8 +824,24 @@ function requestedOpenConversation() {
         'mozeskine-open-conversation', 'modal,centerscreen',
         request);
 
-    if(request.confirm) 
-        joinRoom(request.account, request.roomAddress, request.roomNick);
+    if(request.confirm)
+        if(request.type == 'groupchat')
+            joinRoom(request.account, request.address, request.nick);
+        else
+            if(isConversationOpen(request.account,
+                                  request.address,
+                                  null,
+                                  'chat'))
+                focusConversation(request.account,
+                                  request.address);
+            else
+                withConversation(request.account, request.address,
+                                 '',
+                                 'chat',
+                                 function() {
+                                     focusConversation(request.account,
+                                                       request.address);
+                                 });
 }
 
 function clickedTopic(event) {
@@ -1077,6 +1094,7 @@ function receivedMUCPresence(presence) {
                                from.nick,
                                'groupchat');    
             delete pendingJoins[from.address];
+            focusConversation(presence.session.name, from.address);
             // XXX handle stanza.@from = bareAddress && type == 'error' to cleanup joins
         }
     }
