@@ -27,7 +27,6 @@ var smileyMap = {
     '0:-)':  'angel',
     ':\'(':  'crying',
     '>:-)':  'devil-grin',
-    '>:-(':  'devil-sad',
     'B-)':   'glasses',
     ':-*':   'kiss',
     ':-(|)': 'monkey',
@@ -35,7 +34,6 @@ var smileyMap = {
     ':-(':   'sad',
     ':-)':   'smile',
     ':-D':   'smile-big',
-    ':-!':   'smirk',
     ':-0':  'surprise',
     ';-)':   'wink'
 };
