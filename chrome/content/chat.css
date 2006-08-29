@@ -22,6 +22,8 @@ ul#messages > li
 a 
 {
   color: darkblue;
+  cursor: pointer;
+  text-decoration: underline;
   }
 
 a:hover 

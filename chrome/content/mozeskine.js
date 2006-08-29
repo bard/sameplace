@@ -323,9 +323,8 @@ function textToHTML(doc, text) {
                              smileyMap[match[0]] +
                              '.png');
         } else {
-            //translatedElement = doc.createElement('a');
-            //translatedElement.textContent = match[0];
-            translatedElement = doc.createTextNode(match[0]);
+            translatedElement = doc.createElement('a');
+            translatedElement.textContent = match[0];
         }
         container.appendChild(translatedElement);
 
@@ -334,18 +333,6 @@ function textToHTML(doc, text) {
     container.appendChild(
         doc.createTextNode(
             text.substring(start, text.length)));
-/*
-  var links = container.getElementsByTagName('a');
-  var link;
-  for(var i=0; link = links[i]; i++)
-  link.addEventListener(
-  'click', function(event) {
-  var url = event.target.textContent;
-  if(url.match(/^www\./))
-  url = 'http://' + url;
-  window.top.content.location = url;
-  }, false);
-*/
 
     return container;
 }
@@ -446,6 +433,11 @@ function growTextBox(textBox) {
 // Application-dependent functions dealing with interface.  They do
 // not affect the domain directly.
 
+function getBrowser() {
+    // XXX Temporary: won't work well with stand-alone window.
+    return top.gBrowser;
+}
+
 function withContactInfoOf(address, action) {
     action(_('contact-infos', {address: address}));
 }
@@ -468,6 +460,17 @@ function createConversation(account, address, resource, type) {
         if(window.wantBottom ||
            window.pageYOffset == 0) 
             window.scrollTo(window.pageXOffset, window.scrollMaxY);
+    }
+
+    function clickedLink(link, button) {
+        switch(button) {
+        case 0:
+            getBrowser().loadURI(link);
+            break;
+        case 1:
+            getBrowser().addTab(link);
+            break;
+        }
     }
 
     account = account.toString();
@@ -509,6 +512,12 @@ function createConversation(account, address, resource, type) {
         'resize', function(event) {
             resizedWindow(event.currentTarget); },
         false);
+
+    output.contentWindow.addEventListener(
+        'click', function(event) {
+            if(event.target.nodeName == 'A')
+                clickedLink(event.target.textContent, event.button);
+        }, false);
 
     return conversation;
 }
