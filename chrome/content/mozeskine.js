@@ -167,7 +167,6 @@ var contacts = {
         contact = cloneBlueprint('contact');
         contact.setAttribute('address', address);
         contact.setAttribute('account', account);
-//        contact.setAttribute('resource', resource);
         contact.getElementsByAttribute('role', 'name')[0]
         .setAttribute('value', JID(address).username);
         _('contact-list').appendChild(contact);
@@ -175,17 +174,22 @@ var contacts = {
     },
 
     // domain reactions
-    
-    contactExists: function(account, address) {
+
+    contactExists: function(account, address, subscription) {
         var contact = this.get(account, address) || this.add(account, address);;
 
         if(!contact.hasAttribute('availability'))
             contact.setAttribute('availability', 'unavailable');
 
+        if(subscription)
+            contact.setAttribute('subscription', subscription);
+
         return contact;
     },
 
     resourceChangedPresence: function(account, address, resource, availability, show, status) {
+        var contact = this.contactExists(account, address);
+
         if(availability == undefined)
             availability = 'available';
         if(show)
@@ -193,22 +197,43 @@ var contacts = {
         if(status)
             status = status.toString();
 
-        var contact = this.contactExists(account, address);
+        var contactPresences = XMPP.cache.presence.filter(
+            function(presence) {
+                return (presence.session.name == account &&
+                        XMPP.JID(presence.stanza.@from).address == address);
+            });
 
-        contact.setAttribute('availability', availability);
-        contact.setAttribute('show', show);
-        
-        contact.getElementsByAttribute('role', 'show')[0].value = show || '';
-        if(status)
-            contact.getElementsByAttribute('role', 'status')[0].value = status;
-        else if(contact.getElementsByAttribute('role', 'status')[0].hasAttribute('value'))
-            contact.getElementsByAttribute('role', 'status')[0].removeAttribute('value');
-        
-        if(availability == 'available')
-            _('contact-list').insertBefore(
-                contact, _('contact-list').firstChild);
-        else
-            _('contact-list').appendChild(contact);
+        if(contactPresences.some(
+               function(p) {
+                   return ((p.stanza.show == undefined || p.stanza.show == 'chat') &&
+                           p.stanza.@type == undefined);
+               })) {
+            contact.setAttribute('availability', 'available');
+            contact.setAttribute('show', '');
+            _('contact-list').insertBefore(contact, _('contact-list').firstChild);
+        }
+        else if(contactPresences.some(
+                    function(p) {
+                        return (p.stanza.show == 'away' ||
+                                p.stanza.show == 'xa');
+                    })) {
+            contact.setAttribute('availability', 'available');
+            contact.setAttribute('show', 'away');
+            _('contact-list').insertBefore(contact, _('contact-list').firstChild);
+        }
+        else if(contactPresences.some(
+                    function(p) {
+                        return (p.stanza.show == 'dnd');
+                    })) {
+            contact.setAttribute('availability', 'available');
+            contact.setAttribute('show', 'dnd');
+            _('contact-list').insertBefore(contact, _('contact-list').firstChild);
+        }
+        else {
+            contact.setAttribute('availability', 'unavailable');
+            contact.setAttribute('show', '');
+            _('contact-list').appendChild(contact);            
+        }
     },
 
     startedConversationWith: function(account, address, resource) {
@@ -460,7 +485,6 @@ function createConversation(account, address, resource, type) {
     var contactInfo = cloneBlueprint('contact-info');
     contactInfo.setAttribute('account', account);
     contactInfo.setAttribute('address', address);
-    contactInfo.setAttribute('resource', resource);
     contactInfo.setAttribute('type', type);
     _(contactInfo, {role: 'partner-address'}).value = address;
     if(type == 'groupchat') {
@@ -559,11 +583,9 @@ function getConversation(account, address, resource, type) {
              '@address="' + address + '"]');
 }
 
-function getContactInfo(account, address, resource, type) {
+function getContactInfo(account, address) {
     return x('//*[' +
              '@role="contact-info" and ' +
-             (resource ? '@resource="' + resource + '" and ' : '') +
-             (type ? '@type="' + type + '" and ' : '') +
              '@account="' + account + '" and ' +
              '@address="' + address + '"]');
 }
@@ -641,22 +663,34 @@ function focusConversation(account, address) {
 
 function changeConversationResource(account, address, resource, type, otherResource) {
     var conversation = getConversation(account, address, resource, type);
-    var contactInfo = getContactInfo(account, address, resource, type);
-    if(conversation && contactInfo) {
+    if(conversation) 
         conversation.setAttribute('resource', otherResource);
-        contactInfo.setAttribute('resource', otherResource);        
-    }
+
+    var contactInfo = getContactInfo(account, address);
+    /*
+    if(contactInfo)
+        contactInfo.getElementsByAttribute('role', 'current')[0].
+            value = otherResource;
+    */
 }
 
 function closeConversation(account, address, resource, type) {
     var conversation = getConversation(account, address, resource, type);
-    var contactInfo = getContactInfo(account, address, resource, type);
 
-    if(conversation && contactInfo) {
+    if(conversation) {
         conversation.parentNode.removeChild(conversation);
-        contactInfo.parentNode.removeChild(contactInfo);
-        closedConversation(account, address, resource, type);
+        closedConversation(account, address, resource, type);        
     }
+    
+    /*
+      // XXX cannot close just based on account and address: when a room is joined
+      // and some private conversations are active, there will be several conversations
+      // with same address (but different resource)
+    var contactInfo = getContactInfo(account, address);
+    if(conversation && contactInfo) {
+        contactInfo.parentNode.removeChild(contactInfo);
+    }
+    */
 }
 
 function updateContactInfoParticipants(account, address, participantNick, availability) {
@@ -864,6 +898,7 @@ function hoveredMousePointer(event) {
         'Account: <' + get('account') + '>, ' +
         'Address: <' + get('address') + '>, ' +
         'Resource: <' + get('resource') + '>, ' +
+        'Subscription: <' + get('subscription') + '>, ' +
         'Type: <' + get('type') + '>';
 }
 
@@ -1059,7 +1094,8 @@ function receivedRoster(iq) {
     for each(var item in iq.stanza..ns_roster::item) {
         contacts.contactExists(
             iq.session.name,
-            item.@jid);
+            item.@jid,
+            item.@subscription);
     }
 }
 

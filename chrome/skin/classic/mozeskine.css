@@ -61,7 +61,8 @@ richlistbox[role="contact-info"] *
 {
   list-style-image: url("chrome://xmpp4moz/skin/status/all-small.png");
   max-width: 16px;
-  max-height: 16px;  
+  max-height: 16px;
+  -moz-image-region: rect(48px 16px 64px 0px);  
   }
 
 [role="contact"][availability="available"][show="dnd"] [role="status-indicator"]
