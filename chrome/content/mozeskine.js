@@ -1016,7 +1016,8 @@ function receivedSubscriptionRequest(presence) {
     var account = presence.session.name;
     var address = presence.stanza.@from.toString();
     var accept, reciprocate;
-    if(contacts.get(account, address) == undefined) {
+    if(contacts.get(account, address) == undefined ||
+       contacts.get(account, address).getAttribute('subscription') == 'none') {
         var check = {value: true};
         accept = prompts.confirmCheck(
             null, 'Contact notification',
