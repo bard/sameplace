@@ -351,7 +351,8 @@ function getAncestorAttribute(element, attributeName) {
 
 function x() {
     var contextNode, path;
-    if(arguments[0] instanceof XULElement) {
+    if(arguments[0] instanceof Ci.nsIDOMElement ||
+       arguments[0] instanceof Ci.nsIDOMDocument) {
         contextNode = arguments[0];
         path = arguments[1];
     }
@@ -441,8 +442,11 @@ function getBrowser() {
     return top.gBrowser;
 }
 
-function withContactInfoOf(address, action) {
-    action(_('contact-infos', {address: address}));
+function withContactInfoOf(account, address, action) {
+    // XXX will break on private conversations with participants
+    action(getConversation(account, address)
+           .contentDocument
+           .getElementById('info'));
 }
 
 function isConversationOpen() {
@@ -488,21 +492,17 @@ function createConversation(account, address, resource, type) {
     conversation.setAttribute('type', type);
     _('conversations').appendChild(conversation);
 
-    var contactInfo = cloneBlueprint('contact-info');
-    contactInfo.setAttribute('account', account);
-    contactInfo.setAttribute('address', address);
-    contactInfo.setAttribute('type', type);
-    _(contactInfo, {role: 'partner-address'}).value = address;
-    if(type == 'groupchat') {
-        contactInfo.appendChild(cloneBlueprint('room-topic'));
-        contactInfo.appendChild(cloneBlueprint('room-participants'));
-    }
-    _('contact-infos').appendChild(contactInfo);
-
     var output = _(conversation, {role: 'chat-output'});
 
     output.addEventListener(
         'load', function(event) {
+            var doc = output.contentDocument;
+            doc.getElementById('address').textContent = address;
+            if(type == 'groupchat') {
+                x(doc, '//*[@class="box" and @for="topic"]').style.display = 'block';
+                x(doc, '//*[@class="box" and @for="resources"]').style.display = 'block';
+            }
+
             openedConversation(account, address, resource, type);
         }, true);
 
@@ -556,7 +556,13 @@ function withConversation(account, address, resource, type, action) {
         break;
     case 'groupchat':
         conversation = getConversation(account, address, null, 'groupchat');
-        action(conversation);
+        var chatOutput = _(conversation, {role: 'chat-output'});
+
+        if(chatOutput.contentDocument.getElementById('messages'))
+            action(conversation);
+        else
+            chatOutput.addEventListener(
+                'load', function(event) { action(conversation); }, true);
         break;
     case 'normal':
     case 'chat':
@@ -595,13 +601,6 @@ function getConversation(account, address, resource, type) {
              '@address="' + address + '"]');
 }
 
-function getContactInfo(account, address) {
-    return x('//*[' +
-             '@role="contact-info" and ' +
-             '@account="' + account + '" and ' +
-             '@address="' + address + '"]');
-}
-
 
 // GUI ACTIONS
 // ----------------------------------------------------------------------
@@ -616,14 +615,12 @@ function orientHorizontal() {
     _('box-main').setAttribute('orient', 'horizontal');
     _('splitter-main').setAttribute('orient', 'horizontal');
     _('box-auxiliary').setAttribute('orient', 'vertical');
-    _('splitter-auxiliary').setAttribute('orient', 'vertical');        
 }
 
 function orientVertical() {
     _('box-main').setAttribute('orient', 'vertical');
     _('splitter-main').setAttribute('orient', 'vertical');
     _('box-auxiliary').setAttribute('orient', 'horizontal');
-    _('splitter-auxiliary').setAttribute('orient', 'horizontal');        
 }
 
 function cycleOrientation() {
@@ -659,13 +656,11 @@ function focusContent(account, address, url) {
 
 function focusConversation(account, address) {
     var conversation = getConversation(account, address);
-    var contactInfo = getContactInfo(account, address);
-    if(conversation && contactInfo) {
+    if(conversation) {
         if(_('conversations').collapsed)
             displayAuxiliaryAndConversations();
 
         _('conversations').selectedPanel = conversation;
-        _('contact-infos').selectedPanel = contactInfo;
         setTimeout(
             function() {
                 _(conversation, {role: 'chat-input'}).focus();
@@ -677,13 +672,6 @@ function changeConversationResource(account, address, resource, type, otherResou
     var conversation = getConversation(account, address, resource, type);
     if(conversation) 
         conversation.setAttribute('resource', otherResource);
-
-    var contactInfo = getContactInfo(account, address);
-    /*
-    if(contactInfo)
-        contactInfo.getElementsByAttribute('role', 'current')[0].
-            value = otherResource;
-    */
 }
 
 function closeConversation(account, address, resource, type) {
@@ -693,35 +681,33 @@ function closeConversation(account, address, resource, type) {
         conversation.parentNode.removeChild(conversation);
         closedConversation(account, address, resource, type);        
     }
-    
-    /*
-      // XXX cannot close just based on account and address: when a room is joined
-      // and some private conversations are active, there will be several conversations
-      // with same address (but different resource)
-    var contactInfo = getContactInfo(account, address);
-    if(conversation && contactInfo) {
-        contactInfo.parentNode.removeChild(contactInfo);
-    }
-    */
 }
 
 function updateContactInfoParticipants(account, address, participantNick, availability) {
-    var contactInfo = getContactInfo(account, address);
-    var participants = _(contactInfo, {role: 'participants'});
-    var participant = _(contactInfo, {nick: participantNick});
+    withConversation(
+        account, address, '', 'groupchat',
+        function(conversation) {
+            var doc = _(conversation, {role: 'chat-output'}).contentDocument;
 
-    if(participant) {
-        if(availability == 'unavailable') 
-            participants.removeChild(participant);
-    } else {
-        if(availability != 'unavailable') {
-            participant = cloneBlueprint('participant');
-            participant.setAttribute('nick', participantNick);
-            participant.getElementsByAttribute('role', 'nick')[0]
-                .value = participantNick;
-            participants.appendChild(participant);            
-        }
-    }
+            var participants = doc.getElementById('resources');
+            var participant;
+            for(var i=0; i<participants.childNodes.length; i++) {        
+                if(participants.childNodes[i].textContent == participantNick) {
+                    p = participants[i];
+                    break;
+                }
+            }
+            if(participant) {
+                if(availability == 'unavailable')
+                    participants.removeChild(participant);
+            } else {
+                if(availability != 'unavailable') {
+                    var participant = doc.createElement('li');
+                    participant.textContent = participantNick;
+                    participants.insertBefore(participant, participants.firstChild);
+                }
+            }
+        });
 }
 
 function displayChatMessage(account, address, resource, direction, type, sender, body) {
@@ -1089,18 +1075,19 @@ function receivedMessageWithURL(message) {
 
 function receivedRoomTopic(message) {
     var from = JID(message.stanza.@from);
+    withConversation(
+        message.session.name, from.address, '', 'groupchat',
+        function(conversation) {
+            var doc = _(conversation, {role: 'chat-output'}).contentDocument;
+            doc.getElementById('topic').textContent = message.stanza.subject;
+        });
+
     displayEvent(
         message.session.name,
         from.address, from.resource,
         'groupchat',
         from.nick + ' set the topic to "' +
         message.stanza.subject + '"', 'topic');
-    
-    withContactInfoOf(
-        from.address, function(info) {
-            info.getElementsByAttribute('role', 'topic')[0].textContent =
-                message.stanza.subject.toString();
-        });
 }
 
 function receivedRoster(iq) {

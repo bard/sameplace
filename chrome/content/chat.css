@@ -143,3 +143,48 @@ img.emoticon
 /*   font-size: 90%; */
 /*   } */
 
+#info
+{
+  z-index: 1000;
+  padding-left: 1em;
+  padding-top: 1em;
+  font-size: smaller;
+  position: fixed;
+  bottom: 10px;
+  left: 90%;
+  max-width: 35%;
+  min-height: 200px;
+  background: lightblue;
+  white-space: nowrap;
+  opacity: 0.25;
+  }
+
+#info:hover
+{
+  opacity: 0.8;
+  left: auto;
+  right: 0;
+  }
+
+.box
+{
+  margin-bottom: 0.5em;
+  }
+
+.box > h3
+{
+  margin: 0;
+  }
+
+.box[for="resources"] > ul
+{
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  }
+
+.box[for="topic"],
+.box[for="resources"]
+{
+  display: none;
+  }

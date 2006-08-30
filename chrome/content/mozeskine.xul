@@ -44,12 +44,6 @@
         <vbox flex="1">
           <richlistbox id="contact-list" flex="1"/>
         </vbox>
-
-        <splitter id="splitter-auxiliary" persist="orient" orient="vertical" collapse="before"/>
-
-        <vbox flex="0">
-          <deck id="contact-infos" flex="1"/>
-        </vbox>
       </box>
 
       <splitter id="splitter-main" persist="orient" orient="horizontal"/>

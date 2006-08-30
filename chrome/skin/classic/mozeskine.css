@@ -38,19 +38,6 @@ richlistitem[role="contact"][availability="unavailable"]
   font-size: smaller;
   }
 
-richlistbox[role="contact-info"]
-{
-  font-size: smaller;
-  background: white url("contact-info-bg.png") no-repeat bottom right;
-  min-height: 100px;
-  min-width: 100px;
-  }
-
-richlistbox[role="contact-info"] *
-{
-  background: transparent;
-  }
-
 #contact-list
 {
   background: white url("user-bg.png") bottom right no-repeat;
