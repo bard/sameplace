@@ -232,8 +232,22 @@ var contacts = {
         else {
             contact.setAttribute('availability', 'unavailable');
             contact.setAttribute('show', '');
-            _('contact-list').appendChild(contact);            
+            _('contact-list').appendChild(contact);
         }
+
+        if(availability == 'available') {
+            var wResources = _(contact, {role: 'resources'});
+            if(!_(wResources, {name: resource})) {
+                var wResource = cloneBlueprint('resource');
+                _(wResource, {role: 'status'}).setAttribute(
+                    'tooltiptext', resource + ' (' + (show || 'online') + ')');
+                if(status)
+                    _(wResource, {role: 'status'}).value = status;
+                wResources.appendChild(wResource);
+            }
+        } else 
+            resources.removeChild(
+                _(wResources, {name: resource}));
     },
 
     startedConversationWith: function(account, address, resource) {

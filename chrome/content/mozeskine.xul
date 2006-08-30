@@ -29,6 +29,8 @@
              tooltiptext="Toggle between horizontal and vertical layout"/>
   </commandset>
 
+  <!-- MENUS -->
+
   <popupset>
     <popup id="message-menu"/>
   </popupset>
@@ -129,11 +131,13 @@
           <hbox flex="1">
             <image role="status-indicator"/>
             <label role="name"/>
-            <spacer flex="1"/>
-            <label role="show" style="font-size: smaller"/>
           </hbox>
-          <label role="status" style="font-size: smaller; margin-left: 2em;"/>
+          <vbox role="resources" style="font-size: smaller" flex="1"/>
         </richlistitem>
+
+        <hbox role="resource" name="" style="padding-left: 1em;">
+          <label role="status" style="font-style: italic;" crop="end" tooltiptext=""/>
+        </hbox>
       </box>
     </box>
 
