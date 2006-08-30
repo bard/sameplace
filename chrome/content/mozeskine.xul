@@ -132,12 +132,8 @@
             <image role="status-indicator"/>
             <label role="name"/>
           </hbox>
-          <vbox role="resources" style="font-size: smaller" flex="1"/>
+          <label role="status" style="font-style: italic; font-size: smaller; padding-left: 1em;" crop="end"/> 
         </richlistitem>
-
-        <hbox role="resource" name="" style="padding-left: 1em;">
-          <label role="status" style="font-style: italic;" crop="end" tooltiptext=""/>
-        </hbox>
       </box>
     </box>
 

@@ -235,21 +235,8 @@ var contacts = {
             _('contact-list').appendChild(contact);
         }
 
-        var wResources = _(contact, {role: 'resources'});
-        var wResource = _(wResources, {name: resource});
-        if(availability == 'available') {
-            if(!wResource) {
-                wResource = cloneBlueprint('resource');
-                wResource.setAttribute('name', resource);
-            }
-
-            _(wResource, {role: 'status'}).setAttribute(
-                'tooltiptext', resource + ' (' + (show || 'online') + ')');
-            if(status)
-                _(wResource, {role: 'status'}).value = status;
-            wResources.appendChild(wResource);
-        } else 
-            wResources.removeChild(wResource);
+        if(status)
+            _(contact, {role: 'status'}).value = status;
     },
 
     startedConversationWith: function(account, address, resource) {
