@@ -9,6 +9,7 @@ var request;
 
 function init() {
     request = window.arguments[0];
+    _('address').select();
 }
 
 // GUI ACTIONS
