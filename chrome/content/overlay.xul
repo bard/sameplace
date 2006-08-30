@@ -33,22 +33,59 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
   <!-- COMMANDS -->
 
   <commandset id="mainCommandSet">
-    <command id="mozeskine-command-load-livebar"
-             label="Mozeskine (livebar)"
-             oncommand="mozeskine_loadLivebar();"
+    <command id="mozeskine-command-toggle-sidebar"
+             label="Sidebar"
+             oncommand="mozeskine_toggleSidebar();"
+             accesskey="L"/>
+    <command id="mozeskine-command-load-sidebar"
+             label="Mozeskine (sidebar)"
+             oncommand="mozeskine_loadSidebar();"
              accesskey="M"/>
     <command id="mozeskine-command-open-window"
              label="Mozeskine (window)"
              accesskey="M"
              oncommand="window.open('chrome://mozeskine/content/mozeskine.xul', 'mozeskine', 'chrome');"/>
+    <command id="mozeskine-command-load-sidebar-force"
+             oncommand="mozeskine_loadSidebar(true);"/>
   </commandset>
+
+  <!-- KEYS -->
+
+  <keyset id="mainKeyset">
+    <key keycode="VK_F12" command="mozeskine-command-toggle-sidebar"/>
+  </keyset>
 
   <!-- MENUS -->
 
   <menupopup id="xmpp-menu-accounts">
-    <menuitem command="mozeskine-command-load-livebar"
+    <menuitem command="mozeskine-command-load-sidebar"
               class="menuitem-iconic"/>
     <menuitem command="mozeskine-command-open-window"
               class="menuitem-iconic"/>
   </menupopup>
+
+  <hbox id="browser">
+
+    <!-- SIDEBAR -->
+
+    <vbox id="mozeskine-sidebar"
+          insertbefore="appcontent"
+          class="chromeclass-extracontent"
+          collapsed="true"
+          persist="width"
+          width="350">
+      <iframe src="about:blank"
+              class="box-inset"
+              flex="1"/>
+    </vbox>
+
+    <splitter id="mozeskine-sidebar-splitter"
+              insertbefore="appcontent"
+              state="open"
+              collapse="before"
+              resizebefore="closest"
+              resizeafter="closest"
+              class="chromeclass-extracontent"
+              hidden="true"/>
+  </hbox>
 </overlay>

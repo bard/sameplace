@@ -1,11 +1,5 @@
 
 Context:
 
-[Response to disco queries was forwarded to observers *before* the disco query itself (so response appeared in console before the query). Fixed.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060826174652] 
-
-[Status icons cleanup.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060826174523] 
-
-[TAG 0.2.7
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060825183803] 
+[TAG 0.2.9
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060830171505] 
