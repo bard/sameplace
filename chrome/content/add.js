@@ -55,7 +55,6 @@ function refresh() {
 function xmppLoadedAccounts() {
     for each(var account in XMPP.accounts) {
         if(XMPP.isUp(account.jid)) {
-            selectedAccount();
             _('accounts').value = account.jid;
             break;
         }
