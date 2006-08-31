@@ -107,41 +107,28 @@ img.emoticon
   display: none;
   }
 
+.tooltip
+{
+  position: fixed;
+  z-index: 100;
+  right: 10px;
+  text-align: center;
+  top: 0;
+  display: none;
+  background: lightblue;
+  padding: 0.2em;
+  padding-left: 1em;
+  padding-right: 1em;
+  font-size: smaller;
+  opacity: 0.8;
+  -moz-border-radius-bottomleft: 8px;
+  -moz-border-radius-bottomright: 8px;
+  }
 
-/* .info  */
-/* { */
-/*   position: relative; */
-/*   z-index: 24; */
-/*   text-decoration: none; */
-/*   } */
-
-/* .info:hover  */
-/* { */
-/*   z-index:25; */
-/*   } */
-
-/* .info>.tooltip  */
-/* { */
-/*   display: none; */
-/*   } */
-
-/* .info:hover>.tooltip  */
-/* {  */
-/*   display: block; */
-/*   position: absolute; */
-/*   top: -0.5em;  */
-/*   right: -0.5em; */
-/*   padding-right: 1em; */
-/*   padding-left: 1em; */
-/*   font-style: normal; */
-/*   border: thin solid #0cf; */
-/*   background-color: #cff; */
-/*   color: #000; */
-/*   text-align: center; */
-/*   opacity: 0.80; */
-/*   font-weight: bold; */
-/*   font-size: 90%; */
-/*   } */
+.message:hover>.tooltip
+{
+  display: block;
+  }
 
 #info
 {
@@ -157,6 +144,8 @@ img.emoticon
   background: lightblue;
   white-space: nowrap;
   opacity: 0.25;
+  -moz-border-radius-topleft: 12px;
+  -moz-border-radius-bottomleft: 12px;
   }
 
 #info:hover

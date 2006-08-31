@@ -128,6 +128,7 @@ function init(event) {
             }, false);
         _('devel-shortcut').hidden = false;
     }
+    
 
     for each(var pluginInfo in prefBranch.getChildList('plugin.', {})) {
         var pluginOverlayURL = prefBranch.getCharPref(pluginInfo);
@@ -713,13 +714,21 @@ function displayChatMessage(account, address, resource, direction, type, sender,
                 htmlSender.textContent = XMPP.JID(sender).username;
             htmlSender.setAttribute(
                 'class', direction == 'in' ? 'contact' : 'user');
+
             var htmlBody = textToHTML(doc, body);
             htmlBody.setAttribute('class', 'body');
+
+            var htmlTooltip = doc.createElement('span');
+            htmlTooltip.setAttribute('class', 'tooltip');
+            var time = new Date();
+            htmlTooltip.textContent = (direction == 'in' ? 'Received at ' : 'Sent at ') +
+                time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds();
 
             var message = doc.createElement('li');
             message.setAttribute('class', 'message');
             message.appendChild(htmlSender);
             message.appendChild(htmlBody);
+            message.appendChild(htmlTooltip);
 
             scrollingOnlyIfAtBottom(
                 chatOutputWindow, function() {
