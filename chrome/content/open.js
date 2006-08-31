@@ -10,6 +10,7 @@ var request;
 function init() {
     request = window.arguments[0];
     _('address').select();
+    refresh();
 }
 
 // GUI ACTIONS
@@ -38,6 +39,8 @@ function refresh() {
             _('main').getButton('accept').disabled = false;
         else
             _('main').getButton('accept').disabled = true;
+    else
+        _('main').getButton('accept').disabled = true;
 }
 
 
