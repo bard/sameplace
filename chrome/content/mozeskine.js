@@ -695,7 +695,7 @@ function updateContactInfoParticipants(account, address, participantNick, availa
             var participant;
             for(var i=0; i<participants.childNodes.length; i++) {        
                 if(participants.childNodes[i].textContent == participantNick) {
-                    p = participants[i];
+                    participant = participants.childNodes[i];
                     break;
                 }
             }
