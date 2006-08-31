@@ -241,7 +241,9 @@ var contacts = {
         var availability = contact.getAttribute('availability');
         var show = contact.getAttribute('show');
 
-        if(availability == 'available' && show == '')
+        if(contact.getAttribute('talking'))
+            _('contact-list').insertBefore(contact, _('contact-list', {role: 'talking'}).nextSibling);
+        else if(availability == 'available' && show == '')
             _('contact-list').insertBefore(contact, _('contact-list', {role: 'online'}).nextSibling);
         else if(availability == 'available' && show == 'away')
             _('contact-list').insertBefore(contact, _('contact-list', {role: 'away'}).nextSibling);
@@ -254,12 +256,15 @@ var contacts = {
     startedConversationWith: function(account, address) {
         var contact = this.get(account, address) || this.add(account, address);
         contact.setAttribute('talking', 'true');
+        this._reposition(contact);
     },
 
     stoppedConversationWith: function(account, address) {
         var contact = this.get(account, address);
-        if(contact)
+        if(contact) {
             contact.removeAttribute('talking');
+            this._reposition(contact);
+        }
     }
 };
 

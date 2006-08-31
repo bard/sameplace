@@ -43,6 +43,7 @@
       <box id="box-auxiliary" persist="orient height" orient="vertical" height="100" flex="1">
         <vbox flex="1">
           <richlistbox id="contact-list" flex="1">
+            <richlistitem role="talking"/>
             <richlistitem role="online"/>
             <richlistitem role="away"/>
             <richlistitem role="dnd"/>
