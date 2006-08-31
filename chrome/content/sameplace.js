@@ -211,7 +211,6 @@ var contacts = {
                })) {
             contact.setAttribute('availability', 'available');
             contact.setAttribute('show', '');
-            _('contact-list').insertBefore(contact, _('contact-list', {role: 'online'}).nextSibling);
         }
         else if(contactPresences.some(
                     function(p) {
@@ -220,7 +219,6 @@ var contacts = {
                     })) {
             contact.setAttribute('availability', 'available');
             contact.setAttribute('show', 'away');
-            _('contact-list').insertBefore(contact, _('contact-list', {role: 'away'}).nextSibling);
         }
         else if(contactPresences.some(
                     function(p) {
@@ -228,18 +226,31 @@ var contacts = {
                     })) {
             contact.setAttribute('availability', 'available');
             contact.setAttribute('show', 'dnd');
-            _('contact-list').insertBefore(contact, _('contact-list', {role: 'dnd'}).nextSibling);
         }
         else {
             contact.setAttribute('availability', 'unavailable');
             contact.setAttribute('show', '');
-            _('contact-list').appendChild(contact);
         }
+        this._reposition(contact);
 
         if(status)
             _(contact, {role: 'status'}).value = status;
     },
 
+    _reposition: function(contact) {
+        var availability = contact.getAttribute('availability');
+        var show = contact.getAttribute('show');
+
+        if(availability == 'available' && show == '')
+            _('contact-list').insertBefore(contact, _('contact-list', {role: 'online'}).nextSibling);
+        else if(availability == 'available' && show == 'away')
+            _('contact-list').insertBefore(contact, _('contact-list', {role: 'away'}).nextSibling);
+        else if(availability == 'available' && show == 'dnd')
+            _('contact-list').insertBefore(contact, _('contact-list', {role: 'dnd'}).nextSibling);
+        else
+            _('contact-list').appendChild(contact);
+    },
+    
     startedConversationWith: function(account, address) {
         var contact = this.get(account, address) || this.add(account, address);
         contact.setAttribute('talking', 'true');
