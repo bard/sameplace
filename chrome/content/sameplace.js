@@ -956,9 +956,12 @@ function openedConversation(account, address, resource, type) {
 
 function closedConversation(account, address, resource, type) {
     contacts.stoppedConversationWith(account, address, resource);
-    if(_('conversations').childNodes.length == 0)
+    if(_('conversations').childNodes.length == 0) 
         _('conversations').collapsed = true;
+    else if(_('conversations').selectedIndex == _('conversations').childNodes.length)
+        _('conversations').selectedIndex = _('conversations').childNodes.length-1;
 }
+
 
 // NETWORK ACTIONS
 // ----------------------------------------------------------------------
