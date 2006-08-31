@@ -211,7 +211,7 @@ var contacts = {
                })) {
             contact.setAttribute('availability', 'available');
             contact.setAttribute('show', '');
-            _('contact-list').insertBefore(contact, _('contact-list').firstChild);
+            _('contact-list').insertBefore(contact, _('contact-list', {role: 'online'}).nextSibling);
         }
         else if(contactPresences.some(
                     function(p) {
@@ -220,7 +220,7 @@ var contacts = {
                     })) {
             contact.setAttribute('availability', 'available');
             contact.setAttribute('show', 'away');
-            _('contact-list').insertBefore(contact, _('contact-list').firstChild);
+            _('contact-list').insertBefore(contact, _('contact-list', {role: 'away'}).nextSibling);
         }
         else if(contactPresences.some(
                     function(p) {
@@ -228,7 +228,7 @@ var contacts = {
                     })) {
             contact.setAttribute('availability', 'available');
             contact.setAttribute('show', 'dnd');
-            _('contact-list').insertBefore(contact, _('contact-list').firstChild);
+            _('contact-list').insertBefore(contact, _('contact-list', {role: 'dnd'}).nextSibling);
         }
         else {
             contact.setAttribute('availability', 'unavailable');
