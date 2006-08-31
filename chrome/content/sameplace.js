@@ -156,14 +156,13 @@ function finish() {
 var contacts = {
     // interface glue
 
-    get: function(account, address, resource) {
+    get: function(account, address) {
         return x('//*[@id="contact-list"]//*[' +
-                 (resource ? '@resource="' + resource + '" and ' : '') +
                  '@address="' + address + '" and ' +
                  '@account="' + account + '"]');
     },
 
-    add: function(account, address, resource) {
+    add: function(account, address) {
         var contact;
         contact = cloneBlueprint('contact');
         contact.setAttribute('address', address);
@@ -241,15 +240,15 @@ var contacts = {
             _(contact, {role: 'status'}).value = status;
     },
 
-    startedConversationWith: function(account, address, resource) {
-        var contact = this.get(account, address) || this.add(account, address, resource);
-        contact.style.fontStyle = 'italic';
+    startedConversationWith: function(account, address) {
+        var contact = this.get(account, address) || this.add(account, address);
+        contact.setAttribute('talking', 'true');
     },
 
-    stoppedConversationWith: function(account, address, resource) {
-        var contact = this.get(account, address, resource);
+    stoppedConversationWith: function(account, address) {
+        var contact = this.get(account, address);
         if(contact)
-            contact.style.fontStyle = null;
+            contact.removeAttribute('talking');
     }
 };
 

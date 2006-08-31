@@ -73,6 +73,11 @@ richlistitem[role="contact"][availability="unavailable"]
   -moz-image-region: rect(48px 16px 64px 0px);
   }
 
+[role="contact"][talking="true"]
+{
+  font-style: italic;
+  }
+
 [role="close"]
 {
   list-style-image: url("close.png");
