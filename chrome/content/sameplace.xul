@@ -37,10 +37,10 @@
 
   <vbox flex="1">
 
-    <box flex="1" id="box-main" persist="orient" orient="vertical">
+    <box flex="1" id="box-main" orient="vertical">
       <!-- CONTACT AREA -->
 
-      <box id="box-auxiliary" persist="orient height" orient="vertical" height="100" flex="1">
+      <box id="box-auxiliary" persist="height" orient="vertical" height="100" flex="1">
         <vbox flex="1">
           <richlistbox id="contact-list" flex="1">
             <richlistitem role="talking"/>
@@ -52,7 +52,7 @@
         </vbox>
       </box>
 
-      <splitter id="splitter-main" persist="orient" orient="vertical"/>
+      <splitter id="splitter-main"  orient="vertical"/>
 
       <!-- CONVERSATION AREA -->
 
@@ -97,7 +97,7 @@
             </toolbar>
           </toolbox>
 
-            
+
           <iframe role="chat-output" src="chat.html" flex="5" class="box-inset"
                   context="message-menu"/>
 

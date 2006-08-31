@@ -66,6 +66,11 @@ function init(event) {
     if(!event.target)
         return;
 
+    if(window == top) 
+        orientHorizontal();
+    else 
+        orientVertical();
+
     _('contact-list').selectedIndex = -1;
 
     channel = XMPP.createChannel();
