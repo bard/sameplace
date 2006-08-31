@@ -137,9 +137,8 @@ img.emoticon
   padding-top: 1em;
   font-size: smaller;
   position: fixed;
-  bottom: 10px;
+  top: 10px;
   left: 90%;
-  max-width: 35%;
   min-height: 200px;
   background: lightblue;
   white-space: nowrap;

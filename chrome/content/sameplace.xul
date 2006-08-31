@@ -86,14 +86,14 @@
 
               <toolbarspring/>
 
-              <toolbarbutton role="close"
-                             tooltiptext="Close this conversation"
-                             oncommand="requestedCloseConversation(event);"/>
-
               <toolbarbutton role="attach" accesskey="A"
                              tooltiptext="Make this conversation available as a communication channel to this web page"
                              oncommand="requestedAttachContent(event);"
                              dir="reverse"/>
+
+              <toolbarbutton role="close"
+                             tooltiptext="Close this conversation"
+                             oncommand="requestedCloseConversation(event);"/>
             </toolbar>
           </toolbox>
 
@@ -130,9 +130,9 @@
 
         <toolbarbutton command="open-conversation"/>
 
-        <toolbarbutton command="cycle-orientation"/>
+        <toolbarbutton command="cycle-orientation" hidden="true"/>
 
-        <toolbarbutton command="cycle-maximize"/>
+        <toolbarbutton command="cycle-maximize" hidden="true"/>
 
         <toolbarbutton id="devel-shortcut" oncommand="quickJoin();"
                        label="Quick Join" accesskey="Q" hidden="true"/>
