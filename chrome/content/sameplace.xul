@@ -80,7 +80,7 @@
               </toolbarbutton>
 
               <toolbaritem align="center">
-                <label role="contact" class="header" style="font-style: italic;"/>
+                <label role="contact" class="header"/>
               </toolbaritem>
 
               <toolbarspring/>
@@ -116,7 +116,7 @@
             <image role="status-indicator"/>
             <label role="name"/>
           </hbox>
-          <label role="status" style="font-style: italic; font-size: smaller; padding-left: 1em;" crop="end"/> 
+          <label role="status" crop="end"/> 
         </richlistitem>
       </box>
     </box>

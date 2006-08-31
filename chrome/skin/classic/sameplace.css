@@ -87,3 +87,14 @@ richlistitem[role="contact"][availability="unavailable"]
 {
   list-style-image: url("attach.png");
   }
+
+#contact-list [role="contact"] [role="status"]
+{
+  font-size: smaller;
+  padding-left: 1em;
+  }
+
+[role="conversation"] [role="contact"]
+{
+  font-style: italic;
+  }
