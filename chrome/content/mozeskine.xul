@@ -64,28 +64,37 @@
                 <menupopup role="plugins" id="plugins-menu"/>
               </toolbarbutton>
 
-              <toolbarbutton role="close" 
-                             oncommand="requestedCloseConversation(event);"/>
-
               <toolbarbutton label="Options "
                              type="menu" tooltiptext="Options for this conversation"
-                             accesskey="p">
+                             accesskey="p"
+                             hidden="true">
                 <menupopup role="options">
                   <menuitem label="Follow URLs" role="follow"
                             checked="false" accesskey="F" type="checkbox"/>
                 </menupopup>
               </toolbarbutton>
 
+              <toolbaritem align="center">
+                <label role="contact" class="header" style="font-style: italic;"/>
+              </toolbaritem>
+
               <toolbarspring/>
 
-              <toolbarbutton role="attach" label="Attach " accesskey="A"
+              <toolbarbutton role="close"
+                             tooltiptext="Close this conversation"
+                             oncommand="requestedCloseConversation(event);"/>
+
+              <toolbarbutton role="attach" accesskey="A"
+                             tooltiptext="Make this conversation available as a communication channel to this web page"
                              oncommand="requestedAttachContent(event);"
                              dir="reverse"/>
             </toolbar>
           </toolbox>
 
+            
           <iframe role="chat-output" src="chat.html" flex="5" class="box-inset"
                   context="message-menu"/>
+
           <splitter/>
 
           <textbox role="chat-input" class="box-inset" multiline="true" rows="0"

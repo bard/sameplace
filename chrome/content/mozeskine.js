@@ -492,6 +492,8 @@ function createConversation(account, address, resource, type) {
     conversation.setAttribute('type', type);
     _('conversations').appendChild(conversation);
 
+    _(conversation, {role: 'contact'}).value = XMPP.JID(address).username;
+
     var output = _(conversation, {role: 'chat-output'});
 
     output.addEventListener(
