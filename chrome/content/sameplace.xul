@@ -37,7 +37,7 @@
 
   <vbox flex="1">
 
-    <box flex="1" id="box-main" persist="orient" orient="horizontal">
+    <box flex="1" id="box-main" persist="orient" orient="vertical">
       <!-- CONTACT AREA -->
 
       <box id="box-auxiliary" persist="orient height" orient="vertical" height="100" flex="1">
@@ -51,7 +51,7 @@
         </vbox>
       </box>
 
-      <splitter id="splitter-main" persist="orient" orient="horizontal"/>
+      <splitter id="splitter-main" persist="orient" orient="vertical"/>
 
       <!-- CONVERSATION AREA -->
 
