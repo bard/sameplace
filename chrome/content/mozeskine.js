@@ -168,7 +168,7 @@ var contacts = {
         contact.setAttribute('address', address);
         contact.setAttribute('account', account);
         contact.getElementsByAttribute('role', 'name')[0]
-        .setAttribute('value', JID(address).username);
+        .setAttribute('value', XMPP.JID(address).username);
         _('contact-list').appendChild(contact);
         return contact;
     },
@@ -202,6 +202,7 @@ var contacts = {
                 return (presence.session.name == account &&
                         XMPP.JID(presence.stanza.@from).address == address);
             });
+
 
         if(contactPresences.some(
                function(p) {
@@ -255,20 +256,6 @@ var contacts = {
 // UTILITIES (GENERIC)
 // ----------------------------------------------------------------------
 // Application-independent functions not dealing with user interface.
-
-function JID(string) {
-    var m = string.match(/^(.+?)@(.+?)(?:\/|$)(.*$)/);
-    var jid = {
-        username: m[1],
-        hostname: m[2],
-        resource: m[3],
-        nick: m[3],
-        address: m[1] + '@' + m[2],
-        full: m[3] ? string : null
-    }
-
-    return jid;
-}
 
 
 // GUI UTILITIES (GENERIC)
@@ -721,9 +708,9 @@ function displayChatMessage(account, address, resource, direction, type, sender,
 
             var htmlSender = doc.createElement('span');
             if(type == 'groupchat')
-                htmlSender.textContent = JID(sender).resource || address;
+                htmlSender.textContent = XMPP.JID(sender).resource || address;
             else
-                htmlSender.textContent = JID(sender).username;
+                htmlSender.textContent = XMPP.JID(sender).username;
             htmlSender.setAttribute(
                 'class', direction == 'in' ? 'contact' : 'user');
             var htmlBody = textToHTML(doc, body);
@@ -1036,7 +1023,7 @@ function receivedSubscriptionApproval(presence) {
 }
 
 function receivedChatMessage(message) {
-    var from = JID(message.stanza.@from);
+    var from = XMPP.JID(message.stanza.@from);
     displayChatMessage(
         message.session.name,
         from.address, from.resource,
@@ -1047,7 +1034,7 @@ function receivedChatMessage(message) {
 }
 
 function receivedErrorMessage(message) {
-    var from = JID(message.stanza.@from);
+    var from = XMPP.JID(message.stanza.@from);
     displayEvent(
         message.session.name,
         from.address, from.resource,
@@ -1057,7 +1044,7 @@ function receivedErrorMessage(message) {
 }
 
 function sentChatMessage(message) {
-    var from = JID(message.stanza.@to);
+    var from = XMPP.JID(message.stanza.@to);
     displayChatMessage(
         message.session.name,
         from.address, from.resource,
@@ -1068,7 +1055,7 @@ function sentChatMessage(message) {
 }
 
 function receivedMessageWithURL(message) {
-    if(_('conversations', {address: JID(message.stanza.@from).address, role: 'follow'})
+    if(_('conversations', {address: XMPP.JID(message.stanza.@from).address, role: 'follow'})
        .getAttribute('checked') == 'true') {
         var url = message.stanza.body.toString().match(urlRegexp)[0];
         window.top.getBrowser().addTab(url);   
@@ -1076,7 +1063,7 @@ function receivedMessageWithURL(message) {
 }
 
 function receivedRoomTopic(message) {
-    var from = JID(message.stanza.@from);
+    var from = XMPP.JID(message.stanza.@from);
     withConversation(
         message.session.name, from.address, '', 'groupchat',
         function(conversation) {
@@ -1102,7 +1089,7 @@ function receivedRoster(iq) {
 }
 
 function receivedPresence(presence) {
-    var from = JID(presence.stanza.@from);
+    var from = XMPP.JID(presence.stanza.@from);
 
     contacts.resourceChangedPresence(
         presence.session.name,
@@ -1114,15 +1101,15 @@ function receivedPresence(presence) {
 }
 
 function sentMUCPresence(presence) {
-    var room = JID(presence.stanza.@to);
+    var room = XMPP.JID(presence.stanza.@to);
     pendingJoins[room.address] = room.nick;
 }
 
 function receivedMUCPresence(presence) {
-    var from = JID(presence.stanza.@from);
+    var from = XMPP.JID(presence.stanza.@from);
 
     if(presence.stanza.@type != 'unavailable') {
-        var from = JID(presence.stanza.@from);
+        var from = XMPP.JID(presence.stanza.@from);
         if(pendingJoins[from.address] &&
            pendingJoins[from.address] == from.nick) {
             createConversation(presence.session.name,
