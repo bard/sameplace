@@ -112,6 +112,8 @@
           <hbox flex="1" align="center">
             <image role="status-indicator"/>
             <label role="name"/>
+            <spacer flex="1"/>
+            <label role="pending" value="0" />
           </hbox>
           <label role="status" crop="end"/> 
         </vbox>

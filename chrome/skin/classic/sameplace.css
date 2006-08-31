@@ -90,6 +90,16 @@
   -moz-image-region: rect(48px 16px 64px 0px);
   }
 
+#contact-list [role="contact"] [role="pending"]
+{
+  color: red;
+  }
+
+#contact-list [role="contact"] [role="pending"][value="0"]
+{
+  visibility: hidden;
+  }
+
 /* STATUS INDICATOR END */
 
 

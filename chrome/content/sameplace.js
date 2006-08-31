@@ -125,6 +125,12 @@ function init(event) {
         {event: 'message', direction: 'in', stanza: function(s) {
                 return s.@type == 'groupchat' && s.subject.toString();
             }}, function(message) { receivedRoomTopic(message); });
+    channel.on(
+        {event: 'message', direction: 'in'},
+        function(message) {
+            contacts.gotMessageFrom(
+                message.session.name, XMPP.JID(message.stanza.@from).address);
+        });
 
     if(debugMode) {
         document.addEventListener(
@@ -180,6 +186,21 @@ var contacts = {
 
     // domain reactions
 
+    gotMessageFrom: function(account, address) {
+        var contact = this.get(account, address) || this.add(account, address);
+
+        if(contact.getAttribute('current') != 'true') {
+            var pending = parseInt(_(contact, {role: 'pending'}).value);
+            _(contact, {role: 'pending'}).value = pending + 1;            
+        }
+    },
+
+    messagesSeen: function(account, address) {
+        var contact = this.get(account, address) || this.add(account, address);
+
+        _(contact, {role: 'pending'}).value = 0;
+    },
+
     nowTalkingWith: function(account, address) {
         var previouslyTalking = _('contact-list', {current: 'true'});
         if(previouslyTalking) 
@@ -187,6 +208,7 @@ var contacts = {
 
         var contact = this.get(account, address) || this.add(account, address);
         contact.setAttribute('current', 'true');
+        _(contact, {role: 'pending'}).value = 0;
     },
 
     contactExists: function(account, address, subscription) {
