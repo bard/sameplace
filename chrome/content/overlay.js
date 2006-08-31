@@ -1,23 +1,23 @@
 
-var mozeskine_xmppChannel = XMPP.createChannel();
+var sameplace_xmppChannel = XMPP.createChannel();
 
-mozeskine_xmppChannel.on(
+sameplace_xmppChannel.on(
     {event: 'stream', direction: 'out', state: 'open'},
-    function(stream) { mozeskine_loadSidebar(); });
+    function(stream) { sameplace_loadSidebar(); });
 
-function mozeskine_loadSidebar(force) {
-    var sidebar = document.getElementById('mozeskine-sidebar');
+function sameplace_loadSidebar(force) {
+    var sidebar = document.getElementById('sameplace-sidebar');
     var frame = sidebar.firstChild.contentWindow;
 
-    if(force || frame.location.href != 'chrome://mozeskine/content/mozeskine.xul') 
-        frame.location.href = 'chrome://mozeskine/content/mozeskine.xul';
+    if(force || frame.location.href != 'chrome://sameplace/content/sameplace.xul') 
+        frame.location.href = 'chrome://sameplace/content/sameplace.xul';
 
-    mozeskine_showSidebar();
+    sameplace_showSidebar();
 }
 
-function mozeskine_toggleSidebar() {
-    var sidebar = document.getElementById('mozeskine-sidebar');
-    var splitter = document.getElementById('mozeskine-sidebar-splitter');
+function sameplace_toggleSidebar() {
+    var sidebar = document.getElementById('sameplace-sidebar');
+    var splitter = document.getElementById('sameplace-sidebar-splitter');
 
     if(sidebar.collapsed) {
         sidebar.collapsed = false;
@@ -28,7 +28,7 @@ function mozeskine_toggleSidebar() {
     }
 }
 
-function mozeskine_showSidebar() {
-    document.getElementById('mozeskine-sidebar').collapsed = false;
-    document.getElementById('mozeskine-sidebar-splitter').hidden = false;
+function sameplace_showSidebar() {
+    document.getElementById('sameplace-sidebar').collapsed = false;
+    document.getElementById('sameplace-sidebar-splitter').hidden = false;
 }

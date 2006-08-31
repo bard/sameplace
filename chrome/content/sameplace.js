@@ -7,7 +7,7 @@ const Ci = Components.interfaces;
 const prefBranch = Components
     .classes["@mozilla.org/preferences-service;1"]
     .getService(Components.interfaces.nsIPrefService)
-    .getBranch('extensions.mozeskine.');
+    .getBranch('extensions.sameplace.');
 const pref = Cc['@mozilla.org/preferences-service;1']
     .getService(Ci.nsIPrefBranch);
 const mediator = Cc['@mozilla.org/appshell/window-mediator;1']
@@ -15,8 +15,8 @@ const mediator = Cc['@mozilla.org/appshell/window-mediator;1']
 const prompts = Cc["@mozilla.org/embedcomp/prompt-service;1"]
     .getService(Ci.nsIPromptService);
 
-const ns_notes = new Namespace('http://hyperstruct.net/mozeskine/protocol/0.1.4#notes');
-const ns_agent = new Namespace('http://hyperstruct.net/mozeskine/protocol/0.1.4#agent');
+const ns_notes = new Namespace('http://hyperstruct.net/sameplace/protocol/0.1.4#notes');
+const ns_agent = new Namespace('http://hyperstruct.net/sameplace/protocol/0.1.4#agent');
 const ns_muc_user = new Namespace('http://jabber.org/protocol/muc#user');
 const ns_muc = new Namespace('http://jabber.org/protocol/muc');
 const ns_xul = new Namespace('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul');
@@ -309,7 +309,7 @@ function textToHTML(doc, text) {
             translatedElement.setAttribute('class', 'emoticon');
             translatedElement.
                 setAttribute('src',
-                             'chrome://mozeskine/skin/emoticons/' +
+                             'chrome://sameplace/skin/emoticons/' +
                              smileyMap[match[0]] +
                              '.png');
         } else {
@@ -765,8 +765,8 @@ function requestedAddContact() {
     };
     
     window.openDialog(
-        'chrome://mozeskine/content/add.xul',
-        'mozeskine-add-contact', 'modal,centerscreen',
+        'chrome://sameplace/content/add.xul',
+        'sameplace-add-contact', 'modal,centerscreen',
         request);
 
     if(request.confirm)
@@ -839,8 +839,8 @@ function requestedOpenConversation() {
     };
 
     window.openDialog(
-        'chrome://mozeskine/content/open.xul',
-        'mozeskine-open-conversation', 'modal,centerscreen',
+        'chrome://sameplace/content/open.xul',
+        'sameplace-open-conversation', 'modal,centerscreen',
         request);
 
     if(request.confirm)
@@ -867,7 +867,7 @@ function clickedTopic(event) {
     var input = { value: '' };
     var check = { value: false };
 
-    if(prompts.prompt(null, 'Mozeskine', 'Set topic for this room:', input, null, check))
+    if(prompts.prompt(null, 'SamePlace', 'Set topic for this room:', input, null, check))
         setRoomTopic(getAncestorAttribute(event.target, 'account'),
                      getAncestorAttribute(event.target, 'address'),
                      input.value);

@@ -4,7 +4,7 @@
      xmlns:em="http://www.mozilla.org/2004/em-rdf#">
 
   <Description about="urn:mozilla:install-manifest">
-    <em:id>mozeskine@hyperstruct.net</em:id>
+    <em:id>sameplace@hyperstruct.net</em:id>
     <em:version></em:version>
     <em:type>2</em:type>
    
@@ -16,8 +16,8 @@
       </Description>
     </em:targetApplication>
    
-    <em:name>Mozeskine</em:name>
-    <em:description>Collaborative notetaking</em:description>
+    <em:name>SamePlace</em:name>
+    <em:description>Extensible Instant Messaging Client</em:description>
     <em:creator>Massimiliano Mirra</em:creator>
     <em:updateURL>http://dev.hyperstruct.net/download/update.rdf</em:updateURL>
   </Description>      
