@@ -115,7 +115,7 @@ img.emoticon
   text-align: center;
   top: 0;
   display: none;
-  background: lightblue;
+  background: #C4C4FF;
   padding: 0.2em;
   padding-left: 1em;
   padding-right: 1em;
@@ -134,13 +134,14 @@ img.emoticon
 {
   z-index: 1000;
   padding-left: 1em;
+  padding-right: 0.5em;
   padding-top: 1em;
   font-size: smaller;
   position: fixed;
   top: 10px;
   left: 90%;
   min-height: 200px;
-  background: lightblue;
+  background: #C4C4FF;
   white-space: nowrap;
   opacity: 0.25;
   -moz-border-radius-topleft: 12px;
