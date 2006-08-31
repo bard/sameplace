@@ -102,30 +102,6 @@
                    onoverflow="growTextBox(this);"/>
         </vbox>
 
-        <richlistbox role="contact-info" address="" resource="" type="" flex="1">
-          <richlistitem orient="vertical">
-            <label value="Address" class="header" flex="1"/>
-            <label role="partner-address" style="padding-left: 0.5em;"/>
-          </richlistitem>          
-        </richlistbox>
-
-        <richlistitem role="room-topic" orient="vertical">
-          <label value="Topic" class="header" flex="1" onclick="clickedTopic(event);"/>
-          <label role="topic" style="padding-left: 0.5em;">[None]</label>
-        </richlistitem>
-
-        <richlistitem role="room-participants" orient="vertical">
-          <label value="Participants" class="header" flex="1"/>
-          <richlistbox role="participants" flex="1" style="padding-left: 0.5em;"/>
-        </richlistitem>
-
-        <richlistitem role="participant" orient="horizontal" align="center"
-                      class="participant" style="overflow: -moz-scrollbars-none;"
-                      nick="">
-          <image/>
-          <label role="nick" value=""/>
-        </richlistitem>
-
         <richlistitem role="contact"
                       account="" address="" 
                       onclick="selectedContact(this);"
