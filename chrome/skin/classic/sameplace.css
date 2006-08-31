@@ -18,33 +18,50 @@
   list-style-image: url("orient-layout.png");
   }
 
-richlistitem.participant
-{
-  padding: 0.2em;
-  }
-
-richlistitem.participant>image
-{
-  list-style-image: url("user.png");
-  }
-
-richlistitem[role="contact"][availability="available"]
-{
-  }
-
-richlistitem[role="contact"][availability="unavailable"]
-{
-  color: graytext;
-  font-size: smaller;
-  }
 
 #contact-list
 {
   background: white url("user-bg.png") bottom right no-repeat;
   }
 
+#contact-list [role="contact"] [role="status"]
+{
+  font-size: smaller;
+  padding-left: 1em;
+  }
 
-[role="contact"] [role="status-indicator"]
+#contact-list [role="contact"]
+{
+  border: thin solid transparent;
+  }
+
+#contact-list [role="contact"]:hover
+{
+  border: thin dotted gray;
+  }
+
+/* CONVERSATION FOCUS START */
+
+#contact-list [role="contact"][open="true"][current="true"] [role="name"]
+{
+  font-weight: bold;
+  }
+
+#contact-list [role="contact"][availability="unavailable"][open="false"]
+{
+  color: graytext;
+  }
+
+#contact-list [role="contact"][open="false"]
+{ 
+  font-size: smaller;
+  }
+
+/* CONVERSATION FOCUS END */
+
+/* STATUS INDICATOR START */
+
+#contact-list [role="contact"] [role="status-indicator"]
 {
   list-style-image: url("chrome://xmpp4moz/skin/status/all-small.png");
   max-width: 16px;
@@ -52,31 +69,29 @@ richlistitem[role="contact"][availability="unavailable"]
   -moz-image-region: rect(48px 16px 64px 0px);  
   }
 
-[role="contact"][availability="available"][show="dnd"] [role="status-indicator"]
+#contact-list [role="contact"][availability="available"][show="dnd"] [role="status-indicator"]
 {
   -moz-image-region: rect(0px 16px 16px 0px);
   }
 
-[role="contact"][availability="available"] [role="status-indicator"]
+#contact-list [role="contact"][availability="available"] [role="status-indicator"]
 {
   -moz-image-region: rect(16px 16px 32px 0px);
   }
 
-[role="contact"][availability="available"][show="away"] [role="status-indicator"],
-[role="contact"][availability="available"][show="xa"]   [role="status-indicator"]
+#contact-list [role="contact"][availability="available"][show="away"] [role="status-indicator"],
+#contact-list [role="contact"][availability="available"][show="xa"]   [role="status-indicator"]
 {
   -moz-image-region: rect(32px 16px 48px 0px);
   }
 
-[role="contact"][availability="unavailable"] [role="status-indicator"]
+#contact-list [role="contact"][availability="unavailable"] [role="status-indicator"]
 {
   -moz-image-region: rect(48px 16px 64px 0px);
   }
 
-[role="contact"][talking="true"]
-{
-  font-style: italic;
-  }
+/* STATUS INDICATOR END */
+
 
 [role="close"]
 {
@@ -88,13 +103,8 @@ richlistitem[role="contact"][availability="unavailable"]
   list-style-image: url("attach.png");
   }
 
-#contact-list [role="contact"] [role="status"]
-{
-  font-size: smaller;
-  padding-left: 1em;
-  }
-
 [role="conversation"] [role="contact"]
 {
   font-style: italic;
   }
+

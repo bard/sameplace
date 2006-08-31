@@ -180,6 +180,15 @@ var contacts = {
 
     // domain reactions
 
+    nowTalkingWith: function(account, address) {
+        var previouslyTalking = _('contact-list', {current: 'true'});
+        if(previouslyTalking) 
+            previouslyTalking.setAttribute('current', 'false');
+
+        var contact = this.get(account, address) || this.add(account, address);
+        contact.setAttribute('current', 'true');
+    },
+
     contactExists: function(account, address, subscription) {
         var contact = this.get(account, address) || this.add(account, address);;
 
@@ -246,8 +255,8 @@ var contacts = {
         var availability = contact.getAttribute('availability');
         var show = contact.getAttribute('show');
 
-        if(contact.getAttribute('talking'))
-            _('contact-list').insertBefore(contact, _('contact-list', {role: 'talking'}).nextSibling);
+        if(contact.getAttribute('open') == 'true')
+            _('contact-list').insertBefore(contact, _('contact-list', {role: 'open'}).nextSibling);
         else if(availability == 'available' && show == '')
             _('contact-list').insertBefore(contact, _('contact-list', {role: 'online'}).nextSibling);
         else if(availability == 'available' && show == 'away')
@@ -260,14 +269,14 @@ var contacts = {
     
     startedConversationWith: function(account, address) {
         var contact = this.get(account, address) || this.add(account, address);
-        contact.setAttribute('talking', 'true');
+        contact.setAttribute('open', 'true');
         this._reposition(contact);
     },
 
     stoppedConversationWith: function(account, address) {
         var contact = this.get(account, address);
         if(contact) {
-            contact.removeAttribute('talking');
+            contact.setAttribute('open', 'false');
             this._reposition(contact);
         }
     }
@@ -676,6 +685,7 @@ function focusConversation(account, address) {
                 _(conversation, {role: 'chat-input'}).focus();
             }, 100);
     }
+    contacts.nowTalkingWith(account, address);
 }
 
 function changeConversationResource(account, address, resource, type, otherResource) {
@@ -820,9 +830,11 @@ function requestedCycleMaximize(command) {
         maximizeAuxiliary();
 }
 
-function selectedContact(contact) {
-    focusConversation(contact.getAttribute('account'),
+function clickedContact(contact) {
+/*    focusConversation(contact.getAttribute('account'),
                       contact.getAttribute('address'));
+*/
+    doubleClickedContact(contact);
 }
 
 function doubleClickedContact(contact) {
@@ -952,6 +964,8 @@ function pressedKeyInChatInput(event) {
 function openedConversation(account, address, resource, type) {
     contacts.startedConversationWith(account, address, resource);
     _('conversations').collapsed = false;
+    if(_('conversations').childNodes.length == 1)
+        contacts.nowTalkingWith(account, address);
 }
 
 function closedConversation(account, address, resource, type) {
@@ -959,7 +973,13 @@ function closedConversation(account, address, resource, type) {
     if(_('conversations').childNodes.length == 0) 
         _('conversations').collapsed = true;
     else if(_('conversations').selectedIndex == _('conversations').childNodes.length)
-        _('conversations').selectedIndex = _('conversations').childNodes.length-1;
+        focusConversation(
+            _('conversations').lastChild.getAttribute('account'),
+            _('conversations').lastChild.getAttribute('address'));
+    else
+        focusConversation(
+            _('conversations').selectedPanel.getAttribute('account'),
+            _('conversations').selectedPanel.getAttribute('address'));
 }
 
 

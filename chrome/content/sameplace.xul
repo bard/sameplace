@@ -40,15 +40,13 @@
     <box flex="1" id="box-main" orient="vertical">
       <!-- CONTACT AREA -->
 
-      <box id="box-auxiliary" persist="height" orient="vertical" height="100" flex="1">
-        <vbox flex="1">
-          <richlistbox id="contact-list" flex="1">
-            <richlistitem role="talking"/>
-            <richlistitem role="online"/>
-            <richlistitem role="away"/>
-            <richlistitem role="dnd"/>
-            <richlistitem role="offline"/>
-          </richlistbox>
+      <box id="box-auxiliary" persist="height" orient="vertical" flex="1">
+        <vbox id="contact-list" flex="1" style="overflow: auto;">
+          <box role="open"/>
+          <box role="online"/>
+          <box role="away"/>
+          <box role="dnd"/>
+          <box role="offline"/>
         </vbox>
       </box>
 
@@ -108,17 +106,15 @@
                    onoverflow="growTextBox(this);"/>
         </vbox>
 
-        <richlistitem role="contact"
-                      account="" address="" 
-                      onclick="selectedContact(this);"
-                      ondblclick="doubleClickedContact(this);"
-                      orient="vertical">
-          <hbox flex="1">
+        <vbox role="contact"
+              account="" address="" open="false" current="false"
+              onclick="clickedContact(this);">
+          <hbox flex="1" align="center">
             <image role="status-indicator"/>
             <label role="name"/>
           </hbox>
           <label role="status" crop="end"/> 
-        </richlistitem>
+        </vbox>
       </box>
     </box>
 
