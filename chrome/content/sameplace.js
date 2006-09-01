@@ -729,7 +729,7 @@ function focusConversation(account, address) {
                 _(conversation, {role: 'chat-input'}).focus();
             }, 100);
     }
-    contacts.nowTalkingWith(account, address);
+    focusedConversation(account, address);
 }
 
 function changeConversationResource(account, address, resource, type, otherResource) {
@@ -838,6 +838,10 @@ function displayEvent(account, address, resource, type, content, additionalClass
 
 // GUI REACTIONS
 // ----------------------------------------------------------------------
+
+function focusedConversation(account, address) {
+    contacts.nowTalkingWith(account, address);
+}
 
 function requestedAddContact() {
     var request = {
@@ -1016,12 +1020,13 @@ function closedConversation(account, address, resource, type) {
     contacts.stoppedConversationWith(account, address, resource);
     if(_('conversations').childNodes.length == 0) 
         _('conversations').collapsed = true;
-    else if(_('conversations').selectedIndex == _('conversations').childNodes.length)
-        focusConversation(
+    else if(!_('conversations').selectedPanel) {
+        _('conversations').selectedPanel = _('conversations').lastChild;
+        focusedConversation(
             _('conversations').lastChild.getAttribute('account'),
             _('conversations').lastChild.getAttribute('address'));
-    else
-        focusConversation(
+    } else
+        focusedConversation(
             _('conversations').selectedPanel.getAttribute('account'),
             _('conversations').selectedPanel.getAttribute('address'));
 }
