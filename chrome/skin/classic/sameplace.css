@@ -28,6 +28,8 @@
 {
   font-size: smaller;
   padding-left: 1em;
+  margin-bottom: 0.4em;
+  color: graytext;
   }
 
 #contact-list [role="contact"]
@@ -54,7 +56,7 @@
 
 #contact-list [role="contact"][open="false"]
 { 
-  font-size: smaller;
+  font-size: 0.8em;
   }
 
 /* CONVERSATION FOCUS END */
@@ -102,6 +104,11 @@
 
 /* STATUS INDICATOR END */
 
+#contact-list spacer[role="online"]
+{
+  height: 1px;
+  background: url("chrome://sameplace/skin/separator.png") center no-repeat;
+  }
 
 [role="close"]
 {

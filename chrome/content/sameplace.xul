@@ -42,11 +42,11 @@
 
       <box id="box-auxiliary" persist="height" orient="vertical" flex="1">
         <vbox id="contact-list" flex="1" style="overflow: auto;">
-          <box role="open"/>
-          <box role="online"/>
-          <box role="away"/>
-          <box role="dnd"/>
-          <box role="offline"/>
+          <spacer role="open"/>
+          <spacer role="online"/>
+          <spacer role="away"/>
+          <spacer role="dnd"/>
+          <spacer role="offline"/>
         </vbox>
       </box>
 
