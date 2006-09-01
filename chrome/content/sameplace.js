@@ -277,6 +277,7 @@ var contacts = {
         var availability = contact.getAttribute('availability');
         var show = contact.getAttribute('show');
 
+        contact.style.opacity = 0;
         if(contact.getAttribute('open') == 'true')
             _('contact-list').insertBefore(contact, _('contact-list', {role: 'open'}).nextSibling);
         else if(availability == 'available' && show == '')
@@ -287,6 +288,7 @@ var contacts = {
             _('contact-list').insertBefore(contact, _('contact-list', {role: 'dnd'}).nextSibling);
         else
             _('contact-list').appendChild(contact);
+        fadeIn(contact);
     },
     
     startedConversationWith: function(account, address) {
@@ -313,6 +315,26 @@ var contacts = {
 // GUI UTILITIES (GENERIC)
 // ----------------------------------------------------------------------
 // Application-independent functions dealing with user interface.
+
+function fadeIn(element, stepValue, stepInterval) {
+    var stepValue = stepValue || 0.1;
+    var stepInterval = stepInterval || 150;
+
+    function fadeStep() {
+        if(element.style.opacity == 1)
+            return;
+        
+        var targetOpacity = parseFloat(element.style.opacity) + stepValue;
+        if(targetOpacity > 1)
+            targetOpacity = 1;
+
+        element.style.opacity = targetOpacity;
+
+        window.setTimeout(fadeStep, stepInterval);
+    }
+
+    fadeStep();
+}
 
 function withContent(account, address, url, code) {
     var browser = findBrowser(account, address, url);
