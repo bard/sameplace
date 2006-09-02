@@ -94,6 +94,7 @@
 
 #contact-list [role="contact"] [role="pending"]
 {
+  font-weight: bold;
   color: red;
   }
 

@@ -126,9 +126,7 @@
     </box>
 
     <toolbox>
-      <toolbar fullscreentoolbar="true">
-        <toolbarspring/>
-
+      <toolbar fullscreentoolbar="true" pack="center">
         <toolbarbutton command="add-contact"/>
 
         <toolbarbutton command="open-conversation"/>
