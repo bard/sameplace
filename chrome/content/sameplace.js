@@ -563,10 +563,16 @@ function createConversation(account, address, resource, type) {
         'load', function(event) {
             var doc = output.contentDocument;
             doc.getElementById('address').textContent = address;
-            if(type == 'groupchat') {
-                x(doc, '//*[@class="box" and @for="topic"]').style.display = 'block';
-                x(doc, '//*[@class="box" and @for="resources"]').style.display = 'block';
-            }
+
+            XMPP.cache.presence.forEach(
+                function(presence) {
+                    if(presence.session.name == account &&
+                       XMPP.JID(presence.stanza.@from).address == address)
+                        updateResources(
+                            account, address,
+                            XMPP.JID(presence.stanza.@from).resource,
+                            presence.stanza.@type);
+                });
 
             openedConversation(account, address, resource, type);
         }, true);
@@ -749,31 +755,31 @@ function closeConversation(account, address, resource, type) {
     }
 }
 
-function updateContactInfoParticipants(account, address, participantNick, availability) {
-    withConversation(
-        account, address, '', 'groupchat',
-        function(conversation) {
-            var doc = _(conversation, {role: 'chat-output'}).contentDocument;
+function updateResources(account, address, participantNick, availability) {
+    var conversation = getConversation(account, address);
+    if(!conversation)
+        return;
 
-            var participants = doc.getElementById('resources');
-            var participant;
-            for(var i=0; i<participants.childNodes.length; i++) {        
-                if(participants.childNodes[i].textContent == participantNick) {
-                    participant = participants.childNodes[i];
-                    break;
-                }
-            }
-            if(participant) {
-                if(availability == 'unavailable')
-                    participants.removeChild(participant);
-            } else {
-                if(availability != 'unavailable') {
-                    var participant = doc.createElement('li');
-                    participant.textContent = participantNick;
-                    participants.insertBefore(participant, participants.firstChild);
-                }
-            }
-        });
+    var doc = _(conversation, {role: 'chat-output'}).contentDocument;
+
+    var participants = doc.getElementById('resources');
+    var participant;
+    for(var i=0; i<participants.childNodes.length; i++) {        
+        if(participants.childNodes[i].textContent == participantNick) {
+            participant = participants.childNodes[i];
+            break;
+        }
+    }
+    if(participant) {
+        if(availability == 'unavailable')
+            participants.removeChild(participant);
+    } else {
+        if(availability != 'unavailable') {
+            var participant = doc.createElement('li');
+            participant.textContent = participantNick;
+            participants.insertBefore(participant, participants.firstChild);
+        }
+    }
 }
 
 function displayChatMessage(account, address, resource, direction, type, sender, body) {
@@ -1221,6 +1227,11 @@ function receivedPresence(presence) {
         presence.stanza.@type,
         presence.stanza.show,
         presence.stanza.status);
+
+    updateResources(
+        presence.session.name, from.address,
+        from.resource,
+        presence.stanza.@type.toString());
 }
 
 function sentMUCPresence(presence) {
@@ -1244,10 +1255,6 @@ function receivedMUCPresence(presence) {
             // XXX handle stanza.@from = bareAddress && type == 'error' to cleanup joins
         }
     }
-
-    updateContactInfoParticipants(
-        presence.session.name, from.address, from.resource,
-        presence.stanza.@type.toString());
 
     var eventMessage, eventClass;
     if(presence.stanza.@type.toString() == 'unavailable') {
