@@ -3,22 +3,23 @@
   <head>
     <title>Chat</title>
     <link rel="stylesheet" type="text/css" href="chat.css"/>
+    <script type="application/x-javascript" src="chat.js"/>
   </head>
 
-  <body>
+  <body onload="init(event);">
     <div id="info">
       <div class="box" for="address">
         <h3>Address</h3>
-        <span id="address"/>
+        <span id="address"></span>
       </div>
 
       <div class="box" for="topic">
         <h3>Topic</h3>
-        <span id="topic">[None]</span>
+        <span id="topic"></span>
       </div>
 
       <div class="box" for="resources">
-        <h3>Participants</h3>
+        <h3>Resources</h3>
         <ul id="resources"/>
       </div>
     </div>
