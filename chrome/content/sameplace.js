@@ -839,6 +839,26 @@ function displayEvent(account, address, resource, type, content, additionalClass
 // GUI REACTIONS
 // ----------------------------------------------------------------------
 
+var chatOutputDropObserver = {
+    getSupportedFlavours: function () {
+        var flavours = new FlavourSet();
+        flavours.appendFlavour('text/unicode');
+        return flavours;
+    },
+    onDragOver: function(event, flavour, session) {},
+
+    onDrop: function(event, dropdata, session) {
+        if(dropdata.data != '') {
+            sendChatMessage(
+                getAncestorAttribute(event.currentTarget, 'account'),
+                getAncestorAttribute(event.currentTarget, 'address'),
+                getAncestorAttribute(event.currentTarget, 'resource'),
+                getAncestorAttribute(event.currentTarget, 'type'),
+                dropdata.data);
+        }
+    }
+};
+
 function focusedConversation(account, address) {
     contacts.nowTalkingWith(account, address);
 }

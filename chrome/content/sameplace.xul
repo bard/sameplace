@@ -12,6 +12,9 @@
       height="480">
 
   <!-- SCRIPTS -->
+  
+  <script type="application/x-javascript" src="chrome://global/content/nsDragAndDrop.js"/>
+  <script type="application/x-javascript" src="chrome://global/content/nsTransferable.js"/>
 
   <script type="application/x-javascript" src="chrome://xmpp4moz/content/xmpp.js"/>
   <script type="application/x-javascript" src="sameplace.js"/>
@@ -97,7 +100,9 @@
 
 
           <iframe role="chat-output" src="chat.html" flex="5" class="box-inset"
-                  context="message-menu"/>
+                  context="message-menu"
+                  ondragover="nsDragAndDrop.dragOver(event, chatOutputDropObserver)"
+                  ondragdrop="nsDragAndDrop.drop(event, chatOutputDropObserver)"/>
 
           <splitter/>
 
