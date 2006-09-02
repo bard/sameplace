@@ -271,6 +271,8 @@ var contacts = {
 
         if(status)
             _(contact, {role: 'status'}).value = status;
+        else
+            _(contact, {role: 'status'}).removeAttribute('value');
     },
 
     _reposition: function(contact) {
