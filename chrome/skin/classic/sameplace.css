@@ -116,13 +116,17 @@
   list-style-image: url("close.png");
   }
 
-[role="attach"]
+[role="conversation"] [role="attach"]
 {
   list-style-image: url("attach.png");
   }
 
 [role="conversation"] [role="contact"]
 {
-  font-style: italic;
+
   }
 
+[role="conversation"] [role="smileys"]
+{
+  list-style-image: url("emoticons/wink-small.png");
+  }

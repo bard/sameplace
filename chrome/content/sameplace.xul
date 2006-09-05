@@ -40,6 +40,21 @@
 
   <vbox flex="1">
 
+    <toolbox>
+      <toolbar fullscreentoolbar="true" pack="center">
+        <toolbarbutton command="add-contact"/>
+
+        <toolbarbutton command="open-conversation"/>
+
+        <toolbarbutton command="cycle-orientation" hidden="true"/>
+
+        <toolbarbutton command="cycle-maximize" hidden="true"/>
+
+        <toolbarbutton id="devel-shortcut" oncommand="quickJoin();"
+                       label="Shortcut" accesskey="S" hidden="true"/>
+      </toolbar>
+    </toolbox>
+
     <box flex="1" id="box-main" orient="vertical">
       <!-- CONTACT AREA -->
 
@@ -62,35 +77,12 @@
       <box hidden="true" id="blueprints">
         <vbox role="conversation" address="" resource="" type="">
           <toolbox>
-            <toolbar id="conversation-toolbar" fullscreentoolbar="true">
-
-              <toolbarbutton label="Plugins "
-                             type="menu" tooltiptext="Available plugins"
-                             accesskey="P"
-                             hidden="true">
-                <menupopup role="plugins" id="plugins-menu"/>
-              </toolbarbutton>
-
-              <toolbarbutton label="Options "
-                             type="menu" tooltiptext="Options for this conversation"
-                             accesskey="p"
-                             hidden="true">
-                <menupopup role="options">
-                  <menuitem label="Follow URLs" role="follow"
-                            checked="false" accesskey="F" type="checkbox"/>
-                </menupopup>
-              </toolbarbutton>
-
+            <toolbar id="conversation-header" fullscreentoolbar="true">
               <toolbaritem align="center">
                 <label role="contact" class="header"/>
               </toolbaritem>
 
               <toolbarspring/>
-
-              <toolbarbutton role="attach" accesskey="A"
-                             tooltiptext="Make this conversation available as a communication channel to this web page"
-                             oncommand="requestedAttachContent(event);"
-                             dir="reverse"/>
 
               <toolbarbutton role="close"
                              tooltiptext="Close this conversation"
@@ -99,14 +91,46 @@
           </toolbox>
 
 
-          <iframe role="chat-output" src="chat.html" flex="5" class="box-inset"
+          <iframe role="chat-output" src="chat.html" flex="5" 
                   context="message-menu"
                   ondragover="nsDragAndDrop.dragOver(event, chatOutputDropObserver)"
                   ondragdrop="nsDragAndDrop.drop(event, chatOutputDropObserver)"/>
 
           <splitter/>
 
-          <textbox role="chat-input" class="box-inset" multiline="true" rows="0"
+          <toolbar id="conversation-toolbar" fullscreentoolbar="true">
+
+            <toolbarbutton label="Plugins "
+                           type="menu" tooltiptext="Available plugins"
+                           accesskey="P"
+                           hidden="true">
+              <menupopup role="plugins" id="plugins-menu"/>
+            </toolbarbutton>
+
+            <toolbarbutton label="Options "
+                           type="menu" tooltiptext="Options for this conversation"
+                           accesskey="p"
+                           hidden="true">
+              <menupopup role="options">
+                <menuitem label="Follow URLs" role="follow"
+                          checked="false" accesskey="F" type="checkbox"/>
+              </menupopup>
+            </toolbarbutton>
+
+            <toolbarspring/>
+
+            <toolbarbutton role="smileys"
+                           tooltiptext="Insert emoticons ;-)"
+                           oncommand="requestedInsertedEmoticons(event);"/>                           
+
+            <toolbarbutton role="attach"
+                           tooltiptext="Make this conversation available as a communication channel to this web page"
+                           oncommand="requestedAttachContent(event);"/>
+
+            <toolbarspring/>
+          </toolbar>
+
+          <textbox role="chat-input" multiline="true" rows="0"
                    onkeypress="pressedKeyInChatInput(event);"
                    onoverflow="growTextBox(this);"/>
         </vbox>
@@ -123,21 +147,6 @@
           <label role="status" crop="end"/> 
         </vbox>
       </box>
-    </box>
-
-    <toolbox>
-      <toolbar fullscreentoolbar="true" pack="center">
-        <toolbarbutton command="add-contact"/>
-
-        <toolbarbutton command="open-conversation"/>
-
-        <toolbarbutton command="cycle-orientation" hidden="true"/>
-
-        <toolbarbutton command="cycle-maximize" hidden="true"/>
-
-        <toolbarbutton id="devel-shortcut" oncommand="quickJoin();"
-                       label="Quick Join" accesskey="Q" hidden="true"/>
-      </toolbar>
-    </toolbox>    
+    </box>    
   </vbox>
 </page>
