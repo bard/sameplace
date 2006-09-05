@@ -50,8 +50,8 @@
 
         <toolbarbutton command="cycle-maximize" hidden="true"/>
 
-        <toolbarbutton id="devel-shortcut" oncommand="quickJoin();"
-                       label="Shortcut" accesskey="S" hidden="true"/>
+        <toolbarbutton id="devel-shortcut" oncommand="quickTest();"
+                       label="Shortcut" accesskey="T" hidden="true"/>
       </toolbar>
     </toolbox>
 

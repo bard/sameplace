@@ -1311,12 +1311,32 @@ function receivedMUCPresence(presence) {
 //         }
 }
 
-// DEVELOPER SHORTCUTS
+// DEVELOPER UTILITIES
 // ----------------------------------------------------------------------
 
-function quickJoin() {
+function quickTest() {
     XMPP.up('foo@jabber.sameplace.cc/Firefox',
             {password: 'foo', continuation: function(jid) {
                     joinRoom(jid, 'a@places.sameplace.cc', 'foobarfoobar');
                 }});
 }
+
+function getStackTrace() {
+    var frame = Components.stack.caller;
+    var str = "<top>";
+
+    while (frame) {
+        str += '\n' + frame;
+        frame = frame.caller;
+    }
+
+    return str;
+}
+
+function log(msg) {
+    Cc[ "@mozilla.org/consoleservice;1" ]
+        .getService(Ci.nsIConsoleService)
+        .logStringMessage(msg);
+}
+
+

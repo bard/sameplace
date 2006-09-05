@@ -1,4 +1,3 @@
-
 var sameplace_xmppChannel = XMPP.createChannel();
 
 sameplace_xmppChannel.on(
@@ -32,3 +31,11 @@ function sameplace_showSidebar() {
     document.getElementById('sameplace-sidebar').collapsed = false;
     document.getElementById('sameplace-sidebar-splitter').hidden = false;
 }
+
+function sameplace_log(msg) {
+    Components
+        .classes[ "@mozilla.org/consoleservice;1" ]
+        .getService(Components.interfaces.nsIConsoleService)
+        .logStringMessage(msg);
+}
+
