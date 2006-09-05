@@ -911,13 +911,6 @@ function requestedCycleMaximize(command) {
 }
 
 function clickedContact(contact) {
-/*    focusConversation(contact.getAttribute('account'),
-                      contact.getAttribute('address'));
-*/
-    doubleClickedContact(contact);
-}
-
-function doubleClickedContact(contact) {
     if(isConversationOpen(contact.getAttribute('account'),
                           contact.getAttribute('address'),
                           '',
