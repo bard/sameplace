@@ -564,6 +564,10 @@ function createConversation(account, address, resource, type) {
             var doc = output.contentDocument;
             doc.getElementById('address').textContent = address;
 
+            if(type == 'groupchat')
+                doc.getElementById('box-resources')
+                    .getElementsByTagName('h3')[0].textContent = 'Participants';
+
             XMPP.cache.presence.forEach(
                 function(presence) {
                     if(presence.session.name == account &&
