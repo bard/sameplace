@@ -18,7 +18,7 @@ function hidden(element) {
 // ----------------------------------------------------------------------
 
 function init(event) {
-    for each(id in ['topic', 'resources']) {
+    for each(id in ['topic', 'resources', 'groups']) {
         _(id).addEventListener(
             'DOMNodeInserted', function(event) {
                 refresh(event.currentTarget);
@@ -44,6 +44,7 @@ function refresh(element) {
             (element.parentNode);
         break;
     case 'resources':
+    case 'groups':
         (element.getElementsByTagName('li').length > 0 ? visible : hidden)
             (element.parentNode);
         break;

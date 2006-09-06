@@ -576,6 +576,15 @@ function createConversation(account, address, resource, type) {
                 }
             }
 
+            for each(var roster in XMPP.cache.roster) 
+                if(roster.session.name == account) 
+                    for each(var group in
+                             roster.stanza..ns_roster::item.(@jid==address).*) {
+                        var htmlItem = doc.createElement('li');
+                        htmlItem.textContent = group.toString();
+                        doc.getElementById('groups').appendChild(htmlItem);
+                    }
+
             XMPP.cache.presence.forEach(
                 function(presence) {
                     if(presence.session.name == account &&

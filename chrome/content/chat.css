@@ -165,7 +165,8 @@ img.emoticon
   margin: 0;
   }
 
-.box[for="resources"] > ul
+.box[for="resources"] > ul,
+.box[for="groups"] > ul
 {
   list-style-type: none;
   margin: 0;
@@ -173,7 +174,8 @@ img.emoticon
   }
 
 .box[for="topic"],
-.box[for="resources"]
+.box[for="resources"],
+.box[for="groups"]
 {
   display: none;
   }
