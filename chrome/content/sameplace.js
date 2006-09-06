@@ -564,9 +564,17 @@ function createConversation(account, address, resource, type) {
             var doc = output.contentDocument;
             doc.getElementById('address').textContent = address;
 
-            if(type == 'groupchat')
-                doc.getElementById('box-resources')
-                    .getElementsByTagName('h3')[0].textContent = 'Participants';
+            if(type == 'groupchat') {
+                var divs = doc.getElementsByTagName('div');
+                for(var i=0, l=divs.length; i<l; i++) {
+                    var div = divs[i];
+                    if(div.getAttribute('class') == 'box' &&
+                       div.getAttribute('for') == 'resources') {
+                        div.getElementsByTagName('h3')[0].textContent = 'Participants';
+                        break;
+                    }                        
+                }
+            }
 
             XMPP.cache.presence.forEach(
                 function(presence) {
