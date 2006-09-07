@@ -896,10 +896,11 @@ var chatOutputDropObserver = {
 
     onDrop: function(event, dropdata, session) {
         if(dropdata.data != '') {
+            var type = getAncestorAttribute(event.currentTarget, 'type');
             sendChatMessage(
                 getAncestorAttribute(event.currentTarget, 'account'),
                 getAncestorAttribute(event.currentTarget, 'address'),
-                getAncestorAttribute(event.currentTarget, 'resource'),
+                type != 'groupchat' ? getAncestorAttribute('resource') : null,
                 getAncestorAttribute(event.currentTarget, 'type'),
                 dropdata.data);
         }
