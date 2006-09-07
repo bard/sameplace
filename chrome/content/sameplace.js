@@ -580,9 +580,8 @@ function createConversation(account, address, resource, type) {
                 if(roster.session.name == account) 
                     for each(var group in
                              roster.stanza..ns_roster::item.(@jid==address).*) {
-                        var htmlItem = doc.createElement('li');
-                        htmlItem.textContent = group.toString();
-                        doc.getElementById('groups').appendChild(htmlItem);
+                        updateGroups(
+                            account, address, group.toString());
                     }
 
             XMPP.cache.presence.forEach(
@@ -773,6 +772,28 @@ function closeConversation(account, address, resource, type) {
     if(conversation) {
         conversation.parentNode.removeChild(conversation);
         closedConversation(account, address, resource, type);        
+    }
+}
+
+function updateGroups(account, address, group) {
+    var conversation = getConversation(account, address);
+    if(!conversation)
+        return;
+    
+    var doc = _(conversation, {role: 'chat-output'}).contentDocument;
+
+    var groups = doc.getElementById('resources');
+    var group;
+    for(var i=0; i<groups.childNodes.length; i++) 
+        if(groups.childNodes[i].textContent == group) {
+            group = groups.childNodes[i];
+            break;
+        }
+
+    if(!group) {
+        var htmlItem = doc.createElement('li');
+        htmlItem.textContent = group.toString();
+        doc.getElementById('groups').appendChild(htmlItem);
     }
 }
 
