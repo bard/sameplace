@@ -4,9 +4,8 @@
 const Cc = Components.classes;
 const Ci = Components.interfaces;
 
-const prefBranch = Components
-    .classes["@mozilla.org/preferences-service;1"]
-    .getService(Components.interfaces.nsIPrefService)
+const prefBranch = Cc["@mozilla.org/preferences-service;1"]
+    .getService(Ci.nsIPrefService)
     .getBranch('extensions.sameplace.');
 const pref = Cc['@mozilla.org/preferences-service;1']
     .getService(Ci.nsIPrefBranch);
@@ -15,8 +14,6 @@ const mediator = Cc['@mozilla.org/appshell/window-mediator;1']
 const prompts = Cc["@mozilla.org/embedcomp/prompt-service;1"]
     .getService(Ci.nsIPromptService);
 
-const ns_notes = new Namespace('http://hyperstruct.net/sameplace/protocol/0.1.4#notes');
-const ns_agent = new Namespace('http://hyperstruct.net/sameplace/protocol/0.1.4#agent');
 const ns_muc_user = new Namespace('http://jabber.org/protocol/muc#user');
 const ns_muc = new Namespace('http://jabber.org/protocol/muc');
 const ns_xul = new Namespace('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul');

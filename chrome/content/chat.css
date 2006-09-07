@@ -1,6 +1,6 @@
 body
 {
-  font-family: "Bitstream Vera Sans", arial, sans;
+  font-family: "Bitstream Vera Sans", arial, sans-serif;
   font-size: smaller;
   margin-top: 0;
   background: white;
@@ -120,7 +120,7 @@ img.emoticon
   padding-left: 1em;
   padding-right: 1em;
   font-size: smaller;
-  opacity: 0.8;
+  opacity: 0.92;
   -moz-border-radius-bottomleft: 8px;
   -moz-border-radius-bottomright: 8px;
   }
