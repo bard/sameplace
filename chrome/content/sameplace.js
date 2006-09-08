@@ -144,7 +144,11 @@ function init(event) {
     }
 
     XMPP.cache.roster.forEach(receivedRoster);
-    XMPP.cache.presence.forEach(receivedPresence);        
+    XMPP.cache.presence.forEach(
+        function(presence) {
+            if(presence.direction == 'in')
+                receivedPresence(presence);
+        });
 }
 
 function finish() {
@@ -233,6 +237,7 @@ var contacts = {
         var contactPresences = XMPP.cache.presence.filter(
             function(presence) {
                 return (presence.session.name == account &&
+                        presence.direction == 'in' &&
                         XMPP.JID(presence.stanza.@from).address == address);
             });
 
