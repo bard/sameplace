@@ -107,7 +107,7 @@ function init(event) {
             }}, function(message) { receivedMessageWithURL(message); });
     channel.on(
         {event: 'message', direction: 'out', stanza: function(s) {
-                return s.@type != 'groupchat';
+                return s.body.length() > 0 && s.@type != 'groupchat';
             }}, function(message) { sentChatMessage(message) });
 
     channel.on(
