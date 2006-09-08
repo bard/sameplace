@@ -241,34 +241,10 @@ var contacts = {
                         XMPP.JID(presence.stanza.@from).address == address);
             });
 
+        var summary = XMPP.presenceSummary(contactPresences);
+        contact.setAttribute('availability', summary[0]);
+        contact.setAttribute('show', summary[1]);
 
-        if(contactPresences.some(
-               function(p) {
-                   return ((p.stanza.show == undefined || p.stanza.show == 'chat') &&
-                           p.stanza.@type == undefined);
-               })) {
-            contact.setAttribute('availability', 'available');
-            contact.setAttribute('show', '');
-        }
-        else if(contactPresences.some(
-                    function(p) {
-                        return (p.stanza.show == 'away' ||
-                                p.stanza.show == 'xa');
-                    })) {
-            contact.setAttribute('availability', 'available');
-            contact.setAttribute('show', 'away');
-        }
-        else if(contactPresences.some(
-                    function(p) {
-                        return (p.stanza.show == 'dnd');
-                    })) {
-            contact.setAttribute('availability', 'available');
-            contact.setAttribute('show', 'dnd');
-        }
-        else {
-            contact.setAttribute('availability', 'unavailable');
-            contact.setAttribute('show', '');
-        }
         this._reposition(contact);
 
         if(status)
