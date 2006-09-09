@@ -144,11 +144,7 @@ function init(event) {
     }
 
     XMPP.cache.roster.forEach(receivedRoster);
-    XMPP.cache.presence.forEach(
-        function(presence) {
-            if(presence.direction == 'in')
-                receivedPresence(presence);
-        });
+    XMPP.cache.presenceIn.forEach(receivedPresence);
 }
 
 function finish() {
@@ -234,10 +230,9 @@ var contacts = {
         if(status)
             status = status.toString();
 
-        var contactPresences = XMPP.cache.presence.filter(
+        var contactPresences = XMPP.cache.presenceIn.filter(
             function(presence) {
                 return (presence.session.name == account &&
-                        presence.direction == 'in' &&
                         XMPP.JID(presence.stanza.@from).address == address);
             });
 
@@ -561,9 +556,8 @@ function createConversation(account, address, resource, type) {
                         updateGroups(
                             account, address, group.toString());
 
-            for each(var presence in XMPP.cache.presence)
+            for each(var presence in XMPP.cache.presenceIn)
                 if(presence.session.name == account &&
-                   presence.direction == 'in' &&
                    XMPP.JID(presence.stanza.@from).address == address)
                     updateResources(
                         account, address,
