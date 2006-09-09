@@ -175,8 +175,6 @@ var contacts = {
         contact = cloneBlueprint('contact');
         contact.setAttribute('address', address);
         contact.setAttribute('account', account);
-        contact.getElementsByAttribute('role', 'name')[0]
-        .setAttribute('value', XMPP.JID(address).username);
         _('contact-list').appendChild(contact);
         return contact;
     },
@@ -208,7 +206,7 @@ var contacts = {
         _(contact, {role: 'pending'}).value = 0;
     },
 
-    contactExists: function(account, address, subscription) {
+    contactExists: function(account, address, subscription, name) {
         var contact = this.get(account, address) || this.add(account, address);;
 
         if(!contact.hasAttribute('availability'))
@@ -216,6 +214,14 @@ var contacts = {
 
         if(subscription)
             contact.setAttribute('subscription', subscription);
+
+        var nameElement = contact.getElementsByAttribute('role', 'name')[0];
+
+        if(name)
+            nameElement.setAttribute('value', name);
+        else if(name == '' ||
+                !nameElement.hasAttribute('value'))
+            nameElement.setAttribute('value', address);
 
         return contact;
     },
@@ -374,6 +380,13 @@ function textToHTML(doc, text) {
             text.substring(start, text.length)));
 
     return container;
+}
+
+function attr(element, attributeName) {
+    if(element.hasAttribute(attributeName)) 
+        return element.getAttribute(attributeName);
+    else
+        return getAncestorAttribute(element, attributeName);
 }
 
 function getAncestorAttribute(element, attributeName) {
@@ -883,6 +896,21 @@ var chatOutputDropObserver = {
     }
 };
 
+function requestedSetContactAlias() {
+    var account = attr(document.popupNode, 'account');
+    var address = attr(document.popupNode, 'address');
+    var alias = { value: '' };
+
+    var confirm = prompts.prompt(
+        null, 'Alias Change', 'Choose an alias for ' + address, alias, null, {});
+        
+    if(confirm) 
+        XMPP.send(account,
+                  <iq type="set"><query xmlns="jabber:iq:roster">
+                  <item jid={address} name={alias.value}/>
+                  </query></iq>);
+}
+
 function focusedConversation(account, address) {
     contacts.nowTalkingWith(account, address);
 }
@@ -1222,7 +1250,8 @@ function receivedRoster(iq) {
         contacts.contactExists(
             iq.session.name,
             item.@jid,
-            item.@subscription);
+            item.@subscription,
+            item.@name.toString());
     }
 }
 

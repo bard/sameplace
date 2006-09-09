@@ -36,6 +36,9 @@
 
   <popupset>
     <popup id="message-menu"/>
+    <popup id="contact-menu">
+      <menuitem label="Set Alias..." oncommand="requestedSetContactAlias();"/>
+    </popup>
   </popupset>
 
   <vbox flex="1">
@@ -137,7 +140,8 @@
 
         <vbox role="contact"
               account="" address="" open="false" current="false"
-              onclick="clickedContact(this);">
+              onclick="if(event.button == 0) clickedContact(this);"
+              context="contact-menu">
           <hbox flex="1" align="center">
             <image role="status-indicator"/>
             <label role="name"/>
