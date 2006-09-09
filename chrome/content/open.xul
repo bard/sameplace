@@ -20,7 +20,7 @@
     <rows>
       <row align="center">
         <label value="Address:" control="address" accesskey="A"/>
-        <textbox id="address" value="contact@server.org" oninput="refresh();"/>
+        <textbox id="address" value="newusers@places.sameplace.cc" oninput="refresh();"/>
       </row>
 
       <row align="center">
@@ -37,7 +37,7 @@
       </row>
 
       <row align="center">
-        <label value="Account:" control="accounts" accesskey="A"/>
+        <label value="Account:" control="accounts" accesskey="c"/>
         <menulist id="accounts" oncommand="refresh();"
                   flex="1" label="" sizetopopup="none">
           <menupopup id="xmpp-menu-accounts"/>
