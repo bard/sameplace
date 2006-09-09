@@ -775,6 +775,9 @@ function updateResources(account, address, participantNick, availability) {
     var doc = _(conversation, {role: 'chat-output'}).contentDocument;
 
     var participants = doc.getElementById('resources');
+    if(!participants)
+        return;
+       
     var participant;
     for(var i=0; i<participants.childNodes.length; i++) {        
         if(participants.childNodes[i].textContent == participantNick) {
