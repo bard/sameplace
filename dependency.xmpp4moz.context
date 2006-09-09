@@ -1,14 +1,5 @@
 
 Context:
 
-[Service: splitted presence cache in cache of incoming presences and cache of outgoing presences.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060909080035] 
-
-[Service: removed redundant presence synthesis on outbound unavailable presence (would happen anyway on outbound closed stream).
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060909075859] 
-
-[Showing away/dnd status for each account in account menu, and a summary of states in toolbarbutton.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060908205612] 
-
-[TAG 0.2.16
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060908185839] 
+[TAG 0.2.17
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060909233609] 

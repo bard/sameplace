@@ -175,6 +175,8 @@ var contacts = {
         contact = cloneBlueprint('contact');
         contact.setAttribute('address', address);
         contact.setAttribute('account', account);
+        contact.setAttribute('availability', 'unavailable');
+        contact.getElementsByAttribute('role', 'name')[0].setAttribute('value', address);
         _('contact-list').appendChild(contact);
         return contact;
     },
@@ -206,28 +208,26 @@ var contacts = {
         _(contact, {role: 'pending'}).value = 0;
     },
 
-    contactExists: function(account, address, subscription, name) {
-        var contact = this.get(account, address) || this.add(account, address);;
+    contactChangedRelationship: function(account, address, subscription, name) {
+        var contact = this.get(account, address) || this.add(account, address);
 
-        if(!contact.hasAttribute('availability'))
-            contact.setAttribute('availability', 'unavailable');
-
-        if(subscription)
-            contact.setAttribute('subscription', subscription);
+        if(subscription) 
+            if(subscription == 'remove') {
+                _('contact-list').removeChild(contact);
+                return;
+            }
+            else
+                contact.setAttribute('subscription', subscription);
 
         var nameElement = contact.getElementsByAttribute('role', 'name')[0];
-
         if(name)
             nameElement.setAttribute('value', name);
-        else if(name == '' ||
-                !nameElement.hasAttribute('value'))
+        else if(name == '' || !nameElement.hasAttribute('value'))
             nameElement.setAttribute('value', address);
-
-        return contact;
     },
 
     resourceChangedPresence: function(account, address, resource, availability, show, status) {
-        var contact = this.contactExists(account, address);
+        var contact = this.get(account, address) || this.add(account, address);
 
         if(availability == undefined)
             availability = 'available';
@@ -896,9 +896,9 @@ var chatOutputDropObserver = {
     }
 };
 
-function requestedSetContactAlias() {
-    var account = attr(document.popupNode, 'account');
-    var address = attr(document.popupNode, 'address');
+function requestedSetContactAlias(element) {
+    var account = attr(element, 'account');
+    var address = attr(element, 'address');
     var alias = { value: '' };
 
     var confirm = prompts.prompt(
@@ -909,6 +909,16 @@ function requestedSetContactAlias() {
                   <iq type="set"><query xmlns="jabber:iq:roster">
                   <item jid={address} name={alias.value}/>
                   </query></iq>);
+}
+
+function requestedRemoveContact(element) {
+    var account = attr(element, 'account');
+    var address = attr(element, 'address');
+
+    XMPP.send(account,
+              <iq type="set"><query xmlns="jabber:iq:roster">
+              <item jid={address} subscription="remove"/>
+              </query></iq>);
 }
 
 function focusedConversation(account, address) {
@@ -1247,7 +1257,7 @@ function receivedRoomTopic(message) {
 
 function receivedRoster(iq) {
     for each(var item in iq.stanza..ns_roster::item) {
-        contacts.contactExists(
+        contacts.contactChangedRelationship(
             iq.session.name,
             item.@jid,
             item.@subscription,

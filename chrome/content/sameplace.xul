@@ -37,7 +37,8 @@
   <popupset>
     <popup id="message-menu"/>
     <popup id="contact-menu">
-      <menuitem label="Set Alias..." oncommand="requestedSetContactAlias();"/>
+      <menuitem label="Set Alias..." oncommand="requestedSetContactAlias(document.popupNode);"/>
+      <menuitem label="Remove" oncommand="requestedRemoveContact(document.popupNode);"/>
     </popup>
   </popupset>
 
