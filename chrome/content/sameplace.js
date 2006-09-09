@@ -1137,14 +1137,14 @@ function receivedSubscriptionRequest(presence) {
         var check = {value: true};
         accept = prompts.confirmCheck(
             null, 'Contact notification',
-            address + ' wants to add you to his/her contact list.\nDo you accept?',
+            address + ' wants to add ' + presence.stanza.@to + ' to his/her contact list.\nDo you accept?',
             'Also add ' + address + ' to my contact list', check);
         reciprocate = check.value;        
     }
     else {
         accept = prompts.confirm(
             null, 'Contact notification',
-            address + ' wants to add you to his/her contact list.\nDo you accept?');
+            address + ' wants to add ' + presence.stanza.@to + ' you to his/her contact list.\nDo you accept?');
 
     }
     if(accept) {
