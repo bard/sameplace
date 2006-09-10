@@ -83,6 +83,11 @@ function init(event) {
             }},
         function(presence) { receivedPresence(presence) });
     channel.on(
+        {event: 'presence', direction: 'out', stanza: function(s) {
+                return s.@type == undefined || s.@type == 'unavailable';
+            }},
+        function(presence) { sentPresence(presence) });
+    channel.on(
         {event: 'presence', direction: 'in', stanza: function(s) {
                 return s.@type == 'subscribed';
             }},
@@ -145,6 +150,7 @@ function init(event) {
 
     XMPP.cache.roster.forEach(receivedRoster);
     XMPP.cache.presenceIn.forEach(receivedPresence);
+    XMPP.cache.presenceOut.forEach(sentPresence);
 }
 
 function finish() {
@@ -676,6 +682,24 @@ function getConversation(account, address, resource, type) {
 // Application-dependent functions dealing with user interface.  They
 // affect the domain.
 
+function changeStatusMessage(message) {
+    for each(var account in XMPP.accounts)
+        if(XMPP.isUp(account)) {
+            var stanza;
+            for each(var presence in XMPP.cache.presenceOut) 
+                if(presence.session.name == account.jid) {
+                    stanza = presence.stanza.copy();
+                    stanza.status = message;
+                    break;
+                }
+
+            stanza = stanza ||
+                <presence><status>{message}</status></presence>;
+
+            XMPP.send(account, stanza);
+        }
+}
+
 function attachContent(account, address, type) {
     top.xmppEnableContent(account, address, type);
 }
@@ -890,6 +914,14 @@ var chatOutputDropObserver = {
         }
     }
 };
+
+function requestedChangeStatusMessage(event) {
+    if(event.keyCode != KeyEvent.DOM_VK_RETURN)
+        return;
+
+    changeStatusMessage(event.target.value);
+    document.commandDispatcher.advanceFocus();
+}
 
 function requestedSetContactAlias(element) {
     var account = attr(element, 'account');
@@ -1275,6 +1307,11 @@ function receivedPresence(presence) {
         presence.session.name, from.address,
         from.resource,
         presence.stanza.@type.toString());
+}
+
+function sentPresence(presence) {
+    _('status-message').value = presence.stanza.status.toString();
+    _('status-message').setAttribute('draft', 'false');
 }
 
 function sentMUCPresence(presence) {

@@ -45,7 +45,15 @@
   <vbox flex="1">
 
     <toolbox>
-      <toolbar fullscreentoolbar="true" pack="center">
+      <toolbar fullscreentoolbar="true">
+        <toolbaritem flex="1">
+          <textbox id="status-message"
+                   onkeypress="requestedChangeStatusMessage(event);"
+                   oninput="this.setAttribute('draft', 'true');"
+                   draft="true"
+                   flex="1"/>
+        </toolbaritem>
+
         <toolbarbutton command="add-contact"/>
 
         <toolbarbutton command="open-conversation"/>

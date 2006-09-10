@@ -130,3 +130,9 @@
 {
   list-style-image: url("emoticons/wink-small.png");
   }
+
+
+#status-message[draft="true"]
+{
+  color: graytext;
+  }
