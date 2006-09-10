@@ -918,6 +918,18 @@ var chatOutputDropObserver = {
     }
 };
 
+function requestedUpdateTooltip(element) {
+    _('contact-tooltip', {role: 'name'}).value =
+        XMPP.nickFor(attr(element, 'account'), attr(element, 'address'));
+    _('contact-tooltip', {role: 'address'}).value = attr(element, 'address');
+    _('contact-tooltip', {role: 'account'}).value = attr(element, 'account');
+    var subscription = attr(element, 'subscription');
+    if(subscription == 'both')
+        subscription = 'Both see when other is online';
+    
+    _('contact-tooltip', {role: 'subscription'}).value = subscription;
+}
+
 function requestedChangeStatusMessage(event) {
     if(event.keyCode != KeyEvent.DOM_VK_RETURN)
         return;

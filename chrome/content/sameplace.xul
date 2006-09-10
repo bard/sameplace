@@ -40,6 +40,37 @@
       <menuitem label="Set Alias..." oncommand="requestedSetContactAlias(document.popupNode);"/>
       <menuitem label="Remove" oncommand="requestedRemoveContact(document.popupNode);"/>
     </popup>
+    <tooltip id="contact-tooltip" noautohide="true"
+             orient="vertical"
+             onpopupshowing="requestedUpdateTooltip(document.tooltipNode);">
+      <hbox align="center" style="font-weight: bold;">
+        <label role="name"/>
+        <label value="(" style="margin-right: 0;"/>
+        <label role="address" style="margin-left: 0; margin-right: 0;"/>
+        <label value=")" style="margin-left: 0;"/>
+      </hbox>
+
+      <spacer height="5"/>
+      
+      <grid>
+        <columns>
+          <column flex="0"/>
+          <column flex="1"/>
+        </columns>
+
+        <rows>
+          <row>
+            <label value="Contact of:"/>
+            <label role="account"/>
+          </row>
+
+          <row>
+            <label value="Presence notification:"/>
+            <label role="subscription"/>
+          </row>
+        </rows>
+      </grid>
+    </tooltip>
   </popupset>
 
   <vbox flex="1">
@@ -150,7 +181,8 @@
         <vbox role="contact"
               account="" address="" open="false" current="false"
               onclick="if(event.button == 0) clickedContact(this);"
-              context="contact-menu">
+              context="contact-menu"
+              tooltip="contact-tooltip">
           <hbox flex="1" align="center">
             <image role="status-indicator"/>
             <label role="name"/>
