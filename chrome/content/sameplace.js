@@ -244,8 +244,8 @@ var contacts = {
 
         var summary = XMPP.presenceSummary(account, address);
 
-        contact.setAttribute('availability', summary[0]);
-        contact.setAttribute('show', summary[1]);
+        contact.setAttribute('availability', summary.stanza.@type.toString() || 'available');
+        contact.setAttribute('show', summary.stanza.show.toString());
 
         this._reposition(contact);
 
