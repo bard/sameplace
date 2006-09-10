@@ -799,32 +799,35 @@ function updateGroups(account, address, group) {
     }
 }
 
-function updateResources(account, address, participantNick, availability) {
+function updateResources(account, address, resource, availability) {
     var conversation = getConversation(account, address);
     if(!conversation)
         return;
 
+    if(!resource)
+        return;
+
     var doc = _(conversation, {role: 'chat-output'}).contentDocument;
 
-    var participants = doc.getElementById('resources');
-    if(!participants)
+    var resources = doc.getElementById('resources');
+    if(!resources)
         return;
        
-    var participant;
-    for(var i=0; i<participants.childNodes.length; i++) {        
-        if(participants.childNodes[i].textContent == participantNick) {
-            participant = participants.childNodes[i];
+    var resource;
+    for(var i=0; i<resources.childNodes.length; i++) {        
+        if(resources.childNodes[i].textContent == resource) {
+            resource = resources.childNodes[i];
             break;
         }
     }
-    if(participant) {
+    if(resource) {
         if(availability == 'unavailable')
-            participants.removeChild(participant);
+            resources.removeChild(resource);
     } else {
         if(availability != 'unavailable') {
-            var participant = doc.createElement('li');
-            participant.textContent = participantNick;
-            participants.insertBefore(participant, participants.firstChild);
+            var resource = doc.createElement('li');
+            resource.textContent = resource;
+            resources.insertBefore(resource, resources.firstChild);
         }
     }
 }
