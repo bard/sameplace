@@ -941,7 +941,7 @@ function requestedChangeStatusMessage(event) {
 function requestedSetContactAlias(element) {
     var account = attr(element, 'account');
     var address = attr(element, 'address');
-    var alias = { value: '' };
+    var alias = { value: XMPP.nickFor(account, address) };
 
     var confirm = prompts.prompt(
         null, 'Alias Change', 'Choose an alias for ' + address, alias, null, {});
