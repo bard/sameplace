@@ -236,13 +236,8 @@ var contacts = {
         if(status)
             status = status.toString();
 
-        var contactPresences = XMPP.cache.presenceIn.filter(
-            function(presence) {
-                return (presence.session.name == account &&
-                        XMPP.JID(presence.stanza.@from).address == address);
-            });
+        var summary = XMPP.presenceSummary(account, address);
 
-        var summary = XMPP.presenceSummary(contactPresences);
         contact.setAttribute('availability', summary[0]);
         contact.setAttribute('show', summary[1]);
 
@@ -541,7 +536,7 @@ function createConversation(account, address, resource, type) {
     conversation.setAttribute('type', type);
     _('conversations').appendChild(conversation);
 
-    _(conversation, {role: 'contact'}).value = XMPP.JID(address).username;
+    _(conversation, {role: 'contact'}).value = XMPP.nickFor(account, address);
 
     var output = _(conversation, {role: 'chat-output'});
 
