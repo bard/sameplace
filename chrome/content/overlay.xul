@@ -58,7 +58,7 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
 
   <!-- MENUS -->
 
-  <menupopup id="xmpp-menu-accounts">
+  <menupopup id="xmpp-menu-main">
     <menuitem command="sameplace-command-load-sidebar"
               class="menuitem-iconic"/>
     <menuitem command="sameplace-command-open-window"

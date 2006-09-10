@@ -1,17 +1,5 @@
 
 Context:
 
-[Overlay: (EXPERIMENTAL) hybrid application can set an optional resource to send the message to, and a type.  Address is still decided by xmpp4moz.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060910094449] 
-
-[JS API: modified presenceSummary() to perform presence selection on the user's behalf, given account and address (or just account if summarizing user presence).
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060910093659] 
-
-[JS API: Added nickFor() utility to implement a system-wide policy to retrieve the preferred handle for a contact.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060910012547] 
-
-[JS API: sending presence of type unavailable just before bringing down the session.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060910005526] 
-
-[TAG 0.2.17
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060909233609] 
+[TAG 0.2.18
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060910110926] 
