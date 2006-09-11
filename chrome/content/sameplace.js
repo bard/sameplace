@@ -53,7 +53,6 @@ var smileyRegexp;
 
 var channel;
 var debugMode = false;
-var pendingJoins = {};
 
 
 // GUI INITIALIZATION AND FINALIZATION
@@ -1357,25 +1356,13 @@ function sentPresence(presence) {
 
 function sentMUCPresence(presence) {
     var room = XMPP.JID(presence.stanza.@to);
-    pendingJoins[room.address] = room.nick;
+
+    createConversation(presence.session.name,
+                       room.address, room.resource, 'groupchat');
 }
 
 function receivedMUCPresence(presence) {
     var from = XMPP.JID(presence.stanza.@from);
-
-    if(presence.stanza.@type != 'unavailable') {
-        var from = XMPP.JID(presence.stanza.@from);
-        if(pendingJoins[from.address] &&
-           pendingJoins[from.address] == from.nick) {
-            createConversation(presence.session.name,
-                               from.address,
-                               from.nick,
-                               'groupchat');    
-            delete pendingJoins[from.address];
-            focusConversation(presence.session.name, from.address);
-            // XXX handle stanza.@from = bareAddress && type == 'error' to cleanup joins
-        }
-    }
 
     var eventMessage, eventClass;
     if(presence.stanza.@type.toString() == 'unavailable') {
