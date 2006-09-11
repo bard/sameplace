@@ -627,47 +627,39 @@ function createConversation(account, address, resource, type) {
  *
  */
 
-function withConversation(account, address, resource, type, action) {
-    var conversation;
-    switch(type.toString()) {
-    case 'headline':
-        break;
-    case 'groupchat':
-        conversation = getConversation(account, address, null, 'groupchat');
-        var chatOutput = _(conversation, {role: 'chat-output'});
-
-        if(chatOutput.contentDocument.getElementById('messages'))
-            action(conversation);
+function withConversation(account, address, resource, type, forceOpen, action) {
+    function withDocumentLoaded(documentContainer, action) {
+        // XXX would be nice to find a more general way than to check for 'messages'
+        if(documentContainer.contentDocument.getElementById('messages'))
+            action();
         else
-            chatOutput.addEventListener(
-                'load', function(event) { action(conversation); }, true);
-        break;
-    case 'normal':
-    case 'chat':
-    default:
-        var roomConversation = getConversation(account, address, null, 'groupchat');
-        if(roomConversation) {
-            conversation =
-                getConversation(account, address, resource, 'chat') ||
-                createConversation(account, address, resource, 'chat');
-        }
-        else {
-            conversation = getConversation(account, address, null, 'chat');
-            if(conversation) {
-                conversation.setAttribute('resource', resource);
-            } else
-                conversation = createConversation(account, address, resource, 'chat');
-
-            var chatOutput = _(conversation, {role: 'chat-output'});
-
-            if(chatOutput.contentDocument.getElementById('messages'))
-                action(conversation);
-            else
-                chatOutput.addEventListener(
-                    'load', function(event) { action(conversation); }, true);
-        }
-        return conversation;
+            documentContainer.addEventListener(
+                'load', function(evente) {
+                    action();
+                }, true);
     }
+
+    function ignore() {
+        log('Ignoring: ' + [account, address, resource, type, forceOpen] + '\n' +
+            'Stack: ' + getStackTrace());
+    }
+
+    var conversation = getConversation(account, address, null, null);
+    if(conversation) {
+        if(type == 'chat')
+            conversation.setAttribute('resource', resource);
+
+        withDocumentLoaded(_(conversation, {role: 'chat-output'}),
+                           function() { action(conversation); });
+    } else if(forceOpen) {
+        if(type == 'chat' || type == 'normal' || type == 'headline') {
+            conversation = createConversation(account, address, resource, type);
+
+            withDocumentLoaded(_(conversation, {role: 'chat-output'}),
+                               function(event) { action(conversation); });
+        }
+    } else
+        ignore();
 }
 
 function getConversation(account, address, resource, type) {
@@ -803,41 +795,39 @@ function updateGroups(account, address, group) {
 }
 
 function updateResources(account, address, resource, availability) {
-    var conversation = getConversation(account, address);
-    if(!conversation)
-        return;
-
     if(!resource)
         return;
 
-    var doc = _(conversation, {role: 'chat-output'}).contentDocument;
+    function getChildByContent(parent, content) {
+        for(var child = parent.firstChild; child; child = child.nextSibling)
+            if(child.textContent == content)
+                return child;
+    }
 
-    var resources = doc.getElementById('resources');
-    if(!resources)
-        return;
-       
-    var resource;
-    for(var i=0; i<resources.childNodes.length; i++) {        
-        if(resources.childNodes[i].textContent == resource) {
-            resource = resources.childNodes[i];
-            break;
-        }
-    }
-    if(resource) {
-        if(availability == 'unavailable')
-            resources.removeChild(resource);
-    } else {
-        if(availability != 'unavailable') {
-            var resource = doc.createElement('li');
-            resource.textContent = resource;
-            resources.insertBefore(resource, resources.firstChild);
-        }
-    }
+    withConversation(
+        account, address, '', '', false,
+        function(wConversation) {
+            var doc = _(wConversation, {role: 'chat-output'}).contentDocument;
+
+            var wResources = doc.getElementById('resources');
+            var wResource = getChildByContent(wResources, resource);
+
+            if(wResource) {
+                if(availability == 'unavailable')
+                    wResources.removeChild(wResource);
+            } else {
+                if(availability != 'unavailable') {
+                    wResource = doc.createElement('li');
+                    wResource.textContent = resource;
+                    wResources.insertBefore(wResource, wResources.firstChild);
+                }
+            }            
+        });
 }
 
 function displayChatMessage(account, address, resource, direction, type, sender, body) {
     withConversation(
-        account, address, resource, type,
+        account, address, resource, type, true,
         function(conversation) {
             var chatOutputWindow = _(conversation, {role: 'chat-output'}).contentWindow;
             var doc = chatOutputWindow.document;
@@ -874,7 +864,7 @@ function displayChatMessage(account, address, resource, direction, type, sender,
 
 function displayEvent(account, address, resource, type, content, additionalClass) {
     withConversation(
-        account, address, resource, type,
+        account, address, resource, type, true,
         function(conversation) {
             var chatOutputWindow = _(conversation, {role: 'chat-output'}).contentWindow;
             var doc = chatOutputWindow.document;
@@ -1033,6 +1023,7 @@ function clickedContact(contact) {
                           contact.getAttribute('address'),
                           '',
                           'chat',
+                         true,
                           function() {
                               focusConversation(contact.getAttribute('account'),
                                                 contact.getAttribute('address'));
@@ -1078,8 +1069,7 @@ function requestedOpenConversation() {
                                   request.address);
             else
                 withConversation(request.account, request.address,
-                                 '',
-                                 'chat',
+                                 '', 'chat', true,
                                  function() {
                                      focusConversation(request.account,
                                                        request.address);
@@ -1271,9 +1261,7 @@ function receivedChatMessage(message) {
 function receivedErrorMessage(message) {
     var from = XMPP.JID(message.stanza.@from);
     displayEvent(
-        message.session.name,
-        from.address, from.resource,
-        'chat',
+        message.session.name, from.address, from.resource, '',
         'Error: code ' + message.stanza.error.@code,
         'error');
 }
@@ -1308,7 +1296,7 @@ function receivedMessageWithURL(message) {
 function receivedRoomTopic(message) {
     var from = XMPP.JID(message.stanza.@from);
     withConversation(
-        message.session.name, from.address, '', 'groupchat',
+        message.session.name, from.address, '', 'groupchat', false,
         function(conversation) {
             var doc = _(conversation, {role: 'chat-output'}).contentDocument;
             doc.getElementById('topic').textContent = message.stanza.subject;
