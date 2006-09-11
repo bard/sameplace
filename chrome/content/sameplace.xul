@@ -40,9 +40,16 @@
       <menuitem label="Set Alias..." oncommand="requestedSetContactAlias(document.popupNode);"/>
       <menuitem label="Remove" oncommand="requestedRemoveContact(document.popupNode);"/>
     </popup>
+
+    <tooltip id="attach-tooltip"
+             onpopupshowing="updateAttachTooltip();">
+      <label role="message"
+             value="Make this conversation channel available to this web page"/>
+    </tooltip>
+
     <tooltip id="contact-tooltip" noautohide="true"
              orient="vertical"
-             onpopupshowing="requestedUpdateTooltip(document.tooltipNode);">
+             onpopupshowing="requestedUpdateContactTooltip(document.tooltipNode);">
       <hbox align="center" style="font-weight: bold;">
         <label role="name"/>
         <label value="(" style="margin-right: 0;"/>
@@ -167,7 +174,7 @@
                            oncommand="requestedInsertedEmoticons(event);"/>                           
 
             <toolbarbutton role="attach"
-                           tooltiptext="Make this conversation available as a communication channel to this web page"
+                           tooltip="attach-tooltip"
                            oncommand="requestedAttachContent(event);"/>
 
             <toolbarspring/>

@@ -677,6 +677,12 @@ function getConversation(account, address, resource, type) {
 // Application-dependent functions dealing with user interface.  They
 // affect the domain.
 
+function updateAttachTooltip() {
+    _('attach-tooltip', {role: 'message'}).value =
+        'Make this conversation channel available to ' +
+        getBrowser().currentURI.spec;
+}
+
 function changeStatusMessage(message) {
     for each(var account in XMPP.accounts)
         if(XMPP.isUp(account)) {
@@ -911,7 +917,7 @@ var chatOutputDropObserver = {
     }
 };
 
-function requestedUpdateTooltip(element) {
+function requestedUpdateContactTooltip(element) {
     _('contact-tooltip', {role: 'name'}).value =
         XMPP.nickFor(attr(element, 'account'), attr(element, 'address'));
     _('contact-tooltip', {role: 'address'}).value = attr(element, 'address');
