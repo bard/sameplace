@@ -327,7 +327,7 @@ function withContent(account, address, url, code) {
     if(browser) {
         code(browser.contentWindow);        
     } else {
-        var tabBrowser = top.getBrowser();
+        var tabBrowser = getBrowser();
         if(tabBrowser.currentURI.spec != 'about:blank')
             tabBrowser.selectedTab = tabBrowser.addTab();
 
@@ -451,11 +451,11 @@ function scrollingOnlyIfAtBottom(window, action) {
 function findBrowser(account, address, url) {
     var index = findBrowserIndex(account, address, url);
     if(index != -1)
-        return window.top.getBrowser().getBrowserAtIndex(index);
+        return getBrowser().getBrowserAtIndex(index);
 }
 
 function findBrowserIndex(account, address, url) {
-    var tabBrowser = window.top.getBrowser();
+    var tabBrowser = getBrowser();
     var browser;
     var numTabs = tabBrowser.mPanelContainer.childNodes.length;
     var index = 0;
@@ -492,7 +492,7 @@ function growTextBox(textBox) {
 
 function getBrowser() {
     // XXX Temporary: won't work well with stand-alone window.
-    return top.gBrowser;
+    return top.getBrowser();
 }
 
 function withContactInfoOf(account, address, action) {
@@ -737,8 +737,8 @@ function displayAuxiliaryAndConversations() {
 }
 
 function focusContent(account, address, url) {
-    top.getBrowser().selectedTab =
-        top.getBrowser().tabContainer.childNodes[
+    getBrowser().selectedTab =
+        getBrowser().tabContainer.childNodes[
             findBrowserIndex(account, address, url)];
 }
 
@@ -1289,7 +1289,7 @@ function receivedMessageWithURL(message) {
     if(_('conversations', {address: XMPP.JID(message.stanza.@from).address, role: 'follow'})
        .getAttribute('checked') == 'true') {
         var url = message.stanza.body.toString().match(urlRegexp)[0];
-        window.top.getBrowser().addTab(url);   
+        getBrowser().addTab(url);
     }
 }
 
