@@ -924,8 +924,20 @@ function requestedUpdateTooltip(element) {
     _('contact-tooltip', {role: 'address'}).value = attr(element, 'address');
     _('contact-tooltip', {role: 'account'}).value = attr(element, 'account');
     var subscription = attr(element, 'subscription');
-    if(subscription == 'both')
+    switch(subscription) {
+    case 'both':
         subscription = 'Both see when other is online';
+        break;
+    case 'from':
+        subscription = 'Contact sees when you are online'
+        break;
+    case 'to':
+        subscription = 'You see when contact is online'
+        break;
+    case 'none':
+        subscription = 'Neither sees when other is online'
+        break;
+    }
     
     _('contact-tooltip', {role: 'subscription'}).value = subscription;
 }
