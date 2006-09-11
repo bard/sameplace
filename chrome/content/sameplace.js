@@ -415,8 +415,14 @@ function x() {
     }
 
     function resolver(prefix) {
-        return prefix == 'xul' ? 
-            'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul' : null;
+        switch(prefix) {
+        case 'xul':
+            return 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul';
+            break;
+        case 'html':
+            return 'http://www.w3.org/1999/xhtml';
+            break;
+        }
     }
 
     return document.evaluate(
@@ -554,17 +560,9 @@ function createConversation(account, address, resource, type) {
             var doc = output.contentDocument;
             doc.getElementById('address').textContent = address;
 
-            if(type == 'groupchat') {
-                var divs = doc.getElementsByTagName('div');
-                for(var i=0, l=divs.length; i<l; i++) {
-                    var div = divs[i];
-                    if(div.getAttribute('class') == 'box' &&
-                       div.getAttribute('for') == 'resources') {
-                        div.getElementsByTagName('h3')[0].textContent = 'Participants';
-                        break;
-                    }                        
-                }
-            }
+            if(type == 'groupchat')
+                x(doc, '//div[@class="box" and @for="resources"]/h3')
+                    .textContent = 'Participants;'
 
             for each(var roster in XMPP.cache.roster) 
                 if(roster.session.name == account) 
@@ -804,19 +802,13 @@ function updateResources(account, address, resource, availability) {
     if(!resource)
         return;
 
-    function getChildByContent(parent, content) {
-        for(var child = parent.firstChild; child; child = child.nextSibling)
-            if(child.textContent == content)
-                return child;
-    }
-
     withConversation(
         account, address, '', '', false,
         function(wConversation) {
             var doc = _(wConversation, {role: 'chat-output'}).contentDocument;
 
             var wResources = doc.getElementById('resources');
-            var wResource = getChildByContent(wResources, resource);
+            var wResource = x(wResources, '//*[text()="' + resource + '"]');
 
             if(wResource) {
                 if(availability == 'unavailable')
