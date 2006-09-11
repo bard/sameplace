@@ -1037,14 +1037,16 @@ function clickedContact(contact) {
     }
 }
 
-function requestedCloseConversation(event) {
-    (getAncestorAttribute(event.target, 'type') == 'groupchat' ?
-        exitRoom :
-        closeConversation).call(null,
-                                getAncestorAttribute(event.target, 'account'),
-                                getAncestorAttribute(event.target, 'address'),
-                                getAncestorAttribute(event.target, 'resource'),
-                                getAncestorAttribute(event.target, 'type'));
+function requestedCloseConversation(element) {
+    if(attr(element, 'type') == 'groupchat')
+        exitRoom(attr(element, 'account'),
+                 attr(element, 'address'),
+                 attr(element, 'resource'));
+
+    closeConversation(attr(element, 'account'),
+                      attr(element, 'address'),
+                      attr(element, 'resource'),
+                      attr(element, 'type'));
 }
 
 function requestedOpenConversation() {
@@ -1375,9 +1377,6 @@ function receivedMUCPresence(presence) {
     displayEvent(
         presence.session.name, from.address, from.resource, 'groupchat',
         eventMessage, eventClass);
-
-    if(presence.stanza.@type.toString() == 'unavailable')
-        closeConversation(presence.session.name, from.address, from.resource, 'groupchat');
 
     contacts.resourceChangedPresence(
         presence.session.name,

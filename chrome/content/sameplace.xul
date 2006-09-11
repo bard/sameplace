@@ -129,7 +129,7 @@
 
               <toolbarbutton role="close"
                              tooltiptext="Close this conversation"
-                             oncommand="requestedCloseConversation(event);"/>
+                             oncommand="requestedCloseConversation(this);"/>
             </toolbar>
           </toolbox>
 
