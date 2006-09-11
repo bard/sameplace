@@ -89,6 +89,10 @@ function init(event) {
         function(presence) { sentPresence(presence) });
     channel.on(
         {event: 'presence', direction: 'in', stanza: function(s) {
+                return s.@type == 'error';
+            }}, function(presence) { receivedErrorPresence(presence); });
+    channel.on(
+        {event: 'presence', direction: 'in', stanza: function(s) {
                 return s.@type == 'subscribed';
             }},
         function(presence) { receivedSubscriptionApproval(presence); });
@@ -1272,6 +1276,14 @@ function receivedErrorMessage(message) {
         from.address, from.resource,
         'chat',
         'Error: code ' + message.stanza.error.@code,
+        'error');
+}
+
+function receivedErrorPresence(presence) {
+    var from = XMPP.JID(presence.stanza.@from);
+    displayEvent(
+        presence.session.name, from.address, from.resource, '',
+        'Error: code ' + presence.stanza.error.@code,
         'error');
 }
 
