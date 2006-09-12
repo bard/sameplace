@@ -990,14 +990,18 @@ function requestedAddContact() {
 function requestedAttachContent(element, menuitem) {
     if(menuitem && menuitem.value) {
         var newTab = getBrowser().addTab(menuitem.value);
+        getBrowser().selectedTab = newTab;
         var newBrowser = getBrowser().getBrowserForTab(newTab);
+        var account = attr(element, 'account');
+        var address = attr(element, 'address');
+        var type = attr(element, 'type');
         newBrowser.addEventListener(
             'load', function() {
-                getBrowser().selectedTab = newTab;
-                attachContent(attr(element, 'account'),
-                              attr(element, 'address'),
-                              attr(element, 'type'));                
-                newBrowser.removeEventListener('load', arguments.callee, true);
+                setTimeout(function() {
+                               attachContent(attr(element, 'account'),
+                                             attr(element, 'address'),
+                                             attr(element, 'type') || 'chat');
+                           }, 100);
             }, true);
     } else 
         attachContent(attr(element, 'account'),
