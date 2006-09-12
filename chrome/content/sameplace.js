@@ -987,10 +987,22 @@ function requestedAddContact() {
         addContact(request.account, request.contactAddress, request.subscribeToPresence);
 }
 
-function requestedAttachContent(event) {
-    attachContent(getAncestorAttribute(event.target, 'account'),
-                  getAncestorAttribute(event.target, 'address'),
-                  getAncestorAttribute(event.target, 'type'));
+function requestedAttachContent(element, menuitem) {
+    if(menuitem && menuitem.value) {
+        var newTab = getBrowser().addTab(menuitem.value);
+        var newBrowser = getBrowser().getBrowserForTab(newTab);
+        newBrowser.addEventListener(
+            'load', function() {
+                getBrowser().selectedTab = newTab;
+                attachContent(attr(element, 'account'),
+                              attr(element, 'address'),
+                              attr(element, 'type'));                
+                newBrowser.removeEventListener('load', arguments.callee, true);
+            }, true);
+    } else 
+        attachContent(attr(element, 'account'),
+                      attr(element, 'address'),
+                      attr(element, 'type'));
 }
 
 function requestedCycleMaximize(command) {

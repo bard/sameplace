@@ -39,6 +39,11 @@
     <popup id="contact-menu">
       <menuitem label="Set Alias..." oncommand="requestedSetContactAlias(document.popupNode);"/>
       <menuitem label="Remove" oncommand="requestedRemoveContact(document.popupNode);"/>
+      <menuitem label="Open default conversation"
+                oncommand="requestedAttachContent(document.popupNode, this)"
+                value="http://www.sameplace.cc/chat/chat.xhtml"/>
+      <menuitem label="Attach to current web page"
+                oncommand="requestedAttachContent(document.popupNode, this);"/>
     </popup>
 
     <tooltip id="attach-tooltip"
@@ -175,7 +180,7 @@
 
             <toolbarbutton role="attach"
                            tooltip="attach-tooltip"
-                           oncommand="requestedAttachContent(event);"/>
+                           oncommand="requestedAttachContent(this);"/>
 
             <toolbarspring/>
           </toolbar>
