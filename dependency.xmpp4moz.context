@@ -1,14 +1,5 @@
 
 Context:
 
-[JS API: presenceSummary() now returns a copy of the presence object that should be considered a summary, instead of an array.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060910195319] 
-
-[Was incorrectly calculating presence summary on sent presences, fixed.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060910170946] 
-
-[Overlay: Sending presence was cancelling previously sent status message.  Fixed by fetching a copy of the presence from cache (if any), modifying and sending it.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060910164817] 
-
-[TAG 0.2.18
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060910110926] 
+[TAG 0.2.19
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060913102729] 

@@ -61,13 +61,13 @@
           </conditions>
           <action>
             <menuitem uri="?app" label="?name" value="?url"
-                      oncommand="requestedAttachContent(document.popupNode, this);"/>
+                      oncommand="requestedAttachDocument(document.popupNode, this);"/>
           </action>
         </rule>
       </template>
 
       <menuitem label="Current web page"
-                oncommand="requestedAttachContent(document.popupNode, this);"/>
+                oncommand="requestedAttachDocument(document.popupNode, this);"/>
     </popup>
 
     <tooltip id="attach-tooltip"
@@ -204,7 +204,7 @@
 
             <toolbarbutton role="attach"
                            tooltip="attach-tooltip"
-                           oncommand="requestedAttachContent(this);"/>
+                           oncommand="requestedAttachDocument(this);"/>
 
             <toolbarspring/>
           </toolbar>

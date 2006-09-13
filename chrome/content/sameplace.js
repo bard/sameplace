@@ -501,6 +501,10 @@ function getBrowser() {
     return top.getBrowser();
 }
 
+function getTop() {
+    return top;
+}
+
 function withContactInfoOf(account, address, action) {
     // XXX will break on private conversations with participants
     action(getConversation(account, address)
@@ -699,8 +703,8 @@ function changeStatusMessage(message) {
         }
 }
 
-function attachContent(account, address, type) {
-    top.xmppEnableContent(account, address, type);
+function attachDocument(document, account, address, type) {
+    getTop().xmppEnableDocument(document, account, address, type);
 }
 
 function orientHorizontal() {
@@ -987,7 +991,7 @@ function requestedAddContact() {
         addContact(request.account, request.contactAddress, request.subscribeToPresence);
 }
 
-function requestedAttachContent(element, menuitem) {
+function requestedAttachDocument(element, menuitem) {
     if(menuitem && menuitem.value) {
         var newTab = getBrowser().addTab(menuitem.value);
         getBrowser().selectedTab = newTab;
@@ -998,15 +1002,17 @@ function requestedAttachContent(element, menuitem) {
         newBrowser.addEventListener(
             'load', function() {
                 setTimeout(function() {
-                               attachContent(attr(element, 'account'),
-                                             attr(element, 'address'),
-                                             attr(element, 'type') || 'chat');
+                               attachDocument(newBrowser.contentDocument,
+                                              attr(element, 'account'),
+                                              attr(element, 'address'),
+                                              attr(element, 'type') || 'chat');
                            }, 100);
             }, true);
     } else 
-        attachContent(attr(element, 'account'),
-                      attr(element, 'address'),
-                      attr(element, 'type'));
+        attachDocument(getBrowser().contentDocument,
+                       attr(element, 'account'),
+                       attr(element, 'address'),
+                       attr(element, 'type'));
 }
 
 function requestedCycleMaximize(command) {
@@ -1108,7 +1114,7 @@ function hoveredMousePointer(event) {
         (function(attributeName) { return event.target.getAttribute(attributeName); }) :
         (function(attributeName) { return getAncestorAttribute(event.target, attributeName); });
    
-    window.top.document.getElementById('statusbar-display').label =
+    getTop().document.getElementById('statusbar-display').label =
         'Account: <' + get('account') + '>, ' +
         'Address: <' + get('address') + '>, ' +
         'Resource: <' + get('resource') + '>, ' +
