@@ -991,28 +991,41 @@ function requestedAddContact() {
         addContact(request.account, request.contactAddress, request.subscribeToPresence);
 }
 
-function requestedAttachDocument(element, menuitem) {
-    if(menuitem && menuitem.value) {
-        var newTab = getBrowser().addTab(menuitem.value);
-        getBrowser().selectedTab = newTab;
-        var newBrowser = getBrowser().getBrowserForTab(newTab);
-        var account = attr(element, 'account');
-        var address = attr(element, 'address');
-        var type = attr(element, 'type');
-        newBrowser.addEventListener(
-            'load', function() {
-                setTimeout(function() {
-                               attachDocument(newBrowser.contentDocument,
-                                              attr(element, 'account'),
-                                              attr(element, 'address'),
-                                              attr(element, 'type') || 'chat');
-                           }, 100);
+function requestedOpenAttachDocument(contactElement, documentHref) {
+    function whenDocumentReady(browser, action) {
+        browser.addEventListener(
+            'load', function(event) {
+                browser.contentWindow.addEventListener(
+                    'load', function() {
+                        action(browser.contentDocument);
+                    }, false);
+                browser.removeEventListener('load', arguments.callee, true);
             }, true);
-    } else 
-        attachDocument(getBrowser().contentDocument,
-                       attr(element, 'account'),
-                       attr(element, 'address'),
-                       attr(element, 'type'));
+    }
+
+    var browser;
+    if(getBrowser().currentURI.spec == 'about:blank')
+        browser = getBrowser().selectedBrowser;
+    else {
+        getBrowser().selectedTab = getBrowser().addTab();
+        browser = getBrowser().selectedBrowser;
+    }
+    
+    whenDocumentReady(
+        browser, function(document) {
+            attachDocument(document,
+                           attr(contactElement, 'account'),
+                           attr(contactElement, 'address'),
+                           attr(contactElement, 'type') || 'chat');            
+        });
+    browser.loadURI(documentHref);
+}
+
+function requestedAttachDocument(element) {
+    attachDocument(getBrowser().contentDocument,
+                   attr(element, 'account'),
+                   attr(element, 'address'),
+                   attr(element, 'type'));
 }
 
 function requestedCycleMaximize(command) {

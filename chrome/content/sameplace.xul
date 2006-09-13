@@ -60,8 +60,10 @@
                     object="?url"/>
           </conditions>
           <action>
-            <menuitem uri="?app" label="?name" value="?url"
-                      oncommand="requestedAttachDocument(document.popupNode, this);"/>
+            <menuitem uri="?app" label="?name (browser)" value="?url"
+                      oncommand="requestedOpenAttachDocument(document.popupNode, this.value);"/>
+            <menuitem uri="?app" label="?name (sidebar)" value="?url"
+                      oncommand="requestedOpenAttachDocument(document.popupNode, this.value);"/>
           </action>
         </rule>
       </template>
