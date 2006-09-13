@@ -321,32 +321,6 @@ function fadeIn(element, stepValue, stepInterval) {
     fadeStep();
 }
 
-function withContent(account, address, url, code) {
-    var browser = findBrowser(account, address, url);
-    
-    if(browser) {
-        code(browser.contentWindow);        
-    } else {
-        var tabBrowser = getBrowser();
-        if(tabBrowser.currentURI.spec != 'about:blank')
-            tabBrowser.selectedTab = tabBrowser.addTab();
-
-        browser = tabBrowser.selectedBrowser;
-        browser.setAttribute('account', account);
-        browser.setAttribute('address', address);
-
-        browser.addEventListener(
-            'load', function(event) {
-                if(event.target && event.target.location &&
-                   event.target.location.href == url) {
-                    browser.contentWindow.attach(account, address);
-                    code(browser.contentWindow);
-                }
-            }, true);
-        browser.loadURI(url);
-    }       
-}
-
 function textToHTML(doc, text) {
     text = text.toString();
     var container = doc.createElement('span');
