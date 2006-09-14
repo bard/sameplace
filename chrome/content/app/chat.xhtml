@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Chat</title>
+    <link rel="stylesheet" type="text/css" href="chat.css"/>
+
+    <script type="text/javascript" src="chat.js"/>
+  </head>
+
+  <body onload="init(event);">
+    <div id="info">
+      <div class="box" for="address">
+        <h3>Address</h3>
+        <span id="address"></span>
+      </div>
+
+      <div class="box" for="topic">
+        <h3>Topic</h3>
+        <span id="topic"></span>
+      </div>
+
+      <div class="box" for="resources">
+        <h3>Resources</h3>
+        <ul id="resources"/>
+      </div>
+
+      <div class="box" for="groups">
+        <h3>Groups</h3>
+        <ul id="groups"/>
+      </div>
+    </div>
+
+    <div id="chat-area">
+      <div id="chat-output">
+        <ul id="messages"/>
+      </div>
+      <textarea id="chat-input" cols="80" rows="4" tabindex="1"
+                onkeypress="pressedKeyInChatInput(event);"/>
+    </div>
+
+    <div id="blueprints">
+      <ul>
+        <li class="message">
+          <span class="sender"/>
+          <span class="time"/>
+          <span class="content"/>
+        </li>
+
+        <li class="error"/>
+        
+        <li class="join"/>
+
+        <li class="leave"/>
+      </ul>
+    </div>
+    
+    <div id="socket">
+      <h3>Socket</h3>
+      <div class="channel-container">
+        <h4>From network:</h4>
+        <div id="input"/>        
+      </div>
+      <div class="channel-container">
+        <h4>To network:</h4>
+        <div id="output"/>        
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,479 @@
+/*
+  Copyright (C) 2005-2006 by Massimiliano Mirra
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+  Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
+*/
+
+// GLOBAL DEFINITIONS
+// ----------------------------------------------------------------------
+
+var serializer = new XMLSerializer();
+var parser = new DOMParser();
+var ns_application = new Namespace(stripUriFragment(window.location.href));
+var ns_xhtml = new Namespace('http://www.w3.org/1999/xhtml');
+var ns_muc_user = new Namespace('http://jabber.org/protocol/muc#user');
+var ns_muc = new Namespace('http://jabber.org/protocol/muc');
+
+var wsRegexp = /^\s*$/m;
+var urlRegexp = new RegExp('(http:\/\/|www.)[^ \\t\\n\\f\\r"<>|()]*[^ \\t\\n\\f\\r"<>|,.!?(){}]');
+var smileyMap = {
+    '0:-)':  'angel',
+    ':\'(':  'crying',
+    '>:-)':  'devil-grin',
+    'B-)':   'glasses',
+    ':-*':   'kiss',
+    ':-(|)': 'monkey',
+    ':-|':   'plain',
+    ':-(':   'sad',
+    ':-)':   'smile',
+    ':-D':   'smile-big',
+    ':-0':  'surprise',
+    ';-)':   'wink'
+};
+var smileyRegexp;
+
+(function() {
+    var smileySymbols = [];
+    for(var symbol in smileyMap)
+        smileySymbols.push(symbol);
+
+    smileyRegexp = smileySymbols.map(
+        function(symbol) {
+            return symbol.replace(/(\(|\)|\*|\|)/g, '\\$1');
+        }).join('|');
+})();
+
+
+// GLOBAL STATE
+// ----------------------------------------------------------------------
+
+var wantBottom = true;
+var scrolling = false;
+
+
+// UTILITIES
+// ----------------------------------------------------------------------
+
+function visible(element) {
+    element.style.display = 'block';
+}
+
+function hidden(element) {
+    element.style.display = 'none';
+}
+
+function JID(string) {
+    var m = string.match(/^(.+@)?(.+?)(?:\/|$)(.*$)/);
+
+    var jid = {};
+
+    if(m[1])
+        jid.username = m[1].slice(0, -1);
+
+    jid.hostname = m[2];
+    jid.resource = m[3];
+    jid.nick     = m[3];
+    jid.full     = m[3] ? string : null;
+    jid.address  = jid.username ?
+        jid.username + '@' + jid.hostname :
+        jid.hostname;
+
+    return jid;    
+}
+
+function stripUriFragment(uri) {
+    var hashPos = uri.lastIndexOf('#');
+    return (hashPos != -1 ?
+            uri.slice(0, hashPos) :
+            uri);}
+
+function padLeft(string, character, length) {
+    string = string.toString();
+    while(string.length < length)
+        string = character + string;
+    
+    return string;
+}
+
+function formatTime(dateTime) {
+    return padLeft(dateTime.getHours(), '0', 2) + ':' +
+        padLeft(dateTime.getMinutes(), '0', 2) + ':' +
+        padLeft(dateTime.getSeconds(), '0', 2)
+}
+
+
+// GUI UTILITIES (GENERIC)
+// ----------------------------------------------------------------------
+
+function textToHTML(container, text) {
+    text = text.toString();
+    
+    var rx = new RegExp([urlRegexp.source, smileyRegexp].join('|'), 'g');
+    
+    var start = 0;
+    var match = rx.exec(text);
+    while(match) {
+        container.appendChild(
+            document.createTextNode(
+                text.substring(start, match.index)));
+
+        start = rx.lastIndex;
+
+        var translatedElement;
+        if(match[0].match(smileyRegexp)) {
+            translatedElement = document.createElement('img');
+            translatedElement.setAttribute('class', 'emoticon');
+            translatedElement.
+                setAttribute('src',
+                             'emoticons/' + smileyMap[match[0]] + '.png');
+        } else {
+            translatedElement = document.createElement('a');
+            var url = match[0];
+            translatedElement.textContent = url;
+            if(!/^https?:\/\//.test(url))
+                url = 'http://' + url;
+            translatedElement.setAttribute('href', url);
+        }
+        container.appendChild(translatedElement);
+
+        match = rx.exec(text);
+    }
+    container.appendChild(
+        document.createTextNode(
+            text.substring(start, text.length)));
+
+    return container;
+}
+
+function _(id) {
+    return document.getElementById(id);
+}
+
+function cloneBlueprint(name) {
+    return x('//*[@id="blueprints"]' +
+             '//*[@class="' + name + '"]')
+        .cloneNode(true);
+}
+
+function getElementByAttribute(parent, name, value) {
+    for(child = parent.firstChild; child; child = child.nextSibling)
+        if(child.getAttribute && child.getAttribute(name) == value)
+            return child;
+
+    for(child = parent.firstChild; child; child = child.nextSibling) {
+        var matchingChild = getElementByAttribute(child, name, value);
+        if(matchingChild)
+            return matchingChild;
+    }
+}
+
+function x() {
+    var contextNode, path;
+    if(typeof(arguments[0]) == 'string') {
+        contextNode = document;
+        path = arguments[0];
+    } else {
+        contextNode = arguments[0];
+        path = arguments[1];
+    }
+
+    function resolver(prefix) {
+        return 'http://www.w3.org/1999/xhtml';
+    }
+
+    return document.evaluate(
+        path, contextNode, resolver,
+        XPathResult.ANY_UNORDERED_NODE_TYPE, null).singleNodeValue;
+}
+
+function isNearBottom(domElement, threshold) {
+    return Math.abs(domElement.scrollHeight -
+                    (domElement.scrollTop + domElement.clientHeight)) < (threshold || 24);
+}
+
+function isAtBottom(domElement) {
+    return domElement.scrollHeight == domElement.scrollTop + domElement.clientHeight;
+}
+
+function scrollToBottom(domElement, smooth) {
+    if(smooth == undefined)
+        smooth = true;
+    
+    function smoothScroll() {
+        scrolling = true;
+        var intervalID = window.setInterval(
+            function() {
+                if(!isAtBottom(domElement))
+                    domElement.scrollTop += 5;
+                else {
+                    window.clearInterval(intervalID);
+                    scrolling = false;
+                }
+            }, 15);
+    }
+
+    if(smooth && scrolling)
+        return;
+    else if(smooth)
+        smoothScroll();
+    else        
+        domElement.scrollTop =
+            domElement.scrollHeight - domElement.clientHeight;
+}
+
+function scrollingOnlyIfAtBottom(domElement, action) {
+    var shouldScroll = isNearBottom(domElement);
+    action();
+    if(shouldScroll)
+        scrollToBottom(domElement);
+}
+
+
+// GUI UTILITIES (SPECIFIC)
+// ----------------------------------------------------------------------
+
+function M(domElement) {
+    var wrapper = {
+        get sender() {
+            return getElementByAttribute(domElement, 'class', 'sender');
+        },
+
+        get time() {
+            return getElementByAttribute(domElement, 'class', 'time');
+        },
+
+        get content() {
+            return getElementByAttribute(domElement, 'class', 'content');
+        }   
+    };
+
+    return wrapper;
+}
+
+
+// GUI ACTIONS
+// ----------------------------------------------------------------------
+
+function displayMessage(stanza) {
+    scrollingOnlyIfAtBottom(
+        _('chat-output'), function() {
+            var domMessage = cloneBlueprint('message');
+            if(stanza.@type == 'groupchat')
+                M(domMessage).sender.textContent = JID(stanza.@from).resource;
+            else
+                M(domMessage).sender.textContent = 
+                    (stanza.@from == undefined ? 'Me' : JID(stanza.@from).username);
+            M(domMessage).sender.setAttribute(
+                'class', stanza.@from.toString() ? 'contact' : 'user');
+            textToHTML(M(domMessage).content, stanza.body);
+            M(domMessage).time.textContent =
+                (stanza.@from == undefined ?
+                 'Sent at ' : 'Received at ') + formatTime(new Date())
+            _('messages').appendChild(domMessage);
+        });
+}
+
+function displayEvent(eventClass, text) {
+    scrollingOnlyIfAtBottom(
+        _('chat-output'), function() {
+            var domChatEvent = cloneBlueprint(eventClass);
+            domChatEvent.textContent = text;
+            _('messages').appendChild(domChatEvent);
+        });
+}
+
+function refresh(element) {
+    switch(element.getAttribute('id')) {
+    case 'topic':
+        (element.textContent ? visible : hidden)
+            (element.parentNode);
+        break;
+    case 'resources':
+    case 'groups':
+        (element.getElementsByTagName('li').length > 0 ? visible : hidden)
+            (element.parentNode);
+        break;
+    }
+}
+
+function updateAddress(address) {
+    _('address').textContent = address;
+}
+
+function updateTitle(address) {
+    document.title = address;
+}
+
+function updateResources(resource, availability) {
+    var domResource = x('//*[@id="resources"]' +
+                        '//*[text()="' + resource + '"]');
+    
+    if(domResource) {
+        if(availability == 'unavailable')
+            _('resources').removeChild(domResource);
+    }
+    else 
+        if(availability != 'unavailable') {
+            domResource = document.createElement('li');
+            domResource.textContent = resource;
+            _('resources').insertBefore(domResource, _('resources').firstChild);
+        }
+}
+
+
+// GUI INITIALIZATION/FINALIZATION
+// ----------------------------------------------------------------------
+
+function init(event) {
+    _('input').addEventListener(
+        'DOMNodeInserted', function(event) {
+            var stanza = new XML(event.target.textContent);
+            switch(stanza.localName()) {
+            case 'message':
+                receivedMessage(stanza);
+                break;
+            case 'presence':
+                receivedPresence(stanza);
+                break;
+            default:
+                receivedUnknown(stanza);
+                break;
+            }
+        }, false);
+
+    for each(id in ['topic', 'resources', 'groups']) {
+        _(id).addEventListener(
+            'DOMNodeInserted', function(event) {
+                refresh(event.currentTarget);
+            }, false);
+
+        _(id).addEventListener(
+            'DOMNodeRemoved', function(event) {
+                refresh(event.currentTarget);
+            }, false);
+    }
+
+    window.addEventListener(
+        'resize', function(event) { resizedWindow(event); }, false);
+
+    _('chat-output').addEventListener(
+        'scroll', function(event) { scrolledWindow(event); }, false);
+}
+
+
+// UTILITIES
+// ----------------------------------------------------------------------
+
+function toXML(domElement) {
+    return new XML(serializer.serializeToString(domElement));
+}
+
+function toDOM(description) {
+    return parser.parseFromString((typeof(description) == 'xml' ?
+                                   description.toXMLString() : description),
+                                  'application/xhtml+xml').documentElement;
+}
+
+function _(thing) {
+    switch(typeof(thing)) {
+    case 'string':
+        return document.getElementById(thing);
+        break;
+    case 'xml':
+        return document.getElementById(thing.toString());
+        break;
+    default:
+        return thing;
+    }
+}
+
+
+// GUI REACTIONS
+// ----------------------------------------------------------------------
+
+function pressedKeyInChatInput(event) {
+    if(event.keyCode == KeyEvent.DOM_VK_RETURN) {
+        var chatInput = event.target;
+
+        if(event.ctrlKey)
+            chatInput.value += '\n';
+        else {
+            event.preventDefault();
+            if(!wsRegexp.test(chatInput.value)) {
+                send(chatInput.value);
+                chatInput.value = '';
+            }
+        }
+    }
+}
+
+function scrolledWindow(event) {
+    wantBottom = isNearBottom(_('chat-output'));
+}
+
+function resizedWindow(event) {
+    if(wantBottom || _('chat-output').scrollTop == 0)
+        scrollToBottom(_('chat-output'), false);
+}
+
+
+// NETWORK ACTIONS
+// ----------------------------------------------------------------------
+
+function send(content) {
+    var message = <message/>;
+    message.body = <body>{content}</body>;
+    message.x = <chat:x xmlns:chat={ns_application}/>;
+    _('output').textContent = message.toXMLString();
+}
+
+
+// NETWORK REACTIONS
+// ----------------------------------------------------------------------
+
+function receivedMessage(stanza) {
+    if(stanza.body == undefined)
+        return;
+
+    if(stanza.@type == 'error')
+        displayEvent('error', 'Error: code ' + stanza.error.@code);
+    else
+        displayMessage(stanza);
+}
+
+function receivedPresence(stanza) {
+    if(stanza.ns_muc_user::x.length() > 0) {
+        x('//xhtml:div[@class="box" and @for="resources"]/xhtml:h3')
+            .textContent = 'Participants';
+
+        if(stanza.@type == undefined)            
+            displayEvent('join', JID(stanza.@from).resource + ' entered the room');
+        else if(stanza.@type == 'unavailable')
+            displayEvent('leave', JID(stanza.@from).resource + ' left the room');
+        else if(stanza.@type == 'error')
+            displayEvent('error', 'Error: code ' + stanza.error.@code);
+    }
+    
+    updateAddress(JID(stanza.@from).address);
+    updateResources(JID(stanza.@from).resource, stanza.@type);
+    updateTitle(JID(stanza.@from).address);
+}
+
+function receivedUnknown(stanza) {
+    
+}
+

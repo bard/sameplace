@@ -19,35 +19,6 @@ const ns_muc = new Namespace('http://jabber.org/protocol/muc');
 const ns_xul = new Namespace('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul');
 const ns_roster = new Namespace('jabber:iq:roster');
 
-var urlRegexp = new RegExp('(http:\/\/|www.)[^ \\t\\n\\f\\r"<>|()]*[^ \\t\\n\\f\\r"<>|,.!?(){}]');
-var smileyMap = {
-    '0:-)':  'angel',
-    ':\'(':  'crying',
-    '>:-)':  'devil-grin',
-    'B-)':   'glasses',
-    ':-*':   'kiss',
-    ':-(|)': 'monkey',
-    ':-|':   'plain',
-    ':-(':   'sad',
-    ':-)':   'smile',
-    ':-D':   'smile-big',
-    ':-0':  'surprise',
-    ';-)':   'wink'
-};
-var smileyRegexp;
-
-(function() {
-    var smileySymbols = [];
-    for(var symbol in smileyMap)
-        smileySymbols.push(symbol);
-
-    smileyRegexp = smileySymbols.map(
-        function(symbol) {
-            return symbol.replace(/(\(|\)|\*|\|)/g, '\\$1');
-        }).join('|');
-})();
-
-
 // GLOBAL STATE
 // ----------------------------------------------------------------------
 
@@ -61,11 +32,6 @@ var debugMode = false;
 function init(event) {
     if(!event.target)
         return;
-
-    if(window == top) 
-        orientHorizontal();
-    else 
-        orientVertical();
 
     _('contact-list').selectedIndex = -1;
 
@@ -87,9 +53,13 @@ function init(event) {
             }},
         function(presence) { sentPresence(presence) });
     channel.on(
-        {event: 'presence', direction: 'in', stanza: function(s) {
-                return s.@type == 'error';
-            }}, function(presence) { receivedErrorPresence(presence); });
+        {event: 'message', direction: 'in', stanza: function(s) {
+                return s.body.length() > 0 && s.@type != 'error';
+            }}, function(message) { receivedChatMessage(message); });
+    channel.on(
+        {event: 'message', direction: 'out', stanza: function(s) {
+                return s.body.length() > 0 && s.@type != 'groupchat';
+            }}, function(message) { sentChatMessage(message) });
     channel.on(
         {event: 'presence', direction: 'in', stanza: function(s) {
                 return s.@type == 'subscribed';
@@ -101,24 +71,6 @@ function init(event) {
             }},
         function(presence) { receivedSubscriptionRequest(presence); });
     channel.on(
-        {event: 'message', direction: 'in', stanza: function(s) {
-                return s.body.length() > 0 && s.@type != 'error';
-            }}, function(message) { receivedChatMessage(message); });
-    channel.on(
-        {event: 'message', direction: 'in', stanza: function(s) {
-                return s.@type == 'error';
-            }}, function(message) { receivedErrorMessage(message); });
-    channel.on(
-        {event: 'message', direction: 'in', stanza: function(s) {
-                return (s.body.toString() &&
-                        s.body.toString().search(urlRegexp) != -1);
-            }}, function(message) { receivedMessageWithURL(message); });
-    channel.on(
-        {event: 'message', direction: 'out', stanza: function(s) {
-                return s.body.length() > 0 && s.@type != 'groupchat';
-            }}, function(message) { sentChatMessage(message) });
-
-    channel.on(
         {event: 'presence', direction: 'in', stanza: function(s) {
                 return s.ns_muc_user::x.length() > 0;
             }}, function(presence) { receivedMUCPresence(presence) });
@@ -126,10 +78,6 @@ function init(event) {
         {event: 'presence', direction: 'out', stanza: function(s) {
                 return s.ns_muc::x.length() > 0 && s.@type != 'unavailable';
             }}, function(presence) { sentMUCPresence(presence) });
-    channel.on(
-        {event: 'message', direction: 'in', stanza: function(s) {
-                return s.@type == 'groupchat' && s.subject.toString();
-            }}, function(message) { receivedRoomTopic(message); });
     channel.on(
         {event: 'message', direction: 'in'},
         function(message) {
@@ -144,7 +92,6 @@ function init(event) {
             }, false);
         _('devel-shortcut').hidden = false;
     }
-    
 
     for each(var pluginInfo in prefBranch.getChildList('plugin.', {})) {
         var pluginOverlayURL = prefBranch.getCharPref(pluginInfo);
@@ -154,16 +101,25 @@ function init(event) {
     XMPP.cache.roster.forEach(receivedRoster);
     XMPP.cache.presenceIn.forEach(receivedPresence);
     XMPP.cache.presenceOut.forEach(sentPresence);
+
+    _('conversations').addEventListener(
+        'DOMNodeInserted', function(event) {
+            _('conversations').collapsed = 
+                (_('conversations').childNodes.length == 0);
+        }, false);
+
+    _('conversations').addEventListener(
+        'DOMNodeRemoved', function(event) {
+            _('conversations').collapsed = 
+                (_('conversations').childNodes.length == 0);
+        }, false);
 }
 
 function finish() {
     for(var conversation, i=0; conversation = _('conversations').childNodes[i]; i++)
         closeConversation(
-            conversation.getAttribute('account'),
-            conversation.getAttribute('address'),
-            conversation.getAttribute('resource'),
-            conversation.getAttribute('type'));
-    
+            attr(conversation, 'account'), attr(conversation, 'address'));
+
     channel.release();
 }
 
@@ -197,7 +153,7 @@ var contacts = {
 
         if(contact.getAttribute('current') != 'true') {
             var pending = parseInt(_(contact, {role: 'pending'}).value);
-            _(contact, {role: 'pending'}).value = pending + 1;            
+            _(contact, {role: 'pending'}).value = pending + 1;
         }
     },
 
@@ -209,7 +165,7 @@ var contacts = {
 
     nowTalkingWith: function(account, address) {
         var previouslyTalking = _('contact-list', {current: 'true'});
-        if(previouslyTalking) 
+        if(previouslyTalking)
             previouslyTalking.setAttribute('current', 'false');
 
         var contact = this.get(account, address) || this.add(account, address);
@@ -220,7 +176,7 @@ var contacts = {
     contactChangedRelationship: function(account, address, subscription, name) {
         var contact = this.get(account, address) || this.add(account, address);
 
-        if(subscription) 
+        if(subscription)
             if(subscription == 'remove') {
                 _('contact-list').removeChild(contact);
                 return;
@@ -321,47 +277,8 @@ function fadeIn(element, stepValue, stepInterval) {
     fadeStep();
 }
 
-function textToHTML(doc, text) {
-    text = text.toString();
-    var container = doc.createElement('span');
-    
-    var rx = new RegExp([urlRegexp.source, smileyRegexp].join('|'), 'g');
-    
-    var start = 0;
-    var match = rx.exec(text);
-    while(match) {
-        container.appendChild(
-            doc.createTextNode(
-                text.substring(start, match.index)));
-
-        start = rx.lastIndex;
-
-        var translatedElement;
-        if(match[0].match(smileyRegexp)) {
-            translatedElement = doc.createElement('img');
-            translatedElement.setAttribute('class', 'emoticon');
-            translatedElement.
-                setAttribute('src',
-                             'chrome://sameplace/skin/emoticons/' +
-                             smileyMap[match[0]] +
-                             '.png');
-        } else {
-            translatedElement = doc.createElement('a');
-            translatedElement.textContent = match[0];
-        }
-        container.appendChild(translatedElement);
-
-        match = rx.exec(text);
-    }
-    container.appendChild(
-        doc.createTextNode(
-            text.substring(start, text.length)));
-
-    return container;
-}
-
 function attr(element, attributeName) {
-    if(element.hasAttribute(attributeName)) 
+    if(element.hasAttribute(attributeName))
         return element.getAttribute(attributeName);
     else
         return getAncestorAttribute(element, attributeName);
@@ -410,11 +327,11 @@ function cloneBlueprint(role) {
 }
 
 function _(element, descendantQuery) {
-    if(typeof(element) == 'string') 
-        element = document.getElementById(element); 
+    if(typeof(element) == 'string')
+        element = document.getElementById(element);
 
-    if(typeof(descendantQuery) == 'object') 
-        for(var attrName in descendantQuery) 
+    if(typeof(descendantQuery) == 'object')
+        for(var attrName in descendantQuery)
             element = element.getElementsByAttribute(
                 attrName, descendantQuery[attrName])[0];
 
@@ -428,40 +345,21 @@ function scrollingOnlyIfAtBottom(window, action) {
         window.scrollTo(0, window.scrollMaxY);
 }
 
-function findBrowser(account, address, url) {
-    var index = findBrowserIndex(account, address, url);
-    if(index != -1)
-        return getBrowser().getBrowserAtIndex(index);
-}
 
-function findBrowserIndex(account, address, url) {
-    var tabBrowser = getBrowser();
-    var browser;
-    var numTabs = tabBrowser.mPanelContainer.childNodes.length;
-    var index = 0;
-    while (index < numTabs) {
-        browser = tabBrowser.getBrowserAtIndex(index);
-        if(browser.currentURI.spec == url &&
-           browser.getAttribute('account') == account &&
-           browser.getAttribute('address') == address)
-            return index;
-        index++;
-    }
-    return -1;
-}
+// GUI UTILITIES (GENERIC)
+// ----------------------------------------------------------------------
 
-function findWindow(name) {
-    var enumerator = mediator.getEnumerator('');
-    while(enumerator.hasMoreElements()) {
-        var window = enumerator.getNext();
-        if(window.name == name)
-            return window;
-    }
-    return null;
-}
-
-function growTextBox(textBox) {
-    textBox.setAttribute('rows', parseInt(textBox.getAttribute('rows')) + 1);
+function loadDocument(contentPanel, documentHref, action) {
+    contentPanel.addEventListener(
+        'load', function(event) {
+            contentPanel.contentWindow.addEventListener(
+                'load', function(event) {
+                    action(contentPanel.contentDocument);
+                }, false);
+            contentPanel.removeEventListener(
+                'load', arguments.callee, true);
+        }, true);
+    contentPanel.contentDocument.location.href = documentHref;
 }
 
 
@@ -471,7 +369,6 @@ function growTextBox(textBox) {
 // not affect the domain directly.
 
 function getBrowser() {
-    // XXX Temporary: won't work well with stand-alone window.
     return top.getBrowser();
 }
 
@@ -479,172 +376,32 @@ function getTop() {
     return top;
 }
 
-function withContactInfoOf(account, address, action) {
-    // XXX will break on private conversations with participants
-    action(getConversation(account, address)
-           .contentDocument
-           .getElementById('info'));
+function isConversationOpen(account, address) {
+    return getConversation(account, address) != undefined;
 }
 
-function isConversationOpen() {
-    return getConversation.apply(null, arguments);
+function isConversationCurrent(account, address) {
+    return _('conversations').selectedPanel == getConversation(account, address);
 }
-
-function isConversationCurrent() {
-    return getConversation.apply(null, arguments) == _('conversations').selectedPanel;
-}
-
-function createConversation(account, address, resource, type) {
-    function scrolledWindow(window) {
-        window.wantBottom =
-            (Math.abs(window.pageYOffset - window.scrollMaxY) < 24);
-    }
-
-    function resizedWindow(window) {
-        if(window.wantBottom ||
-           window.pageYOffset == 0) 
-            window.scrollTo(window.pageXOffset, window.scrollMaxY);
-    }
-
-    function clickedLink(link, button) {
-        switch(button) {
-        case 0:
-            getBrowser().loadURI(link);
-            break;
-        case 1:
-            getBrowser().addTab(link);
-            break;
-        }
-    }
-
-    account = account.toString();
-    address = address.toString();
-    resource = resource.toString();
-    type = type.toString();
-
-    var conversation = cloneBlueprint('conversation');
-    conversation.setAttribute('account', account);
-    conversation.setAttribute('address', address);
-    conversation.setAttribute('resource', resource);
-    conversation.setAttribute('type', type);
-    _('conversations').appendChild(conversation);
-
-    _(conversation, {role: 'contact'}).value = XMPP.nickFor(account, address);
-
-    var output = _(conversation, {role: 'chat-output'});
-
-    output.addEventListener(
-        'load', function(event) {
-            var doc = output.contentDocument;
-            doc.getElementById('address').textContent = address;
-
-            if(type == 'groupchat')
-                x(doc, '//div[@class="box" and @for="resources"]/h3')
-                    .textContent = 'Participants;'
-
-            for each(var roster in XMPP.cache.roster) 
-                if(roster.session.name == account) 
-                    for each(var group in
-                             roster.stanza..ns_roster::item.(@jid==address).*) 
-                        updateGroups(
-                            account, address, group.toString());
-
-            for each(var presence in XMPP.cache.presenceIn)
-                if(presence.session.name == account &&
-                   XMPP.JID(presence.stanza.@from).address == address)
-                    updateResources(
-                        account, address,
-                        XMPP.JID(presence.stanza.@from).resource,
-                        presence.stanza.@type);
-
-            openedConversation(account, address, resource, type);
-        }, true);
-
-    output.contentWindow.addEventListener(
-        'scroll', function(event) {
-            scrolledWindow(event.currentTarget); },
-        false);
-
-    output.contentWindow.addEventListener(
-        'resize', function(event) {
-            resizedWindow(event.currentTarget); },
-        false);
-
-    output.contentWindow.addEventListener(
-        'click', function(event) {
-            if(event.target.nodeName == 'A')
-                clickedLink(event.target.textContent, event.button);
-        }, false);
-
-    return conversation;
-}
-
-/**
- * Ensures that the correct conversation for the given combination of
- * parameters is open, then executes the given action.
- *
- * Criteria for selecting the correct conversation:
- *
- * - if type is "groupchat", select the conversation with the
- *   account/address combination, ignoring the resource (since there
- *   cannot be more than one groupchat conversation for a certain
- *   account/address combination);
- *
- * - if type is "chat" and a conversation of type "groupchat" with
- *   given account/address exists somewhere, then we have a
- *   conversation with a room participant.  Open it if not opened
- *   already, then execute action.
- *
- * - if type is "chat" an no conversation of type "groupchat" with
- *   given account/address exists already, this is a conversation with
- *   an ordinary contact.  If a conversation of type "chat" with given
- *   account/address exists already, reuse it changing the resource,
- *   otherwise create it.
- *
- */
 
 function withConversation(account, address, resource, type, forceOpen, action) {
-    function withDocumentLoaded(documentContainer, action) {
-        // XXX would be nice to find a more general way than to check for 'messages'
-        if(documentContainer.contentDocument.getElementById('messages'))
-            action();
-        else
-            documentContainer.addEventListener(
-                'load', function(evente) {
-                    action();
-                }, true);
-    }
+    var conversation = getConversation(account, address);
 
-    function ignore() {
-        log('Ignoring: ' + [account, address, resource, type, forceOpen] + '\n' +
-            'Stack: ' + getStackTrace());
-    }
-
-    var conversation = getConversation(account, address, null, null);
-    if(conversation) {
-        if(type == 'chat')
-            conversation.setAttribute('resource', resource);
-
-        withDocumentLoaded(_(conversation, {role: 'chat-output'}),
-                           function() { action(conversation); });
-    } else if(forceOpen) {
-        if(type == 'chat' || type == 'normal' || type == 'headline') {
-            conversation = createConversation(account, address, resource, type);
-
-            withDocumentLoaded(_(conversation, {role: 'chat-output'}),
-                               function(event) { action(conversation); });
-        }
-    } else
-        ignore();
+    if(!conversation && forceOpen)
+        openAttachDocument(
+            account, address, resource, type,
+            'chrome://sameplace/content/app/chat.xhtml',
+            'mini', function(document) {
+                action(document);
+            });
+    else
+        action(_(conversation, {role: 'chat'}).contentDocument);
 }
 
-function getConversation(account, address, resource, type) {
-    return x('//*[' +
-             '@role="conversation" and ' +
-             (resource ? '@resource="' + resource + '" and ' : '') +
-             (type ? '@type="' + type + '" and ': '') +
-             '@account="' + account + '" and ' +
-             '@address="' + address + '"]');
+function getConversation(account, address) {
+    return x('//*[@id="conversations"]' +
+             '//*[@account="' + account + '" and ' +
+             '    @address="' + address + '"]');
 }
 
 
@@ -663,7 +420,7 @@ function changeStatusMessage(message) {
     for each(var account in XMPP.accounts)
         if(XMPP.isUp(account)) {
             var stanza;
-            for each(var presence in XMPP.cache.presenceOut) 
+            for each(var presence in XMPP.cache.presenceOut)
                 if(presence.session.name == account.jid) {
                     stanza = presence.stanza.copy();
                     stanza.status = message;
@@ -677,27 +434,51 @@ function changeStatusMessage(message) {
         }
 }
 
-function attachDocument(document, account, address, type) {
-    getTop().xmppEnableDocument(document, account, address, type);
+function attachContentDocument(contentPanel, account, address, type) {
+    XMPP.enableContentDocument(contentPanel, account, address, type);
 }
 
-function orientHorizontal() {
-    _('box-main').setAttribute('orient', 'horizontal');
-    _('splitter-main').setAttribute('orient', 'horizontal');
-    _('box-auxiliary').setAttribute('orient', 'vertical');
-}
+function openAttachDocument(account, address, resource, type, documentHref, target, action) {
+    var contentPanel;
+    if(target == 'main') {
+        if(getBrowser().contentDocument.location.href != 'about:blank')
+            getBrowser().selectedTab = getBrowser().addTab();
 
-function orientVertical() {
-    _('box-main').setAttribute('orient', 'vertical');
-    _('splitter-main').setAttribute('orient', 'vertical');
-    _('box-auxiliary').setAttribute('orient', 'horizontal');
-}
+        contentPanel = getBrowser().selectedBrowser;
+    } else {
+        var conversation = cloneBlueprint('conversation');
+        _('conversations').appendChild(conversation);
+        _(conversation, {role: 'contact'}).value = XMPP.nickFor(account, address);
+        contentPanel = _(conversation, {role: 'chat'});
+        conversation.setAttribute('account', account);
+        conversation.setAttribute('address', address);
+        conversation.setAttribute('resource', resource);
+        conversation.setAttribute('type', type);
+        conversation.setAttribute('url', documentHref);
+        contentPanel.addEventListener(
+            'click', function(event) {
+                if(event.target.localName == 'a' &&
+                   event.target.isDefaultNamespace('http://www.w3.org/1999/xhtml')) {
+                    event.preventDefault();
+                    if(event.button == 0)
+                        getBrowser().loadURI(event.target.getAttribute('href'));
+                    else if(event.button == 1) {
+                        getBrowser().selectedTab = getBrowser().addTab(event.target.getAttribute('href'));
+                    }
+                }
+            }, true);
+    }
 
-function cycleOrientation() {
-    if(_('box-main').getAttribute('orient') == 'horizontal')
-        orientVertical();
-    else
-        orientHorizontal();
+    loadDocument(
+        contentPanel, documentHref, function(document) {
+            XMPP.enableContentDocument(contentPanel, account, address, type);
+
+            if(documentHref == 'chrome://sameplace/content/app/chat.xhtml')
+                openedConversation(account, address);
+
+            if(action) 
+                action(document);
+        });
 }
 
 function maximizeAuxiliary() {
@@ -715,151 +496,27 @@ function maximizeConversations() {
 function displayAuxiliaryAndConversations() {
     _('conversations').collapsed = false;
     _('box-auxiliary').collapsed = false;
-    _('splitter-main').hidden = false;    
-}
-
-function focusContent(account, address, url) {
-    getBrowser().selectedTab =
-        getBrowser().tabContainer.childNodes[
-            findBrowserIndex(account, address, url)];
+    _('splitter-main').hidden = false;
 }
 
 function focusConversation(account, address) {
     var conversation = getConversation(account, address);
+
     if(conversation) {
-        if(_('conversations').collapsed)
-            displayAuxiliaryAndConversations();
-
         _('conversations').selectedPanel = conversation;
-        setTimeout(
-            function() {
-                _(conversation, {role: 'chat-input'}).focus();
-            }, 100);
+        focusedConversation(account, address);
+        conversation.focus();
+        document.commandDispatcher.advanceFocus();
     }
-    focusedConversation(account, address);
 }
 
-function changeConversationResource(account, address, resource, type, otherResource) {
-    var conversation = getConversation(account, address, resource, type);
-    if(conversation) 
-        conversation.setAttribute('resource', otherResource);
-}
-
-function closeConversation(account, address, resource, type) {
-    var conversation = getConversation(account, address, resource, type);
+function closeConversation(account, address) {
+    var conversation = getConversation(account, address);
 
     if(conversation) {
         conversation.parentNode.removeChild(conversation);
-        closedConversation(account, address, resource, type);        
+        closedConversation(account, address);
     }
-}
-
-function updateGroups(account, address, group) {
-    var conversation = getConversation(account, address);
-    if(!conversation)
-        return;
-    
-    var doc = _(conversation, {role: 'chat-output'}).contentDocument;
-
-    var groups = doc.getElementById('resources');
-    var group;
-    for(var i=0; i<groups.childNodes.length; i++) 
-        if(groups.childNodes[i].textContent == group) {
-            group = groups.childNodes[i];
-            break;
-        }
-
-    if(!group) {
-        var htmlItem = doc.createElement('li');
-        htmlItem.textContent = group.toString();
-        doc.getElementById('groups').appendChild(htmlItem);
-    }
-}
-
-function updateResources(account, address, resource, availability) {
-    if(!resource)
-        return;
-
-    withConversation(
-        account, address, '', '', false,
-        function(wConversation) {
-            var doc = _(wConversation, {role: 'chat-output'}).contentDocument;
-
-            var wResources = doc.getElementById('resources');
-            var wResource = x(wResources, '//*[text()="' + resource + '"]');
-
-            if(wResource) {
-                if(availability == 'unavailable')
-                    wResources.removeChild(wResource);
-            } else {
-                if(availability != 'unavailable') {
-                    wResource = doc.createElement('li');
-                    wResource.textContent = resource;
-                    wResources.insertBefore(wResource, wResources.firstChild);
-                }
-            }            
-        });
-}
-
-function displayChatMessage(account, address, resource, direction, type, sender, body) {
-    withConversation(
-        account, address, resource, type, true,
-        function(conversation) {
-            var chatOutputWindow = _(conversation, {role: 'chat-output'}).contentWindow;
-            var doc = chatOutputWindow.document;
-
-            var htmlSender = doc.createElement('span');
-            if(type == 'groupchat')
-                htmlSender.textContent = XMPP.JID(sender).resource || address;
-            else
-                htmlSender.textContent = XMPP.JID(sender).username;
-            htmlSender.setAttribute(
-                'class', direction == 'in' ? 'contact' : 'user');
-
-            var htmlBody = textToHTML(doc, body);
-            htmlBody.setAttribute('class', 'body');
-
-            var htmlTooltip = doc.createElement('span');
-            htmlTooltip.setAttribute('class', 'tooltip');
-            var time = new Date();
-            htmlTooltip.textContent = (direction == 'in' ? 'Received at ' : 'Sent at ') +
-                time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds();
-
-            var message = doc.createElement('li');
-            message.setAttribute('class', 'message');
-            message.appendChild(htmlSender);
-            message.appendChild(htmlBody);
-            message.appendChild(htmlTooltip);
-
-            scrollingOnlyIfAtBottom(
-                chatOutputWindow, function() {
-                    doc.getElementById('messages').appendChild(message);
-                });
-        });    
-}
-
-function displayEvent(account, address, resource, type, content, additionalClass) {
-    withConversation(
-        account, address, resource, type, true,
-        function(conversation) {
-            var chatOutputWindow = _(conversation, {role: 'chat-output'}).contentWindow;
-            var doc = chatOutputWindow.document;
-
-            var body = doc.createElement('span');
-            body.setAttribute('class', 'body');
-            body.textContent = content;
-
-            var event = doc.createElement('li');
-            event.setAttribute('class', additionalClass ?
-                               'event ' + additionalClass :
-                               'event');
-            event.appendChild(body);
-
-            scrollingOnlyIfAtBottom(
-                chatOutputWindow, function() {
-                    doc.getElementById('messages').appendChild(event);
-                });
-        });
 }
 
 
@@ -876,16 +533,22 @@ var chatOutputDropObserver = {
 
     onDrop: function(event, dropdata, session) {
         if(dropdata.data != '') {
-            var type = getAncestorAttribute(event.currentTarget, 'type');
-            sendChatMessage(
-                getAncestorAttribute(event.currentTarget, 'account'),
-                getAncestorAttribute(event.currentTarget, 'address'),
-                type != 'groupchat' ? getAncestorAttribute('resource') : null,
-                getAncestorAttribute(event.currentTarget, 'type'),
-                dropdata.data);
+            var element = event.currentTarget;
+            XMPP.send(
+                attr(element, 'account'),
+                <message to={attr(element, 'address')} type={attr(element, 'type')}>
+                <body>{dropdata.data}</body>
+                </message>);
         }
     }
 };
+
+function requestedAttachBrowser(element) {
+    attachContentDocument(getBrowser().selectedBrowser,
+                          attr(element, 'account'),
+                          attr(element, 'address'),
+                          attr(element, 'type'));
+}
 
 function requestedUpdateContactTooltip(element) {
     _('contact-tooltip', {role: 'name'}).value =
@@ -899,15 +562,15 @@ function requestedUpdateContactTooltip(element) {
         break;
     case 'from':
         subscription = 'Contact sees when you are online'
-        break;
+            break;
     case 'to':
         subscription = 'You see when contact is online'
-        break;
+            break;
     case 'none':
         subscription = 'Neither sees when other is online'
-        break;
+            break;
     }
-    
+
     _('contact-tooltip', {role: 'subscription'}).value = subscription;
 }
 
@@ -926,8 +589,8 @@ function requestedSetContactAlias(element) {
 
     var confirm = prompts.prompt(
         null, 'Alias Change', 'Choose an alias for ' + address, alias, null, {});
-        
-    if(confirm) 
+
+    if(confirm)
         XMPP.send(account,
                   <iq type="set"><query xmlns="jabber:iq:roster">
                   <item jid={address} name={alias.value}/>
@@ -955,7 +618,7 @@ function requestedAddContact() {
         confirm: false,
         account: undefined
     };
-    
+
     window.openDialog(
         'chrome://sameplace/content/add.xul',
         'sameplace-add-contact', 'modal,centerscreen',
@@ -965,34 +628,12 @@ function requestedAddContact() {
         addContact(request.account, request.contactAddress, request.subscribeToPresence);
 }
 
-function requestedOpenAttachDocument(contactElement, documentHref) {
-    function whenDocumentReady(browser, action) {
-        browser.addEventListener(
-            'load', function(event) {
-                browser.contentWindow.addEventListener(
-                    'load', function() {
-                        action(browser.contentDocument);
-                    }, false);
-                browser.removeEventListener('load', arguments.callee, true);
-            }, true);
-    }
+function requestedOpenAttachDocument(contactElement, documentHref, target) {
+    var account = attr(contactElement, 'account');
+    var address = attr(contactElement, 'address');
+    var type = attr(contactElement, 'type') || 'chat';
 
-    var browser;
-    if(getBrowser().currentURI.spec == 'about:blank')
-        browser = getBrowser().selectedBrowser;
-    else {
-        getBrowser().selectedTab = getBrowser().addTab();
-        browser = getBrowser().selectedBrowser;
-    }
-    
-    whenDocumentReady(
-        browser, function(document) {
-            attachDocument(document,
-                           attr(contactElement, 'account'),
-                           attr(contactElement, 'address'),
-                           attr(contactElement, 'type') || 'chat');            
-        });
-    browser.loadURI(documentHref);
+    openAttachDocument(account, address, null, type, documentHref, target);
 }
 
 function requestedAttachDocument(element) {
@@ -1004,7 +645,7 @@ function requestedAttachDocument(element) {
 
 function requestedCycleMaximize(command) {
     if(!_('conversations').collapsed &&
-       !_('box-auxiliary').collapsed) 
+       !_('box-auxiliary').collapsed)
         maximizeConversations();
     else if(_('conversations').collapsed &&
             !_('box-auxiliary').collapsed)
@@ -1015,27 +656,24 @@ function requestedCycleMaximize(command) {
 }
 
 function clickedContact(contact) {
-    if(isConversationOpen(contact.getAttribute('account'),
-                          contact.getAttribute('address'),
-                          '',
-                          'groupchat') ||
-       isConversationOpen(contact.getAttribute('account'),
-                          contact.getAttribute('address'),
-                          null,
-                          'chat'))
-        focusConversation(contact.getAttribute('account'),
-                          contact.getAttribute('address'));
-    else {
-        withConversation(contact.getAttribute('account'),
-                          contact.getAttribute('address'),
-                          '',
-                          'chat',
-                         true,
-                          function() {
-                              focusConversation(contact.getAttribute('account'),
-                                                contact.getAttribute('address'));
-                          });
-    }
+    var account = contact.getAttribute('account');
+    var address = contact.getAttribute('address');
+    var type = contact.getAttribute('type') || 'chat';
+
+    withConversation(
+        account, address, null, type, true, function() {
+            focusConversation(account, address);
+        });
+}
+
+function requestedCloseConversation(element) {
+    if(attr(element, 'type') == 'groupchat')
+        exitRoom(attr(element, 'account'),
+                 attr(element, 'address'),
+                 attr(element, 'resource'));
+
+    closeConversation(attr(element, 'account'),
+                      attr(element, 'address'));
 }
 
 function requestedCloseConversation(element) {
@@ -1067,20 +705,15 @@ function requestedOpenConversation() {
     if(request.confirm)
         if(request.type == 'groupchat')
             joinRoom(request.account, request.address, request.nick);
-        else
-            if(isConversationOpen(request.account,
-                                  request.address,
-                                  null,
-                                  'chat'))
-                focusConversation(request.account,
-                                  request.address);
+        else           
+            if(isConversationOpen(request.account, request.address))
+               focusConversation(request.account, request.address);
             else
-                withConversation(request.account, request.address,
-                                 '', 'chat', true,
-                                 function() {
-                                     focusConversation(request.account,
-                                                       request.address);
-                                 });
+                withConversation(
+                    request.account, request.address, null, null, true, 
+                    function() {
+                        focusConversation(request.account, request.address);
+                    });
 }
 
 function clickedTopic(event) {
@@ -1096,11 +729,11 @@ function clickedTopic(event) {
 function hoveredMousePointer(event) {
     if(!event.target.hasAttribute)
         return;
-    
+
     var get = (event.target.hasAttribute('account')) ?
         (function(attributeName) { return event.target.getAttribute(attributeName); }) :
         (function(attributeName) { return getAncestorAttribute(event.target, attributeName); });
-   
+
     getTop().document.getElementById('statusbar-display').label =
         'Account: <' + get('account') + '>, ' +
         'Address: <' + get('address') + '>, ' +
@@ -1109,47 +742,17 @@ function hoveredMousePointer(event) {
         'Type: <' + get('type') + '>';
 }
 
-function pressedKeyInChatInput(event) {
-    if(event.keyCode == KeyEvent.DOM_VK_RETURN) {
-        var textBox = event.currentTarget;
-        if(event.ctrlKey)
-            textBox.value += '\n';
-        else {
-            event.preventDefault();
-                
-            if(textBox.value.match(/^\s*$/))
-                return;
-
-            if(getAncestorAttribute(textBox, 'type') == 'groupchat') 
-                sendChatMessage(
-                    getAncestorAttribute(textBox, 'account'),
-                    getAncestorAttribute(textBox, 'address'),
-                    null,
-                    'groupchat',
-                    textBox.value);
-            else
-                sendChatMessage(
-                    getAncestorAttribute(textBox, 'account'),
-                    getAncestorAttribute(textBox, 'address'),
-                    getAncestorAttribute(textBox, 'resource'),
-                    getAncestorAttribute(textBox, 'type'),
-                    textBox.value);
-            textBox.value = '';
-            textBox.setAttribute('rows', 1);
-        }
-    }
-}
-
-function openedConversation(account, address, resource, type) {
-    contacts.startedConversationWith(account, address, resource);
-    _('conversations').collapsed = false;
+function openedConversation(account, address) {
+    contacts.startedConversationWith(account, address);
+    focusConversation(account, address);
+    
     if(_('conversations').childNodes.length == 1)
         contacts.nowTalkingWith(account, address);
 }
 
-function closedConversation(account, address, resource, type) {
-    contacts.stoppedConversationWith(account, address, resource);
-    if(_('conversations').childNodes.length == 0) 
+function closedConversation(account, address) {
+    contacts.stoppedConversationWith(account, address);
+    if(_('conversations').childNodes.length == 0)
         _('conversations').collapsed = true;
     else if(!_('conversations').selectedPanel) {
         _('conversations').selectedPanel = _('conversations').lastChild;
@@ -1184,9 +787,9 @@ function addContact(account, address, subscribe) {
         <query xmlns='jabber:iq:roster'>
         <item jid={address}/>
         </query></iq>);
-    
+
     XMPP.send(account, <presence to={address} type="subscribe"/>)
-}
+        }
 
 function exitRoom(account, roomAddress, roomNick) {
     XMPP.send(account,
@@ -1200,21 +803,12 @@ function joinRoom(account, roomAddress, roomNick) {
               </presence>);
 }
 
+// XXX OBSOLETE
+
 function setRoomTopic(account, roomAddress, content) {
-    XMPP.send(account, 
+    XMPP.send(account,
               <message to={roomAddress} type="groupchat">
               <subject>{content}</subject>
-              </message>);
-}
-
-function sendChatMessage(account, address, resource, type, text) {
-    var jid = address;
-    if(resource)
-        jid += '/' + resource;
-    
-    XMPP.send(account,
-              <message to={jid} type={type}>
-              <body>{text}</body>
               </message>);
 }
 
@@ -1233,7 +827,7 @@ function receivedSubscriptionRequest(presence) {
             null, 'Contact notification',
             address + ' wants to add ' + presence.stanza.@to + ' to his/her contact list.\nDo you accept?',
             'Also add ' + address + ' to my contact list', check);
-        reciprocate = check.value;        
+        reciprocate = check.value;
     }
     else {
         accept = prompts.confirm(
@@ -1256,65 +850,30 @@ function receivedSubscriptionApproval(presence) {
 
 function receivedChatMessage(message) {
     var from = XMPP.JID(message.stanza.@from);
-    displayChatMessage(
-        message.session.name,
-        from.address, from.resource,
-        message.direction,
-        message.stanza.@type,
-        message.stanza.@from,
-        message.stanza.body);
-}
 
-function receivedErrorMessage(message) {
-    var from = XMPP.JID(message.stanza.@from);
-    displayEvent(
-        message.session.name, from.address, from.resource, '',
-        'Error: code ' + message.stanza.error.@code,
-        'error');
-}
-
-function receivedErrorPresence(presence) {
-    var from = XMPP.JID(presence.stanza.@from);
-    displayEvent(
-        presence.session.name, from.address, from.resource, '',
-        'Error: code ' + presence.stanza.error.@code,
-        'error');
+    if(!getConversation(message.session.name, from.address))
+        withConversation(
+            message.session.name, from.address,
+            from.resource, message.stanza.@type,
+            true,
+            function(document) {
+                document.getElementById('input').textContent =
+                    message.stanza.toXMLString();
+            });
 }
 
 function sentChatMessage(message) {
-    var from = XMPP.JID(message.stanza.@to);
-    displayChatMessage(
-        message.session.name,
-        from.address, from.resource,
-        message.direction,
-        message.stanza.@type,
-        message.session.name,
-        message.stanza.body);
-}
+    var to = XMPP.JID(message.stanza.@to);
 
-function receivedMessageWithURL(message) {
-    if(_('conversations', {address: XMPP.JID(message.stanza.@from).address, role: 'follow'})
-       .getAttribute('checked') == 'true') {
-        var url = message.stanza.body.toString().match(urlRegexp)[0];
-        getBrowser().addTab(url);
-    }
-}
-
-function receivedRoomTopic(message) {
-    var from = XMPP.JID(message.stanza.@from);
-    withConversation(
-        message.session.name, from.address, '', 'groupchat', false,
-        function(conversation) {
-            var doc = _(conversation, {role: 'chat-output'}).contentDocument;
-            doc.getElementById('topic').textContent = message.stanza.subject;
-        });
-
-    displayEvent(
-        message.session.name,
-        from.address, from.resource,
-        'groupchat',
-        from.nick + ' set the topic to "' +
-        message.stanza.subject + '"', 'topic');
+    if(!getConversation(message.session.name, to.address))
+        withConversation(
+            message.session.name, to.address,
+            to.resource, message.stanza.@type,
+            true,
+            function(document) {
+                document.getElementById('input').textContent =
+                    message.stanza.toXMLString();
+            });
 }
 
 function receivedRoster(iq) {
@@ -1337,11 +896,6 @@ function receivedPresence(presence) {
         presence.stanza.@type,
         presence.stanza.show,
         presence.stanza.status);
-
-    updateResources(
-        presence.session.name, from.address,
-        from.resource,
-        presence.stanza.@type.toString());
 }
 
 function sentPresence(presence) {
@@ -1352,59 +906,23 @@ function sentPresence(presence) {
 function sentMUCPresence(presence) {
     var room = XMPP.JID(presence.stanza.@to);
 
-    createConversation(presence.session.name,
-                       room.address, room.resource, 'groupchat');
+    openAttachDocument(
+        presence.session.name, room.address, room.resource, 'groupchat',
+        'chrome://sameplace/content/app/chat.xhtml', 'mini');
 }
 
 function receivedMUCPresence(presence) {
     var from = XMPP.JID(presence.stanza.@from);
 
-    var eventMessage, eventClass;
-    if(presence.stanza.@type.toString() == 'unavailable') {
-        eventMessage = from.nick + ' left the room';
-        eventClass = 'leave';
-    } else {
-        eventMessage = from.nick + ' entered the room';
-        eventClass = 'join';
-    }
-    
-    displayEvent(
-        presence.session.name, from.address, from.resource, 'groupchat',
-        eventMessage, eventClass);
-
     contacts.resourceChangedPresence(
         presence.session.name,
-        from.address, 
+        from.address,
         from.resource,
         presence.stanza.@type);
 
     if(presence.stanza.@type != 'unavailable')
         contacts.startedConversationWith(
             presence.session.name, from.address);
-
-
-        // EXPERIMENTAL
-//         if(presence.stanza.ns_xul::x.length() > 0) {
-//             var agentFrame = document.createElement('iframe');
-//             agentFrame.setAttribute('class', 'box-inset');
-                
-//             participant.appendChild(agentFrame);
-//         }
-
-        // EXPERIMENTAL
-//         if(presence.stanza.ns_xul::x.length() > 0) {
-//             var agentWidget = 
-//                 (new DOMParser())
-//                 .parseFromString(presence.stanza.ns_xul::x.*[0], 'text/xml')
-//                 .documentElement;
-
-//             function addWidget(event) {
-//                 agentFrame.contentDocument.documentElement.appendChild(agentWidget);
-//                 agentFrame.contentWindow.removeEventListener('load', addWidget, false);
-//             }
-//             agentFrame.addEventListener('load', addWidget, false);
-//             agentFrame.setAttribute('src', 'agent.xul');
-//         }
 }
 
 // DEVELOPER UTILITIES

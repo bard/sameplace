@@ -28,48 +28,75 @@
              tooltiptext="Open a conversation (single or multi-user)"/>
     <command id="cycle-maximize" oncommand="requestedCycleMaximize();"
              tooltiptext="Maximize each panel in turn"/>
-    <command id="cycle-orientation" oncommand="cycleOrientation();"
-             tooltiptext="Toggle between horizontal and vertical layout"/>
   </commandset>
 
   <!-- MENUS -->
 
   <popupset>
     <popup id="message-menu"/>
-    <popup id="contact-menu" datasources="rdf:bookmarks" ref="NC:BookmarksRoot" flex="1"
-           onpopupshowing="this.builder.rebuild();">
+    <popup id="contact-menu" flex="1">
       <menuitem label="Set Alias..." oncommand="requestedSetContactAlias(document.popupNode);"/>
       <menuitem label="Remove" oncommand="requestedRemoveContact(document.popupNode);"/>
       <menuseparator/>
-      <menuitem disabled="true" style="font-weight: bold;" label="Open for:"/>
 
-      <template>
-        <rule>
-          <conditions>
-            <content uri="?root"/>
-            <member container="?root" child="?menu"/>
-            <triple subject="?menu"
-                    predicate="http://home.netscape.com/NC-rdf#Name"
-                    object="SamePlace"/>
-            <member container="?menu" child="?app"/>
-            <triple subject="?app"
-                    predicate="http://home.netscape.com/NC-rdf#Name"
-                    object="?name"/>
-            <triple subject="?app"
-                    predicate="http://home.netscape.com/NC-rdf#URL"
-                    object="?url"/>
-          </conditions>
-          <action>
-            <menuitem uri="?app" label="?name (browser)" value="?url"
-                      oncommand="requestedOpenAttachDocument(document.popupNode, this.value);"/>
-            <menuitem uri="?app" label="?name (sidebar)" value="?url"
-                      oncommand="requestedOpenAttachDocument(document.popupNode, this.value);"/>
-          </action>
-        </rule>
-      </template>
+      <menu label="Open in browser as...">
+        <menupopup  datasources="rdf:bookmarks" ref="NC:BookmarksRoot"
+                    onpopupshowing="this.builder.rebuild();">
+          <template>
+            <rule>
+              <conditions>
+                <content uri="?root"/>
+                <member container="?root" child="?menu"/>
+                <triple subject="?menu"
+                        predicate="http://home.netscape.com/NC-rdf#Name"
+                        object="SamePlace"/>
+                <member container="?menu" child="?app"/>
+                <triple subject="?app"
+                        predicate="http://home.netscape.com/NC-rdf#Name"
+                        object="?name"/>
+                <triple subject="?app"
+                        predicate="http://home.netscape.com/NC-rdf#URL"
+                        object="?url"/>
+              </conditions>
+              <action>
+                <menuitem uri="?app" label="?name" value="?url"
+                          oncommand="requestedOpenAttachDocument(document.popupNode, this.value, 'main');"/>
+              </action>
+            </rule>
+          </template>          
+        </menupopup>
+      </menu>
 
-      <menuitem label="Current web page"
-                oncommand="requestedAttachDocument(document.popupNode, this);"/>
+      <menu label="Open in sidebar as...">
+        <menupopup  datasources="rdf:bookmarks" ref="NC:BookmarksRoot"
+                    onpopupshowing="this.builder.rebuild();">
+          <template>
+            <rule>
+              <conditions>
+                <content uri="?root"/>
+                <member container="?root" child="?menu"/>
+                <triple subject="?menu"
+                        predicate="http://home.netscape.com/NC-rdf#Name"
+                        object="SamePlace"/>
+                <member container="?menu" child="?app"/>
+                <triple subject="?app"
+                        predicate="http://home.netscape.com/NC-rdf#Name"
+                        object="?name"/>
+                <triple subject="?app"
+                        predicate="http://home.netscape.com/NC-rdf#URL"
+                        object="?url"/>
+              </conditions>
+              <action>
+                <menuitem uri="?app" label="?name" value="?url"
+                          oncommand="requestedOpenAttachDocument(document.popupNode, this.value, 'mini');"/>
+              </action>
+            </rule>
+          </template>          
+        </menupopup>
+      </menu>
+
+      <menuitem label="Open in current web page"
+                oncommand="requestedAttachBrowser(document.popupNode);"/>
     </popup>
 
     <tooltip id="attach-tooltip"
@@ -127,8 +154,6 @@
 
         <toolbarbutton command="open-conversation"/>
 
-        <toolbarbutton command="cycle-orientation" hidden="true"/>
-
         <toolbarbutton command="cycle-maximize" hidden="true"/>
 
         <toolbarbutton id="devel-shortcut" oncommand="quickTest();"
@@ -136,50 +161,36 @@
       </toolbar>
     </toolbox>
 
-    <box flex="1" id="box-main" orient="vertical">
-      <!-- CONTACT AREA -->
+    <!-- CONTACT AREA -->
 
-      <box id="box-auxiliary" persist="height" orient="vertical" flex="1">
-        <vbox id="contact-list" flex="1" style="overflow: auto;">
-          <spacer role="open"/>
-          <spacer role="online"/>
-          <spacer role="away"/>
-          <spacer role="dnd"/>
-          <spacer role="offline"/>
-        </vbox>
-      </box>
+    <box id="box-auxiliary" persist="height" orient="vertical" flex="1">
+      <vbox id="contact-list" flex="1" style="overflow: auto;">
+        <spacer role="open"/>
+        <spacer role="online"/>
+        <spacer role="away"/>
+        <spacer role="dnd"/>
+        <spacer role="offline"/>
+      </vbox>
+    </box>
 
-      <splitter id="splitter-main"  orient="vertical"/>
+    <splitter id="splitter-main"  orient="vertical"/>
 
-      <!-- CONVERSATION AREA -->
+    <!-- MINI-BROWSER AREA -->
 
-      <deck flex="4" id="conversations" collapsed="true"/>
+    <deck flex="4" id="conversations" collapsed="true"/>
 
-      <box hidden="true" id="blueprints">
-        <vbox role="conversation" address="" resource="" type="">
-          <toolbox>
-            <toolbar id="conversation-header" fullscreentoolbar="true">
-              <toolbaritem align="center">
-                <label role="contact" class="header"/>
-              </toolbaritem>
+    <!-- BLUEPRINTS -->
 
-              <toolbarspring/>
+    <box hidden="true" id="blueprints">
+      <vbox role="conversation" 
+            account="" address="" resource="" type="" flex="1">
+        <toolbox>
+          <toolbar fullscreentoolbar="true">
+            <toolbaritem align="center">
+              <label role="contact" class="header"/>
+            </toolbaritem>
 
-              <toolbarbutton role="close"
-                             tooltiptext="Close this conversation"
-                             oncommand="requestedCloseConversation(this);"/>
-            </toolbar>
-          </toolbox>
-
-
-          <iframe role="chat-output" src="chat.html" flex="5" 
-                  context="message-menu"
-                  ondragover="nsDragAndDrop.dragOver(event, chatOutputDropObserver)"
-                  ondragdrop="nsDragAndDrop.drop(event, chatOutputDropObserver)"/>
-
-          <splitter/>
-
-          <toolbar id="conversation-toolbar" fullscreentoolbar="true">
+            <toolbarspring/>
 
             <toolbarbutton label="Plugins "
                            type="menu" tooltiptext="Available plugins"
@@ -197,39 +208,36 @@
                           checked="false" accesskey="F" type="checkbox"/>
               </menupopup>
             </toolbarbutton>
-
-            <toolbarspring/>
-
-            <toolbarbutton role="smileys"
-                           tooltiptext="Insert emoticons ;-)"
-                           oncommand="requestedInsertedEmoticons(event);"/>                           
-
+            
             <toolbarbutton role="attach"
                            tooltip="attach-tooltip"
-                           oncommand="requestedAttachDocument(this);"/>
+                           oncommand="requestedAttachBrowser(this);"/>
 
-            <toolbarspring/>
+            <toolbarbutton role="close"
+                           tooltiptext="Close this conversation"
+                           oncommand="requestedCloseConversation(this);"/>
           </toolbar>
+        </toolbox>
+        
+        <iframe role="chat" src="about:blank" flex="1" 
+                ondragover="nsDragAndDrop.dragOver(event, chatOutputDropObserver)"
+                ondragdrop="nsDragAndDrop.drop(event, chatOutputDropObserver)"/>
+      </vbox>
 
-          <textbox role="chat-input" multiline="true" rows="0"
-                   onkeypress="pressedKeyInChatInput(event);"
-                   onoverflow="growTextBox(this);"/>
-        </vbox>
 
-        <vbox role="contact"
-              account="" address="" open="false" current="false"
-              onclick="if(event.button == 0) clickedContact(this);"
-              context="contact-menu"
-              tooltip="contact-tooltip">
-          <hbox flex="1" align="center">
-            <image role="status-indicator"/>
-            <label role="name"/>
-            <spacer flex="1"/>
-            <label role="pending" value="0" />
-          </hbox>
-          <label role="status" crop="end"/> 
-        </vbox>
-      </box>
-    </box>    
+      <vbox role="contact"
+            account="" address="" open="false" current="false"
+            onclick="if(event.button == 0) clickedContact(this);"
+            context="contact-menu" 
+            tooltip="contact-tooltip">
+        <hbox flex="1" align="center">
+          <image role="status-indicator"/>
+          <label role="name"/>
+          <spacer flex="1"/>
+          <label role="pending" value="0"/>
+        </hbox>
+        <label role="status" crop="end"/> 
+      </vbox>
+    </box>
   </vbox>
 </page>
