@@ -191,16 +191,8 @@ var contacts = {
             nameElement.setAttribute('value', address);
     },
 
-    resourceChangedPresence: function(account, address, resource, availability, show, status) {
+    resourceChangedPresence: function(account, address) {
         var contact = this.get(account, address) || this.add(account, address);
-
-        if(availability == undefined)
-            availability = 'available';
-        if(show)
-            show = show.toString();
-        if(status)
-            status = status.toString();
-
         var summary = XMPP.presenceSummary(account, address);
 
         contact.setAttribute('availability', summary.stanza.@type.toString() || 'available');
@@ -208,7 +200,7 @@ var contacts = {
 
         this._reposition(contact);
 
-        if(status)
+        if(summary.stanza.status != undefined)
             _(contact, {role: 'status'}).value = status;
         else
             _(contact, {role: 'status'}).removeAttribute('value');
@@ -889,13 +881,7 @@ function receivedRoster(iq) {
 function receivedPresence(presence) {
     var from = XMPP.JID(presence.stanza.@from);
 
-    contacts.resourceChangedPresence(
-        presence.session.name,
-        from.address,
-        from.resource,
-        presence.stanza.@type,
-        presence.stanza.show,
-        presence.stanza.status);
+    contacts.resourceChangedPresence(presence.session.name, from.address);
 }
 
 function sentPresence(presence) {
