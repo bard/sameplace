@@ -251,6 +251,11 @@ function scrollingOnlyIfAtBottom(domElement, action) {
 // GUI UTILITIES (SPECIFIC)
 // ----------------------------------------------------------------------
 
+function preloadSmileys() {
+    for(var smileySymbol in smileyMap) 
+        (new Image()).src = smileyMap[smileySymbol] + '.png';
+}
+
 function M(domElement) {
     var wrapper = {
         get sender() {
@@ -377,6 +382,8 @@ function init(event) {
 
     _('chat-output').addEventListener(
         'scroll', function(event) { scrolledWindow(event); }, false);
+
+    preloadSmileys();
 }
 
 
