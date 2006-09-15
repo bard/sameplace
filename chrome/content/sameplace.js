@@ -920,10 +920,6 @@ function receivedMUCPresence(presence) {
         from.address,
         from.resource,
         presence.stanza.@type);
-
-    if(presence.stanza.@type != 'unavailable')
-        contacts.startedConversationWith(
-            presence.session.name, from.address);
 }
 
 // DEVELOPER UTILITIES
