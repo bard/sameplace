@@ -201,10 +201,11 @@ var contacts = {
 
         this._reposition(contact);
 
-        if(summary.stanza.status != undefined)
-            _(contact, {role: 'status'}).value = summary.stanza.status;
-        else
+        if(summary.stanza.status == undefined ||
+           summary.stanza.status == '')
             _(contact, {role: 'status'}).removeAttribute('value');
+        else
+            _(contact, {role: 'status'}).value = summary.stanza.status;
     },
 
     _reposition: function(contact) {
