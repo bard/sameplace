@@ -210,27 +210,31 @@ function isAtBottom(domElement) {
     return domElement.scrollHeight == domElement.scrollTop + domElement.clientHeight;
 }
 
+function smoothScroll(domElement, stepsLeft) {
+    if(stepsLeft == undefined)
+        stepsLeft = 4;
+    else if(stepsLeft == 0)
+        return;
+
+    var targetScrollTop = domElement.scrollHeight - domElement.clientHeight;
+    var deltaScrollTop = Math.abs(domElement.scrollTop - targetScrollTop);
+    var nextStep = deltaScrollTop / stepsLeft;
+    domElement.scrollTop += nextStep;
+
+    window.setTimeout(
+        function() { smoothScroll(domElement, stepsLeft - 1); }, 5);
+}
+
 function scrollToBottom(domElement, smooth) {
+    if(isAtBottom(domElement) ||
+       (smooth && scrolling))
+        return;
+
     if(smooth == undefined)
         smooth = true;
-    
-    function smoothScroll() {
-        scrolling = true;
-        var intervalID = window.setInterval(
-            function() {
-                if(!isAtBottom(domElement))
-                    domElement.scrollTop += 5;
-                else {
-                    window.clearInterval(intervalID);
-                    scrolling = false;
-                }
-            }, 15);
-    }
 
-    if(smooth && scrolling)
-        return;
-    else if(smooth)
-        smoothScroll();
+    if(smooth)
+        smoothScroll(domElement);
     else        
         domElement.scrollTop =
             domElement.scrollHeight - domElement.clientHeight;
@@ -428,7 +432,7 @@ function scrolledWindow(event) {
 
 function resizedWindow(event) {
     if(wantBottom || _('chat-output').scrollTop == 0)
-        scrollToBottom(_('chat-output'), false);
+        scrollToBottom(_('chat-output'));
 }
 
 
