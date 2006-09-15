@@ -417,12 +417,19 @@ function changeStatusMessage(message) {
             for each(var presence in XMPP.cache.presenceOut)
                 if(presence.session.name == account.jid) {
                     stanza = presence.stanza.copy();
-                    stanza.status = message;
+                    if(message)
+                        stanza.status = message;
+                    else
+                        delete stanza.status;
                     break;
                 }
 
-            stanza = stanza ||
-                <presence><status>{message}</status></presence>;
+            if(!stanza) {
+                if(message)
+                    stanza = <presence><status>{message}</status></presence>;
+                else
+                    stanza = <presence/>;
+            }
 
             XMPP.send(account, stanza);
         }
