@@ -329,6 +329,9 @@ function updateTitle(address) {
 }
 
 function updateResources(resource, availability) {
+    if(!resource)
+        return;
+    
     var domResource = x('//*[@id="resources"]' +
                         '//*[text()="' + resource + '"]');
     
