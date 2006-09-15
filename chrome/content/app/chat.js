@@ -39,8 +39,9 @@ var smileyMap = {
     ':-(|)': 'monkey',
     ':-|':   'plain',
     ':-(':   'sad',
+    ':-))':  'smile-big',
     ':-)':   'smile',
-    ':-D':   'smile-big',
+    ':-D':   'grin',
     ':-0':  'surprise',
     ';-)':   'wink'
 };
