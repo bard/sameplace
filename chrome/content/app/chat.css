@@ -137,6 +137,13 @@ ul#messages
   -moz-border-radius-bottomright: 8px;
   }
 
+.message
+{
+  margin-bottom: 0.25em;
+  margin-top: 0.25em;
+  line-height: 120%;
+  }
+
 .message:hover > .time
 {
   display: block;
