@@ -140,6 +140,7 @@ var contacts = {
         contact = cloneBlueprint('contact');
         contact.setAttribute('address', address);
         contact.setAttribute('account', account);
+        contact.setAttribute('type', 'chat');
         contact.setAttribute('availability', 'unavailable');
         contact.getElementsByAttribute('role', 'name')[0].setAttribute('value', address);
         _('contact-list').appendChild(contact);
@@ -201,7 +202,7 @@ var contacts = {
         this._reposition(contact);
 
         if(summary.stanza.status != undefined)
-            _(contact, {role: 'status'}).value = status;
+            _(contact, {role: 'status'}).value = summary.stanza.status;
         else
             _(contact, {role: 'status'}).removeAttribute('value');
     },
@@ -223,10 +224,11 @@ var contacts = {
             _('contact-list').appendChild(contact);
         fadeIn(contact);
     },
-    
-    startedConversationWith: function(account, address) {
+
+    startedConversationWith: function(account, address, type) {
         var contact = this.get(account, address) || this.add(account, address);
         contact.setAttribute('open', 'true');
+        contact.setAttribute('type', type);
         this._reposition(contact);
     },
 
@@ -256,7 +258,7 @@ function fadeIn(element, stepValue, stepInterval) {
     function fadeStep() {
         if(element.style.opacity == 1)
             return;
-        
+
         var targetOpacity = parseFloat(element.style.opacity) + stepValue;
         if(targetOpacity > 1)
             targetOpacity = 1;
@@ -466,7 +468,7 @@ function openAttachDocument(account, address, resource, type, documentHref, targ
             XMPP.enableContentDocument(contentPanel, account, address, type);
 
             if(documentHref == 'chrome://sameplace/content/app/chat.xhtml')
-                openedConversation(account, address);
+                openedConversation(account, address, type);
 
             if(action) 
                 action(document);
@@ -650,7 +652,7 @@ function requestedCycleMaximize(command) {
 function clickedContact(contact) {
     var account = contact.getAttribute('account');
     var address = contact.getAttribute('address');
-    var type = contact.getAttribute('type') || 'chat';
+    var type = contact.getAttribute('type');
 
     withConversation(
         account, address, null, type, true, function() {
@@ -734,8 +736,8 @@ function hoveredMousePointer(event) {
         'Type: <' + get('type') + '>';
 }
 
-function openedConversation(account, address) {
-    contacts.startedConversationWith(account, address);
+function openedConversation(account, address, type) {
+    contacts.startedConversationWith(account, address, type);
     focusConversation(account, address);
     
     if(_('conversations').childNodes.length == 1)
