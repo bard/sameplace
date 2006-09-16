@@ -23,7 +23,6 @@
 
 var serializer = new XMLSerializer();
 var parser = new DOMParser();
-var ns_application = new Namespace(stripUriFragment(window.location.href));
 var ns_xhtml = new Namespace('http://www.w3.org/1999/xhtml');
 var ns_muc_user = new Namespace('http://jabber.org/protocol/muc#user');
 var ns_muc = new Namespace('http://jabber.org/protocol/muc');
@@ -171,11 +170,11 @@ function cloneBlueprint(name) {
 }
 
 function getElementByAttribute(parent, name, value) {
-    for(child = parent.firstChild; child; child = child.nextSibling)
+    for(var child = parent.firstChild; child; child = child.nextSibling)
         if(child.getAttribute && child.getAttribute(name) == value)
             return child;
 
-    for(child = parent.firstChild; child; child = child.nextSibling) {
+    for(var child = parent.firstChild; child; child = child.nextSibling) {
         var matchingChild = getElementByAttribute(child, name, value);
         if(matchingChild)
             return matchingChild;
@@ -452,7 +451,6 @@ function resizedWindow(event) {
 function send(content) {
     var message = <message/>;
     message.body = <body>{content}</body>;
-    message.x = <chat:x xmlns:chat={ns_application}/>;
     _('output').textContent = message.toXMLString();
 }
 
