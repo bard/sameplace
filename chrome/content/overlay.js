@@ -2,7 +2,12 @@ var sameplace_xmppChannel = XMPP.createChannel();
 
 sameplace_xmppChannel.on(
     {event: 'stream', direction: 'out', state: 'open'},
-    function(stream) { sameplace_loadSidebar(); });
+    function(stream) {
+        if(window == Components.classes["@mozilla.org/appshell/window-mediator;1"]
+           .getService(Components.interfaces.nsIWindowMediator)
+           .getMostRecentWindow('navigator:browser'))
+            sameplace_loadSidebar();
+    });
 
 function sameplace_loadSidebar(force) {
     var sidebar = document.getElementById('sameplace-sidebar');
