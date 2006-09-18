@@ -39,7 +39,7 @@
       <menuitem label="Remove" oncommand="requestedRemoveContact(document.popupNode);"/>
       <menuseparator/>
 
-      <menu label="Open in browser as...">
+      <menu label="Communicate in browser using...">
         <menupopup  datasources="rdf:bookmarks" ref="NC:BookmarksRoot"
                     onpopupshowing="this.builder.rebuild();">
           <template>
@@ -67,7 +67,7 @@
         </menupopup>
       </menu>
 
-      <menu label="Open in sidebar as...">
+      <menu label="Communicate in sidebar using...">
         <menupopup  datasources="rdf:bookmarks" ref="NC:BookmarksRoot"
                     onpopupshowing="this.builder.rebuild();">
           <template>
@@ -95,7 +95,7 @@
         </menupopup>
       </menu>
 
-      <menuitem label="Open in current web page"
+      <menuitem label="Communicate using current web page"
                 oncommand="requestedAttachBrowser(document.popupNode);"/>
     </popup>
 
