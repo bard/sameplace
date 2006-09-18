@@ -56,7 +56,12 @@
 
 #contact-list [role="contact"][open="false"]
 { 
-  font-size: 0.8em;
+
+  }
+
+#contact-list [role="contact"][open="true"]
+{
+  font-size: 105%;
   }
 
 /* CONVERSATION FOCUS END */
