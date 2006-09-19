@@ -1,5 +1,17 @@
 
 Context:
 
+[JS API: connected page now also gets "from" address on outgoing messages (inserted artificially).
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060919193723] 
+
+[JS API: renamed channel.handle() to more intuitive channel.receive().
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060919193633] 
+
+[JS API: Unload event of connected pages was not received, fixed.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060918125451] 
+
+[Accounts overlay: show availability based on outbound presences, not whether session is up or down.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060917162733] 
+
 [TAG 0.2.20
 Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20060917162539] 

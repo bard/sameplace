@@ -386,8 +386,8 @@ function withConversation(account, address, resource, type, forceOpen, action) {
         openAttachDocument(
             account, address, resource, type,
             'chrome://sameplace/content/app/chat.xhtml',
-            'mini', function(document) {
-                action(document);
+            'mini', function(contentPanel) {
+                action(contentPanel);
             });
     else
         action(_(conversation, {role: 'chat'}).contentDocument);
@@ -479,8 +479,10 @@ function openAttachDocument(account, address, resource, type, documentHref, targ
                 openedConversation(account, address, type);
 
             if(action) 
-                action(document);
+                action(contentPanel);
         });
+
+    return contentPanel;
 }
 
 function maximizeAuxiliary() {
@@ -859,15 +861,32 @@ function receivedSubscriptionApproval(presence) {
 function receivedChatMessage(message) {
     var from = XMPP.JID(message.stanza.@from);
 
-    if(!getConversation(message.session.name, from.address))
-        withConversation(
+    var wConversation = getConversation(message.session.name, from.address);
+    if(!wConversation) {
+        openAttachDocument(
             message.session.name, from.address,
             from.resource, message.stanza.@type,
-            true,
-            function(document) {
-                document.getElementById('input').textContent =
-                    message.stanza.toXMLString();
+            'chrome://sameplace/content/app/chat.xhtml',
+            'mini',
+            function(contentPanel) {
+                contentPanel.xmppChannel.receive(message);
             });
+    } else if(!wConversation.contentDocument ||
+              (wConversation.contentDocument &&
+               !wConversation.contentDocument.getElementById('input'))) {
+
+        var panel = _(wConversation, {role: 'chat'});
+        panel.addEventListener(
+            'load', function(event) {
+                if(event.target != panel.contentDocument)
+                    return;
+                panel = event.currentTarget;
+                panel.contentWindow.addEventListener(
+                    'load', function(event) {
+                        panel.xmppChannel.receive(message);
+                    }, false);
+            }, true);
+    }
 }
 
 function sentChatMessage(message) {
