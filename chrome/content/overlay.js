@@ -1,3 +1,14 @@
+window.addEventListener(
+    'load', function(event) {
+        var button = document.getElementById('xmpp-button');
+
+        button.addEventListener(
+            'command', function(event) {
+                if(event.target == button)
+                    sameplace_toggleSidebar();
+                }, false);
+    }, false);
+
 var sameplace_xmppChannel = XMPP.createChannel();
 
 sameplace_xmppChannel.on(
