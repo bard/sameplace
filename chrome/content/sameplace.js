@@ -360,19 +360,6 @@ function queuePostLoadAction(contentPanel, action) {
         }, true);
 }
 
-function loadDocument(contentPanel, documentHref, action) {
-    contentPanel.addEventListener(
-        'load', function(event) {
-            contentPanel.contentWindow.addEventListener(
-                'load', function(event) {
-                    action(contentPanel.contentDocument);
-                }, false);
-            contentPanel.removeEventListener(
-                'load', arguments.callee, true);
-        }, true);
-    contentPanel.contentDocument.location.href = documentHref;
-}
-
 
 // GUI UTILITIES (SPECIFIC)
 // ----------------------------------------------------------------------
@@ -487,8 +474,8 @@ function openAttachPanel(account, address, resource, type, documentHref, target,
             }, true);
     }
 
-    loadDocument(
-        contentPanel, documentHref, function(document) {
+    queuePostLoadAction(
+        contentPanel, function(document) {
             XMPP.enableContentDocument(contentPanel, account, address, type);
 
             if(documentHref == 'chrome://sameplace/content/app/chat.xhtml')
@@ -497,6 +484,8 @@ function openAttachPanel(account, address, resource, type, documentHref, target,
             if(action) 
                 action(contentPanel);
         });
+    
+    contentPanel.contentDocument.location.href = documentHref;
 
     return contentPanel;
 }
