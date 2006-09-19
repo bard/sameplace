@@ -344,6 +344,22 @@ function scrollingOnlyIfAtBottom(window, action) {
 // GUI UTILITIES (GENERIC)
 // ----------------------------------------------------------------------
 
+function queuePostLoadAction(contentPanel, action) {
+    contentPanel.addEventListener(
+        'load', function(event) {
+            if(event.target != contentPanel.contentDocument)
+                return;
+
+            // The following appears not to work if reference to
+            // contentPanel is not the one carried by event object.
+            contentPanel = event.currentTarget;
+            contentPanel.contentWindow.addEventListener(
+                'load', function(event) {
+                    action(contentPanel);
+                }, false);
+        }, true);
+}
+
 function loadDocument(contentPanel, documentHref, action) {
     contentPanel.addEventListener(
         'load', function(event) {
@@ -875,17 +891,10 @@ function receivedChatMessage(message) {
               (wConversation.contentDocument &&
                !wConversation.contentDocument.getElementById('input'))) {
 
-        var panel = _(wConversation, {role: 'chat'});
-        panel.addEventListener(
-            'load', function(event) {
-                if(event.target != panel.contentDocument)
-                    return;
-                panel = event.currentTarget;
-                panel.contentWindow.addEventListener(
-                    'load', function(event) {
-                        panel.xmppChannel.receive(message);
-                    }, false);
-            }, true);
+        queuePostLoadAction(
+            _(wConversation, {role: 'chat'}), function(contentPanel) {
+                contentPanel.xmppChannel.receive(message);
+            });
     }
 }
 
