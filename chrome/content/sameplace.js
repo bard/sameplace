@@ -399,7 +399,7 @@ function withConversation(account, address, resource, type, forceOpen, action) {
     var conversation = getConversation(account, address);
 
     if(!conversation && forceOpen)
-        openAttachDocument(
+        openAttachPanel(
             account, address, resource, type,
             'chrome://sameplace/content/app/chat.xhtml',
             'mini', function(contentPanel) {
@@ -456,7 +456,7 @@ function attachContentDocument(contentPanel, account, address, type) {
     XMPP.enableContentDocument(contentPanel, account, address, type);
 }
 
-function openAttachDocument(account, address, resource, type, documentHref, target, action) {
+function openAttachPanel(account, address, resource, type, documentHref, target, action) {
     var contentPanel;
     if(target == 'main') {
         if(getBrowser().contentDocument.location.href != 'about:blank')
@@ -654,12 +654,12 @@ function requestedAddContact() {
         addContact(request.account, request.contactAddress, request.subscribeToPresence);
 }
 
-function requestedOpenAttachDocument(contactElement, documentHref, target) {
+function requestedOpenAttachPanel(contactElement, documentHref, target) {
     var account = attr(contactElement, 'account');
     var address = attr(contactElement, 'address');
     var type = attr(contactElement, 'type') || 'chat';
 
-    openAttachDocument(account, address, null, type, documentHref, target);
+    openAttachPanel(account, address, null, type, documentHref, target);
 }
 
 function requestedAttachDocument(element) {
@@ -879,7 +879,7 @@ function receivedChatMessage(message) {
 
     var wConversation = getConversation(message.session.name, from.address);
     if(!wConversation) {
-        openAttachDocument(
+        openAttachPanel(
             message.session.name, from.address,
             from.resource, message.stanza.@type,
             'chrome://sameplace/content/app/chat.xhtml',
@@ -936,7 +936,7 @@ function sentPresence(presence) {
 function sentMUCPresence(presence) {
     var room = XMPP.JID(presence.stanza.@to);
 
-    openAttachDocument(
+    openAttachPanel(
         presence.session.name, room.address, room.resource, 'groupchat',
         'chrome://sameplace/content/app/chat.xhtml', 'mini');
 }
