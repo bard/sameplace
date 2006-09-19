@@ -662,13 +662,6 @@ function requestedOpenAttachPanel(contactElement, documentHref, target) {
     openAttachPanel(account, address, null, type, documentHref, target);
 }
 
-function requestedAttachDocument(element) {
-    attachDocument(getBrowser().contentDocument,
-                   attr(element, 'account'),
-                   attr(element, 'address'),
-                   attr(element, 'type'));
-}
-
 function requestedCycleMaximize(command) {
     if(!_('conversations').collapsed &&
        !_('box-auxiliary').collapsed)
