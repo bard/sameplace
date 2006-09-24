@@ -33,7 +33,7 @@ function init(event) {
     if(!event.target)
         return;
 
-    _('contact-list').selectedIndex = -1;
+    _('contacts').selectedIndex = -1;
 
     channel = XMPP.createChannel();
 
@@ -130,7 +130,7 @@ var contacts = {
     // interface glue
 
     get: function(account, address) {
-        return x('//*[@id="contact-list"]//*[' +
+        return x('//*[@id="contacts"]//*[' +
                  '@address="' + address + '" and ' +
                  '@account="' + account + '"]');
     },
@@ -143,7 +143,7 @@ var contacts = {
         contact.setAttribute('type', 'chat');
         contact.setAttribute('availability', 'unavailable');
         contact.getElementsByAttribute('role', 'name')[0].setAttribute('value', address);
-        _('contact-list').appendChild(contact);
+        _('contacts').appendChild(contact);
         return contact;
     },
 
@@ -165,7 +165,7 @@ var contacts = {
     },
 
     nowTalkingWith: function(account, address) {
-        var previouslyTalking = _('contact-list', {current: 'true'});
+        var previouslyTalking = _('contacts', {current: 'true'});
         if(previouslyTalking)
             previouslyTalking.setAttribute('current', 'false');
 
@@ -179,7 +179,7 @@ var contacts = {
 
         if(subscription)
             if(subscription == 'remove') {
-                _('contact-list').removeChild(contact);
+                _('contacts').removeChild(contact);
                 return;
             }
             else
@@ -214,15 +214,15 @@ var contacts = {
 
         contact.style.opacity = 0;
         if(contact.getAttribute('open') == 'true')
-            _('contact-list').insertBefore(contact, _('contact-list', {role: 'open'}).nextSibling);
+            _('contacts').insertBefore(contact, _('contacts', {role: 'open'}).nextSibling);
         else if(availability == 'available' && show == '')
-            _('contact-list').insertBefore(contact, _('contact-list', {role: 'online'}).nextSibling);
+            _('contacts').insertBefore(contact, _('contacts', {role: 'online'}).nextSibling);
         else if(availability == 'available' && show == 'away')
-            _('contact-list').insertBefore(contact, _('contact-list', {role: 'away'}).nextSibling);
+            _('contacts').insertBefore(contact, _('contacts', {role: 'away'}).nextSibling);
         else if(availability == 'available' && show == 'dnd')
-            _('contact-list').insertBefore(contact, _('contact-list', {role: 'dnd'}).nextSibling);
+            _('contacts').insertBefore(contact, _('contacts', {role: 'dnd'}).nextSibling);
         else
-            _('contact-list').appendChild(contact);
+            _('contacts').appendChild(contact);
         fadeIn(contact);
     },
 
@@ -412,14 +412,14 @@ function setTabbedLayout() {
     _('layout-stacked').hidden = true;
     _('layout-tabbed').hidden = false;
     _('tabpanel-conversations').appendChild(_('conversations'));
-    _('tabpanel-contacts').appendChild(_('contact-list'));
+    _('tabpanel-contacts').appendChild(_('contacts'));
 }
 
 function setStackedLayout() {
     _('layout-tabbed').hidden = true;
     _('layout-stacked').hidden = false;
     _('box-conversations').appendChild(_('conversations'));
-    _('box-contacts').appendChild(_('contact-list'));
+    _('box-contacts').appendChild(_('contacts'));
 }
 
 function updateAttachTooltip() {

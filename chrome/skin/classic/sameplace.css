@@ -19,12 +19,12 @@
   }
 
 
-#contact-list
+#contacts
 {
   background: white url("user-bg.png") bottom right no-repeat;
   }
 
-#contact-list [role="contact"] [role="status"]
+#contacts [role="contact"] [role="status"]
 {
   font-size: smaller;
   padding-left: 1em;
@@ -32,34 +32,34 @@
   color: graytext;
   }
 
-#contact-list [role="contact"]
+#contacts [role="contact"]
 {
   border: thin solid transparent;
   }
 
-#contact-list [role="contact"]:hover
+#contacts [role="contact"]:hover
 {
   border: thin dotted gray;
   }
 
 /* CONVERSATION FOCUS START */
 
-#contact-list [role="contact"][open="true"][current="true"] [role="name"]
+#contacts [role="contact"][open="true"][current="true"] [role="name"]
 {
   font-weight: bold;
   }
 
-#contact-list [role="contact"][availability="unavailable"][open="false"]
+#contacts [role="contact"][availability="unavailable"][open="false"]
 {
   color: graytext;
   }
 
-#contact-list [role="contact"][open="false"]
+#contacts [role="contact"][open="false"]
 { 
 
   }
 
-#contact-list [role="contact"][open="true"]
+#contacts [role="contact"][open="true"]
 {
   font-size: 105%;
   }
@@ -68,7 +68,7 @@
 
 /* STATUS INDICATOR START */
 
-#contact-list [role="contact"] [role="status-indicator"]
+#contacts [role="contact"] [role="status-indicator"]
 {
   list-style-image: url("chrome://xmpp4moz/skin/status/all-small.png");
   max-width: 16px;
@@ -76,41 +76,41 @@
   -moz-image-region: rect(48px 16px 64px 0px);  
   }
 
-#contact-list [role="contact"][availability="available"][show="dnd"] [role="status-indicator"]
+#contacts [role="contact"][availability="available"][show="dnd"] [role="status-indicator"]
 {
   -moz-image-region: rect(0px 16px 16px 0px);
   }
 
-#contact-list [role="contact"][availability="available"] [role="status-indicator"]
+#contacts [role="contact"][availability="available"] [role="status-indicator"]
 {
   -moz-image-region: rect(16px 16px 32px 0px);
   }
 
-#contact-list [role="contact"][availability="available"][show="away"] [role="status-indicator"],
-#contact-list [role="contact"][availability="available"][show="xa"]   [role="status-indicator"]
+#contacts [role="contact"][availability="available"][show="away"] [role="status-indicator"],
+#contacts [role="contact"][availability="available"][show="xa"]   [role="status-indicator"]
 {
   -moz-image-region: rect(32px 16px 48px 0px);
   }
 
-#contact-list [role="contact"][availability="unavailable"] [role="status-indicator"]
+#contacts [role="contact"][availability="unavailable"] [role="status-indicator"]
 {
   -moz-image-region: rect(48px 16px 64px 0px);
   }
 
-#contact-list [role="contact"] [role="pending"]
+#contacts [role="contact"] [role="pending"]
 {
   font-weight: bold;
   color: red;
   }
 
-#contact-list [role="contact"] [role="pending"][value="0"]
+#contacts [role="contact"] [role="pending"][value="0"]
 {
   visibility: hidden;
   }
 
 /* STATUS INDICATOR END */
 
-#contact-list spacer[role="online"]
+#contacts spacer[role="online"]
 {
   height: 1px;
   background: url("chrome://sameplace/skin/separator.png") center no-repeat;
