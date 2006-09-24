@@ -104,13 +104,13 @@ function init(event) {
 
     _('conversations').addEventListener(
         'DOMNodeInserted', function(event) {
-            _('conversations').collapsed = 
+            _('box-conversations').collapsed = 
                 (_('conversations').childNodes.length == 0);
         }, false);
 
     _('conversations').addEventListener(
         'DOMNodeRemoved', function(event) {
-            _('conversations').collapsed = 
+            _('box-conversations').collapsed = 
                 (_('conversations').childNodes.length == 0);
         }, false);
 }
@@ -408,6 +408,20 @@ function getConversation(account, address) {
 // Application-dependent functions dealing with user interface.  They
 // affect the domain.
 
+function setTabbedLayout() {
+    _('layout-stacked').hidden = true;
+    _('layout-tabbed').hidden = false;
+    _('tabpanel-conversations').appendChild(_('conversations'));
+    _('tabpanel-contacts').appendChild(_('contact-list'));
+}
+
+function setStackedLayout() {
+    _('layout-tabbed').hidden = true;
+    _('layout-stacked').hidden = false;
+    _('box-conversations').appendChild(_('conversations'));
+    _('box-contacts').appendChild(_('contact-list'));
+}
+
 function updateAttachTooltip() {
     _('attach-tooltip', {role: 'message'}).value =
         'Make this conversation channel available to ' +
@@ -493,17 +507,17 @@ function openAttachPanel(account, address, resource, type, documentHref, target,
 function maximizeAuxiliary() {
     _('splitter-main').hidden = true;
     _('box-auxiliary').collapsed = false;
-    _('conversations').collapsed = true;
+    _('box-conversations').collapsed = true;
 }
 
 function maximizeConversations() {
     _('splitter-main').hidden = true;
     _('box-auxiliary').collapsed = true;
-    _('conversations').collapsed = false;
+    _('box-conversations').collapsed = false;
 }
 
 function displayAuxiliaryAndConversations() {
-    _('conversations').collapsed = false;
+    _('box-conversations').collapsed = false;
     _('box-auxiliary').collapsed = false;
     _('splitter-main').hidden = false;
 }
@@ -652,14 +666,14 @@ function requestedOpenAttachPanel(contactElement, documentHref, target) {
 }
 
 function requestedCycleMaximize(command) {
-    if(!_('conversations').collapsed &&
+    if(!_('box-conversations').collapsed &&
        !_('box-auxiliary').collapsed)
         maximizeConversations();
-    else if(_('conversations').collapsed &&
+    else if(_('box-conversations').collapsed &&
             !_('box-auxiliary').collapsed)
         displayAuxiliaryAndConversations();
     else if(_('box-auxiliary').collapsed &&
-            !_('conversations').collapsed)
+            !_('box-conversations').collapsed)
         maximizeAuxiliary();
 }
 
@@ -761,7 +775,7 @@ function openedConversation(account, address, type) {
 function closedConversation(account, address) {
     contacts.stoppedConversationWith(account, address);
     if(_('conversations').childNodes.length == 0)
-        _('conversations').collapsed = true;
+        _('box-conversations').collapsed = true;
     else if(!_('conversations').selectedPanel) {
         _('conversations').selectedPanel = _('conversations').lastChild;
         focusedConversation(

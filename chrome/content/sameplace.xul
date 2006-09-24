@@ -161,23 +161,39 @@
       </toolbar>
     </toolbox>
 
-    <!-- CONTACT AREA -->
+    <!-- STACKED LAYOUT -->
 
-    <box id="box-auxiliary" persist="height" orient="vertical" flex="1">
-      <vbox id="contact-list" flex="1" style="overflow: auto;">
-        <spacer role="open"/>
-        <spacer role="online"/>
-        <spacer role="away"/>
-        <spacer role="dnd"/>
-        <spacer role="offline"/>
-      </vbox>
-    </box>
+    <vbox id="layout-stacked" flex="1">
+      <box id="box-contacts" persist="height" orient="vertical" flex="1">
+        <vbox id="contact-list" flex="1" style="overflow: auto;">
+          <spacer role="open"/>
+          <spacer role="online"/>
+          <spacer role="away"/>
+          <spacer role="dnd"/>
+          <spacer role="offline"/>
+        </vbox>
+      </box>
 
-    <splitter id="splitter-main"  orient="vertical"/>
+      <splitter id="splitter-main" orient="vertical"/>
 
-    <!-- MINI-BROWSER AREA -->
+      <box id="box-conversations" flex="4" collapsed="true">
+        <deck flex="1" id="conversations"/>
+      </box>
+    </vbox>
 
-    <deck flex="4" id="conversations" collapsed="true"/>
+    <!-- TABBED LAYOUT -->
+
+    <tabbox id="layout-tabbed" hidden="true" flex="1">
+      <tabs>
+        <tab label="Contacts"/>
+        <tab label="Conversations"/>
+      </tabs>
+
+      <tabpanels flex="1">
+        <tabpanel id="tabpanel-contacts"/>
+        <tabpanel id="tabpanel-conversations"/>
+      </tabpanels>
+    </tabbox>
 
     <!-- BLUEPRINTS -->
 
