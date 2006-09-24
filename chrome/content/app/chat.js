@@ -26,6 +26,7 @@ var parser = new DOMParser();
 var ns_xhtml = new Namespace('http://www.w3.org/1999/xhtml');
 var ns_muc_user = new Namespace('http://jabber.org/protocol/muc#user');
 var ns_muc = new Namespace('http://jabber.org/protocol/muc');
+var ns_roster = new Namespace('jabber:iq:roster');
 
 var wsRegexp = /^\s*$/m;
 var urlRegexp = new RegExp('(http:\/\/|www.)[^ \\t\\n\\f\\r"<>|()]*[^ \\t\\n\\f\\r"<>|,.!?(){}]');
@@ -63,6 +64,7 @@ var smileyRegexp;
 
 var wantBottom = true;
 var scrolling = false;
+var userAddress;
 
 
 // UTILITIES
@@ -284,8 +286,8 @@ function displayMessage(stanza) {
             if(stanza.@type == 'groupchat')
                 M(domMessage).sender.textContent = JID(stanza.@from).resource;
             else
-                M(domMessage).sender.textContent = 
-                    (stanza.@from == undefined ? 'Me' : JID(stanza.@from).username);
+                M(domMessage).sender.textContent =
+                    JID(stanza.@from == undefined ? userAddress : stanza.@from).username;
             M(domMessage).sender.setAttribute(
                 'class', stanza.@from.toString() ? 'contact' : 'user');
             textToHTML(M(domMessage).content, stanza.body);
@@ -360,6 +362,9 @@ function init(event) {
                 break;
             case 'presence':
                 receivedPresence(stanza);
+                break;
+            case 'iq':
+                receivedIq(stanza);
                 break;
             default:
                 receivedUnknown(stanza);
@@ -484,6 +489,14 @@ function receivedPresence(stanza) {
     updateAddress(JID(stanza.@from).address);
     updateResources(JID(stanza.@from).resource, stanza.@type);
     updateTitle(JID(stanza.@from).address);
+}
+
+function receivedIq(stanza) {
+    if(stanza.ns_roster::query.length() > 0) {
+        userAddress = JID(stanza.@to).address;
+        if(stanza..ns_roster::item.length() > 0)
+            updateAddress(stanza..ns_roster::item.@jid);
+    }
 }
 
 function receivedUnknown(stanza) {
