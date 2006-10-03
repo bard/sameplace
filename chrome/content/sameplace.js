@@ -400,6 +400,7 @@ function withConversation(account, address, resource, type, forceOpen, action) {
             chromeToFileUrl('chrome://sameplace/content/app/chat.xhtml'),
             'mini', function(contentPanel) {
                 action(contentPanel);
+                openedConversation(account, address, type);
             });
     else
         action(_(conversation, {role: 'chat'}).contentDocument);
