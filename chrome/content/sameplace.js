@@ -775,7 +775,6 @@ function hoveredMousePointer(event) {
 
 function openedConversation(account, address, type) {
     contacts.startedConversationWith(account, address, type);
-    focusConversation(account, address);
     
     if(_('conversations').childNodes.length == 1)
         contacts.nowTalkingWith(account, address);
@@ -943,7 +942,10 @@ function sentMUCPresence(presence) {
 
     openAttachPanel(
         presence.session.name, room.address, room.resource, 'groupchat',
-        chromeToFileUrl('chrome://sameplace/content/app/chat.xhtml'), 'mini');
+        chromeToFileUrl('chrome://sameplace/content/app/chat.xhtml'), 'mini',
+        function(contentPanel) {
+            focusConversation(presence.session.name, room.address);
+        });
 }
 
 function receivedMUCPresence(presence) {
