@@ -247,6 +247,15 @@ var contacts = {
 // ----------------------------------------------------------------------
 // Application-independent functions not dealing with user interface.
 
+function chromeToFileUrl(url) {
+    return Cc["@mozilla.org/chrome/chrome-registry;1"]
+        .getService(Ci.nsIChromeRegistry)
+        .convertChromeURL(
+            Cc["@mozilla.org/network/io-service;1"]
+            .getService(Ci.nsIIOService)
+            .newURI(url, null, null)).spec;
+}
+
 
 // GUI UTILITIES (GENERIC)
 // ----------------------------------------------------------------------
@@ -388,7 +397,7 @@ function withConversation(account, address, resource, type, forceOpen, action) {
     if(!conversation && forceOpen)
         openAttachPanel(
             account, address, resource, type,
-            'chrome://sameplace/content/app/chat.xhtml',
+            chromeToFileUrl('chrome://sameplace/content/app/chat.xhtml'),
             'mini', function(contentPanel) {
                 action(contentPanel);
             });
@@ -878,7 +887,7 @@ function receivedChatMessage(message) {
         openAttachPanel(
             message.session.name, from.address,
             from.resource, message.stanza.@type,
-            'chrome://sameplace/content/app/chat.xhtml',
+            chromeToFileUrl('chrome://sameplace/content/app/chat.xhtml'),
             'mini',
             function(contentPanel) {
                 contentPanel.xmppChannel.receive(message);
@@ -934,7 +943,7 @@ function sentMUCPresence(presence) {
 
     openAttachPanel(
         presence.session.name, room.address, room.resource, 'groupchat',
-        'chrome://sameplace/content/app/chat.xhtml', 'mini');
+        chromeToFileUrl('chrome://sameplace/content/app/chat.xhtml'), 'mini');
 }
 
 function receivedMUCPresence(presence) {
