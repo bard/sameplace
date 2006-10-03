@@ -892,6 +892,7 @@ function receivedChatMessage(message) {
             function(contentPanel) {
                 contentPanel.xmppChannel.receive(message);
             });
+        openedConversation(message.session.name, from.address, message.stanza.@type);
     } else if(!wConversation.contentDocument ||
               (wConversation.contentDocument &&
                !wConversation.contentDocument.getElementById('input'))) {
