@@ -446,7 +446,7 @@ function scrolledWindow(event) {
 
 function resizedWindow(event) {
     if(wantBottom || _('chat-output').scrollTop == 0)
-        scrollToBottom(_('chat-output'));
+        scrollToBottom(_('chat-output'), false);
 }
 
 
