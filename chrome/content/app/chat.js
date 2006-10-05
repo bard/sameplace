@@ -23,10 +23,10 @@
 
 var serializer = new XMLSerializer();
 var parser = new DOMParser();
-var ns_xhtml = new Namespace('http://www.w3.org/1999/xhtml');
-var ns_muc_user = new Namespace('http://jabber.org/protocol/muc#user');
-var ns_muc = new Namespace('http://jabber.org/protocol/muc');
-var ns_roster = new Namespace('jabber:iq:roster');
+var ns_xhtml    = 'http://www.w3.org/1999/xhtml';
+var ns_muc_user = 'http://jabber.org/protocol/muc#user';
+var ns_muc      = 'http://jabber.org/protocol/muc';
+var ns_roster   = 'jabber:iq:roster';
 
 var wsRegexp = /^\s*$/m;
 var urlRegexp = new RegExp('(http:\/\/|www.)[^ \\t\\n\\f\\r"<>|()]*[^ \\t\\n\\f\\r"<>|,.!?(){}]');
