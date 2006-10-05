@@ -117,6 +117,16 @@ function formatTime(dateTime) {
         padLeft(dateTime.getSeconds(), '0', 2)
 }
 
+function toXML(domElement) {
+    return new XML(serializer.serializeToString(domElement));
+}
+
+function toDOM(description) {
+    return parser.parseFromString((typeof(description) == 'xml' ?
+                                   description.toXMLString() : description),
+                                  'application/xhtml+xml').documentElement;
+}
+
 
 // GUI UTILITIES (GENERIC)
 // ----------------------------------------------------------------------
@@ -286,6 +296,51 @@ function M(domElement) {
 }
 
 
+// GUI INITIALIZATION/FINALIZATION
+// ----------------------------------------------------------------------
+
+function init(event) {
+    _('input').addEventListener(
+        'DOMNodeInserted', function(event) {
+            var stanza = new XML(event.target.textContent);
+            switch(stanza.localName()) {
+            case 'message':
+                receivedMessage(stanza);
+                break;
+            case 'presence':
+                receivedPresence(stanza);
+                break;
+            case 'iq':
+                receivedIq(stanza);
+                break;
+            default:
+                receivedUnknown(stanza);
+                break;
+            }
+        }, false);
+
+    for each(id in ['topic', 'resources', 'groups']) {
+        _(id).addEventListener(
+            'DOMNodeInserted', function(event) {
+                refresh(event.currentTarget);
+            }, false);
+
+        _(id).addEventListener(
+            'DOMNodeRemoved', function(event) {
+                refresh(event.currentTarget);
+            }, false);
+    }
+
+    window.addEventListener(
+        'resize', function(event) { resizedWindow(event); }, false);
+
+    _('chat-output').addEventListener(
+        'scroll', function(event) { scrolledWindow(event); }, false);
+
+    preloadSmileys();
+}
+
+
 // GUI ACTIONS
 // ----------------------------------------------------------------------
 
@@ -356,65 +411,6 @@ function updateResources(resource, availability) {
             domResource.textContent = resource;
             _('resources').insertBefore(domResource, _('resources').firstChild);
         }
-}
-
-
-// GUI INITIALIZATION/FINALIZATION
-// ----------------------------------------------------------------------
-
-function init(event) {
-    _('input').addEventListener(
-        'DOMNodeInserted', function(event) {
-            var stanza = new XML(event.target.textContent);
-            switch(stanza.localName()) {
-            case 'message':
-                receivedMessage(stanza);
-                break;
-            case 'presence':
-                receivedPresence(stanza);
-                break;
-            case 'iq':
-                receivedIq(stanza);
-                break;
-            default:
-                receivedUnknown(stanza);
-                break;
-            }
-        }, false);
-
-    for each(id in ['topic', 'resources', 'groups']) {
-        _(id).addEventListener(
-            'DOMNodeInserted', function(event) {
-                refresh(event.currentTarget);
-            }, false);
-
-        _(id).addEventListener(
-            'DOMNodeRemoved', function(event) {
-                refresh(event.currentTarget);
-            }, false);
-    }
-
-    window.addEventListener(
-        'resize', function(event) { resizedWindow(event); }, false);
-
-    _('chat-output').addEventListener(
-        'scroll', function(event) { scrolledWindow(event); }, false);
-
-    preloadSmileys();
-}
-
-
-// UTILITIES
-// ----------------------------------------------------------------------
-
-function toXML(domElement) {
-    return new XML(serializer.serializeToString(domElement));
-}
-
-function toDOM(description) {
-    return parser.parseFromString((typeof(description) == 'xml' ?
-                                   description.toXMLString() : description),
-                                  'application/xhtml+xml').documentElement;
 }
 
 
