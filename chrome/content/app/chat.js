@@ -277,6 +277,20 @@ function preloadSmileys() {
         (new Image()).src = smileyMap[smileySymbol] + '.png';
 }
 
+/**
+ * Provides a convenient stateless wrapper over a document element
+ * representing a message.
+ *
+ * Element descendants with "class" attribute set to "sender", "time"
+ * and "content" will be accessible through members of the wrapper, as
+ * in:
+ *
+ *   M(domMessage).sender
+ *   M(domMessage).time
+ *   M(domMessage).content
+ *
+ */
+
 function M(domElement) {
     var wrapper = {
         get sender() {
@@ -353,6 +367,7 @@ function displayMessage(stanza) {
             else
                 M(domMessage).sender.textContent =
                     JID(stanza.@from == undefined ? userAddress : stanza.@from).username;
+            
             M(domMessage).sender.setAttribute(
                 'class', stanza.@from.toString() ? 'contact' : 'user');
             textToHTML(M(domMessage).content, stanza.body);
@@ -446,9 +461,14 @@ function resizedWindow(event) {
 // NETWORK ACTIONS
 // ----------------------------------------------------------------------
 
-function send(content) {
+/**
+ * Builds a message having the given text as body and sends it out.
+ *
+ */
+
+function send(messageBody) {
     var message = <message/>;
-    message.body = <body>{content}</body>;
+    message.body = <body>{messageBody}</body>;
     _('output').textContent = message.toXMLString();
 }
 
