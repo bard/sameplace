@@ -161,8 +161,17 @@ function textToHTML(container, text) {
     return container;
 }
 
-function _(id) {
-    return document.getElementById(id);
+function _(thing) {
+    switch(typeof(thing)) {
+    case 'string':
+        return document.getElementById(thing);
+        break;
+    case 'xml':
+        return document.getElementById(thing.toString());
+        break;
+    default:
+        return thing;
+    }
 }
 
 function cloneBlueprint(name) {
@@ -405,19 +414,6 @@ function toDOM(description) {
     return parser.parseFromString((typeof(description) == 'xml' ?
                                    description.toXMLString() : description),
                                   'application/xhtml+xml').documentElement;
-}
-
-function _(thing) {
-    switch(typeof(thing)) {
-    case 'string':
-        return document.getElementById(thing);
-        break;
-    case 'xml':
-        return document.getElementById(thing.toString());
-        break;
-    default:
-        return thing;
-    }
 }
 
 
