@@ -64,6 +64,7 @@ var smileyRegexp;
 
 var wantBottom = true;
 var scrolling = false;
+var groupchat = false;
 var userAddress;
 
 
@@ -319,16 +320,13 @@ function init(event) {
             var stanza = new XML(event.target.textContent);
             switch(stanza.localName()) {
             case 'message':
-                receivedMessage(stanza);
+                seenMessage(stanza);
                 break;
             case 'presence':
-                receivedPresence(stanza);
+                seenPresence(stanza);
                 break;
             case 'iq':
-                receivedIq(stanza);
-                break;
-            default:
-                receivedUnknown(stanza);
+                seenIq(stanza);
                 break;
             }
         }, false);
@@ -476,7 +474,7 @@ function send(messageBody) {
 // NETWORK REACTIONS
 // ----------------------------------------------------------------------
 
-function receivedMessage(stanza) {
+function seenMessage(stanza) {
     if(stanza.body == undefined)
         return;
 
@@ -486,25 +484,30 @@ function receivedMessage(stanza) {
         displayMessage(stanza);
 }
 
-function receivedPresence(stanza) {
-    if(stanza.ns_muc_user::x.length() > 0) {
-        x('//xhtml:div[@class="box" and @for="resources"]/xhtml:h3')
-            .textContent = 'Participants';
+function seenPresence(stanza) {
+    if(stanza.@from == undefined) {
+        if(stanza.ns_muc::x.length() > 0)
+            groupchat = true;
+    } else {
+        if(stanza.ns_muc_user::x.length() > 0) {
+            x('//xhtml:div[@class="box" and @for="resources"]/xhtml:h3')
+                .textContent = 'Participants';
 
-        if(stanza.@type == undefined)            
-            displayEvent('join', JID(stanza.@from).resource + ' entered the room');
-        else if(stanza.@type == 'unavailable')
-            displayEvent('leave', JID(stanza.@from).resource + ' left the room');
-        else if(stanza.@type == 'error')
-            displayEvent('error', 'Error: code ' + stanza.error.@code);
-    }
+            if(stanza.@type == undefined)            
+                displayEvent('join', JID(stanza.@from).resource + ' entered the room');
+            else if(stanza.@type == 'unavailable')
+                displayEvent('leave', JID(stanza.@from).resource + ' left the room');
+            else if(stanza.@type == 'error')
+                displayEvent('error', 'Error: code ' + stanza.error.@code);
+        }
     
-    updateAddress(JID(stanza.@from).address);
-    updateResources(JID(stanza.@from).resource, stanza.@type);
-    updateTitle(JID(stanza.@from).address);
+        updateAddress(JID(stanza.@from).address);
+        updateResources(JID(stanza.@from).resource, stanza.@type);
+        updateTitle(JID(stanza.@from).address);
+    }
 }
 
-function receivedIq(stanza) {
+function seenIq(stanza) {
     if(stanza.ns_roster::query.length() > 0) {
         userAddress = JID(stanza.@to).address;
         if(stanza..ns_roster::item.length() > 0)
@@ -512,7 +515,4 @@ function receivedIq(stanza) {
     }
 }
 
-function receivedUnknown(stanza) {
-    
-}
 
