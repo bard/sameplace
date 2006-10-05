@@ -139,6 +139,7 @@ function textToHTML(container, text) {
         if(match[0].match(smileyRegexp)) {
             translatedElement = document.createElement('img');
             translatedElement.setAttribute('class', 'emoticon');
+            translatedElement.setAttribute('alt', match[0]);
             translatedElement.
                 setAttribute('src',
                              'emoticons/' + smileyMap[match[0]] + '.png');
