@@ -66,6 +66,7 @@ var wantBottom = true;
 var scrolling = false;
 var groupchat = false;
 var userAddress;
+var contactResource;
 
 
 // UTILITIES
@@ -466,6 +467,8 @@ function resizedWindow(event) {
 
 function send(messageBody) {
     var message = <message/>;
+    if(contactResource) 
+        message.@to = '/' + contactResource;
     message.body = <body>{messageBody}</body>;
     _('output').textContent = message.toXMLString();
 }
@@ -482,6 +485,10 @@ function seenMessage(stanza) {
         displayEvent('error', 'Error: code ' + stanza.error.@code);
     else
         displayMessage(stanza);
+
+    if(stanza.@from != undefined && !groupchat)
+        contactResource = JID(stanza.@from).resource;
+        
 }
 
 function seenPresence(stanza) {
