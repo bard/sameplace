@@ -67,6 +67,7 @@ var scrolling = false;
 var groupchat = false;
 var userAddress;
 var contactResource;
+var contactName;
 
 
 // UTILITIES
@@ -364,8 +365,10 @@ function displayMessage(stanza) {
             if(stanza.@type == 'groupchat')
                 M(domMessage).sender.textContent = JID(stanza.@from).resource;
             else
-                M(domMessage).sender.textContent =
-                    JID(stanza.@from == undefined ? userAddress : stanza.@from).username;
+                if(stanza.@from == undefined)
+                    M(domMessage).sender.textContent = JID(userAddress).username;
+                else
+                    M(domMessage).sender.textContent = contactName || JID(stanza.@from).username;
             
             M(domMessage).sender.setAttribute(
                 'class', stanza.@from.toString() ? 'contact' : 'user');
@@ -517,6 +520,7 @@ function seenPresence(stanza) {
 function seenIq(stanza) {
     if(stanza.ns_roster::query.length() > 0) {
         userAddress = JID(stanza.@to).address;
+        contactName = stanza..ns_roster::item.@name.toString();
         if(stanza..ns_roster::item.length() > 0)
             updateAddress(stanza..ns_roster::item.@jid);
     }
