@@ -247,6 +247,10 @@ var contacts = {
 // ----------------------------------------------------------------------
 // Application-independent functions not dealing with user interface.
 
+function isChromeUrl(string) {
+    return /^chrome:\/\//.test(string);
+}
+
 function chromeToFileUrl(url) {
     return Cc["@mozilla.org/chrome/chrome-registry;1"]
         .getService(Ci.nsIChromeRegistry)
@@ -260,6 +264,11 @@ function chromeToFileUrl(url) {
 // GUI UTILITIES (GENERIC)
 // ----------------------------------------------------------------------
 // Application-independent functions dealing with user interface.
+
+function getDefaultAppUrl() {
+    var url = prefBranch.getCharPref('defaultAppUrl');
+    return isChromeUrl(url) ? chromeToFileUrl(url) : url;
+}
 
 function fadeIn(element, stepValue, stepInterval) {
     var stepValue = stepValue || 0.1;
@@ -397,7 +406,7 @@ function withConversation(account, address, resource, type, forceOpen, action) {
     if(!conversation && forceOpen)
         openAttachPanel(
             account, address, resource, type,
-            chromeToFileUrl('chrome://sameplace/content/app/chat.xhtml'),
+            getDefaultAppUrl(),
             'mini', function(contentPanel) {
                 action(contentPanel);
                 openedConversation(account, address, type);
@@ -502,7 +511,7 @@ function openAttachPanel(account, address, resource, type, documentHref, target,
         contentPanel, function(document) {
             XMPP.enableContentDocument(contentPanel, account, address, type);
 
-            if(documentHref == 'chrome://sameplace/content/app/chat.xhtml')
+            if(documentHref == getDefaultAppUrl())
                 openedConversation(account, address, type);
 
             if(action) 
@@ -887,7 +896,7 @@ function receivedChatMessage(message) {
         openAttachPanel(
             message.session.name, from.address,
             from.resource, message.stanza.@type,
-            chromeToFileUrl('chrome://sameplace/content/app/chat.xhtml'),
+            getDefaultAppUrl(),
             'mini',
             function(contentPanel) {
                 contentPanel.xmppChannel.receive(message);
@@ -944,7 +953,7 @@ function sentMUCPresence(presence) {
 
     openAttachPanel(
         presence.session.name, room.address, room.resource, 'groupchat',
-        chromeToFileUrl('chrome://sameplace/content/app/chat.xhtml'), 'mini',
+        getDefaultAppUrl(), 'mini',
         function(contentPanel) {
             focusConversation(presence.session.name, room.address);
         });
