@@ -60,7 +60,7 @@
               </conditions>
               <action>
                 <menuitem uri="?app" label="?name" value="?url"
-                          oncommand="requestedOpenAttachDocument(document.popupNode, this.value, 'main');"/>
+                          oncommand="requestedOpenAttachPanel(document.popupNode, this.value, 'main');"/>
               </action>
             </rule>
           </template>          
@@ -88,7 +88,7 @@
               </conditions>
               <action>
                 <menuitem uri="?app" label="?name" value="?url"
-                          oncommand="requestedOpenAttachDocument(document.popupNode, this.value, 'mini');"/>
+                          oncommand="requestedOpenAttachPanel(document.popupNode, this.value, 'mini');"/>
               </action>
             </rule>
           </template>          
