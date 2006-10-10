@@ -479,7 +479,8 @@ function attachContentDocument(contentPanel, account, address, type) {
 function openAttachPanel(account, address, resource, type, documentHref, target, action) {
     var contentPanel;
     if(target == 'main') {
-        if(getBrowser().contentDocument.location.href != 'about:blank')
+        if(getBrowser().contentDocument.location.href != 'about:blank' &&
+           !documentHref.match(/^javascript:/))
             getBrowser().selectedTab = getBrowser().addTab();
 
         contentPanel = getBrowser().selectedBrowser;
