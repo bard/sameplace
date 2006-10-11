@@ -3,6 +3,12 @@
 
 const Cc = Components.classes;
 const Ci = Components.interfaces;
+const RDF = Cc["@mozilla.org/rdf/rdf-service;1"]
+    .getService(Ci.nsIRDFService);    
+const RDFCU = Cc["@mozilla.org/rdf/container-utils;1"]
+    .getService(Ci.nsIRDFContainerUtils);
+const BMSVC = Cc['@mozilla.org/browser/bookmarks-service;1']
+    .getService(Ci.nsIBookmarksService);
 
 
 // GLOBAL STATE
@@ -40,11 +46,28 @@ function initOverlay(event) {
             if(event.target == button)
                 toggleSidebar();
         }, false);
+
+    setTimeout(function() { addBookmark(); }, 250);
 }
 
 
 // GUI ACTIONS
 // ----------------------------------------------------------------------
+
+function addBookmark() {
+    var folderName = 'SamePlace';
+
+    var dsBookmarks = Cc["@mozilla.org/rdf/datasource;1?name=bookmarks"]
+        .getService(Ci.nsIRDFDataSource);
+
+    var bookmark = dsBookmarks.GetSource(
+        RDF.GetResource('http://home.netscape.com/NC-rdf#Name'),
+        RDF.GetLiteral(folderName), true);
+
+    if(!(bookmark && RDFCU.IsContainer(dsBookmarks, bookmark)))
+        BMSVC.createFolderInContainer(
+            folderName, RDF.GetResource('NC:BookmarksRoot'), null);
+}
 
 function loadSidebar(force) {
     var frame = _('sidebar').firstChild.contentWindow;
