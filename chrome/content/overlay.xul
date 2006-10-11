@@ -35,18 +35,18 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
   <commandset id="mainCommandSet">
     <command id="sameplace-command-toggle-sidebar"
              label="Sidebar"
-             oncommand="sameplace_toggleSidebar();"
+             oncommand="sameplace.toggleSidebar();"
              accesskey="L"/>
     <command id="sameplace-command-load-sidebar"
              label="SamePlace (sidebar)"
-             oncommand="sameplace_loadSidebar();"
+             oncommand="sameplace.loadSidebar();"
              accesskey="S"/>
     <command id="sameplace-command-open-window"
              label="SamePlace (window)"
              accesskey="S"
              oncommand="window.open('chrome://sameplace/content/sameplace.xul', 'sameplace', 'chrome');"/>
     <command id="sameplace-command-load-sidebar-force"
-             oncommand="sameplace_loadSidebar(true);"/>
+             oncommand="sameplace.loadSidebar(true);"/>
   </commandset>
 
   <!-- KEYS -->
