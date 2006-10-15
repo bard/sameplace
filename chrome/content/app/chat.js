@@ -317,7 +317,7 @@ function M(domElement) {
 // ----------------------------------------------------------------------
 
 function init(event) {
-    _('input').addEventListener(
+    _('xmpp-incoming').addEventListener(
         'DOMNodeInserted', function(event) {
             var stanza = new XML(event.target.textContent);
             switch(stanza.localName()) {
@@ -473,7 +473,7 @@ function send(messageBody) {
     if(contactResource) 
         message.@to = '/' + contactResource;
     message.body = <body>{messageBody}</body>;
-    _('output').textContent = message.toXMLString();
+    _('xmpp-outgoing').textContent = message.toXMLString();
 }
 
 

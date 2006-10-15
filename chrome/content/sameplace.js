@@ -905,7 +905,7 @@ function receivedChatMessage(message) {
         openedConversation(message.session.name, from.address, message.stanza.@type);
     } else if(!wConversation.contentDocument ||
               (wConversation.contentDocument &&
-               !wConversation.contentDocument.getElementById('input'))) {
+               !wConversation.contentDocument.getElementById('xmpp-incoming'))) {
 
         queuePostLoadAction(
             _(wConversation, {role: 'chat'}), function(contentPanel) {
@@ -923,7 +923,7 @@ function sentChatMessage(message) {
             to.resource, message.stanza.@type,
             true,
             function(document) {
-                document.getElementById('input').textContent =
+                document.getElementById('xmpp-incoming').textContent =
                     message.stanza.toXMLString();
             });
 }
