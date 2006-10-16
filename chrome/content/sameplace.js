@@ -222,7 +222,7 @@ var contacts = {
         else if(availability == 'available' && show == 'dnd')
             _('contacts').insertBefore(contact, _('contacts', {role: 'dnd'}).nextSibling);
         else
-            _('contacts').appendChild(contact);
+            _('contacts').insertBefore(contact, _('contacts', {role: 'offline'}).nextSibling);
         fadeIn(contact);
     },
 
