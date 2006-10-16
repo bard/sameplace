@@ -496,7 +496,8 @@ function openAttachPanel(account, address, resource, type, documentHref, target,
         conversation.setAttribute('url', documentHref);
         contentPanel.addEventListener(
             'click', function(event) {
-                if(event.target.localName == 'A') {
+                if(event.target.localName == 'a' &&
+                   event.target.isDefaultNamespace('http://www.w3.org/1999/xhtml')) {
                     event.preventDefault();
                     if(event.button == 0)
                         getBrowser().loadURI(event.target.getAttribute('href'));
