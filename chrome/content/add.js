@@ -1,3 +1,10 @@
+// GLOBAL DEFINITIONS
+// ----------------------------------------------------------------------
+
+var xmpp = xmpp || {};
+xmpp.ui = xmpp.ui || {};
+
+
 // GLOBAL STATE
 // ----------------------------------------------------------------------
 
@@ -52,7 +59,7 @@ function refresh() {
 // HOOKS
 // ----------------------------------------------------------------------
 
-function xmppLoadedAccounts() {
+xmpp.ui.loadedAccounts = function() {
     for each(var account in XMPP.accounts) {
         if(XMPP.isUp(account.jid)) {
             _('accounts').value = account.jid;
