@@ -38,7 +38,7 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
              oncommand="sameplace.toggleSidebar();"
              accesskey="L"/>
     <command id="sameplace-command-load-sidebar"
-             label="SamePlace (sidebar)"
+             label="SamePlace"
              oncommand="sameplace.loadSidebar();"
              accesskey="S"/>
     <command id="sameplace-command-open-window"
@@ -62,7 +62,8 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
     <menuitem command="sameplace-command-load-sidebar"
               class="menuitem-iconic"/>
     <menuitem command="sameplace-command-open-window"
-              class="menuitem-iconic"/>
+              class="menuitem-iconic"
+              hidden="true"/>
   </menupopup>
 
   <hbox id="browser">
