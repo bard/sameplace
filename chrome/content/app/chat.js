@@ -397,8 +397,10 @@ function refresh(element) {
         break;
     case 'resources':
     case 'groups':
-        (element.getElementsByTagName('li').length > 0 ? visible : hidden)
-            (element.parentNode);
+        if(element.getElementsByTagName('li').length > 0)
+            visible(element.parentNode);
+        else 
+            hidden(element.parentNode);
         break;
     }
 }
