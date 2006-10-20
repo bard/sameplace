@@ -562,6 +562,34 @@ function closeConversation(account, address) {
     }
 }
 
+function promptOpenConversation(account, address, type, nick) {
+    var request = {
+        address: address,
+        account: account,
+        type: type,
+        nick: nick,
+        confirm: false
+    }
+
+    window.openDialog(
+        'chrome://sameplace/content/open.xul',
+        'sameplace-open-conversation', 'modal,centerscreen',
+        request);   
+
+    if(request.confirm)
+        if(request.type == 'groupchat')
+            joinRoom(request.account, request.address, request.nick);
+        else           
+            if(isConversationOpen(request.account, request.address))
+                focusConversation(request.account, request.address);
+            else
+                withConversation(
+                    request.account, request.address, null, null, true, 
+                    function() {
+                        focusConversation(request.account, request.address);
+                    });
+}
+
 
 // GUI REACTIONS
 // ----------------------------------------------------------------------
@@ -702,10 +730,13 @@ function clickedContact(contact) {
     var address = contact.getAttribute('address');
     var type = contact.getAttribute('type');
 
-    withConversation(
-        account, address, null, type, true, function() {
-            focusConversation(account, address);
-        });
+    if(type == 'groupchat') 
+        promptOpenConversation(account, address, type);
+    else 
+        withConversation(
+            account, address, null, type, true, function() {
+                focusConversation(account, address);
+            });
 }
 
 function requestedCloseConversation(element) {
@@ -731,31 +762,7 @@ function requestedCloseConversation(element) {
 }
 
 function requestedOpenConversation() {
-    var request = {
-        address: undefined,
-        nick: undefined,
-        confirm: false,
-        account: undefined,
-        type: undefined
-    };
-
-    window.openDialog(
-        'chrome://sameplace/content/open.xul',
-        'sameplace-open-conversation', 'modal,centerscreen',
-        request);
-
-    if(request.confirm)
-        if(request.type == 'groupchat')
-            joinRoom(request.account, request.address, request.nick);
-        else           
-            if(isConversationOpen(request.account, request.address))
-               focusConversation(request.account, request.address);
-            else
-                withConversation(
-                    request.account, request.address, null, null, true, 
-                    function() {
-                        focusConversation(request.account, request.address);
-                    });
+    promptOpenConversation();    
 }
 
 function clickedTopic(event) {
@@ -997,5 +1004,3 @@ function log(msg) {
         .getService(Ci.nsIConsoleService)
         .logStringMessage(msg);
 }
-
-
