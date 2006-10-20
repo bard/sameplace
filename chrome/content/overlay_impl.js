@@ -10,6 +10,7 @@ const RDFCU = Cc["@mozilla.org/rdf/container-utils;1"]
 const BMSVC = Cc['@mozilla.org/browser/bookmarks-service;1']
     .getService(Ci.nsIBookmarksService);
 
+var ns_auth = 'jabber:iq:auth';
 
 // GLOBAL STATE
 // ----------------------------------------------------------------------
@@ -32,8 +33,10 @@ function initOverlay(event) {
     channel = XMPP.createChannel();
 
     channel.on(
-        {event: 'stream', direction: 'out', state: 'open'},
-        function(stream) {
+        {event: 'iq', direction: 'out', stanza: function(s) {
+                return s.ns_auth::query.length() > 0;
+            }},
+        function(iq) {
             if(window == Cc["@mozilla.org/appshell/window-mediator;1"]
                .getService(Ci.nsIWindowMediator)
                .getMostRecentWindow('navigator:browser'))
