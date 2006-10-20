@@ -368,7 +368,8 @@ function displayMessage(stanza) {
                 if(stanza.@from == undefined)
                     M(domMessage).sender.textContent = JID(userAddress).username;
                 else
-                    M(domMessage).sender.textContent = contactName || JID(stanza.@from).username;
+                    M(domMessage).sender.textContent =
+                        contactName || JID(stanza.@from).username || stanza.@from;
             
             M(domMessage).sender.setAttribute(
                 'class', stanza.@from.toString() ? 'contact' : 'user');
