@@ -16,7 +16,15 @@ var request;
 
 function init() {
     request = window.arguments[0];
-    _('address').select();
+
+    for each(var fieldName in ['account', 'address', 'nick']) 
+        _(fieldName).value = request[fieldName] || '';
+
+    if(request.address)
+        _('nick').focus();
+    else
+        _('address').select();
+
     refresh();
 }
 
@@ -29,7 +37,7 @@ function doOk() {
     request.nick = _('nick').value;
     request.type = _('type').value;
     request.confirm = true;
-    request.account = _('accounts').value;
+    request.account = _('account').value;
     return true;
 }
 
@@ -40,7 +48,7 @@ function doCancel() {
 function refresh() {
     _('nick').parentNode.hidden = (_('type').value != 'groupchat');
 
-    if(_('accounts').value && _('address').value)
+    if(_('account').value && _('address').value)
         if(_('type').value == 'groupchat' && _('nick').value)
             _('main').getButton('accept').disabled = false;
         else if(_('type').value == 'chat')
@@ -66,7 +74,7 @@ function _(id) {
 xmpp.ui.loadedAccounts = function() {
     for each(var account in XMPP.accounts) {
         if(XMPP.isUp(account.jid)) {
-            _('accounts').value = account.jid;
+            _('account').value = account.jid;
             break;
         }
     }
