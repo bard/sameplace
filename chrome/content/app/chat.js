@@ -29,7 +29,7 @@ var ns_muc      = 'http://jabber.org/protocol/muc';
 var ns_roster   = 'jabber:iq:roster';
 
 var wsRegexp = /^\s*$/m;
-var urlRegexp = new RegExp('(http:\/\/|www\.)[^ \\t\\n\\f\\r"<>|()]*[^ \\t\\n\\f\\r"<>|,.!?(){}]');
+var urlRegexp = new RegExp('(https?:\/\/|www\.)[^ \\t\\n\\f\\r"<>|()]*[^ \\t\\n\\f\\r"<>|,.!?(){}]');
 var smileyMap = {
     '0:-)':  'angel',
     ':\'(':  'crying',
