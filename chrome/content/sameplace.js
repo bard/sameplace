@@ -730,7 +730,7 @@ function clickedContact(contact) {
     var address = contact.getAttribute('address');
     var type = contact.getAttribute('type');
 
-    if(type == 'groupchat') 
+    if(type == 'groupchat' && !isConversationOpen(account, address))        
         promptOpenConversation(account, address, type);
     else 
         withConversation(
