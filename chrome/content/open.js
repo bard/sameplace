@@ -17,8 +17,9 @@ var request;
 function init() {
     request = window.arguments[0];
 
-    for each(var fieldName in ['account', 'address', 'nick']) 
-        _(fieldName).value = request[fieldName] || '';
+    for each(var fieldName in ['account', 'address', 'nick'])
+        if(request[fieldName])
+            _(fieldName).value = request[fieldName];
 
     if(request.address)
         _('nick').focus();
