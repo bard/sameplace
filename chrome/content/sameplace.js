@@ -478,48 +478,59 @@ function attachContentDocument(contentPanel, account, address, type) {
 
 function openAttachPanel(account, address, resource, type, documentHref, target, action) {
     var contentPanel;
-    if(target == 'main') {
-        if(getBrowser().contentDocument.location.href != 'about:blank' &&
-           !documentHref.match(/^javascript:/))
-            getBrowser().selectedTab = getBrowser().addTab();
 
+    if(target == 'main' && documentHref.match(/^javascript:/)) {
         contentPanel = getBrowser().selectedBrowser;
+        XMPP.enableContentDocument(contentPanel, account, address, type, true);
+
+        contentPanel.contentDocument.location.href = documentHref;
+
+        if(action)
+            action(contentPanel);
     } else {
-        var conversation = cloneBlueprint('conversation');
-        _('conversations').appendChild(conversation);
-        _(conversation, {role: 'contact'}).value = XMPP.nickFor(account, address);
-        contentPanel = _(conversation, {role: 'chat'});
-        conversation.setAttribute('account', account);
-        conversation.setAttribute('address', address);
-        conversation.setAttribute('resource', resource);
-        conversation.setAttribute('type', type);
-        conversation.setAttribute('url', documentHref);
-        contentPanel.addEventListener(
-            'click', function(event) {
-                if(event.target.localName == 'a' &&
-                   event.target.isDefaultNamespace('http://www.w3.org/1999/xhtml')) {
-                    event.preventDefault();
-                    if(event.button == 0)
-                        getBrowser().loadURI(event.target.getAttribute('href'));
-                    else if(event.button == 1) {
-                        getBrowser().selectedTab = getBrowser().addTab(event.target.getAttribute('href'));
+        if(target == 'main') {
+            if(getBrowser().contentDocument.location.href != 'about:blank'
+               && !documentHref.match(/^javascript:/))
+                getBrowser().selectedTab = getBrowser().addTab();
+            
+            contentPanel = getBrowser().selectedBrowser;
+        } else {
+            var conversation = cloneBlueprint('conversation');
+            _('conversations').appendChild(conversation);
+            _(conversation, {role: 'contact'}).value = XMPP.nickFor(account, address);
+            contentPanel = _(conversation, {role: 'chat'});
+            conversation.setAttribute('account', account);
+            conversation.setAttribute('address', address);
+            conversation.setAttribute('resource', resource);
+            conversation.setAttribute('type', type);
+            conversation.setAttribute('url', documentHref);
+            contentPanel.addEventListener(
+                'click', function(event) {
+                    if(event.target.localName == 'a' &&
+                       event.target.isDefaultNamespace('http://www.w3.org/1999/xhtml')) {
+                        event.preventDefault();
+                        if(event.button == 0)
+                            getBrowser().loadURI(event.target.getAttribute('href'));
+                        else if(event.button == 1) {
+                            getBrowser().selectedTab = getBrowser().addTab(event.target.getAttribute('href'));
+                        }
                     }
-                }
-            }, true);
-    }
+                }, true);
+        }
 
-    queuePostLoadAction(
-        contentPanel, function(document) {
-            XMPP.enableContentDocument(contentPanel, account, address, type);
+        queuePostLoadAction(
+            contentPanel, function(document) {
+                XMPP.enableContentDocument(contentPanel, account, address, type);
 
-            if(documentHref == getDefaultAppUrl())
-                openedConversation(account, address, type);
+                if(documentHref == getDefaultAppUrl())
+                    openedConversation(account, address, type);
 
-            if(action) 
-                action(contentPanel);
-        });
-    
-    contentPanel.contentDocument.location.href = documentHref;
+                if(action) 
+                    action(contentPanel);
+            });
+
+        contentPanel.contentDocument.location.href = documentHref;
+    }    
 
     return contentPanel;
 }
