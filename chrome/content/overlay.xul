@@ -34,9 +34,9 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
 
   <commandset id="mainCommandSet">
     <command id="sameplace-command-toggle-sidebar"
-             label="Sidebar"
+             label="Toggle"
              oncommand="sameplace.toggleSidebar();"
-             accesskey="L"/>
+             accesskey="T"/>
     <command id="sameplace-command-load-sidebar"
              label="SamePlace"
              oncommand="sameplace.loadSidebar();"
@@ -57,20 +57,32 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
   <!-- KEYS -->
 
   <keyset id="mainKeyset">
-    <key keycode="VK_F12" command="sameplace-command-toggle-sidebar"/>
+    <key id="sameplace-key-toggle-sidebar"
+         keycode="VK_F12" 
+         command="sameplace-command-toggle-sidebar"/>
     <key keycode="VK_F12" modifiers="shift" command="sameplace-command-load-sidebar-force"/>
   </keyset>
 
   <!-- MENUS -->
 
   <menupopup id="xmpp-menu-main">
-    <menuitem command="sameplace-command-load-sidebar"
-              class="menuitem-iconic"/>
-    <menuitem command="sameplace-command-open-window"
+    <menu label="SamePlace" accesskey="S">
+      <menupopup>
+        <menuitem command="sameplace-command-toggle-sidebar"
+                  key="sameplace-key-toggle-sidebar"
+                  class="menuitem-iconic"/>
+        <menuitem command="sameplace-command-import-contacts"
+                  class="menuitem-iconic"/>        
+      </menupopup>      
+    </menu>
+  </menupopup>
+
+  <menupopup id="xmpp-menu-accounts-secondary">
+    <menuitem label="Toggle SamePlace"
+              key="sameplace-key-toggle-sidebar"
               class="menuitem-iconic"
-              hidden="true"/>
-    <menuitem command="sameplace-command-import-contacts"
-              class="menuitem-iconic"/>
+              oncommand="sameplace.toggleSidebar();
+                         event.stopPropagation();"/>
   </menupopup>
 
   <hbox id="browser">

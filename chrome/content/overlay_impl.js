@@ -82,18 +82,26 @@ function loadSidebar(force) {
 }
 
 function toggleSidebar() {
-    if(_('sidebar').collapsed) {
-        _('sidebar').collapsed = false;
-        _('sidebar-splitter').hidden = false;
-    } else {
-        _('sidebar').collapsed = true;
-        _('sidebar-splitter').hidden = true;
-    }
+    if(_('sidebar').collapsed)
+        showSidebar(true);
+    else 
+        hideSidebar();
 }
 
-function showSidebar() {
+function showSidebar(load) {
+    if(load) {
+        var frame = _('sidebar').firstChild.contentWindow;
+        if(frame.location.href != 'chrome://sameplace/content/sameplace.xul') 
+            frame.location.href = 'chrome://sameplace/content/sameplace.xul';
+    }
+        
     _('sidebar').collapsed = false;
     _('sidebar-splitter').hidden = false;
+}
+
+function hideSidebar() {
+    _('sidebar').collapsed = true;
+    _('sidebar-splitter').hidden = true;    
 }
 
 function log(msg) {
