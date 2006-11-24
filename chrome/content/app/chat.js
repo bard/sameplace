@@ -94,7 +94,7 @@ function hidden(element) {
 }
 
 function JID(string) {
-    var m = string.match(/^(.+@)?(.+?)(?:\/|$)(.*$)/);
+    var m = string.match(/^(.+?@)?(.+?)(?:\/|$)(.*$)/);
 
     var jid = {};
 
