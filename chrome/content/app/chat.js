@@ -30,19 +30,31 @@ var ns_roster   = 'jabber:iq:roster';
 
 var wsRegexp = /^\s*$/m;
 var urlRegexp = new RegExp('(https?:\/\/|www\.)[^ \\t\\n\\f\\r"<>|()]*[^ \\t\\n\\f\\r"<>|,.!?(){}]');
+
 var smileyMap = {
     '0:-)':  'angel',
+    '0:)':   'angel',
     ':\'(':  'crying',
     '>:-)':  'devil-grin',
+    '>:)':   'devil-grin',
     'B-)':   'glasses',
+    'B)':    'glasses',
     ':-*':   'kiss',
+    ':*':    'kiss',
     ':-(|)': 'monkey',
+    ':(|)':  'monkey',
     ':-|':   'plain',
     ':-(':   'sad',
+    ':(':    'sad',
     ':-))':  'smile-big',
+    ':))':   'smile-big',
     ':-)':   'smile',
+    ':)':    'smile',
     ':-D':   'grin',
-    ':-0':  'surprise',
+    ':D':    'grin',
+    ':-0':   'surprise',
+    ':0':    'surprise',
+    ';)':    'wink',
     ';-)':   'wink'
 };
 var smileyRegexp;
