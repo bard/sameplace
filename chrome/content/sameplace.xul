@@ -147,6 +147,7 @@
                    onkeypress="requestedChangeStatusMessage(event);"
                    oninput="this.setAttribute('draft', 'true');"
                    draft="true"
+                   tooltiptext="Change your status message"
                    flex="1"/>
         </toolbaritem>
 
