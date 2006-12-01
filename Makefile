@@ -11,7 +11,7 @@ dist: xpi
 xpi: $(FILE)
 
 install.rdf:
-	sed -e 's|<em:version></em:version>|<em:version>$(VERSION).$(BUILD)</em:version>|' \
+	sed -e 's|<em:version>0.0.0</em:version>|<em:version>$(VERSION).$(BUILD)</em:version>|' \
 		-e 's|<em:id></em:id>|<em:id>$(EXTID)</em:id>|' \
 		install.rdf.template >install.rdf
 
