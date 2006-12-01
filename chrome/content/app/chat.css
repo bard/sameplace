@@ -159,19 +159,17 @@ ul#messages
   color: #9e0909;
   }
 
-.user, .contact
-{
+.user, .contact {
   font-weight: bold;
   margin-right: 0.5em;
-  }
-.user:before, .contact:before
-{
-  content: "<";
-  }
-.user:after, .contact:after
-{
+  font-size: smaller;
+}
+.user:before, .contact:before {
+//    content: "<";
+}
+.user:after, .contact:after {
   content: ">";
-  }
+}
 
 .join, .leave, .error
 {
