@@ -271,8 +271,8 @@ function getDefaultAppUrl() {
 }
 
 function fadeIn(element, stepValue, stepInterval) {
-    var stepValue = stepValue || 0.1;
-    var stepInterval = stepInterval || 150;
+    stepValue = stepValue || 0.1;
+    stepInterval = stepInterval || 150;
 
     function fadeStep() {
         if(element.style.opacity == 1)
@@ -748,16 +748,6 @@ function clickedContact(contact) {
             account, address, null, type, true, function() {
                 focusConversation(account, address);
             });
-}
-
-function requestedCloseConversation(element) {
-    if(attr(element, 'type') == 'groupchat')
-        exitRoom(attr(element, 'account'),
-                 attr(element, 'address'),
-                 attr(element, 'resource'));
-
-    closeConversation(attr(element, 'account'),
-                      attr(element, 'address'));
 }
 
 function requestedCloseConversation(element) {
