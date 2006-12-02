@@ -27,6 +27,7 @@ var ns_xhtml    = 'http://www.w3.org/1999/xhtml';
 var ns_muc_user = 'http://jabber.org/protocol/muc#user';
 var ns_muc      = 'http://jabber.org/protocol/muc';
 var ns_roster   = 'jabber:iq:roster';
+var ns_delay    = 'jabber:x:delay';
 
 var wsRegexp = /^\s*$/m;
 var urlRegexp = new RegExp('(https?:\/\/|www\.)[^ \\t\\n\\f\\r"<>|()]*[^ \\t\\n\\f\\r"<>|,.!?(){}]');
@@ -386,9 +387,17 @@ function displayMessage(stanza) {
             M(domMessage).sender.setAttribute(
                 'class', stanza.@from.toString() ? 'contact' : 'user');
             textToHTML(M(domMessage).content, stanza.body);
-            M(domMessage).time.textContent =
-                (stanza.@from == undefined ?
-                 'Sent at ' : 'Received at ') + formatTime(new Date())
+
+            var timeSent;
+            if(stanza.ns_delay::x != undefined) {
+                var m = stanza.ns_delay::x.@stamp.toString()
+                    .match(/^(\d{4})(\d{2})(\d{2})T(\d{2}):(\d{2}):(\d{2})/);
+                timeSent = new Date(Date.UTC(m[1], m[2], m[3], m[4], m[5], m[6]))
+            } else 
+                timeSent = new Date();
+
+            M(domMessage).time.textContent = formatTime(timeSent);
+                
             _('messages').appendChild(domMessage);
         });
 }
