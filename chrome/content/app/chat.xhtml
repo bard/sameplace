@@ -30,12 +30,16 @@
       </div>
     </div>
 
+    <div id="format-commands" onclick="requestedFormatCommand(event);">
+      <button class="command" id="bold">B</button>
+      <button class="command" id="italic">I</button>
+      <button class="command" id="underline">U</button>
+    </div>
+
     <div id="chat-area">
       <div id="chat-output">
         <ul id="messages"/>
       </div>
-      <textarea id="chat-input" cols="80" rows="4" tabindex="1"
-                onkeypress="pressedKeyInChatInput(event);"/>
     </div>
 
     <div id="blueprints">

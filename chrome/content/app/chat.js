@@ -21,9 +21,10 @@
 // GLOBAL DEFINITIONS
 // ----------------------------------------------------------------------
 
-var serializer = new XMLSerializer();
-var parser = new DOMParser();
+var serializer  = new XMLSerializer();
+var parser      = new DOMParser();
 var ns_xhtml    = 'http://www.w3.org/1999/xhtml';
+var ns_xhtml_im = 'http://jabber.org/protocol/xhtml-im';
 var ns_muc_user = 'http://jabber.org/protocol/muc#user';
 var ns_muc      = 'http://jabber.org/protocol/muc';
 var ns_roster   = 'jabber:iq:roster';
@@ -141,6 +142,13 @@ function toDOM(description) {
     return parser.parseFromString((typeof(description) == 'xml' ?
                                    description.toXMLString() : description),
                                   'application/xhtml+xml').documentElement;
+}
+
+function copyDomContents(srcElement, dstElement) {
+    for(var i=srcElement.childNodes.length-1; i>=0; i--) 
+        dstElement.insertBefore(
+            srcElement.childNodes[i],
+            dstElement.firstChild);
 }
 
 
@@ -365,11 +373,28 @@ function init(event) {
         'scroll', function(event) { scrolledWindow(event); }, false);
 
     preloadSmileys();
+
+    var chatInput = document.createElement('iframe');
+    chatInput.setAttribute('id', 'chat-input'); 
+    chatInput.addEventListener(
+        'load', function(event) {
+            event.currentTarget && loadedChatInput(chatInput);
+        }, true);
+    _('chat-area').appendChild(chatInput);
 }
 
 
 // GUI ACTIONS
 // ----------------------------------------------------------------------
+
+function resetEditableDocument(document) {
+    window.setTimeout(
+        function() {
+            document.body.innerHTML = '';
+            document.designMode = 'off';
+            document.designMode = 'on';
+        }, 0);
+}
 
 function displayMessage(stanza) {
     scrollingOnlyIfAtBottom(
@@ -386,7 +411,13 @@ function displayMessage(stanza) {
             
             M(domMessage).sender.setAttribute(
                 'class', stanza.@from.toString() ? 'contact' : 'user');
-            textToHTML(M(domMessage).content, stanza.body);
+
+            if(stanza.html == undefined) 
+                textToHTML(M(domMessage).content, stanza.body);
+            else 
+                copyDomContents(
+                    toDOM(stanza.html.ns_xhtml::body),
+                    M(domMessage).content)
 
             var timeSent;
             if(stanza.ns_delay::x != undefined) {
@@ -458,18 +489,28 @@ function updateResources(resource, availability) {
 // GUI REACTIONS
 // ----------------------------------------------------------------------
 
+function loadedChatInput(chatInput) {
+    chatInput.contentDocument.open();
+    chatInput.contentDocument.write(
+        '<html xmlns="http://www.w3.org/1999/xhtml">' +
+        '<head><title></title></head>' +
+        '<body style="margin: 0; font-family: sans-serif; font-size: 10pt;">' +
+        '</body></html>');
+    chatInput.contentDocument.close();
+    chatInput.contentDocument.designMode = 'on';
+    chatInput.contentWindow.focus();
+    chatInput.contentWindow.addEventListener(
+        'keypress', pressedKeyInChatInput, false);
+}
+
 function pressedKeyInChatInput(event) {
     if(event.keyCode == KeyEvent.DOM_VK_RETURN) {
-        var chatInput = event.target;
-
-        if(event.ctrlKey)
-            chatInput.value += '\n';
-        else {
-            event.preventDefault();
-            if(!wsRegexp.test(chatInput.value)) {
-                send(chatInput.value);
-                chatInput.value = '';
-            }
+        var document = event.currentTarget.document;
+        var content = document.body.innerHTML;
+        event.preventDefault();
+        if(content != '<br>') {
+            send(content);
+            resetEditableDocument(document);            
         }
     }
 }
@@ -483,6 +524,16 @@ function resizedWindow(event) {
         scrollToBottom(_('chat-output'), false);
 }
 
+function requestedFormatCommand(event) {
+    if(event.target.getAttribute('class') != 'command')
+        return;
+
+    _('chat-input').contentDocument.execCommand(
+        event.target.getAttribute('id'), false, null);
+    event.target.blur();
+    _('chat-input').contentWindow.focus()
+}
+
 
 // NETWORK ACTIONS
 // ----------------------------------------------------------------------
@@ -492,11 +543,30 @@ function resizedWindow(event) {
  *
  */
 
-function send(messageBody) {
-    var message = <message/>;
+function send(html) {
+    var message =
+        <message>
+        <html xmlns="http://jabber.org/protocol/xhtml-im"/>
+        </message>;
+
     if(contactResource) 
         message.@to = '/' + contactResource;
-    message.body = <body>{messageBody}</body>;
+
+    function html2text(html) {
+        return html.replace(/<.*?>/g, '');
+    }
+
+    function html2xhtml(html) {
+        return html.replace(/<br>/g, '<br/>');
+    }
+
+    message.body = <body>{html2text(html)}</body>;
+
+    message.html.body = new XML(
+        '<body xmlns="http://www.w3.org/1999/xhtml">' +
+        html2xhtml(html) +
+        '</body>');
+
     _('xmpp-outgoing').textContent = message.toXMLString();
 }
 
@@ -515,7 +585,6 @@ function seenMessage(stanza) {
 
     if(stanza.@from != undefined && !groupchat)
         contactResource = JID(stanza.@from).resource;
-        
 }
 
 function seenPresence(stanza) {

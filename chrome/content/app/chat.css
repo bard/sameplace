@@ -19,31 +19,65 @@ a:hover
 
 /* ---------------------------------------------------------------------- */
 
-#info
-{
-  z-index: 1000;
-  padding-left: 1em;
-  padding-right: 0.5em;
-  padding-top: 1em;
-  font-size: smaller;
-  position: fixed;
-  top: 20px;
-  left: 90%;
-  max-height: 80%;
-  background: #C4C4FF;
-  white-space: nowrap;
-  opacity: 0.25;
-  -moz-border-radius-topleft: 12px;
-  -moz-border-radius-bottomleft: 12px;
-  }
+#info {
+    left: 90%;
+    top: 20px;
+    -moz-border-radius-topleft: 12px;
+    -moz-border-radius-bottomleft: 12px;
+}
 
-#info:hover
-{
-  opacity: 0.9;
-  left: auto;
-  right: 0;
-  }
+#format-commands {
+    left: -5em;
+    bottom: 5em;
+    -moz-border-radius-topright: 12px;
+    -moz-border-radius-bottomright: 12px;
+}
 
+#info, #format-commands {
+    z-index: 1000;
+    padding-left: 1em;
+    padding-right: 0.5em;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    font-size: smaller;
+    position: fixed;
+    max-height: 80%;
+    background: #C4C4FF;
+    white-space: nowrap;
+    opacity: 0.25;
+}
+
+#info:hover, #format-commands:hover {
+    opacity: 0.9;
+}
+
+#info:hover {
+    left: auto;
+    right: 0;
+}
+
+#format-commands:hover {
+    left: 0;
+    right: auto:
+}
+
+#format-commands button {
+    border-width: 1px;
+    width: 1.75em;
+}
+
+#format-commands #bold {
+    font-weight: bold;
+}
+
+#format-commands #italic {
+    font-style: italic;
+}
+
+#format-commands #undeline {
+    text-decoration: underline;
+}
+ 
 .box
 {
   margin-bottom: 0.5em;
@@ -164,9 +198,6 @@ ul#messages
   margin-right: 0.5em;
   font-size: smaller;
 }
-.user:before, .contact:before {
-//    content: "<";
-}
 .user:after, .contact:after {
   content: ">";
 }
@@ -188,11 +219,6 @@ ul#messages
 {
   content: "! ";
   font-weight: bold;
-  }
-
-.content
-{
-  white-space: -moz-pre-wrap;
   }
 
 img.emoticon
@@ -260,7 +286,7 @@ img.emoticon
   margin-bottom: 0;
   }
 
-#input, #output
+#xmpp-incoming, #xmpp-outgoing
 {
   font-weight: normal;
   overflow: auto;
@@ -270,3 +296,4 @@ img.emoticon
 {
   display: none;
   }
+
