@@ -1,5 +1,77 @@
 
 Context:
 
+[JS API: more controlled XML (de)serialization to preserve important whitespaces in XHTML-IM.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061207030342] 
+
+[JS API: temporarily disabling pretty printing of XML during actual delivery of message, since to some clients whitespace in XHTML-IM is significant. (Reported by Ivan Morgillo)
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061206001616] 
+
+[JS API: leftover variable caused error, fixed.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061204101509] 
+
+[Service: stubs and preliminary work for supporting StartTLS.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061203205820] 
+
+[Metadata: bumping version number in template to 42.0.0, so who is already tracking development branch won't be nagged by updates.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061203191455] 
+
+[Session: moved start/stop of keepalive to their own functions.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061203191203] 
+
+[JS API: removed code duplication, from _up() now calling open().
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061203182617] 
+
+[JS API: removed unused register() function.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061203182552] 
+
+[Session: work around apparently uncatchable exception from parseFromString() by not attempting to parse known invalid XML (stream prologue/epilogue).
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061203180344] 
+
+[Service: removed assumption that transport is not connected.  USe it as it is if connecte, otherwise connect.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061203144438] 
+
+[Tests: updated tests/specification of nsIXMPPSession.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061203165648] 
+
+[Socket, Session: made socket transport into XPCOM object, laid grounds for multiple transport types.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061203135101] 
+
+[Socket, Session: using transport status events to catch *real* connection start.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061202205947] 
+
+[Session: send space periodically to keep connection alive through NATs. (Reported by Ivan Morgillo)
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061202181935] 
+
+[Socket: doing event handling in-house instead of delegating to eventManager, the power of the latter is not needed here.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061202181417] 
+
+[Metadata, Makefile: modified so that install.rdf.template is valid and can be used by itself when following development branch.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061201221722] 
+
+[Preferences: moved "resource" field under "advanced". (Suggested by Andrea Reginato)
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061201190445] 
+
+[Meta data: added flock compatibility and homepage url.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061201100242] 
+
+[JS API: was using reserved word "enum", fixed.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061201100207] 
+
+[Service, JS API: replaced nsIDictionary with nsIProperties (since Thunderbird lacks the former); bypassing XPCOM when retrieving presence/roster cache.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061129065720] 
+
+[Preferences: added example for user address field.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061129062913] 
+
+[JS API: JID parsing did not allow "@" in resource, fixed.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061129062738] 
+
+[Overlay: leftover toggleLivebar() removed. (Reported by Giuseppe Adessi)
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061128011411] 
+
+[Overlay: moved jabber menu before help menu.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061128011214] 
+
 [TAG 0.3.1
 Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061024204539] 

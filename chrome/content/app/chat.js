@@ -21,8 +21,6 @@
 // GLOBAL DEFINITIONS
 // ----------------------------------------------------------------------
 
-var serializer  = new XMLSerializer();
-var parser      = new DOMParser();
 var ns_xhtml    = 'http://www.w3.org/1999/xhtml';
 var ns_xhtml_im = 'http://jabber.org/protocol/xhtml-im';
 var ns_muc_user = 'http://jabber.org/protocol/muc#user';
@@ -132,16 +130,6 @@ function formatTime(dateTime) {
     return padLeft(dateTime.getHours(), '0', 2) + ':' +
         padLeft(dateTime.getMinutes(), '0', 2) + ':' +
         padLeft(dateTime.getSeconds(), '0', 2)
-}
-
-function toXML(domElement) {
-    return new XML(serializer.serializeToString(domElement));
-}
-
-function toDOM(description) {
-    return parser.parseFromString((typeof(description) == 'xml' ?
-                                   description.toXMLString() : description),
-                                  'application/xhtml+xml').documentElement;
 }
 
 function copyDomContents(srcElement, dstElement) {
@@ -416,14 +404,16 @@ function displayMessage(stanza) {
                 textToHTML(M(domMessage).content, stanza.body);
             else 
                 copyDomContents(
-                    toDOM(stanza.html.ns_xhtml::body),
-                    M(domMessage).content)
+                    conv.toDOM(
+                        filter.xhtmlIM.keepRecommended(
+                            stanza.html.ns_xhtml::body)),
+                    M(domMessage).content);
 
             var timeSent;
             if(stanza.ns_delay::x != undefined) {
                 var m = stanza.ns_delay::x.@stamp.toString()
                     .match(/^(\d{4})(\d{2})(\d{2})T(\d{2}):(\d{2}):(\d{2})/);
-                timeSent = new Date(Date.UTC(m[1], m[2], m[3], m[4], m[5], m[6]))
+                timeSent = new Date(Date.UTC(m[1], m[2], m[3], m[4], m[5], m[6]));
             } else 
                 timeSent = new Date();
 
@@ -507,11 +497,15 @@ function pressedKeyInChatInput(event) {
     if(event.keyCode == KeyEvent.DOM_VK_RETURN) {
         var document = event.currentTarget.document;
         var content = document.body.innerHTML;
+
         event.preventDefault();
-        if(content != '<br>') {
-            send(content);
-            resetEditableDocument(document);            
-        }
+        if(content == '<br>')
+            return;
+
+        send(content);
+        resetEditableDocument(document);            
+    } else if(event.charCode == 'h'.charCodeAt(0) && event.ctrlKey == true) {
+        event.preventDefault();
     }
 }
 
@@ -543,7 +537,9 @@ function requestedFormatCommand(event) {
  *
  */
 
-function send(html) {
+function send(htmlText) {
+    strictXML();
+
     var message =
         <message>
         <html xmlns="http://jabber.org/protocol/xhtml-im"/>
@@ -552,24 +548,31 @@ function send(html) {
     if(contactResource) 
         message.@to = '/' + contactResource;
 
-    function html2text(html) {
-        return html.replace(/<.*?>/g, '');
-    }
-
-    function html2xhtml(html) {
-        return html.replace(/<br>/g, '<br/>');
-    }
-
-    message.body = <body>{html2text(html)}</body>;
+    message.body = <body>{filter.stripTags(
+                              filter.htmlEntitiesToCharacters(
+                                  htmlText))}</body>;
 
     message.html.body = new XML(
         '<body xmlns="http://www.w3.org/1999/xhtml">' +
-        html2xhtml(html) +
+        filter.htmlToXHTMLTags(
+            filter.htmlEntitiesToCodes(htmlText)) +
         '</body>');
 
     _('xmpp-outgoing').textContent = message.toXMLString();
+
+    looseXML();
 }
 
+function strictXML() {
+    var settings = XML.settings();
+    XML.prettyPrinting = false;
+    XML.ignoreWhitespace = false;
+    return settings;
+}
+
+function looseXML(settings) {
+    XML.setSettings(XML.defaultSettings());
+}
 
 // NETWORK REACTIONS
 // ----------------------------------------------------------------------
