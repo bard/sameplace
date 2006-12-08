@@ -31,45 +31,6 @@ var ns_delay    = 'jabber:x:delay';
 var wsRegexp = /^\s*$/m;
 var urlRegexp = new RegExp('(https?:\/\/|www\.)[^ \\t\\n\\f\\r"<>|()]*[^ \\t\\n\\f\\r"<>|,.!?(){}]');
 
-var smileyMap = {
-    '0:-)':  'angel',
-    '0:)':   'angel',
-    ':\'(':  'crying',
-    '>:-)':  'devil-grin',
-    '>:)':   'devil-grin',
-    'B-)':   'glasses',
-    'B)':    'glasses',
-    ':-*':   'kiss',
-    ':*':    'kiss',
-    ':-(|)': 'monkey',
-    ':(|)':  'monkey',
-    ':-|':   'plain',
-    ':-(':   'sad',
-    ':(':    'sad',
-    ':-))':  'smile-big',
-    ':))':   'smile-big',
-    ':-)':   'smile',
-    ':)':    'smile',
-    ':-D':   'grin',
-    ':D':    'grin',
-    ':-0':   'surprise',
-    ':0':    'surprise',
-    ';)':    'wink',
-    ';-)':   'wink'
-};
-var smileyRegexp;
-
-(function() {
-    var smileySymbols = [];
-    for(var symbol in smileyMap)
-        smileySymbols.push(symbol);
-
-    smileyRegexp = smileySymbols.map(
-        function(symbol) {
-            return symbol.replace(/(\(|\)|\*|\|)/g, '\\$1');
-        }).join('|');
-})();
-
 
 // GLOBAL STATE
 // ----------------------------------------------------------------------
@@ -132,57 +93,9 @@ function formatTime(dateTime) {
         padLeft(dateTime.getSeconds(), '0', 2)
 }
 
-function copyDomContents(srcElement, dstElement) {
-    for(var i=srcElement.childNodes.length-1; i>=0; i--) 
-        dstElement.insertBefore(
-            srcElement.childNodes[i],
-            dstElement.firstChild);
-}
-
 
 // GUI UTILITIES (GENERIC)
 // ----------------------------------------------------------------------
-
-function textToHTML(container, text) {
-    text = text.toString();
-    
-    var rx = new RegExp([urlRegexp.source, smileyRegexp].join('|'), 'g');
-    
-    var start = 0;
-    var match = rx.exec(text);
-    while(match) {
-        container.appendChild(
-            document.createTextNode(
-                text.substring(start, match.index)));
-
-        start = rx.lastIndex;
-
-        var translatedElement;
-        if(match[0].match(smileyRegexp)) {
-            translatedElement = document.createElement('img');
-            translatedElement.setAttribute('class', 'emoticon');
-            translatedElement.setAttribute('alt', match[0]);
-            translatedElement.
-                setAttribute('src',
-                             'emoticons/' + smileyMap[match[0]] + '.png');
-        } else {
-            translatedElement = document.createElement('a');
-            var url = match[0];
-            translatedElement.textContent = url;
-            if(!/^https?:\/\//.test(url))
-                url = 'http://' + url;
-            translatedElement.setAttribute('href', url);
-        }
-        container.appendChild(translatedElement);
-
-        match = rx.exec(text);
-    }
-    container.appendChild(
-        document.createTextNode(
-            text.substring(start, text.length)));
-
-    return container;
-}
 
 function _(thing) {
     switch(typeof(thing)) {
@@ -197,10 +110,11 @@ function _(thing) {
     }
 }
 
-function cloneBlueprint(name) {
-    return x('//*[@id="blueprints"]' +
-             '//*[@class="' + name + '"]')
-        .cloneNode(true);
+function copyDomContents(srcElement, dstElement) {
+    for(var i=srcElement.childNodes.length-1; i>=0; i--) 
+        dstElement.insertBefore(
+            srcElement.childNodes[i],
+            dstElement.firstChild);
 }
 
 function getElementByAttribute(parent, name, value) {
@@ -284,11 +198,6 @@ function scrollingOnlyIfAtBottom(domElement, action) {
 // GUI UTILITIES (SPECIFIC)
 // ----------------------------------------------------------------------
 
-function preloadSmileys() {
-    for(var smileySymbol in smileyMap) 
-        (new Image()).src = smileyMap[smileySymbol] + '.png';
-}
-
 /**
  * Provides a convenient stateless wrapper over a document element
  * representing a message.
@@ -319,6 +228,12 @@ function M(domElement) {
     };
 
     return wrapper;
+}
+
+function cloneBlueprint(name) {
+    return x('//*[@id="blueprints"]' +
+             '//*[@class="' + name + '"]')
+        .cloneNode(true);
 }
 
 
@@ -360,8 +275,6 @@ function init(event) {
     _('chat-output').addEventListener(
         'scroll', function(event) { scrolledWindow(event); }, false);
 
-    preloadSmileys();
-
     var chatInput = document.createElement('iframe');
     chatInput.setAttribute('id', 'chat-input'); 
     chatInput.addEventListener(
@@ -400,14 +313,11 @@ function displayMessage(stanza) {
             M(domMessage).sender.setAttribute(
                 'class', stanza.@from.toString() ? 'contact' : 'user');
 
-            if(stanza.html == undefined) 
-                textToHTML(M(domMessage).content, stanza.body);
-            else 
-                copyDomContents(
-                    conv.toDOM(
-                        filter.xhtmlIM.keepRecommended(
-                            stanza.html.ns_xhtml::body)),
-                    M(domMessage).content);
+            copyDomContents(
+                (stanza.http == undefined ?
+                 conv.plainTextToHTML(stanza.body) :
+                 filter.xhtmlIM.keepRecommended(stanza.html.ns_xhtml::body)),
+                M(domMessage).content);
 
             var timeSent;
             if(stanza.ns_delay::x != undefined) {
