@@ -18,30 +18,17 @@
   Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
 */
 
-// GLOBAL DEFINITIONS
-// ----------------------------------------------------------------------
-
-var ns_xhtml    = 'http://www.w3.org/1999/xhtml';
-var ns_xhtml_im = 'http://jabber.org/protocol/xhtml-im';
-var ns_muc_user = 'http://jabber.org/protocol/muc#user';
-var ns_muc      = 'http://jabber.org/protocol/muc';
-var ns_roster   = 'jabber:iq:roster';
-var ns_delay    = 'jabber:x:delay';
-
-var wsRegexp = /^\s*$/m;
-var urlRegexp = new RegExp('(https?:\/\/|www\.)[^ \\t\\n\\f\\r"<>|()]*[^ \\t\\n\\f\\r"<>|,.!?(){}]');
-
 
 // GLOBAL STATE
 // ----------------------------------------------------------------------
 
 var wantBottom = true;
 var scrolling = false;
-var groupchat = false;
+var isGroupchat = false;
 var userAddress;
 var contactResource;
 var contactName;
-var input;
+var inputArea;
 
 
 // UTILITIES
@@ -266,9 +253,9 @@ function init(event) {
     _('chat-output').addEventListener(
         'scroll', function(event) { scrolledWindow(event); }, false);
 
-    input = new Input(_('chat-input'));
-    input.onLoad = function() { input.focus(); };
-    input.onAcceptContent = function(content) { send(content); };
+    inputArea = new InputArea(_('chat-input'));
+    inputArea.onLoad = function() { inputArea.focus(); };
+    inputArea.onAcceptContent = function(content) { send(content); };
 }
 
 
@@ -337,9 +324,9 @@ function requestedFormatCommand(event) {
     if(event.target.getAttribute('class') != 'command')
         return;
 
-    input.execCommand(event.target.getAttribute('id'), null);
+    inputArea.execCommand(event.target.getAttribute('id'), null);
     event.target.blur();
-    input.focus();
+    inputArea.focus();
 }
 
 
@@ -400,14 +387,14 @@ function seenMessage(stanza) {
     else
         displayMessage(stanza);
 
-    if(stanza.@from != undefined && !groupchat)
+    if(stanza.@from != undefined && !isGroupchat)
         contactResource = JID(stanza.@from).resource;
 }
 
 function seenPresence(stanza) {
     if(stanza.@from == undefined) {
         if(stanza.ns_muc::x.length() > 0)
-            groupchat = true;
+            isGroupchat = true;
     } else {
         if(stanza.ns_muc_user::x.length() > 0) {
             x('//xhtml:div[@class="box" and @for="resources"]/xhtml:h3')

@@ -1,10 +1,37 @@
-// DEFINITIONS
+/*
+  Copyright (C) 2005-2006 by Massimiliano Mirra
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+  Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
+*/
+
+
+/**
+ * Routines for plain text/HTML/XML conversion.
+ *
+ */
+
+
+// GLOBAL DEFINITIONS
 // ----------------------------------------------------------------------
 
-var serializer  = new XMLSerializer();
-var parser      = new DOMParser();
+const serializer  = new XMLSerializer();
+const parser      = new DOMParser();
 
-var smileys = {
+const smileys = {
     '0:-)':  'angel',
     '0:)':   'angel',
     ':\'(':  'crying',
@@ -30,7 +57,8 @@ var smileys = {
     ';)':    'wink',
     ';-)':   'wink'
 };
-var smileyRegexp;
+const smileyRegexp;
+const urlRegexp = new RegExp('(https?:\/\/|www\.)[^ \\t\\n\\f\\r"<>|()]*[^ \\t\\n\\f\\r"<>|,.!?(){}]');
 
 var conv = {};
 

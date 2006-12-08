@@ -1,7 +1,34 @@
+/*
+  Copyright (C) 2005-2006 by Massimiliano Mirra
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+  Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
+*/
+
+
+/**
+ * Wrapper for iframe providing an HTML input area.
+ *
+ */
+
+
 // INITIALIZATION
 // ----------------------------------------------------------------------
 
-function Input(iframe) {
+function InputArea(iframe) {
     _this = this;
     this._iframe = iframe;
 
@@ -24,19 +51,19 @@ function Input(iframe) {
 // CALLBACKS
 // ----------------------------------------------------------------------
 
-Input.prototype.onLoad = function() {};
+InputArea.prototype.onLoad = function() {};
 
-Input.prototype.onAcceptContent = function(content) {};
+InputArea.prototype.onAcceptContent = function(content) {};
 
 
 // PUBLIC FUNCTIONALITY
 // ----------------------------------------------------------------------
 
-Input.prototype.focus = function() {
+InputArea.prototype.focus = function() {
     this._iframe.contentWindow.focus();
 };
 
-Input.prototype.reset = function() {
+InputArea.prototype.reset = function() {
     var document = this._iframe.contentDocument;
     
     window.setTimeout(
@@ -47,15 +74,16 @@ Input.prototype.reset = function() {
         }, 0);
 };
 
-Input.prototype.execCommand = function(command, argument) {
+InputArea.prototype.execCommand = function(command, argument) {
     this._iframe.contentDocument.execCommand(
         command, false, argument);
 };
 
+
 // INTERNALS
 // ----------------------------------------------------------------------
 
-Input.prototype.pressedKey = function(event) {
+InputArea.prototype.pressedKey = function(event) {
     if(event.keyCode == KeyEvent.DOM_VK_RETURN) {
         var document = event.currentTarget.document;
         var content = document.body.innerHTML;
