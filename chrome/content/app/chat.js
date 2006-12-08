@@ -302,9 +302,9 @@ function displayMessage(stanza) {
                 'class', stanza.@from.toString() ? 'contact' : 'user');
 
             copyDomContents(
-                (stanza.http == undefined ?
+                (stanza.html == undefined ?
                  conv.plainTextToHTML(stanza.body) :
-                 filter.xhtmlIM.keepRecommended(stanza.html.ns_xhtml::body)),
+                 conv.toDOM(filter.xhtmlIM.keepRecommended(stanza.html.ns_xhtml::body))),
                 M(domMessage).content);
 
             var timeSent;
