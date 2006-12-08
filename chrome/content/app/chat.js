@@ -41,6 +41,7 @@ var groupchat = false;
 var userAddress;
 var contactResource;
 var contactName;
+var input;
 
 
 // UTILITIES
@@ -275,27 +276,14 @@ function init(event) {
     _('chat-output').addEventListener(
         'scroll', function(event) { scrolledWindow(event); }, false);
 
-    var chatInput = document.createElement('iframe');
-    chatInput.setAttribute('id', 'chat-input'); 
-    chatInput.addEventListener(
-        'load', function(event) {
-            event.currentTarget && loadedChatInput(chatInput);
-        }, true);
-    _('chat-area').appendChild(chatInput);
+    input = new Input(_('chat-input'));
+    input.onLoad = function() { input.focus(); };
+    input.onAcceptContent = function(content) { send(content); };
 }
 
 
 // GUI ACTIONS
 // ----------------------------------------------------------------------
-
-function resetEditableDocument(document) {
-    window.setTimeout(
-        function() {
-            document.body.innerHTML = '';
-            document.designMode = 'off';
-            document.designMode = 'on';
-        }, 0);
-}
 
 function displayMessage(stanza) {
     scrollingOnlyIfAtBottom(
@@ -389,36 +377,6 @@ function updateResources(resource, availability) {
 // GUI REACTIONS
 // ----------------------------------------------------------------------
 
-function loadedChatInput(chatInput) {
-    chatInput.contentDocument.open();
-    chatInput.contentDocument.write(
-        '<html xmlns="http://www.w3.org/1999/xhtml">' +
-        '<head><title></title></head>' +
-        '<body style="margin: 0; font-family: sans-serif; font-size: 10pt;">' +
-        '</body></html>');
-    chatInput.contentDocument.close();
-    chatInput.contentDocument.designMode = 'on';
-    chatInput.contentWindow.focus();
-    chatInput.contentWindow.addEventListener(
-        'keypress', pressedKeyInChatInput, false);
-}
-
-function pressedKeyInChatInput(event) {
-    if(event.keyCode == KeyEvent.DOM_VK_RETURN) {
-        var document = event.currentTarget.document;
-        var content = document.body.innerHTML;
-
-        event.preventDefault();
-        if(content == '<br>')
-            return;
-
-        send(content);
-        resetEditableDocument(document);            
-    } else if(event.charCode == 'h'.charCodeAt(0) && event.ctrlKey == true) {
-        event.preventDefault();
-    }
-}
-
 function scrolledWindow(event) {
     wantBottom = isNearBottom(_('chat-output'));
 }
@@ -432,10 +390,9 @@ function requestedFormatCommand(event) {
     if(event.target.getAttribute('class') != 'command')
         return;
 
-    _('chat-input').contentDocument.execCommand(
-        event.target.getAttribute('id'), false, null);
+    input.execCommand(event.target.getAttribute('id'), null);
     event.target.blur();
-    _('chat-input').contentWindow.focus()
+    input.focus();
 }
 
 
