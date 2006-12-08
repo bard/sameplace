@@ -258,17 +258,7 @@ function init(event) {
             }
         }, false);
 
-    for each(id in ['topic', 'resources', 'groups']) {
-        _(id).addEventListener(
-            'DOMNodeInserted', function(event) {
-                refresh(event.currentTarget);
-            }, false);
-
-        _(id).addEventListener(
-            'DOMNodeRemoved', function(event) {
-                refresh(event.currentTarget);
-            }, false);
-    }
+    info.init(_('info'));
 
     window.addEventListener(
         'resize', function(event) { resizedWindow(event); }, false);
@@ -328,49 +318,6 @@ function displayEvent(eventClass, text) {
             domChatEvent.textContent = text;
             _('messages').appendChild(domChatEvent);
         });
-}
-
-function refresh(element) {
-    switch(element.getAttribute('id')) {
-    case 'topic':
-        (element.textContent ? visible : hidden)
-            (element.parentNode);
-        break;
-    case 'resources':
-    case 'groups':
-        if(element.getElementsByTagName('li').length > 0)
-            visible(element.parentNode);
-        else 
-            hidden(element.parentNode);
-        break;
-    }
-}
-
-function updateAddress(address) {
-    _('address').textContent = address;
-}
-
-function updateTitle(address) {
-    document.title = address;
-}
-
-function updateResources(resource, availability) {
-    if(!resource)
-        return;
-    
-    var domResource = x('//*[@id="resources"]' +
-                        '//*[text()="' + resource + '"]');
-    
-    if(domResource) {
-        if(availability == 'unavailable')
-            _('resources').removeChild(domResource);
-    }
-    else 
-        if(availability != 'unavailable') {
-            domResource = document.createElement('li');
-            domResource.textContent = resource;
-            _('resources').insertBefore(domResource, _('resources').firstChild);
-        }
 }
 
 
@@ -474,9 +421,9 @@ function seenPresence(stanza) {
                 displayEvent('error', 'Error: code ' + stanza.error.@code);
         }
     
-        updateAddress(JID(stanza.@from).address);
-        updateResources(JID(stanza.@from).resource, stanza.@type);
-        updateTitle(JID(stanza.@from).address);
+        info.updateAddress(JID(stanza.@from).address);
+        info.updateResources(JID(stanza.@from).resource, stanza.@type);
+        info.updateTitle(JID(stanza.@from).address);
     }
 }
 
@@ -485,7 +432,7 @@ function seenIq(stanza) {
         userAddress = JID(stanza.@to).address;
         contactName = stanza..ns_roster::item.@name.toString();
         if(stanza..ns_roster::item.length() > 0)
-            updateAddress(stanza..ns_roster::item.@jid);
+            info.updateAddress(stanza..ns_roster::item.@jid);
     }
 }
 
