@@ -395,13 +395,11 @@ filter._filterXML = function(src, acceptElement, acceptAttribute) {
     case 'element':
         if(acceptElement(src)) {
             var dst = <{src.localName()}/>;
-            if(src.parent().namespace() != src.namespace())
-                dst.setNamespace(src.namespace());
 
-            for each(var attr in src.attributes())
+            for each(var attr in src.@*::*)
                 if(acceptAttribute(src, attr))
                     dst['@' + attr.localName()] = attr.valueOf();
-
+                
             for each(var child in src.*::*) {
                 var childDst = filterXML(
                     child, acceptElement, acceptAttribute);
@@ -417,7 +415,9 @@ filter._filterXML = function(src, acceptElement, acceptAttribute) {
                     throw new Error('Unexpected. (' + typeof(childDst) + ')');
                 }
             }
-                
+
+            dst.setNamespace(src.namespace());            
+
             return dst;
         } else {
             var children = [];

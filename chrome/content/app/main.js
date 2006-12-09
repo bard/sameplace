@@ -19,6 +19,55 @@
 */
 
 
+// GLOBAL DEFINITIONS
+// ----------------------------------------------------------------------
+
+var emoticons = {
+    '0:-)':  'angel',
+    '0:)':   'angel',
+    ':\'(':  'crying',
+    '>:-)':  'devil-grin',
+    '>:)':   'devil-grin',
+    'B-)':   'glasses',
+    'B)':    'glasses',
+    ':-*':   'kiss',
+    ':*':    'kiss',
+    ':-(|)': 'monkey',
+    ':(|)':  'monkey',
+    ':-|':   'plain',
+    ':-(':   'sad',
+    ':(':    'sad',
+    ':-))':  'smile-big',
+    ':))':   'smile-big',
+    ':-)':   'smile',
+    ':)':    'smile',
+    ':-D':   'grin',
+    ':D':    'grin',
+    ':-0':   'surprise',
+    ':0':    'surprise',
+    ';)':    'wink',
+    ';-)':   'wink'
+};
+
+const smileyRegexp = makeEmoticonRegexp(emoticons);
+const urlRegexp = /(https?:\/\/|www\.)[^ \\t\\n\\f\\r"<>|()]*[^ \\t\\n\\f\\r"<>|,.!?(){}]/g;
+
+var textProcessors = [
+{ name: 'URLs',
+  regexp: /(https?:\/\/|www.)[^ \t\n\f\r"<>|()]*[^ \t\n\f\r"<>|,.!?(){}]/g,
+  action: function(match) {
+        var url = /^https?:\/\//.test(match[0]) ?
+        match[0] : 'http://' + match[0];
+        return <a href={url}>{match[0]}</a>;
+    }},
+{ name: 'Emoticons',
+  regexp: smileyRegexp,
+  action: function(match) {
+        return <img src={'emoticons/' + emoticons[match[0]] + '.png'} class="emoticon" alt={match[0]}/>;
+    }}
+    ];
+
+
 // GLOBAL STATE
 // ----------------------------------------------------------------------
 
@@ -279,10 +328,10 @@ function displayMessage(stanza) {
                 'class', stanza.@from.toString() ? 'contact' : 'user');
 
             copyDomContents(
-                (stanza.ns_xhtml_im::html == undefined ?
-                 conv.plainTextToHTML(stanza.body) :
-                 conv.toDOM(filter.xhtmlIM.keepRecommended(
-                                stanza.ns_xhtml_im::html.ns_xhtml::body))),
+                conv.toDOM(conv.applyTextProcessors(
+                               (stanza.ns_xhtml_im::html == undefined ?
+                                stanza.body : stanza.ns_xhtml_im::html.ns_xhtml::body),
+                               textProcessors)),
                 M(domMessage).content);
 
             var timeSent;
