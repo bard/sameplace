@@ -35,7 +35,12 @@ function init(event) {
 
     _('contacts').selectedIndex = -1;
 
-    channel = XMPP.createChannel();
+    channel = XMPP.createChannel(
+        <query xmlns="http://jabber.org/protocol/disco#info">
+        <feature var="http://jabber.org/protocol/muc"/>
+        <feature var="http://jabber.org/protocol/muc#user"/>
+        <feature var='http://jabber.org/protocol/xhtml-im'/>
+        </query>);
 
     channel.on(
         {event: 'iq', direction: 'in', stanza: function(s) {

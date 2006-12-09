@@ -1,6 +1,9 @@
 
 Context:
 
+[Service, JS API: channel requester can now pass in a disco info query fragment with the features they offer, service will report them in disco info responses.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061209222449] 
+
 [JS API: more controlled XML (de)serialization to preserve important whitespaces in XHTML-IM.
 Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061207030342] 
 
