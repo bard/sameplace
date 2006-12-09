@@ -354,7 +354,7 @@ function send(htmlText) {
                               filter.htmlEntitiesToCharacters(
                                   htmlText))}</body>;
 
-    message.html.body = new XML(
+    message.ns_xhtml_im::html.body = new XML(
         '<body xmlns="http://www.w3.org/1999/xhtml">' +
         filter.htmlToXHTMLTags(
             filter.htmlEntitiesToCodes(htmlText)) +
