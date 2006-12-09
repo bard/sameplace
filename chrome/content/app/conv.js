@@ -31,28 +31,7 @@
 const serializer  = new XMLSerializer();
 const parser      = new DOMParser();
 
-
-// GLOBAL STATE
-// ----------------------------------------------------------------------
-
 var conv = {};
-
-
-// UTILITIES
-// ----------------------------------------------------------------------
-
-function makeEmoticonRegexp(emoticons) {
-    var symbols = [];
-    for(var symbol in emoticons)
-        symbols.push(symbol);
-
-    return new RegExp(
-        symbols.map(
-            function(symbol) {
-                return symbol.replace(/(\(|\)|\*|\|)/g, '\\$1');
-            }).join('|'),
-        'g');
-}
 
 
 // PUBLIC FUNCTIONALITY
@@ -84,18 +63,4 @@ conv.toDOM = function(thing) {
                                   'application/xhtml+xml').documentElement;    
 };
 
-conv.applyTextProcessors = function(xmlFragment, textProcessors) {
-    var applyTextProcessors = arguments.callee;
-    
-    return textProcessors.length == 0 ?
-        xmlFragment :
-        applyTextProcessors(
-            xml.mapTextNodes(
-                xmlFragment, function(textNode) {
-                    return text.mapMatch(textNode.toString(),
-                                         textProcessors[0].regexp,
-                                         textProcessors[0].action);
-                }),
-            textProcessors.slice(1));
-}
 

@@ -381,6 +381,36 @@ filter.xhtmlIM.keepRecommended = function(xhtml) {
         });
 };
 
+/**
+ * Using given XML fragment, produces a new XML fragment where each
+ * text node has been fed to text processors.
+ *
+ * Text processors is an array of objects like:
+ *
+ *     var textProcessors = [
+ *         { regexp: /hello|world/,
+ *           action: function(match) { return match[0].toUpperCase(); } },
+ *         { regexp: /:-\(/,
+ *           action: function(match) { return ':-)'; } }
+ *     ];
+ *
+ */
+
+filter.applyTextProcessors = function(xmlFragment, textProcessors) {
+    var applyTextProcessors = arguments.callee;
+    
+    return textProcessors.length == 0 ?
+        xmlFragment :
+        applyTextProcessors(
+            xml.mapTextNodes(
+                xmlFragment, function(textNode) {
+                    return text.mapMatch(textNode.toString(),
+                                         textProcessors[0].regexp,
+                                         textProcessors[0].action);
+                }),
+            textProcessors.slice(1));
+};
+
 
 // INTERNALS
 // ----------------------------------------------------------------------

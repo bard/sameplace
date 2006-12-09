@@ -49,19 +49,16 @@ var emoticons = {
     ';-)':   'wink'
 };
 
-const smileyRegexp = makeEmoticonRegexp(emoticons);
-const urlRegexp = /(https?:\/\/|www\.)[^ \\t\\n\\f\\r"<>|()]*[^ \\t\\n\\f\\r"<>|,.!?(){}]/g;
-
 var textProcessors = [
 { name: 'URLs',
-  regexp: /(https?:\/\/|www.)[^ \t\n\f\r"<>|()]*[^ \t\n\f\r"<>|,.!?(){}]/g,
+  regexp: /(https?:\/\/|www\.)[^ \t\n\f\r"<>|()]*[^ \t\n\f\r"<>|,.!?(){}]/g,
   action: function(match) {
         var url = /^https?:\/\//.test(match[0]) ?
         match[0] : 'http://' + match[0];
         return <a href={url}>{match[0]}</a>;
     }},
 { name: 'Emoticons',
-  regexp: smileyRegexp,
+  regexp: makeEmoticonRegexp(emoticons),
   action: function(match) {
         return <img src={'emoticons/' + emoticons[match[0]] + '.png'} class="emoticon" alt={match[0]}/>;
     }}
@@ -83,12 +80,17 @@ var inputArea;
 // UTILITIES
 // ----------------------------------------------------------------------
 
-function visible(element) {
-    element.style.display = 'block';
-}
+function makeEmoticonRegexp(emoticons) {
+    var symbols = [];
+    for(var symbol in emoticons)
+        symbols.push(symbol);
 
-function hidden(element) {
-    element.style.display = 'none';
+    return new RegExp(
+        symbols.map(
+            function(symbol) {
+                return symbol.replace(/(\(|\)|\*|\|)/g, '\\$1');
+            }).join('|'),
+        'g');
 }
 
 function JID(string) {
@@ -133,6 +135,14 @@ function formatTime(dateTime) {
 
 // GUI UTILITIES (GENERIC)
 // ----------------------------------------------------------------------
+
+function visible(element) {
+    element.style.display = 'block';
+}
+
+function hidden(element) {
+    element.style.display = 'none';
+}
 
 function _(thing) {
     switch(typeof(thing)) {
@@ -328,7 +338,7 @@ function displayMessage(stanza) {
                 'class', stanza.@from.toString() ? 'contact' : 'user');
 
             copyDomContents(
-                conv.toDOM(conv.applyTextProcessors(
+                conv.toDOM(filter.applyTextProcessors(
                                (stanza.ns_xhtml_im::html == undefined ?
                                 stanza.body : stanza.ns_xhtml_im::html.ns_xhtml::body),
                                textProcessors)),
