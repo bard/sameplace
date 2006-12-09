@@ -600,7 +600,7 @@ function promptOpenConversation(account, address, type, nick) {
                 focusConversation(request.account, request.address);
             else
                 withConversation(
-                    request.account, request.address, null, null, true, 
+                    request.account, request.address, null, 'chat', true, 
                     function() {
                         focusConversation(request.account, request.address);
                     });
