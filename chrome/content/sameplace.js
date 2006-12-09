@@ -55,11 +55,11 @@ function init(event) {
     channel.on(
         {event: 'message', direction: 'in', stanza: function(s) {
                 return s.body.length() > 0 && s.@type != 'error';
-            }}, function(message) { receivedChatMessage(message); });
+            }}, function(message) { seenChatMessage(message); });
     channel.on(
         {event: 'message', direction: 'out', stanza: function(s) {
                 return s.body.length() > 0 && s.@type != 'groupchat';
-            }}, function(message) { sentChatMessage(message) });
+            }}, function(message) { seenChatMessage(message) });
     channel.on(
         {event: 'presence', direction: 'in', stanza: function(s) {
                 return s.@type == 'subscribed';
@@ -897,20 +897,32 @@ function receivedSubscriptionApproval(presence) {
         presence.stanza.@from + ' has accepted to be added to your contact list.');
 }
 
-function receivedChatMessage(message) {
-    var from = XMPP.JID(message.stanza.@from);
+function seenChatMessage(message) {
+    var contact = XMPP.JID(
+        (message.stanza.@from != undefined ?
+         message.stanza.@from : message.stanza.@to));
 
-    var wConversation = getConversation(message.session.name, from.address);
+    if(!getConversation(message.session.name, contact.address))
+        withConversation(
+            message.session.name, contact.address,
+            contact.resource, message.stanza.@type,
+            true,
+            function(document) {
+                document.getElementById('xmpp-incoming').textContent =
+                    message.stanza.toXMLString();
+            });
+
+    var wConversation = getConversation(message.session.name, contact.address);
     if(!wConversation) {
         openAttachPanel(
-            message.session.name, from.address,
-            from.resource, message.stanza.@type,
+            message.session.name, contact.address,
+            contact.resource, message.stanza.@type,
             getDefaultAppUrl(),
             'mini',
             function(contentPanel) {
                 contentPanel.xmppChannel.receive(message);
             });
-        openedConversation(message.session.name, from.address, message.stanza.@type);
+        openedConversation(message.session.name, contact.address, message.stanza.@type);
     } else if(!wConversation.contentDocument ||
               (wConversation.contentDocument &&
                !wConversation.contentDocument.getElementById('xmpp-incoming'))) {
@@ -920,20 +932,7 @@ function receivedChatMessage(message) {
                 contentPanel.xmppChannel.receive(message);
             });
     }
-}
 
-function sentChatMessage(message) {
-    var to = XMPP.JID(message.stanza.@to);
-
-    if(!getConversation(message.session.name, to.address))
-        withConversation(
-            message.session.name, to.address,
-            to.resource, message.stanza.@type,
-            true,
-            function(document) {
-                document.getElementById('xmpp-incoming').textContent =
-                    message.stanza.toXMLString();
-            });
 }
 
 function receivedRoster(iq) {
