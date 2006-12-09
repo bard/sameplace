@@ -279,9 +279,10 @@ function displayMessage(stanza) {
                 'class', stanza.@from.toString() ? 'contact' : 'user');
 
             copyDomContents(
-                (stanza.html == undefined ?
+                (stanza.ns_xhtml_im::html == undefined ?
                  conv.plainTextToHTML(stanza.body) :
-                 conv.toDOM(filter.xhtmlIM.keepRecommended(stanza.html.ns_xhtml::body))),
+                 conv.toDOM(filter.xhtmlIM.keepRecommended(
+                                stanza.ns_xhtml_im::html.ns_xhtml::body))),
                 M(domMessage).content);
 
             var timeSent;
