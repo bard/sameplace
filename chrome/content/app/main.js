@@ -337,12 +337,15 @@ function displayMessage(stanza) {
             M(domMessage).sender.setAttribute(
                 'class', stanza.@from.toString() ? 'contact' : 'user');
 
-            copyDomContents(
-                conv.toDOM(filter.applyTextProcessors(
-                               (stanza.ns_xhtml_im::html == undefined ?
-                                stanza.body : stanza.ns_xhtml_im::html.ns_xhtml::body),
-                               textProcessors)),
-                M(domMessage).content);
+            var body;
+            if(stanza.ns_xhtml_im::html == undefined) {
+                body = filter.applyTextProcessors(stanza.body, textProcessors);
+                body.setNamespace(ns_xhtml);
+            } else
+                body = filter.applyTextProcessors(stanza.ns_xhtml_im::html.ns_xhtml::body,
+                                                  textProcessors);
+            
+            copyDomContents(conv.toDOM(body), M(domMessage).content);
 
             var timeSent;
             if(stanza.ns_delay::x != undefined) {
