@@ -907,16 +907,6 @@ function seenChatMessage(message) {
         (message.stanza.@from != undefined ?
          message.stanza.@from : message.stanza.@to));
 
-    if(!getConversation(message.session.name, contact.address))
-        withConversation(
-            message.session.name, contact.address,
-            contact.resource, message.stanza.@type,
-            true,
-            function(document) {
-                document.getElementById('xmpp-incoming').textContent =
-                    message.stanza.toXMLString();
-            });
-
     var wConversation = getConversation(message.session.name, contact.address);
     if(!wConversation) {
         openAttachPanel(
