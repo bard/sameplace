@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<overlay id="xmpp-overlay-preferences"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <prefpane id="xmpp-pane">
+    <preferences>
+      <preference id="sameplace-get-attention-on-message"
+                  name="extensions.sameplace.getAttentionOnMessage"
+                  type="bool"/>
+      <preference id="sameplace-default-app-url"
+                  name="extensions.sameplace.defaultAppUrl"
+                  type="string"/>
+    </preferences>
+  </prefpane>
+
+  <tabs id="xmpp-tabs">
+    <tab label="SamePlace"/>
+  </tabs>
+
+  <tabpanels id="xmpp-tabpanels">
+    <tabpanel flex="1" orient="vertical">
+      <groupbox>
+        <checkbox label="Flash taskbar on incoming messages" accesskey="F"
+                  preference="sameplace-get-attention-on-message"/>
+        <hbox align="center">
+          <label value="Default application URL" accesskey="U" for="sameplace-textbox-default-app-url"/>
+          <textbox preference="sameplace-default-app-url" flex="1"/>
+        </hbox>
+      </groupbox>
+    </tabpanel>
+  </tabpanels>
+</overlay>

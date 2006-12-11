@@ -9,8 +9,12 @@ const RDFCU = Cc["@mozilla.org/rdf/container-utils;1"]
     .getService(Ci.nsIRDFContainerUtils);
 const BMSVC = Cc['@mozilla.org/browser/bookmarks-service;1']
     .getService(Ci.nsIBookmarksService);
+const prefBranch = Cc["@mozilla.org/preferences-service;1"]
+    .getService(Ci.nsIPrefService)
+    .getBranch('extensions.sameplace.');
 
 var ns_auth = 'jabber:iq:auth';
+
 
 // GLOBAL STATE
 // ----------------------------------------------------------------------
@@ -41,6 +45,15 @@ function initOverlay(event) {
                .getService(Ci.nsIWindowMediator)
                .getMostRecentWindow('navigator:browser'))
                 loadSidebar();
+        });
+
+    channel.on(
+        {event: 'message', direction: 'in', stanza: function(s) {
+                return s.@type == 'chat';
+            }},
+        function(message) {
+            if(prefBranch.getBoolPref('getAttentionOnMessage'))
+                window.getAttention();
         });
 
     var button = document.getElementById('xmpp-button');
