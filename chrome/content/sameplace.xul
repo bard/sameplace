@@ -236,9 +236,10 @@
           </toolbar>
         </toolbox>
         
-        <iframe role="chat" src="about:blank" flex="1" 
-                ondragover="nsDragAndDrop.dragOver(event, chatOutputDropObserver)"
-                ondragdrop="nsDragAndDrop.drop(event, chatOutputDropObserver)"/>
+        <browser type="content"
+                 role="chat" src="about:blank" flex="1" 
+                 ondragover="nsDragAndDrop.dragOver(event, chatOutputDropObserver)"
+                 ondragdrop="nsDragAndDrop.drop(event, chatOutputDropObserver)"/>
       </vbox>
 
 
