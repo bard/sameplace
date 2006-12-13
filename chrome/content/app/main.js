@@ -312,6 +312,9 @@ function init(event) {
     _('chat-output').addEventListener(
         'scroll', function(event) { scrolledWindow(event); }, false);
 
+    window.addEventListener(
+        'focus', function(event) { inputArea.focus(); }, false);
+
     inputArea = new InputArea(_('chat-input'));
     inputArea.onLoad = function() { inputArea.focus(); };
     inputArea.onAcceptContent = function(content) { send(content); };
