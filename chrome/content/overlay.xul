@@ -60,7 +60,7 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
     <key id="sameplace-key-toggle-sidebar"
          keycode="VK_F12" 
          command="sameplace-command-toggle-sidebar"/>
-    <key keycode="VK_F12" modifiers="shift" command="sameplace-command-load-sidebar-force"/>
+    <key keycode="VK_F12" modifiers="control" command="sameplace-command-load-sidebar-force"/>
   </keyset>
 
   <!-- MENUS -->
