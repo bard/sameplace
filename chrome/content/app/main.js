@@ -155,6 +155,7 @@ function _(thing) {
     default:
         return thing;
     }
+    return undefined;
 }
 
 function copyDomContents(srcElement, dstElement) {
@@ -174,6 +175,8 @@ function getElementByAttribute(parent, name, value) {
         if(matchingChild)
             return matchingChild;
     }
+
+    return undefined;
 }
 
 function x() {

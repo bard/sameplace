@@ -29,7 +29,7 @@
 // ----------------------------------------------------------------------
 
 function InputArea(iframe) {
-    _this = this;
+    var _this = this;
     this._iframe = iframe;
 
     iframe.contentDocument.open();

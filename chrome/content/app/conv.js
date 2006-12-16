@@ -51,6 +51,7 @@ conv.toString = function(thing) {
         default:
             throw new Error('Unexpected. (' + typeof(thing) + ')');
     }
+    return undefined;
 }
 
 conv.toXML = function(domElement) {

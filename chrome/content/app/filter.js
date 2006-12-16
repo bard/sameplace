@@ -460,6 +460,8 @@ filter._filterXML = function(src, acceptElement, acceptAttribute) {
     default:
         throw new Error('Unexpected. (' + src.nodeKind() + ')');
     }
+    
+    return undefined;
 };
 
 filter.__defineGetter__(
