@@ -66,18 +66,20 @@
       </div>
     </div>
 
-    <div id="format-commands" onclick="requestedFormatCommand(event);">
-      <button class="command" id="bold">B</button>
-      <button class="command" id="italic">I</button>
-      <button class="command" id="underline">U</button>
-    </div>
-
     <div id="chat-area">
       <div id="chat-output">
         <ul id="messages"/>
       </div>
 
-      <iframe id="chat-input"/>
+      <div id="chat-input-container">
+        <ul id="toolbar" onclick="requestedFormatCommand(event);">
+          <li><a class="command" id="bold">B</a></li>
+          <li><a class="command" id="italic">I</a></li>
+          <li><a class="command" id="underline">U</a></li>      
+        </ul>
+
+        <iframe id="chat-input"/>
+      </div>
     </div>
 
     <div id="blueprints">

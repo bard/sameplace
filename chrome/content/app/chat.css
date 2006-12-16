@@ -18,26 +18,27 @@
   Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
 */
 
-body
-{
-  background: white;
-  font-family: sans-serif;
-  font-size: 10pt;
-  }
 
-a 
-{
-  color: darkblue;
-  cursor: pointer;
-  text-decoration: underline;
-  }
+/* GENERAL */
 
-a:hover 
-{
-  color: blue;
-  }
+body {
+    background: white;
+    font-family: sans-serif;
+    font-size: 10pt;
+}
 
-/* ---------------------------------------------------------------------- */
+a {
+    color: darkblue;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: blue;
+}
+
+
+/* POPUP */
 
 #info {
     left: 90%;
@@ -45,276 +46,275 @@ a:hover
     -moz-border-radius-topleft: 12px;
     -moz-border-radius-bottomleft: 12px;
     opacity: 0.25;
-}
-
-#format-commands {
-    right: 3em;
-    bottom: 3em;
-    -moz-border-radius-topright: 12px;
-    -moz-border-radius-topleft: 12px;
-    opacity: 0.5;
-}
-
-#info, #format-commands {
+    font-size: smaller;
     z-index: 1000;
     padding-left: 1em;
     padding-right: 0.5em;
     padding-top: 1em;
     padding-bottom: 1em;
-    font-size: smaller;
     position: fixed;
     max-height: 80%;
     background: #C4C4FF;
     white-space: nowrap;
 }
 
-#info:hover, #format-commands:hover {
-    opacity: 0.9;
-}
-
 #info:hover {
+    opacity: 0.9;
     left: auto;
     right: 0;
 }
 
-#format-commands:hover {
-    bottom: 5em;
+.box {
+    margin-bottom: 0.5em;
 }
 
-#format-commands button {
-    border-width: 1px;
-    width: 1.75em;
+.box > h3 {
+    margin: 0;
 }
-
-#format-commands #bold {
-    font-weight: bold;
-}
-
-#format-commands #italic {
-    font-style: italic;
-}
-
-#format-commands #underline {
-    text-decoration: underline;
-}
- 
-.box
-{
-  margin-bottom: 0.5em;
-  }
-
-.box > h3
-{
-  margin: 0;
-  }
 
 .box[for="resources"] > ul,
-.box[for="groups"] > ul
-{
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  }
+.box[for="groups"] > ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
 
 .box[for="topic"],
 .box[for="resources"],
-.box[for="groups"]
-{
-  display: none;
-  }
+.box[for="groups"] {
+    display: none;
+}
 
-/* ---------------------------------------------------------------------- */
 
-#chat-area
-{
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  margin: 0;
-  }
+/* TOOLBAR */
 
-#chat-input, #chat-output
-{
-  left: 0;
-  right: 0;
-  overflow: auto;
-  }
+#toolbar {
+    right: 3em;
+    z-index: -1000;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-top: 0.5em;
+    position: absolute;
+    top: -1em;
+    height: 2em;
+    max-height: 80%;
+    background: #C4C4FF;
+    white-space: nowrap;
+    -moz-border-radius-topright: 12px;
+    -moz-border-radius-topleft: 12px;
+    opacity: 0.5;
+}
 
-#chat-output
-{
-  position: absolute;
-  top: 0;
-  bottom: 5em;
-  padding: 5px;
-  }
+#toolbar:hover {
+    top: -2.5em;
+    opacity: 0.9;
+}
 
-#chat-input
-{
-  position: absolute;
-  height: 3em;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  margin: 0.2em;
-  padding: 0.5em;
-  border-width: thin;
-  background-color: #f6f6f6;
-  font-size: 10pt;
-  font-family: sans-serif;
-  z-index: 1000;
-  }
+#toolbar {
+    margin: 0;
+    list-style-type: none;
+}
 
-ul#messages
-{
-  
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  }
+#toolbar li {
+    display: inline;
+    cursor: pointer;
+}
 
-.time
-{
-  position: fixed;
-  display: none;
-  z-index: 100;
-  top: 0;
-  right: 10px;
-  text-align: center;
-  background: #C4C4FF;
-  padding: 0.2em;
-  padding-left: 1em;
-  padding-right: 1em;
-  font-size: smaller;
-  opacity: 0.92;
-  -moz-border-radius-bottomleft: 8px;
-  -moz-border-radius-bottomright: 8px;
-  }
+#toolbar li a.command {
+    text-decoration: none;
+    padding: 0 .2em;
+    color: black;
+    border: 1px solid transparent;
+}
 
-.message
-{
-  margin-bottom: 0.25em;
-  margin-top: 0.25em;
-  line-height: 120%;
-  }
+#toolbar li a.command:hover {
+    background-color: #a4a4df;
+    border: 1px solid blue;
+}
 
-.message:hover > .time
-{
-  display: block;
-  }
+#toolbar #bold {
+    font-weight: bold;
+}
 
-.user
-{
-  color: #0c5588;
-  }
+#toolbar #italic {
+    font-style: italic;
+}
 
-.contact
-{
-  color: #9e0909;
-  }
+#toolbar #underline {
+    text-decoration: underline;
+}
+
+
+/* CHAT AREA */
+
+#chat-input-container, #chat-output {
+    left: 0;
+    right: 0;
+}
+
+#chat-output {
+    position: absolute;
+    top: 0;
+    bottom: 52px;
+    padding: 5px;
+    overflow: auto;
+}
+
+#chat-input {
+    border-width: 0;
+    height: 100%;
+    width: 100%;
+}
+
+#chat-input-container {
+    position: absolute;
+    height: 42px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 4px;
+    background-color: #f0f0f0;
+    border-top: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
+    font-size: 10pt;
+    font-family: sans-serif;
+    z-index: 1000;
+}
+
+ul#messages {  
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.time {
+    position: fixed;
+    display: none;
+    z-index: 100;
+    top: 0;
+    right: 10px;
+    text-align: center;
+    background: #C4C4FF;
+    padding: 0.2em;
+    padding-left: 1em;
+    padding-right: 1em;
+    font-size: smaller;
+    opacity: 0.92;
+    -moz-border-radius-bottomleft: 8px;
+    -moz-border-radius-bottomright: 8px;
+}
+
+.message {
+    margin-bottom: 0.25em;
+    margin-top: 0.25em;
+    line-height: 120%;
+}
+
+.message:hover > .time {
+    display: block;
+}
+
+.user {
+    color: #0c5588;
+}
+
+.contact {
+    color: #9e0909;
+}
 
 .user, .contact {
-  font-weight: bold;
-  margin-right: 0.5em;
-  font-size: smaller;
+    font-weight: bold;
+    margin-right: 0.5em;
+    font-size: smaller;
 }
 .user:after, .contact:after {
-  content: ">";
+    content: ">";
 }
 
-.join, .leave, .error
-{
-  font-style: italic;
-  }
+.join, .leave, .error {
+    font-style: italic;
+}
 
-.join:before
-{
-  content: "» ";
-  }
-.leave:before
-{
-  content: "« ";
-  }
-.error:before
-{
-  content: "! ";
-  font-weight: bold;
-  }
+.join:before {
+    content: "» ";
+}
+.leave:before {
+    content: "« ";
+}
+.error:before {
+    content: "! ";
+    font-weight: bold;
+}
 
-img.emoticon
-{
-  margin: 0 0;
-  padding: 0 0;
-  vertical-align: text-bottom;
-  }
+img.emoticon {
+    margin: 0 0;
+    padding: 0 0;
+    vertical-align: text-bottom;
+}
 
-/* ---------------------------------------------------------------------- */
 
-#socket > h3
-{
-  font-size: 80%;
-  margin-top: 0;
-  }
+/* SOCKET */
 
-#socket
-{
-  z-index: 1000;
-  position: fixed;
-  top: 97%;
-  right: 10px;
-  height: 40%;
-  font-family: monospace, mono;
-  font-size: smaller;
-  background: #D4D4FF;
-  padding-left: 1em;
-  padding-right: 1em;
-  opacity: 0.65;
-  -moz-border-radius-topleft: 12px;
-  -moz-border-radius-topright: 12px;
-  display: none;
-  }
+#socket {
+    z-index: 1000;
+    position: fixed;
+    top: 97%;
+    right: 10px;
+    height: 40%;
+    font-family: monospace, mono;
+    font-size: smaller;
+    background: #D4D4FF;
+    padding-left: 1em;
+    padding-right: 1em;
+    opacity: 0.65;
+    -moz-border-radius-topleft: 12px;
+    -moz-border-radius-topright: 12px;
+}
 
-#socket:hover
-{
-  font-weight: bold;
-  opacity: 0.95;
-  top: auto;
-  bottom: 0;
-  left: 10px;
-  right: 10px;
-  }
+#socket:hover {
+    font-weight: bold;
+    opacity: 0.95;
+    top: auto;
+    bottom: 0;
+    left: 10px;
+    right: 10px;
+}
 
-#socket:hover > h3
-{
-  font-size: 100%;
-  }
+#socket > h3 {
+    font-size: 80%;
+    margin-top: 0;
+}
 
-#socket > .channel-container
-{
-  display: none;
-  }
+#socket:hover > h3 {
+    font-size: 100%;
+}
 
-#socket:hover > .channel-container
-{
-  display: block;
-  height: 40%;
-  }
+#socket > .channel-container {
+    display: none;
+}
 
-#socket > .channel-container > h4
-{
-  margin-top: 0;
-  margin-bottom: 0;
-  }
+#socket:hover > .channel-container {
+    display: block;
+    height: 40%;
+}
 
-#xmpp-incoming, #xmpp-outgoing
-{
-  font-weight: normal;
-  overflow: auto;
-  }
+#socket > .channel-container > h4 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
 
-#blueprints 
-{
-  display: none;
-  }
+#xmpp-incoming, #xmpp-outgoing {
+    font-weight: normal;
+    overflow: auto;
+}
 
+#socket {
+    display: none;
+}
+
+
+/* UTILITIES */
+
+#blueprints {
+    display: none;
+}
