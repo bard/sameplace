@@ -313,3 +313,13 @@ function clickedContact(contact) {
     if(onClickedContact)
         onClickedContact(contact);
 }
+
+function requestedCommunicate(contact, url, target) {
+    if(onRequestedCommunicate)
+        onRequestedCommunicate(
+            attr(contact, 'account'),
+            attr(contact, 'address'),
+            attr(contact, 'type') || 'chat',
+            url,
+            target);
+}

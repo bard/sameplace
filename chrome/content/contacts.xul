@@ -44,9 +44,8 @@
                         object="?url"/>
               </conditions>
               <action>
-                <!-- XXX not adapted yet -->                
                 <menuitem uri="?app" label="?name" value="?url"
-                          oncommand="requestedOpenAttachPanel(document.popupNode, this.value, 'main');"/>
+                          oncommand="requestedCommunicate(document.popupNode, this.value, 'browser-tab');"/>
               </action>
             </rule>
           </template>          
@@ -73,18 +72,16 @@
                         object="?url"/>
               </conditions>
               <action>
-                <!-- XXX not adapted yet -->
                 <menuitem uri="?app" label="?name" value="?url"
-                          oncommand="requestedOpenAttachPanel(document.popupNode, this.value, 'mini');"/>
+                          oncommand="requestedCommunicate(document.popupNode, this.value, 'sidebar');"/>
               </action>
             </rule>
           </template>          
         </menupopup>
       </menu>
 
-      <!-- XXX not adapted yet -->
       <menuitem label="Communicate using current web page"
-                oncommand="requestedAttachBrowser(document.popupNode);"/>
+                oncommand="requestedCommunicate(document.popupNode, null, 'browser-current');"/>
     </popup>
 
     <tooltip id="contact-tooltip" noautohide="true"
