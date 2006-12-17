@@ -7,9 +7,7 @@
       xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
       onload="init(event);"
       onunload="finish(event);"
-      orient="vertical"
-      width="640"
-      height="480">
+      orient="vertical">
 
   <!-- SCRIPTS -->
   
@@ -17,7 +15,9 @@
   <script type="application/x-javascript" src="chrome://global/content/nsTransferable.js"/>
 
   <script type="application/x-javascript" src="chrome://xmpp4moz/content/xmpp.js"/>
+  <script type="application/x-javascript" src="gui_utilities.js"/>
   <script type="application/x-javascript" src="sameplace.js"/>
+
 
   <!-- COMMANDS -->
   
@@ -26,117 +26,21 @@
              tooltiptext="Add a contact to your contact list"/>
     <command id="open-conversation" oncommand="requestedOpenConversation();"
              tooltiptext="Open a conversation (single or multi-user)"/>
-    <command id="cycle-maximize" oncommand="requestedCycleMaximize();"
-             tooltiptext="Maximize each panel in turn"/>
   </commandset>
+
 
   <!-- MENUS -->
 
   <popupset>
-    <popup id="message-menu"/>
-    <popup id="contact-menu" flex="1">
-      <menuitem label="Set Alias..." oncommand="requestedSetContactAlias(document.popupNode);"/>
-      <menuitem label="Remove" oncommand="requestedRemoveContact(document.popupNode);"/>
-      <menuseparator/>
-
-      <menu label="Communicate in browser using...">
-        <menupopup  datasources="rdf:bookmarks" ref="NC:BookmarksRoot"
-                    onpopupshowing="this.builder.rebuild();">
-          <template>
-            <rule>
-              <conditions>
-                <content uri="?root"/>
-                <member container="?root" child="?menu"/>
-                <triple subject="?menu"
-                        predicate="http://home.netscape.com/NC-rdf#Name"
-                        object="SamePlace"/>
-                <member container="?menu" child="?app"/>
-                <triple subject="?app"
-                        predicate="http://home.netscape.com/NC-rdf#Name"
-                        object="?name"/>
-                <triple subject="?app"
-                        predicate="http://home.netscape.com/NC-rdf#URL"
-                        object="?url"/>
-              </conditions>
-              <action>
-                <menuitem uri="?app" label="?name" value="?url"
-                          oncommand="requestedOpenAttachPanel(document.popupNode, this.value, 'main');"/>
-              </action>
-            </rule>
-          </template>          
-        </menupopup>
-      </menu>
-
-      <menu label="Communicate in sidebar using...">
-        <menupopup  datasources="rdf:bookmarks" ref="NC:BookmarksRoot"
-                    onpopupshowing="this.builder.rebuild();">
-          <template>
-            <rule>
-              <conditions>
-                <content uri="?root"/>
-                <member container="?root" child="?menu"/>
-                <triple subject="?menu"
-                        predicate="http://home.netscape.com/NC-rdf#Name"
-                        object="SamePlace"/>
-                <member container="?menu" child="?app"/>
-                <triple subject="?app"
-                        predicate="http://home.netscape.com/NC-rdf#Name"
-                        object="?name"/>
-                <triple subject="?app"
-                        predicate="http://home.netscape.com/NC-rdf#URL"
-                        object="?url"/>
-              </conditions>
-              <action>
-                <menuitem uri="?app" label="?name" value="?url"
-                          oncommand="requestedOpenAttachPanel(document.popupNode, this.value, 'mini');"/>
-              </action>
-            </rule>
-          </template>          
-        </menupopup>
-      </menu>
-
-      <menuitem label="Communicate using current web page"
-                oncommand="requestedAttachBrowser(document.popupNode);"/>
-    </popup>
-
     <tooltip id="attach-tooltip"
              onpopupshowing="updateAttachTooltip();">
       <label role="message"
              value="Make this conversation channel available to this web page"/>
     </tooltip>
-
-    <tooltip id="contact-tooltip" noautohide="true"
-             orient="vertical"
-             onpopupshowing="requestedUpdateContactTooltip(document.tooltipNode);">
-      <hbox align="center" style="font-weight: bold;">
-        <label role="name"/>
-        <label value="(" style="margin-right: 0;"/>
-        <label role="address" style="margin-left: 0; margin-right: 0;"/>
-        <label value=")" style="margin-left: 0;"/>
-      </hbox>
-
-      <spacer height="5"/>
-      
-      <grid>
-        <columns>
-          <column flex="0"/>
-          <column flex="1"/>
-        </columns>
-
-        <rows>
-          <row>
-            <label value="Contact of:"/>
-            <label role="account"/>
-          </row>
-
-          <row>
-            <label value="Presence notification:"/>
-            <label role="subscription"/>
-          </row>
-        </rows>
-      </grid>
-    </tooltip>
   </popupset>
+
+
+  <!-- MAIN -->
 
   <vbox flex="1">
 
@@ -162,39 +66,16 @@
       </toolbar>
     </toolbox>
 
-    <!-- STACKED LAYOUT -->
-
-    <vbox id="layout-stacked" flex="1">
-      <box id="box-contacts" persist="height" orient="vertical" flex="1">
-        <vbox id="contacts" flex="1" style="overflow: auto;">
-          <spacer role="open"/>
-          <spacer role="online"/>
-          <spacer role="away"/>
-          <spacer role="dnd"/>
-          <spacer role="offline"/>
-        </vbox>
-      </box>
-
+    <vbox id="layout-stacked" flex="1"> 
+      <iframe id="contacts" src="contacts.xul" flex="1"/>
+      
       <splitter id="splitter-main" orient="vertical"/>
-
+      
       <box id="box-conversations" flex="4" collapsed="true">
         <deck flex="1" id="conversations"/>
       </box>
     </vbox>
 
-    <!-- TABBED LAYOUT -->
-
-    <tabbox id="layout-tabbed" hidden="true" flex="1">
-      <tabs>
-        <tab label="Contacts"/>
-        <tab label="Conversations"/>
-      </tabs>
-
-      <tabpanels flex="1">
-        <tabpanel id="tabpanel-contacts"/>
-        <tabpanel id="tabpanel-conversations"/>
-      </tabpanels>
-    </tabbox>
 
     <!-- BLUEPRINTS -->
 
@@ -240,21 +121,6 @@
                  role="chat" src="about:blank" flex="1" 
                  ondragover="nsDragAndDrop.dragOver(event, chatOutputDropObserver)"
                  ondragdrop="nsDragAndDrop.drop(event, chatOutputDropObserver)"/>
-      </vbox>
-
-
-      <vbox role="contact"
-            account="" address="" open="false" current="false"
-            onclick="if(event.button == 0) clickedContact(this);"
-            context="contact-menu" 
-            tooltip="contact-tooltip">
-        <hbox flex="1" align="center">
-          <image role="status-indicator"/>
-          <label role="name"/>
-          <spacer flex="1"/>
-          <label role="pending" value="0"/>
-        </hbox>
-        <label role="status" crop="end"/> 
       </vbox>
     </box>
   </vbox>

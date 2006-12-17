@@ -9,7 +9,7 @@
         onload="init();">
 
   <script type="application/x-javascript" src="chrome://xmpp4moz/content/xmpp.js"/>
-  <script type="application/x-javascript" src="add.js"/> 
+  <script type="application/x-javascript" src="add_contact.js"/> 
 
   <grid flex="1">
     <columns>
