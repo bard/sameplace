@@ -115,19 +115,16 @@ a:hover {
     list-style-type: none;
 }
 
-#toolbar li {
+#toolbar li.command {
     display: inline;
     cursor: pointer;
-}
-
-#toolbar li a.command {
     text-decoration: none;
     padding: 0 .2em;
     color: black;
     border: 1px solid transparent;
 }
 
-#toolbar li a.command:hover {
+#toolbar li.command:hover {
     background-color: #a4a4df;
     border: 1px solid blue;
 }
