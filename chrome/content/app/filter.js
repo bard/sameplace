@@ -351,7 +351,7 @@ filter.htmlEntitiesToCharacters = function(htmlText) {
  */
 
 filter.htmlToXHTMLTags = function(htmlText) {
-    return htmlText.replace(/<br>/g, '<br/>');
+    return htmlText.replace(/<br>/g, '<br/>').replace(/<img([^>]+)>/g, '<img$1/>');
 };
 
 /**
