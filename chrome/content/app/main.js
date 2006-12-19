@@ -318,6 +318,9 @@ function init(event) {
     window.addEventListener(
         'focus', function(event) { inputArea.focus(); }, false);
 
+    window.addEventListener(
+        'blur', function(event) { inputArea.blur(); }, false);
+
     inputArea = new InputArea(_('chat-input'));
     inputArea.onLoad = function() { inputArea.focus(); };
     inputArea.onAcceptContent = function(content) { send(content); };

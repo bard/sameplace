@@ -295,7 +295,7 @@ function focusConversation(account, address) {
     if(conversation) {
         _('conversations').selectedPanel = conversation;
         focusedConversation(account, address);
-        conversation.focus();
+        _(conversation, {role: 'chat'}).contentWindow.focus();
         document.commandDispatcher.advanceFocus();
     }
 }

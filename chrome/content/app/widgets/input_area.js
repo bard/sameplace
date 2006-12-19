@@ -63,6 +63,10 @@ InputArea.prototype.focus = function() {
     this._iframe.contentWindow.focus();
 };
 
+InputArea.prototype.blur = function() {
+    this._iframe.blur();
+};
+
 InputArea.prototype.reset = function() {
     var document = this._iframe.contentDocument;
     
