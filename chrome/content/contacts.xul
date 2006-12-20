@@ -119,22 +119,12 @@
 
   <!-- MAIN -->
 
-  <vbox id="layout-stacked" flex="1">
-    <box id="box-contacts" persist="height" orient="vertical" flex="1">
-      <vbox id="contacts" flex="1" style="overflow: auto;">
-        <spacer role="open"/>
-        <spacer role="online"/>
-        <spacer role="away"/>
-        <spacer role="dnd"/>
-        <spacer role="offline"/>
-      </vbox>
-    </box>
-    
-    <splitter id="splitter-main" orient="vertical"/>
-    
-    <box id="box-conversations" flex="4" collapsed="true">
-      <deck flex="1" id="conversations"/>
-    </box>
+  <vbox id="contacts" flex="1" style="overflow: auto;">
+    <spacer role="open"/>
+    <spacer role="online"/>
+    <spacer role="away"/>
+    <spacer role="dnd"/>
+    <spacer role="offline"/>
   </vbox>
 
   <box hidden="true" id="blueprints">
