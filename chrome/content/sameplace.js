@@ -401,6 +401,13 @@ function requestedAddContact() {
         addContact(request.account, request.contactAddress, request.subscribeToPresence);
 }
 
+function requestedAttachBrowser(element) {
+    attachContentDocument(getBrowser().selectedBrowser,
+                          attr(element, 'account'),
+                          attr(element, 'address'),
+                          attr(element, 'type'));
+}
+
 function requestedCommunicate(account, address, type, url, target) {
     switch(target) {
     case 'sidebar':
