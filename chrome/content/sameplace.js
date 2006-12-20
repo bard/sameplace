@@ -68,7 +68,9 @@ function init(event) {
 
     contacts = _('contacts').contentWindow;
     contacts.onClickedContact = clickedContact;
-    contacts.onRequestedCommunicate = requestedCommunicate;
+    contacts.onRequestedCommunicate = function(account, address, type, url, target) {
+        openAttachPanel(account, address, null, type, url, target);
+    };
 
     XMPP.cache.presenceOut.forEach(sentPresence);
 
@@ -216,10 +218,6 @@ function changeStatusMessage(message) {
 
             XMPP.send(account, stanza);
         }
-}
-
-function attachContentDocument(contentPanel, account, address, type) {
-    XMPP.enableContentDocument(contentPanel, account, address, type);
 }
 
 function openAttachPanel(account, address, resource, type, url, target, action) {
@@ -402,22 +400,11 @@ function requestedAddContact() {
 }
 
 function requestedAttachBrowser(element) {
-    attachContentDocument(getBrowser().selectedBrowser,
-                          attr(element, 'account'),
-                          attr(element, 'address'),
-                          attr(element, 'type'));
-}
-
-function requestedCommunicate(account, address, type, url, target) {
-    switch(target) {
-    case 'sidebar':
-    case 'browser-tab':
-    case 'browser-current':
-        openAttachPanel(account, address, null, type, url, target);
-        break;
-    default:
-        throw new Error('Unexpected. (' + target + ')');
-    }
+    openAttachPanel(attr(element, 'account'),
+                    attr(element, 'address'),
+                    attr(element, 'resource'),
+                    attr(element, 'type'),
+                    null, 'browser-current');
 }
 
 function clickedContact(contact) {
