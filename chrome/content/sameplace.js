@@ -7,6 +7,8 @@ const Ci = Components.interfaces;
 const prefBranch = Cc["@mozilla.org/preferences-service;1"]
     .getService(Ci.nsIPrefService)
     .getBranch('extensions.sameplace.');
+const srvPrompt = Cc["@mozilla.org/embedcomp/prompt-service;1"]
+    .getService(Ci.nsIPromptService);
 
 const ns_muc_user = 'http://jabber.org/protocol/muc#user';
 const ns_muc      = 'http://jabber.org/protocol/muc';
@@ -360,12 +362,21 @@ var chatOutputDropObserver = {
 };
 
 function clickedLinkInConversation(event) {
+    var url = event.target.getAttribute('href');
+
+    if(url.match(/^javascript:/)) {
+        srvPrompt.alert(
+            window, 'SamePlace: Security Notification',
+            'This link contains javascript code and has been disabled as a security measure.');
+        return;
+    }
+
     switch(event.button) {
     case 0:
-        getBrowser().loadURI(event.target.getAttribute('href'));
+        getBrowser().loadURI(url);
         break;
     case 1:
-        getBrowser().selectedTab = getBrowser().addTab(event.target.getAttribute('href'));
+        getBrowser().selectedTab = getBrowser().addTab(url);
         break;        
     }
 }
