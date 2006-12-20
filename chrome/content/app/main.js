@@ -43,8 +43,8 @@ var emoticons = {
     ':)':    'smile',
     ':-D':   'grin',
     ':D':    'grin',
-    ':-0':   'surprise',
-    ':0':    'surprise',
+    ':-O':   'surprise',
+    ':O':    'surprise',
     ';)':    'wink',
     ';-)':   'wink'
 };
