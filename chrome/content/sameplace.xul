@@ -16,6 +16,7 @@
 
   <script type="application/x-javascript" src="chrome://xmpp4moz/content/xmpp.js"/>
   <script type="application/x-javascript" src="gui_utilities.js"/>
+  <script type="application/x-javascript" src="app/filter.js"/>
   <script type="application/x-javascript" src="sameplace.js"/>
 
 

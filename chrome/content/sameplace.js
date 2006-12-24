@@ -14,6 +14,7 @@ const ns_muc_user = 'http://jabber.org/protocol/muc#user';
 const ns_muc      = 'http://jabber.org/protocol/muc';
 const ns_xul      = 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul';
 const ns_roster   = 'jabber:iq:roster';
+const ns_xhtml_im = 'http://jabber.org/protocol/xhtml-im';
 
 
 // GLOBAL STATE
@@ -330,19 +331,32 @@ function promptOpenConversation(account, address, type, nick) {
 var chatOutputDropObserver = {
     getSupportedFlavours: function () {
         var flavours = new FlavourSet();
+        flavours.appendFlavour('text/html');
         flavours.appendFlavour('text/unicode');
         return flavours;
     },
+
     onDragOver: function(event, flavour, session) {},
 
     onDrop: function(event, dropdata, session) {
         if(dropdata.data != '') {
             var element = event.currentTarget;
-            XMPP.send(
-                attr(element, 'account'),
-                <message to={attr(element, 'address')} type={attr(element, 'type')}>
-                <body>{dropdata.data}</body>
-                </message>);
+
+            var message = <message to={attr(element, 'address')} type={attr(element, 'type')}/>;
+            if(dropdata.flavour.contentType == 'text/html') {
+                message.body = <body>{filter.stripTags(
+                                          filter.htmlEntitiesToCharacters(
+                                              dropdata.data))}</body>;
+                message.ns_xhtml_im::html.body = new XML(
+                    '<body xmlns="http://www.w3.org/1999/xhtml">' +
+                    filter.htmlToXHTMLTags(
+                        filter.htmlEntitiesToCodes(dropdata.data)) +
+                    '</body>');
+            }
+            else
+                message.body = <body>{dropdata.data}</body>;
+                                                                     
+            XMPP.send(attr(element, 'account'), message);
         }
     }
 };
