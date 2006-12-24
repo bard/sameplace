@@ -154,8 +154,8 @@
         <menulist id="account-new.server-list"
                   oncommand="updatePageAccountNew();">
           <menupopup>
-            <menuitem label="jabber.sameplace.cc"
-                      value="jabber.sameplace.cc"/>
+            <menuitem label="sameplace.cc"
+                      value="sameplace.cc"/>
           </menupopup>
         </menulist>
         
