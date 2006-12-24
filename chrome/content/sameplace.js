@@ -20,7 +20,6 @@ const ns_roster   = 'jabber:iq:roster';
 // ----------------------------------------------------------------------
 
 var channel;
-var debugMode = false;
 
 
 // GUI INITIALIZATION AND FINALIZATION
@@ -54,19 +53,6 @@ function init(event) {
         {event: 'presence', direction: 'out', stanza: function(s) {
                 return s.ns_muc::x.length() > 0 && s.@type != 'unavailable';
             }}, function(presence) { sentMUCPresence(presence) });
-
-    if(debugMode) {
-        document.addEventListener(
-            'mouseover', function(event) {
-                hoveredMousePointer(event);
-            }, false);
-        _('devel-shortcut').hidden = false;
-    }
-
-    for each(var pluginInfo in prefBranch.getChildList('plugin.', {})) {
-        var pluginOverlayURL = prefBranch.getCharPref(pluginInfo);
-        document.loadOverlay(pluginOverlayURL, null);
-    }
 
     contacts = _('contacts').contentWindow;
     contacts.onClickedContact = clickedContact;
