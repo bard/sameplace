@@ -313,7 +313,9 @@ filter.xhtmlIM.recommendedAttributes = {
  */
 
 filter.stripTags = function(htmlText) {
-    return htmlText.replace(/<.*?>/g, '');
+    return htmlText
+    .replace(/<img[^>]*src="([^"]+)"[^>]*>/, '[image: $1]') // #"
+    .replace(/<.*?>/g, '');
 };
 
 /**
