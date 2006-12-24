@@ -351,8 +351,9 @@ function displayMessage(stanza) {
                 body = filter.applyTextProcessors(stanza.body, textProcessors);
                 body.setNamespace(ns_xhtml);
             } else
-                body = filter.applyTextProcessors(stanza.ns_xhtml_im::html.ns_xhtml::body,
-                                                  textProcessors);
+                body = filter.applyTextProcessors(
+                    filter.xhtmlIM.keepRecommended(stanza.ns_xhtml_im::html.ns_xhtml::body),
+                    textProcessors);
             
             copyDomContents(conv.toDOM(body), M(domMessage).content);
 
@@ -425,11 +426,13 @@ function send(htmlText) {
                               filter.htmlEntitiesToCharacters(
                                   htmlText))}</body>;
 
-    message.ns_xhtml_im::html.body = new XML(
-        '<body xmlns="http://www.w3.org/1999/xhtml">' +
-        filter.htmlToXHTMLTags(
-            filter.htmlEntitiesToCodes(htmlText)) +
-        '</body>');
+    message.ns_xhtml_im::html.body = 
+        filter.xhtmlIM.keepRecommended(
+            new XML(
+                '<body xmlns="http://www.w3.org/1999/xhtml">' +
+                filter.htmlToXHTMLTags(
+                    filter.htmlEntitiesToCodes(htmlText)) +
+                '</body>'));
 
     _('xmpp-outgoing').textContent = message.toXMLString();
 

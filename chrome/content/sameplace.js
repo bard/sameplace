@@ -15,6 +15,7 @@ const ns_muc      = 'http://jabber.org/protocol/muc';
 const ns_xul      = 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul';
 const ns_roster   = 'jabber:iq:roster';
 const ns_xhtml_im = 'http://jabber.org/protocol/xhtml-im';
+const ns_xhtml    = 'http://www.w3.org/1999/xhtml';
 
 
 // GLOBAL STATE
@@ -236,6 +237,7 @@ function openAttachPanel(account, address, resource, type, url, target, action) 
         conversation.setAttribute('resource', resource);
         conversation.setAttribute('type', type);
         conversation.setAttribute('url', url);
+
         contentPanel.addEventListener(
             'click', function(event) {
                 if(event.target.localName == 'a' &&
@@ -347,11 +349,13 @@ var chatOutputDropObserver = {
                 message.body = <body>{filter.stripTags(
                                           filter.htmlEntitiesToCharacters(
                                               dropdata.data))}</body>;
-                message.ns_xhtml_im::html.body = new XML(
-                    '<body xmlns="http://www.w3.org/1999/xhtml">' +
-                    filter.htmlToXHTMLTags(
-                        filter.htmlEntitiesToCodes(dropdata.data)) +
-                    '</body>');
+                message.ns_xhtml_im::html.body =
+                    filter.xhtmlIM.keepRecommended(
+                        new XML(
+                            '<body xmlns="http://www.w3.org/1999/xhtml">' +
+                            filter.htmlToXHTMLTags(
+                                filter.htmlEntitiesToCodes(dropdata.data)) +
+                            '</body>'));
             }
             else
                 message.body = <body>{dropdata.data}</body>;
