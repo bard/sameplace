@@ -1,0 +1,273 @@
+<?xml version="1.0"?>
+
+<!--
+  Copyright (C) 2005-2006 by Massimiliano Mirra
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+  Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
+-->
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+<wizard xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        id="wizard" title="SamePlace Configuration Wizard"
+        onload="init();">
+
+  <script type="application/x-javascript" src="chrome://xmpp4moz/content/xmpp.js"/>
+  <script type="application/x-javascript" src="wizard.js"/>
+
+  <wizardpage id="page-current-status"
+              pageid="current-status"
+              onpageshow="shownPageAccountExisting();"
+              onpageadvanced="return advancedPageCurrentStatus();"
+              next="page-account-existing"
+              description="This wizard will guide you through the configuration of an account.">
+    <description>
+      You can use any account valid on the Jabber network, including
+      GTalk/GMail.com, LiveJournal.com, and so on.  If you don't have
+      one yet, you'll be able to create it.
+    </description>
+
+    <spacer height="10"/>
+
+    <description>
+      Do you have an account already?
+    </description>
+
+    <radiogroup id="current-status"
+                value="gmail" oncommand="updatePageCurrentStatus();">
+      <radio label="I have a GTalk/GMail.com account"
+             value="gmail"
+             accesskey="G"
+             selected="true"/>
+      <radio label="I have an account with another Jabber server"
+             accesskey="J"
+             value="other"/>
+      <radio label="I don't have a Jabber account yet"
+             accesskey="d"
+             value="none"/>
+    </radiogroup>
+  </wizardpage>
+
+  <wizardpage id="page-account-existing"
+              pageid="account-existing"
+              onpageadvanced="return advancedPageAccountExisting();"
+              next="finish">
+    <grid>
+      <columns>
+        <column flex="0"/>
+        <column flex="1"/>
+      </columns>
+
+      <rows>
+        <row align="center" id="account-existing.field-address">
+          <label control="account-existing.address" value="Address:" accesskey="A"/>
+          <textbox id="account-existing.address" value="" onkeyup="updatePageAccountExisting(event);"/>
+        </row>
+
+        <row align="center" id="account-existing.field-password">
+          <label control="account-existing.password" value="Password:" accesskey="P"/>
+          <textbox id="account-existing.password" type="password"/>
+        </row>
+
+        <row>
+          <spacer/>
+          <checkbox id="account-existing.password-remember"
+                    label="Remember password" accesskey="R"/>
+        </row>
+      </rows>
+    </grid>
+
+    <separator class="groove"/>
+
+    <hbox pack="end">
+      <button label="Advanced..." accesskey="v"
+              oncommand="_('account-existing.advanced').hidden =
+                         !_('account-existing.advanced').hidden;"/>          
+    </hbox>
+
+    <grid id="account-existing.advanced" hidden="true">
+      <columns>
+        <column flex="0"/>
+        <column flex="1"/>
+      </columns>
+
+      <rows>
+        <row align="center">
+          <label control="account-existing.resource"
+                 value="Resource:" accesskey="R"/>
+          <textbox id="account-existing.resource" value="SamePlace"/>
+        </row>
+
+        <row align="center">
+          <label control="account-existing.server-hostname"
+                 value="Server for Connection:" accesskey="S"/>
+          <textbox id="account-existing.server-hostname"/>
+        </row>
+
+        <row align="center">
+          <label value="Server Port:" control="account-existing.server-port" 
+                 accesskey="P"/>
+          <textbox id="account-existing.server-port" value="5223"/>
+        </row>
+        
+        <row align="center">
+          <label value="Encryption:" control="account-existing.server-security" 
+                 accesskey="E"/>
+          <radiogroup id="account-existing.server-security"
+                      value="1" orient="horizontal">
+            <radio value="1" label="SSL" selected="true" flex="1"/>
+            <radio value="0" label="None" flex="1"/>
+          </radiogroup>
+        </row>
+      </rows>
+    </grid>
+  </wizardpage>
+
+  <wizardpage id="page-account-new"
+              pageid="account-new"
+              next="account-registration"
+              onpageadvanced="return advancedPageAccountNew();"
+              onpageshow="shownPageAccountNew();"
+              description="New Jabber account">
+    <description>
+      Choose a server to register your account with.
+    </description>
+
+    <spacer height="10"/>
+
+    <hbox pack="center" align="center">
+      <vbox>
+        <menulist id="account-new.server-list"
+                  oncommand="updatePageAccountNew();">
+          <menupopup>
+            <menuitem label="jabber.sameplace.cc"
+                      value="jabber.sameplace.cc"/>
+          </menupopup>
+        </menulist>
+        
+        <textbox hidden="true" id="account-new.server-custom"
+                 onkeyup="updatePageAccountNew();"/>
+      </vbox>
+
+      <radiogroup id="account-new.server-selection-mode"
+                  oncommand="changedServerSelectionMode(event);"
+                  value="list"
+                  pack="center"
+                  style="font-size: smaller;">
+        <radio label="Select from list" value="list" selected="true"/>
+        <radio label="Enter custom server" value="custom"/>
+      </radiogroup>
+    </hbox>
+
+    <spacer height="10"/>
+    
+    <separator class="groove"/>
+
+    <hbox pack="end">
+      <button label="Advanced..." accesskey="v"
+              oncommand="_('account-new.advanced').hidden =
+                         !_('account-new.advanced').hidden;"/>
+    </hbox>    
+
+    <grid id="account-new.advanced" hidden="true">
+      <columns>
+        <column flex="0"/>
+        <column flex="1"/>
+      </columns>
+
+      <rows>
+        <row align="center">
+          <label value="Server for Connection:" accesskey="C"/>
+          <textbox id="account-new.server-hostname" onkeyup="updatePageAccountNew();"/>            
+        </row>
+
+        <row align="center">
+          <label control="account-new.resource" value="Resource:" accesskey="R"/>
+          <textbox id="account-new.resource" value="SamePlace"/>
+        </row>
+
+        <row align="center">
+          <label value="Server Port:" control="account-new.server-port" 
+                 accesskey="P"/>
+          <textbox id="account-new.server-port" value="5223"/>
+        </row>
+        
+        <row align="center">
+          <label value="Encryption:" control="account-new.server-security" 
+                 accesskey="E"/>
+          <radiogroup id="account-new.server-security"
+                      value="1" orient="horizontal">
+            <radio value="1" label="SSL" selected="true" flex="1"/>
+            <radio value="0" label="None" flex="1"/>
+          </radiogroup>
+        </row>
+      </rows>
+    </grid>
+  </wizardpage>
+
+  <wizardpage id="page-account-registration"
+              pageid="account-registration"
+              next="finish"
+              onpageadvanced="return advancedPageAccountRegistration();"
+              onpageshow="shownPageAccountRegistration();">
+
+    <description>
+      Connecting... (if this takes too long, consider going back and
+      choosing a different server)
+    </description>
+
+    <progressmeter id="account-registration.connect-progress"
+                   mode="undetermined"
+                   hidden="true"/>
+
+    <description id="account-registration.connect-success">
+      Connected. Requesting registration information...
+    </description>
+    
+    <description id="account-registration.success">
+      Account created successfully!  To finish configuration, click Next.
+    </description>
+
+    <description id="account-registration.failure">
+      Error while creating new account:
+      <label style="margin: 0;" id="account-registration.failure-reason"/>
+    </description>
+  </wizardpage>
+
+  <wizardpage id="page-finish"
+              pageid="finish"
+              onpageadvanced="return advancedPageFinish();"
+              onpageshow="shownPageFinish();">
+    <label style="font-size: larger; font-weight: bold;"
+           value="Account configured"/>
+
+    <spacer height="10"/>
+
+    <description>
+      To connect, select your account from the Jabber menu:
+    </description>
+    
+    <spacer height="10"/>
+
+    <hbox pack="center">
+      <image src="wizard.png" style="width: 242px;
+                                     height: 169px;
+                                     border: 1px solid #666;"/>
+    </hbox>
+  </wizardpage>
+</wizard>
+

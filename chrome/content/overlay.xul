@@ -41,6 +41,10 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
              label="SamePlace"
              oncommand="sameplace.loadSidebar();"
              accesskey="S"/>
+    <command id="sameplace-command-run-wizard"
+             label="Run Account Wizard..."
+             oncommand="sameplace.runWizard();"
+             accesskey="W"/>
     <command id="sameplace-command-open-window"
              label="SamePlace (window)"
              accesskey="S"
@@ -72,7 +76,9 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
                   key="sameplace-key-toggle-sidebar"
                   class="menuitem-iconic"/>
         <menuitem command="sameplace-command-import-contacts"
-                  class="menuitem-iconic"/>        
+                  class="menuitem-iconic"/>
+        <menuitem command="sameplace-command-run-wizard"
+                  class="menuitem-iconic"/>
       </menupopup>      
     </menu>
   </menupopup>

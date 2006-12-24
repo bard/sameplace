@@ -64,11 +64,23 @@ function initOverlay(event) {
         }, false);
 
     setTimeout(function() { addBookmark(); }, 250);
+
+    if(prefBranch.getBoolPref('firstRun')) {
+        prefBranch.setBoolPref('firstRun', false);
+        if(XMPP.accounts.length == 0)
+            runWizard();
+    }
 }
 
 
 // GUI ACTIONS
 // ----------------------------------------------------------------------
+
+function runWizard() {
+    window.openDialog(
+        'chrome://sameplace/content/wizard.xul',
+        'sameplace-wizard', 'chrome')
+}
 
 function addBookmark() {
     var folderName = 'SamePlace';
