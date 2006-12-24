@@ -66,7 +66,7 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
   <!-- MENUS -->
 
   <menupopup id="xmpp-menu-main">
-    <menu label="SamePlace" accesskey="S">
+    <menu label="SamePlace" accesskey="S" insertbefore="xmpp-menu-applications-separator">
       <menupopup>
         <menuitem command="sameplace-command-toggle-sidebar"
                   key="sameplace-key-toggle-sidebar"
@@ -81,6 +81,7 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
     <menuitem label="Toggle SamePlace"
               key="sameplace-key-toggle-sidebar"
               class="menuitem-iconic"
+              insertafter="xmpp-menu-set-status"
               oncommand="sameplace.toggleSidebar();
                          event.stopPropagation();"/>
   </menupopup>

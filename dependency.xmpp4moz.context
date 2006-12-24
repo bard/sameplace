@@ -1,6 +1,42 @@
 
 Context:
 
+[Service, JS API: added 'transport' event that signals starting and stopping of connection underlying the session.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061223235904] 
+
+[Overlay: moved in chrome/content.  Reserving ui/ for reusable components.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061223220436] 
+
+[Overlay: adding id's to menu elements to allow applications more careful positioning of overlayed menu items.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061223205954] 
+
+[TCP Transport: shortcut to Components.utils was not found when file was loaded in environment missing it; added a local one.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061223205700] 
+
+[JS API: removed some references to global name XMPP, which is not actually declared in the file but happens to be in the outer environment.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061223205514] 
+
+[Skin: removed leftovers.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061223204358] 
+
+[Finally supporting UTF-8 -- by replacing "string" with "AUTF8String" in all IDLs.  (duh.)
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061218224623] 
+
+[Prefs: minor source and UI cleanups; opening server map in new browser window.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061215230048] 
+
+[Overlay: changed console menu access key to "C".
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061210195811] 
+
+[Console: forcing entry to begin on a new line.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061210195729] 
+
+[Service: when observer raises exception, unregister it.  (Probably better to use a weak reference in the future.)
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061210195616] 
+
+[JS API: removed references to unused basefilter.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061210105508] 
+
 [Service, JS API: channel requester can now pass in a disco info query fragment with the features they offer, service will report them in disco info responses.
 Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061209222449] 
 
