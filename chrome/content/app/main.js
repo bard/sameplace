@@ -307,8 +307,8 @@ function init(event) {
             }
         }, false);
 
-    _('dnd-sink').addEventListener(
-        'DOMNodeInserted', function(event) { droppedData(event); }, false);
+    _('chat-output').addEventListener(
+        'hsDrop', function(event) { droppedDataInConversation(event); }, false);
 
     info.init(_('info'));
 
@@ -387,8 +387,8 @@ function displayEvent(eventClass, text) {
 // GUI REACTIONS
 // ----------------------------------------------------------------------
 
-function droppedData(event) {
-    var data = new XML(event.target.textContent);
+function droppedDataInConversation(event) {
+    var data = new XML(_('dnd-sink').textContent);
     var contentType = data['@content-type'].toString();
     switch(contentType) {
     case 'text/unicode':

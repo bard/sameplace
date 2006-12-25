@@ -339,10 +339,21 @@ var chatDropObserver = {
     },
 
     onDrop: function(event, dropdata, session) {
-        if(dropdata.data)
-            event.currentTarget.contentDocument.getElementById('dnd-sink').textContent =
-                (<data content-type={dropdata.flavour.contentType}>{dropdata.data}</data>)
-                .toXMLString();
+        if(!dropdata.data)
+            return;
+
+        var document = event.currentTarget.contentDocument;
+        var dropTarget = event.target;
+
+        document.getElementById('dnd-sink').textContent = (
+            <data content-type={dropdata.flavour.contentType}>
+            {dropdata.data}
+            </data>
+            ).toXMLString();
+
+        var synthEvent = document.createEvent('Event');
+        synthEvent.initEvent('hsDrop', true, false);
+        dropTarget.dispatchEvent(synthEvent);
     }
 };
 
