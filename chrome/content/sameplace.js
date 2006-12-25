@@ -330,7 +330,7 @@ function promptOpenConversation(account, address, type, nick) {
 // GUI REACTIONS
 // ----------------------------------------------------------------------
 
-var chatOutputDropObserver = {
+var chatDropObserver = {
     getSupportedFlavours: function () {
         var flavours = new FlavourSet();
         flavours.appendFlavour('text/html');
@@ -338,30 +338,11 @@ var chatOutputDropObserver = {
         return flavours;
     },
 
-    onDragOver: function(event, flavour, session) {},
-
     onDrop: function(event, dropdata, session) {
-        if(dropdata.data != '') {
-            var element = event.currentTarget;
-
-            var message = <message to={attr(element, 'address')} type={attr(element, 'type')}/>;
-            if(dropdata.flavour.contentType == 'text/html') {
-                message.body = <body>{filter.stripTags(
-                                          filter.htmlEntitiesToCharacters(
-                                              dropdata.data))}</body>;
-                message.ns_xhtml_im::html.body =
-                    filter.xhtmlIM.keepRecommended(
-                        new XML(
-                            '<body xmlns="http://www.w3.org/1999/xhtml">' +
-                            filter.htmlToXHTMLTags(
-                                filter.htmlEntitiesToCodes(dropdata.data)) +
-                            '</body>'));
-            }
-            else
-                message.body = <body>{dropdata.data}</body>;
-                                                                     
-            XMPP.send(attr(element, 'account'), message);
-        }
+        if(dropdata.data)
+            event.currentTarget.contentDocument.getElementById('dnd-sink').textContent =
+                (<data content-type={dropdata.flavour.contentType}>{dropdata.data}</data>)
+                .toXMLString();
     }
 };
 

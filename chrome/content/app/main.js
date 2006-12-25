@@ -307,6 +307,9 @@ function init(event) {
             }
         }, false);
 
+    _('dnd-sink').addEventListener(
+        'DOMNodeInserted', function(event) { droppedData(event); }, false);
+
     info.init(_('info'));
 
     window.addEventListener(
@@ -383,6 +386,21 @@ function displayEvent(eventClass, text) {
 
 // GUI REACTIONS
 // ----------------------------------------------------------------------
+
+function droppedData(event) {
+    var data = new XML(event.target.textContent);
+    var contentType = data['@content-type'].toString();
+    switch(contentType) {
+    case 'text/unicode':
+        send(filter.escapeXML(data.toString()));
+        break;
+    case 'text/html':
+        send(data.toString());
+        break;
+    default:
+        throw new Error('Unexpected. (' + contentType + ')');
+    }
+}
 
 function scrolledWindow(event) {
     wantBottom = isNearBottom(_('chat-output'));

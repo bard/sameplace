@@ -413,6 +413,29 @@ filter.applyTextProcessors = function(xmlFragment, textProcessors) {
             textProcessors.slice(1));
 };
 
+/**
+ * Escape illegal XML characters in text.
+ *
+ * filter.escapeXML("Hello 'world'");
+ *   //-> "Hello &apos;world&apos;"
+ *
+ */
+
+filter.escapeXML = function(text) {
+    return text.replace(/<|>|&|"|\'/g, // #"
+                        function(c) {
+                            switch(c) {
+                            case '<': return '&lt;'; break;
+                            case '>': return '&gt;'; break;
+                            case '&': return '&amp;'; break;
+                            case '"': return '&quot;'; break;
+                            case '\'': return '&apos;'; break;
+                            default:
+                                throw new Error('Unexpected. (' + c + ')');
+                            }
+                        })
+};
+
 
 // INTERNALS
 // ----------------------------------------------------------------------

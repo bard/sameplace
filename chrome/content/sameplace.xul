@@ -16,7 +16,6 @@
 
   <script type="application/x-javascript" src="chrome://xmpp4moz/content/xmpp.js"/>
   <script type="application/x-javascript" src="gui_utilities.js"/>
-  <script type="application/x-javascript" src="app/filter.js"/>
   <script type="application/x-javascript" src="sameplace.js"/>
 
 
@@ -119,9 +118,8 @@
         </toolbox>
         
         <browser type="content"
-                 role="chat" src="about:blank" flex="1" 
-                 ondragover="nsDragAndDrop.dragOver(event, chatOutputDropObserver)"
-                 ondragdrop="nsDragAndDrop.drop(event, chatOutputDropObserver)"/>
+                 role="chat" src="about:blank" flex="1"
+                 ondragdrop="nsDragAndDrop.drop(event, chatDropObserver)"/>
       </vbox>
     </box>
   </vbox>
