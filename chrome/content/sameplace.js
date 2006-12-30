@@ -403,7 +403,7 @@ function requestedAddContact() {
         request);
 
     if(request.confirm)
-        addContact(request.account, request.contactAddress, request.subscribeToPresence);
+        contacts.addContact(request.account, request.contactAddress, request.subscribeToPresence);
 }
 
 function requestedAttachBrowser(element) {
@@ -474,17 +474,6 @@ function closedConversation(account, address) {
 // They SHOULD NOT fetch information from the interface, a separate
 // function should instead be created that calls these ones and passes
 // the gathered data via function parameters.
-
-function addContact(account, address, subscribe) {
-    XMPP.send(
-        account,
-        <iq type='set' id='set1'>
-        <query xmlns='jabber:iq:roster'>
-        <item jid={address}/>
-        </query></iq>);
-
-    XMPP.send(account, <presence to={address} type="subscribe"/>);
-}
 
 function exitRoom(account, roomAddress, roomNick) {
     XMPP.send(account,

@@ -182,6 +182,17 @@ function stoppedConversationWith(account, address) {
 // NETWORK ACTIONS
 // ----------------------------------------------------------------------
 
+function addContact(account, address, subscribe) {
+    XMPP.send(
+        account,
+        <iq type='set' id='set1'>
+        <query xmlns='jabber:iq:roster'>
+        <item jid={address}/>
+        </query></iq>);
+
+    XMPP.send(account, <presence to={address} type="subscribe"/>);
+}
+
 function acceptSubscriptionRequest(account, address) {
     XMPP.send(
         account,
