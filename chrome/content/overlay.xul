@@ -101,7 +101,7 @@ Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
           class="chromeclass-extracontent"
           collapsed="true"
           persist="width"
-          width="350">
+          width="300">
       <iframe src="about:blank"
               class="box-inset"
               flex="1"/>

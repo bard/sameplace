@@ -66,15 +66,9 @@
       </toolbar>
     </toolbox>
 
-    <vbox id="layout-stacked" flex="1"> 
-      <iframe id="contacts" src="contacts.xul" flex="1"/>
-      
-      <splitter id="splitter-main" orient="vertical"/>
-      
-      <box id="box-conversations" flex="4" collapsed="true">
-        <deck flex="1" id="conversations"/>
-      </box>
-    </vbox>
+    <iframe id="contacts" src="contacts.xul" flex="1"/>    
+    <splitter id="splitter-main" orient="vertical"/>    
+    <deck id="conversations" collapsed="true" flex="10"/>
 
 
     <!-- BLUEPRINTS -->

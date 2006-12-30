@@ -66,13 +66,13 @@ function init(event) {
 
     _('conversations').addEventListener(
         'DOMNodeInserted', function(event) {
-            _('box-conversations').collapsed = 
+            _('conversations').collapsed = 
                 (_('conversations').childNodes.length == 0);
         }, false);
 
     _('conversations').addEventListener(
         'DOMNodeRemoved', function(event) {
-            _('box-conversations').collapsed = 
+            _('conversations').collapsed = 
                 (_('conversations').childNodes.length == 0);
         }, false);
 
@@ -454,7 +454,7 @@ function openedConversation(account, address, type) {
 function closedConversation(account, address) {
     contacts.stoppedConversationWith(account, address);
     if(_('conversations').childNodes.length == 0)
-        _('box-conversations').collapsed = true;
+        _('conversations').collapsed = true;
     else if(!_('conversations').selectedPanel) {
         _('conversations').selectedPanel = _('conversations').lastChild;
         focusedConversation(
