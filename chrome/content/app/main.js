@@ -76,6 +76,8 @@ var contactResource;
 var contactName;
 var inputArea;
 
+XML.prettyPrinting = false;
+XML.ignoreWhitespace = false;
 
 // UTILITIES
 // ----------------------------------------------------------------------
@@ -430,12 +432,7 @@ function requestedFormatCommand(event) {
  */
 
 function send(htmlText) {
-    strictXML();
-
-    var message =
-        <message>
-        <html xmlns="http://jabber.org/protocol/xhtml-im"/>
-        </message>;
+    var message = <message/>;
 
     if(contactResource) 
         message.@to = '/' + contactResource;
@@ -453,20 +450,8 @@ function send(htmlText) {
                 '</body>'));
 
     _('xmpp-outgoing').textContent = message.toXMLString();
-
-    looseXML();
 }
 
-function strictXML() {
-    var settings = XML.settings();
-    XML.prettyPrinting = false;
-    XML.ignoreWhitespace = false;
-    return settings;
-}
-
-function looseXML(settings) {
-    XML.setSettings(XML.defaultSettings());
-}
 
 // NETWORK REACTIONS
 // ----------------------------------------------------------------------
