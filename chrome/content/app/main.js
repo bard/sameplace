@@ -139,7 +139,7 @@ function formatTime(dateTime) {
 // ----------------------------------------------------------------------
 
 function visible(element) {
-    element.style.display = 'block';
+    element.style.display = '';
 }
 
 function hidden(element) {

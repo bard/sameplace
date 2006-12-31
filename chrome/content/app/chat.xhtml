@@ -45,14 +45,13 @@
 
   <body onload="init(event);">
     <div id="info">
+      <div class="header">
+        Info
+      </div>
+      
       <div class="box" for="address">
         <h3>Address</h3>
         <span role="address"></span>
-      </div>
-
-      <div class="box" for="topic">
-        <h3>Topic</h3>
-        <span role="topic"></span>
       </div>
 
       <div class="box" for="resources">
@@ -72,11 +71,14 @@
       </div>
 
       <div id="chat-input">
-        <ul id="toolbar" onclick="requestedFormatCommand(event);">
-          <li class="command" id="bold">B</li>
-          <li class="command" id="italic">I</li>
-          <li class="command" id="underline">U</li>
-        </ul>
+        <div id="toolbar" onclick="requestedFormatCommand(event);">
+          <div class="header">Styles</div>
+          <ul>
+            <li class="command" id="bold">B</li>
+            <li class="command" id="italic">I</li>
+            <li class="command" id="underline">U</li>
+          </ul>
+        </div>
 
         <iframe/>
       </div>
