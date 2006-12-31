@@ -381,7 +381,10 @@ function requestedChangeStatusMessage(event) {
     if(event.keyCode != KeyEvent.DOM_VK_RETURN)
         return;
 
-    changeStatusMessage(event.target.value);
+    var message = event.target.value;
+    if(message != '[no status message]')
+        changeStatusMessage(event.target.value);
+    
     document.commandDispatcher.advanceFocus();
 }
 
@@ -520,7 +523,7 @@ function seenChatMessage(message) {
 }
 
 function sentPresence(presence) {
-    _('status-message').value = presence.stanza.status.toString();
+    _('status-message').value = presence.stanza.status.toString() || '[no status message]';
     _('status-message').setAttribute('draft', 'false');
 }
 
