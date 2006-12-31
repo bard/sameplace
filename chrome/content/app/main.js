@@ -399,6 +399,11 @@ function droppedDataInConversation(event) {
         break;
     case 'text/html':
         _('html-conversion-area').contentDocument.body.innerHTML = data.toString();
+
+        // Should not be needed, but apparently is.
+        XML.ignoreWhitespace = false;
+        XML.prettyPrinting = false;
+
         sendXHTML(conv.htmlDOMToXHTML(
                       _('html-conversion-area').contentDocument.body));
         break;
