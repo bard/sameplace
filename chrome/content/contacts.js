@@ -60,6 +60,10 @@ function init() {
     XMPP.cache.presenceIn.forEach(receivedPresence);
 }
 
+function finish() {
+    channel.release();
+}
+
 
 // INTERFACE GLUE
 // ----------------------------------------------------------------------
