@@ -74,7 +74,7 @@ var isGroupchat = false;
 var userAddress;
 var contactResource;
 var contactName;
-var inputArea;
+var input;
 
 XML.prettyPrinting = false;
 XML.ignoreWhitespace = false;
@@ -321,19 +321,28 @@ function init(event) {
         'scroll', function(event) { scrolledWindow(event); }, false);
 
     window.addEventListener(
-        'focus', function(event) { inputArea.focus(); }, false);
+        'focus', function(event) { input.focus(); }, false);
 
     window.addEventListener(
-        'blur', function(event) { inputArea.blur(); }, false);
+        'blur', function(event) { input.blur(); }, false);
 
-    inputArea = new InputArea(_('chat-input'));
-    inputArea.onLoad = function() { inputArea.focus(); };
-    inputArea.onAcceptContent = function(xhtmlBody) { sendXHTML(xhtmlBody); };
+    input = new Input(_('chat-input'));
+    input.onLoad = function() { input.focus(); };
+    input.onAcceptContent = function(xhtmlBody) { sendXHTML(xhtmlBody); };
+    input.onResize = function(height) {
+        _('chat-output').style.bottom = height + 'px';
+        repositionOutput();
+    };
 }
 
 
 // GUI ACTIONS
 // ----------------------------------------------------------------------
+
+function repositionOutput() {
+    if(wantBottom || _('chat-output').scrollTop == 0)
+        scrollToBottom(_('chat-output'), false);    
+}
 
 function displayMessage(stanza) {
     scrollingOnlyIfAtBottom(
@@ -417,17 +426,16 @@ function scrolledWindow(event) {
 }
 
 function resizedWindow(event) {
-    if(wantBottom || _('chat-output').scrollTop == 0)
-        scrollToBottom(_('chat-output'), false);
+    repositionOutput();
 }
 
 function requestedFormatCommand(event) {
     if(event.target.getAttribute('class') != 'command')
         return;
 
-    inputArea.execCommand(event.target.getAttribute('id'), null);
+    input.execCommand(event.target.getAttribute('id'), null);
     event.target.blur();
-    inputArea.focus();
+    input.focus();
 }
 
 

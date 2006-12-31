@@ -89,7 +89,7 @@ a:hover {
 /* TOOLBAR */
 
 #toolbar {
-    right: 3em;
+    right: 1.5em;
     z-index: -1000;
     padding-left: 1em;
     padding-right: 1em;
@@ -106,7 +106,7 @@ a:hover {
 }
 
 #toolbar:hover {
-    top: -2.5em;
+    top: -1.9em;
     opacity: 0.9;
 }
 
@@ -144,7 +144,7 @@ a:hover {
 
 /* CHAT AREA */
 
-#chat-input-container, #chat-output {
+#chat-input, #chat-output {
     left: 0;
     right: 0;
 }
@@ -152,26 +152,26 @@ a:hover {
 #chat-output {
     position: absolute;
     top: 0;
-    bottom: 52px;
+    bottom: 20px;
     padding: 5px;
     overflow: auto;
 }
 
-#chat-input {
+#chat-input > iframe {
     border-width: 0;
     height: 100%;
     width: 100%;
 }
 
-#chat-input-container {
+#chat-input {
     position: absolute;
-    height: 42px;
+    height: 18px;
     left: 0;
     right: 0;
     bottom: 0;
     padding: 4px;
     background-color: #f0f0f0;
-    border-top: 1px solid lightgray;
+    border-top: 1px solid #c8c8c8;
     border-bottom: 1px solid lightgray;
     font-size: 10pt;
     font-family: sans-serif;

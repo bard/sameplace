@@ -20,7 +20,18 @@
 
 
 /**
- * Wrapper for iframe providing an HTML input area.
+ * Behaviour for a <div> containing an <iframe>, which will be turned
+ * into an edit area.
+ *
+ * Custom callbacks:
+ *
+ *   - onLoad(): called when edit area is ready.
+ *
+ *   - onAcceptContent(xhtml): called when user presses Enter; passed
+ *     argument is an XML object with XHTML content.
+ *
+ *   - onResize(height): called when edit area grows to accomodate
+ *     input; passed argument is the new height of the <div>.
  *
  * Dependencies: conv.js
  *
@@ -30,47 +41,65 @@
 // INITIALIZATION
 // ----------------------------------------------------------------------
 
-function InputArea(iframe) {
+function Input(container) {
     var _this = this;
-    this._iframe = iframe;
+    this._container = container;
+    this._iframe = container.getElementsByTagName('iframe')[0];
 
-    iframe.contentDocument.open();
-    iframe.contentDocument.write(
+    this._iframe.contentDocument.open();
+    this._iframe.contentDocument.write(
         '<html xmlns="http://www.w3.org/1999/xhtml">' +
-        '<head><title></title></head>' +
-        '<body style="margin: 0; font-family: sans-serif; font-size: 10pt;">' +
-        '</body></html>');
-    iframe.contentDocument.close();
-    iframe.contentDocument.designMode = 'on';
+        '<head><title></title>' +
+        '<style type="text/css">' +
+        'body { margin: 0; font-family: sans-serif; font-size: 10pt; }' +
+        '</style></head>' +
+        '<body></body></html>');
+    this._iframe.contentDocument.close();
+    this._iframe.contentDocument.designMode = 'on';
 
-    iframe.contentWindow.addEventListener(
-        'keypress', function(event) { _this.pressedKey(event); }, false);
-    iframe.addEventListener(
-        'load', function(event) { event.currentTarget && _this.onLoad(); }, true);    
+    this._originalHeight = this._iframe.contentDocument.body.scrollHeight;
+
+    this._iframe.contentWindow.addEventListener(
+        'scroll', function(event) {            
+            container.style.height =
+                _this._iframe.contentDocument.body.scrollHeight + 'px';
+        }, false);
+    this._iframe.contentWindow.addEventListener(
+        'resize', function(event) {
+            _this.onResize(container.clientHeight); }, false);
+    this._iframe.contentWindow.addEventListener(
+        'keypress', function(event) {
+            _this.pressedKey(event); }, false);
+    this._iframe.addEventListener(
+        'load', function(event) {
+            event.currentTarget && _this.onLoad(); }, true);    
 }
 
 
 // CALLBACKS
 // ----------------------------------------------------------------------
 
-InputArea.prototype.onLoad = function() {};
+Input.prototype.onLoad = function() {};
 
-InputArea.prototype.onAcceptContent = function(content) {};
+Input.prototype.onAcceptContent = function(content) {};
+
+Input.prototype.onResize = function(height) {};
 
 
 // PUBLIC FUNCTIONALITY
 // ----------------------------------------------------------------------
 
-InputArea.prototype.focus = function() {
+Input.prototype.focus = function() {
     this._iframe.contentWindow.focus();
 };
 
-InputArea.prototype.blur = function() {
+Input.prototype.blur = function() {
     this._iframe.blur();
 };
 
-InputArea.prototype.reset = function() {
+Input.prototype.reset = function() {
     var document = this._iframe.contentDocument;
+    this._container.style.height = this._originalHeight + 'px';
     
     window.setTimeout(
         function() {
@@ -80,7 +109,7 @@ InputArea.prototype.reset = function() {
         }, 0);
 };
 
-InputArea.prototype.execCommand = function(command, argument) {
+Input.prototype.execCommand = function(command, argument) {
     this._iframe.contentDocument.execCommand(
         command, false, argument);
 };
@@ -89,7 +118,7 @@ InputArea.prototype.execCommand = function(command, argument) {
 // INTERNALS
 // ----------------------------------------------------------------------
 
-InputArea.prototype.pressedKey = function(event) {
+Input.prototype.pressedKey = function(event) {
     if(event.keyCode == KeyEvent.DOM_VK_RETURN) {
         var body = event.currentTarget.document.body;
         
