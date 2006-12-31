@@ -20,7 +20,11 @@
 
 
 /**
- * Routines for text, HTML and XHTML-IM processing and cleanup.
+ * Routines for content filtering.  All return data of the same kind
+ * they were passed as argument.  Unless where specified otherwise,
+ * they are side-effect free.
+ *
+ * Dependencies: namespaces.js
  *
  */
 
@@ -307,18 +311,6 @@ filter.xhtmlIM.recommendedAttributes = {
 // ----------------------------------------------------------------------
 
 /**
- * var htmlText = '<p>hello <span>world!</span></p>';
- * filter.stripTags(htmlText); //-> 'hello world!'
- *
- */
-
-filter.stripTags = function(htmlText) {
-    return htmlText
-    .replace(/<img[^>]*src="([^"]+)"[^>]*>/, '[image: $1]') // #"
-    .replace(/<.*?>/g, '');
-};
-
-/**
  * var htmlText = 'hello&nbsp;&nbsp;world!';
  * filter.htmlEntitiesToCodes(htmlText); //-> 'hello&#160;&#160;world!'
  *
@@ -347,16 +339,6 @@ filter.htmlEntitiesToCharacters = function(htmlText) {
 };
 
 /**
- * var htmlText = 'hello<br>world!';
- * filter.htmlToXHTMLTags(htmlText); //-> 'hello<br/>world!';
- *
- */
-
-filter.htmlToXHTMLTags = function(htmlText) {
-    return htmlText.replace(/<br>/g, '<br/>').replace(/<img([^>]+)>/g, '<img$1/>');
-};
-
-/**
  * var body = <body xmlns="http://www.w3.org/1999/xhtml">
  *            <span>This</span> is <acronym>F.O.O.</acronym>
  *            </body>;
@@ -368,17 +350,14 @@ filter.htmlToXHTMLTags = function(htmlText) {
  */
 
 filter.xhtmlIM.keepRecommended = function(xhtml) {
-    var recommendedElements = filter.xhtmlIM.recommendedElements;
-    var recommendedAttributes = filter.xhtmlIM.recommendedAttributes;
-        
-    return filter._filterXML(
+    return filter.xml(
         xhtml,
         function(element) {
             return (element.namespace() == ns_xhtml &&
-                    recommendedElements.indexOf(element.localName()) != -1);
+                    filter.xhtmlIM.recommendedElements.indexOf(element.localName()) != -1);
         },
         function(element, attribute) {
-            return (recommendedAttributes[element.localName()].indexOf(
+            return (filter.xhtmlIM.recommendedAttributes[element.localName()].indexOf(
                         attribute.localName()) != -1);
         });
 };
@@ -390,9 +369,9 @@ filter.xhtmlIM.keepRecommended = function(xhtml) {
  * Text processors is an array of objects like:
  *
  *     var textProcessors = [
- *         { regexp: /hello|world/,
+ *         { regexp: /hello|world/g,
  *           action: function(match) { return match[0].toUpperCase(); } },
- *         { regexp: /:-\(/,
+ *         { regexp: /:-\(/g,
  *           action: function(match) { return ':-)'; } }
  *     ];
  *
@@ -436,58 +415,77 @@ filter.escapeXML = function(text) {
                         })
 };
 
+/**
+ * Visits each node of an XML tree object, passing each element and
+ * each attribute to the given acceptor functions and rejecting those
+ * for which the functions return a non-true value.
+ *
+ */
 
-// INTERNALS
-// ----------------------------------------------------------------------
-
-filter._filterXML = function(src, acceptElement, acceptAttribute) {
-    var filterXML = arguments.callee;
-        
+filter.xml = function(src, acceptElementFn, acceptAttributeFn) {
+    var self = arguments.callee;
+    
     switch(src.nodeKind()) {
-    case 'text':
-        return src;
-        break;
     case 'element':
-        if(acceptElement(src)) {
-            var dst = <{src.localName()}/>;
+        if(acceptElementFn(src)) {
+            var xmlDst = <{src.localName().toString()} xmlns={src.namespace()}/>;
+            // Alternate strategy: set namespace manually, later
+            // var xmlDst = <{src.localName().toString()}/>;
 
             for each(var attr in src.@*::*)
-                if(acceptAttribute(src, attr))
-                    dst['@' + attr.localName()] = attr.valueOf();
-                
-            for each(var child in src.*::*) {
-                var childDst = filterXML(
-                    child, acceptElement, acceptAttribute);
-                switch(typeof(childDst)) {
+                if(acceptAttributeFn(src, attr))
+                    xmlDst['@' + attr.localName()] = attr.toString();
+
+            // Simply iterating over src.*::* seems to modify src by
+            // adding redundant namespace declarations.
+            // for each(var xmlSrcChild in src.copy().*::*) {
+            
+            for each(var xmlSrcChild in src.*::*) {
+                var xmlDstChild = self(
+                    xmlSrcChild, acceptElementFn, acceptAttributeFn, xmlDst);
+
+                switch(typeof(xmlDstChild)) {
                 case 'xml':
-                    dst.appendChild(childDst);
+                    xmlDst.appendChild(xmlDstChild);
                     break;
                 case 'object':
-                    for each(var item in childDst)
-                        dst.appendChild(item);
+                    for each(var item in xmlDstChild)
+                        xmlDst.appendChild(item);
+                    break;
+                case 'string':
+                    xmlDst.appendChild(xmlDstChild);
                     break;
                 default:
-                    throw new Error('Unexpected. (' + typeof(childDst) + ')');
+                    throw new Error('Unexpected. (' + typeof(xmlDstChild) + ')');
                 }
             }
-
-            dst.setNamespace(src.namespace());            
-
-            return dst;
+            
+            // Alternate strategy:
+            // xmlDst.setNamespace(src.namespace());
+    
+            return xmlDst;
         } else {
             var children = [];
-            for each(var child in src.*::*) 
-                children.push(filterXML(child, acceptElement, acceptAttribute));
+            for each(var xmlSrcChild in src.*::*) 
+                children.push(
+                    arguments.callee(
+                        xmlSrcChild, acceptElementFn, acceptAttributeFn));
             
             return children;
         }
         break;
+    case 'text':
+        return src.toString();
+        break;
     default:
         throw new Error('Unexpected. (' + src.nodeKind() + ')');
     }
-    
     return undefined;
 };
+
+
+// INTERNALS
+// ----------------------------------------------------------------------
 
 filter.__defineGetter__(
     '_htmlEntitiesRegexp', function() {

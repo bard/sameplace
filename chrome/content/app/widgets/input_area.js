@@ -22,6 +22,8 @@
 /**
  * Wrapper for iframe providing an HTML input area.
  *
+ * Dependencies: conv.js
+ *
  */
 
 
@@ -89,17 +91,18 @@ InputArea.prototype.execCommand = function(command, argument) {
 
 InputArea.prototype.pressedKey = function(event) {
     if(event.keyCode == KeyEvent.DOM_VK_RETURN) {
-        var document = event.currentTarget.document;
-        var content = document.body.innerHTML;
+        var body = event.currentTarget.document.body;
         
         event.preventDefault();
-        if(content == '<br>')
+        if(body.innerHTML == '<br>')
             return;
 
-        this.onAcceptContent(content);
+        this.onAcceptContent(
+            conv.htmlDOMToXHTML(body));
         this.reset();
 
-    } else if(event.charCode == 'h'.charCodeAt(0) && event.ctrlKey == true) {
+    } else if(event.charCode == 'h'.charCodeAt(0) &&
+              event.ctrlKey == true) {
         event.preventDefault();
     }
 };

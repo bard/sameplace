@@ -328,7 +328,7 @@ function init(event) {
 
     inputArea = new InputArea(_('chat-input'));
     inputArea.onLoad = function() { inputArea.focus(); };
-    inputArea.onAcceptContent = function(content) { send(content); };
+    inputArea.onAcceptContent = function(xhtmlBody) { sendXHTML(xhtmlBody); };
 }
 
 
@@ -392,12 +392,15 @@ function displayEvent(eventClass, text) {
 function droppedDataInConversation(event) {
     var data = new XML(_('dnd-sink').textContent);
     var contentType = data['@content-type'].toString();
+
     switch(contentType) {
     case 'text/unicode':
-        send(filter.escapeXML(data.toString()));
+        sendText(data.toString());
         break;
     case 'text/html':
-        send(data.toString());
+        _('html-conversion-area').contentDocument.body.innerHTML = data.toString();
+        sendXHTML(conv.htmlDOMToXHTML(
+                      _('html-conversion-area').contentDocument.body));
         break;
     default:
         throw new Error('Unexpected. (' + contentType + ')');
@@ -431,23 +434,31 @@ function requestedFormatCommand(event) {
  *
  */
 
-function send(htmlText) {
+function sendText(text) {
     var message = <message/>;
 
     if(contactResource) 
         message.@to = '/' + contactResource;
 
-    message.body = <body>{filter.stripTags(
-                              filter.htmlEntitiesToCharacters(
-                                  htmlText))}</body>;
+    message.body = <body>{text}</body>;
+    message.ns_xhtml_im::html.body =
+        <body xmlns={ns_xhtml}>{text}</body>
 
-    message.ns_xhtml_im::html.body = 
-        filter.xhtmlIM.keepRecommended(
-            new XML(
-                '<body xmlns="http://www.w3.org/1999/xhtml">' +
-                filter.htmlToXHTMLTags(
-                    filter.htmlEntitiesToCodes(htmlText)) +
-                '</body>'));
+    _('xmpp-outgoing').textContent = message.toXMLString();
+}
+
+function sendXHTML(xhtmlBody) {
+    var message = <message/>;
+
+    if(contactResource)
+        message.@to = '/' + contactResource;
+
+    message.body = <body>{filter.htmlEntitiesToCodes(
+                              conv.xhtmlToText(
+                                  xhtmlBody))}</body>;
+
+    message.ns_xhtml_im::html.body =
+        filter.xhtmlIM.keepRecommended(xhtmlBody);
 
     _('xmpp-outgoing').textContent = message.toXMLString();
 }
