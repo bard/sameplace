@@ -330,7 +330,9 @@ function init(event) {
     input.onLoad = function() { input.focus(); };
     input.onAcceptContent = function(xhtmlBody) { sendXHTML(xhtmlBody); };
     input.onResize = function(height) {
-        _('chat-output').style.bottom = height + 'px';
+        // XXX This should not be hardcoded.
+        _('chat-output').style.bottom = height + 8 + 'px';
+        _('menu-bar').style.bottom = height + 2 + 'px';
         repositionOutput();
     };
 }

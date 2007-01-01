@@ -71,13 +71,24 @@
       </div>
 
       <div id="chat-input">
-        <div id="toolbar" onclick="requestedFormatCommand(event);">
-          <div class="header">Styles</div>
-          <ul>
-            <li class="command" id="bold">B</li>
-            <li class="command" id="italic">I</li>
-            <li class="command" id="underline">U</li>
-          </ul>
+        <div id="menu-bar">
+          <div class="menu" id="styles" onclick="requestedFormatCommand(event);">
+            <div class="header">Styles</div>
+            <ul>
+              <li class="command" id="bold">B</li>
+              <li class="command" id="italic">I</li>
+              <li class="command" id="underline">U</li>
+            </ul>
+          </div>
+          
+          <div class="menu" id="options">
+            <div class="header">Options</div>
+            <ul>
+              <li><input type="radio" name="horiz-scrollbar" value="never" checked="checked"/> Never</li>
+              <li><input type="radio" name="horiz-scrollbar" value="always"/> Always</li>
+              <li><input type="radio" name="horiz-scrollbar" value="auto"/> When text overflows</li>
+            </ul>
+          </div>       
         </div>
 
         <iframe/>
