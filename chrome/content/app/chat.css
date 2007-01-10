@@ -184,10 +184,10 @@ a:hover {
 
 #info {
     top: 0;
+    left: 10px;
     z-index: 1000;
     min-height: 10px;
     white-space: nowrap;
-    min-width: 10em;
     overflow: hidden;
 }
 
