@@ -37,7 +37,7 @@ var info = {};
 info.init = function(element) {
     this._root = element;
     
-    for each(role in ['groups', 'resources']) {
+    for each(role in ['resources']) {
         this._(role).addEventListener(
             'DOMNodeInserted', function(event) {
                 info.refresh(event.currentTarget);

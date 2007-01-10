@@ -38,67 +38,6 @@ a:hover {
 }
 
 
-/* POPUP */
-
-#info {
-    top: 0;
-    -moz-border-radius-bottomleft: 12px;
-    -moz-border-radius-bottomright: 12px;
-    opacity: 0.4;
-    font-size: smaller;
-    z-index: 1000;
-    padding-top: 2px;
-    padding-bottom: 4px;
-    position: fixed;
-    min-height: 10px;
-    background: #C4C4FF;
-    white-space: nowrap;
-    min-width: 10em;
-    overflow: hidden;
-}
-
-#info > .header {
-    width: 10em;
-    text-align: center;
-}
-
-#info > .box {
-    display: none;
-}
-
-#info:hover {
-    padding: 10px;
-    opacity: 0.9;
-}
-
-#info:hover > .box {
-    display: block;
-}
-
-#info:hover > .header {
-    display: none;
-}
-
-.box {
-    margin-bottom: 0.5em;
-}
-
-.box > h3 {
-    margin: 0;
-}
-
-.box[for="resources"] > ul,
-.box[for="groups"] > ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-}
-
-.box[for="resources"],
-.box[for="groups"] {
-    display: none;
-}
-
 /* CHAT INPUT */
 
 #chat-input {
@@ -122,22 +61,26 @@ a:hover {
     width: 100%;
 }
 
-/* STYLES */
-
-#menu-bar {
-    z-index: -1000;
+.menu-bar {
     left: 0;
     right: 0;
     position: fixed;
-    bottom: 28px;
-    border-bottom: 1px solid #dedede;
     background: #eee;
     height: 20px;
 }
 
+.menu-bar.upper {
+    border-top: 1px solid #dedede;
+    top: 0px;
+}
+
+.menu-bar.lower {
+    border-bottom: 1px solid #dedede;
+    bottom: 28px;
+}
+
 .menu {
     position: absolute;
-    bottom: -2px;
     height: 14px;
     padding-top: 2px;
     padding-bottom: 4px;
@@ -146,10 +89,19 @@ a:hover {
     font-size: 10px;
     background: #C4C4FF;
     white-space: nowrap;
+    opacity: 0.6;
+    width: 40px;
+}
+
+.menu.lower {
+    bottom: -2px;
     -moz-border-radius-topright: 12px;
     -moz-border-radius-topleft: 12px;
-    opacity: 0.5;
-    width: 40px;
+}
+
+.menu.upper {
+    -moz-border-radius-bottomright: 12px;
+    -moz-border-radius-bottomleft: 12px;
 }
 
 .menu > .header {
@@ -179,10 +131,15 @@ a:hover {
 }
 
 
+/* POPUP - OPTIONS */
+
 #options.menu {
     left: 75px;
     display: none;
 }
+
+
+/* POPUP - STYLES */
 
 #styles.menu {
     left: 10px;
@@ -191,9 +148,6 @@ a:hover {
 #styles.menu:hover {
     font-size: 14px;
 }
-
-
-
 
 #styles > ul > li.command {
     display: none;
@@ -226,17 +180,61 @@ a:hover {
 }
 
 
+/* POPUP - INFO */
+
+#info {
+    top: 0;
+    z-index: 1000;
+    min-height: 10px;
+    white-space: nowrap;
+    min-width: 10em;
+    overflow: hidden;
+}
+
+#info > .box {
+    display: none;
+}
+
+#info:hover {
+    padding: 10px;
+}
+
+#info:hover > .box {
+    display: block;
+}
+
+.box {
+    margin-bottom: 0.5em;
+}
+
+.box > h3 {
+    margin: 0;
+    font-size: 10px;
+}
+
+.box[for="resources"] > ul,
+.box[for="groups"] > ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.box[for="resources"],
+.box[for="groups"] {
+    display: none;
+}
+
+
 /* CHAT AREA */
 
 #chat-output {
     position: absolute;
-    top: 0;
+    top: 21px;
     left: 0;
     right: 0;
     bottom: 33px;
     padding-right: 5px;
     padding-left: 5px;
-    margin-top: 16px;
     margin-bottom: 16px;
     overflow-y: auto;
     overflow-x: hidden;

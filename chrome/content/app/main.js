@@ -332,7 +332,7 @@ function init(event) {
     input.onResize = function(height) {
         // XXX This should not be hardcoded.
         _('chat-output').style.bottom = height + 8 + 'px';
-        _('menu-bar').style.bottom = height + 2 + 'px';
+        _('lower-menus').style.bottom = height + 2 + 'px';
         repositionOutput();
     };
 }

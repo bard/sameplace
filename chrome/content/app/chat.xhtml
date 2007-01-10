@@ -44,24 +44,21 @@
   </head>
 
   <body onload="init(event);">
-    <div id="info">
-      <div class="header">
-        Info
-      </div>
-      
-      <div class="box" for="address">
-        <h3>Address</h3>
-        <span role="address"></span>
-      </div>
+    <div class="menu-bar upper">
+      <div id="info" class="menu upper">
+        <div class="header">
+          Info
+        </div>
+        
+        <div class="box" for="address">
+          <h3>Address:</h3>
+          <span role="address"></span>
+        </div>
 
-      <div class="box" for="resources">
-        <h3>Resources</h3>
-        <ul role="resources"/>
-      </div>
-
-      <div class="box" for="groups">
-        <h3>Groups</h3>
-        <ul role="groups"/>
+        <div class="box" for="resources">
+          <h3>Logged from:</h3>
+          <ul role="resources"/>
+        </div>
       </div>
     </div>
 
@@ -71,8 +68,8 @@
       </div>
 
       <div id="chat-input">
-        <div id="menu-bar">
-          <div class="menu" id="styles" onclick="requestedFormatCommand(event);">
+        <div id="lower-menus" class="menu-bar lower">
+          <div class="menu lower" id="styles" onclick="requestedFormatCommand(event);">
             <div class="header">Styles</div>
             <ul>
               <li class="command" id="bold">B</li>
@@ -81,7 +78,7 @@
             </ul>
           </div>
           
-          <div class="menu" id="options">
+          <div class="menu lower" id="options">
             <div class="header">Options</div>
             <ul>
               <li><input type="radio" name="horiz-scrollbar" value="never" checked="checked"/> Never</li>
