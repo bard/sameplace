@@ -1,42 +1,28 @@
-[command="add-contact"]
-{
-  list-style-image: url("contact-add.png");
-  }
+[command="add-contact"] {
+    list-style-image: url("contact-add.png");
+}
 
-[command="open-conversation"]
-{
-  list-style-image: url("open.png");
-  }
+[command="open-conversation"] {
+    list-style-image: url("open.png");
+}
 
-[role="close"]
-{
-  list-style-image: url("close.png");
-  -moz-image-region: rect(0px, 16px, 16px, 0px);
-  }
+[role="close"] {
+    list-style-image: url("close.png");
+    -moz-image-region: rect(0px, 16px, 16px, 0px);
+}
 
-[role="close"]:hover
-{
-  list-style-image: url("close.png");
-  -moz-image-region: rect(0px, 32px, 16px, 16px);
-  }
+[role="close"]:hover {
+    -moz-image-region: rect(0px, 32px, 16px, 16px);
+}
 
-[role="conversation"] [role="attach"]
-{
-  list-style-image: url("attach.png");
-  }
+[role="conversation"] [role="attach"] {
+    list-style-image: url("attach.png");
+}
 
-[role="conversation"] [role="contact"]
-{
+[role="conversation"] [role="contact"] {
 
-  }
+}
 
-[role="conversation"] [role="smileys"]
-{
-  list-style-image: url("emoticons/wink-small.png");
-  }
-
-
-#status-message[draft="true"]
-{
-  color: graytext;
-  }
+#status-message[draft="true"] {
+    color: graytext;
+}
