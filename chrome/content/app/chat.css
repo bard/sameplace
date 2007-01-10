@@ -181,6 +181,7 @@ a:hover {
 
 #options.menu {
     left: 75px;
+    display: none;
 }
 
 #styles.menu {
