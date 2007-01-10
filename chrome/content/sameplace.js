@@ -125,6 +125,17 @@ function chromeToFileUrl(url) {
             .newURI(url, null, null)).spec;
 }
 
+function hasAncestor(element, parentName, parentNamespace) {
+    var elementDoc = element.ownerDocument;
+    while(element != elementDoc) {
+        if(element.localName == parentName &&
+           (!parentNamespace || element.isDefaultNamespace(parentNamespace)))
+            return element;
+        element = element.parentNode;
+    }
+    return false;
+}
+
 
 // GUI UTILITIES (GENERIC)
 // ----------------------------------------------------------------------
@@ -200,6 +211,20 @@ function getConversation(account, address) {
 // Application-dependent functions dealing with user interface.  They
 // affect the domain.
 
+function openInBrowser(url, newTab) {
+    if(url.match(/^javascript:/)) {
+        srvPrompt.alert(
+            window, 'SamePlace: Security Notification',
+            'This link contains javascript code and has been disabled as a security measure.');
+        return;
+    }
+
+    if(newTab) 
+        getBrowser().selectedTab = getBrowser().addTab(url);        
+    else
+        getBrowser().loadURI(url);
+}
+
 function updateAttachTooltip() {
     _('attach-tooltip', {role: 'message'}).value =
         'Make this conversation channel available to ' +
@@ -261,11 +286,7 @@ function openAttachPanel(account, address, resource, type, url, target, action) 
 
         contentPanel.addEventListener(
             'click', function(event) {
-                if(event.target.localName == 'a' &&
-                   event.target.isDefaultNamespace('http://www.w3.org/1999/xhtml')) {
-                    event.preventDefault();
-                    clickedLinkInConversation(event);
-                }
+                clickedElementInConversation(event);
             }, true);
 
         break;
@@ -378,23 +399,20 @@ var chatDropObserver = {
     }
 };
 
-function clickedLinkInConversation(event) {
-    var url = event.target.getAttribute('href');
+function clickedElementInConversation(event) {
+    var ancestorAnchor = hasAncestor(event.target, 'a', ns_xhtml);
+    if(ancestorAnchor) {
+        var newTab;
+        
+        switch(event.button) {
+        case 0: newTab = false; break;
+        case 1: newTab = true;  break;
+        }
 
-    if(url.match(/^javascript:/)) {
-        srvPrompt.alert(
-            window, 'SamePlace: Security Notification',
-            'This link contains javascript code and has been disabled as a security measure.');
-        return;
-    }
-
-    switch(event.button) {
-    case 0:
-        getBrowser().loadURI(url);
-        break;
-    case 1:
-        getBrowser().selectedTab = getBrowser().addTab(url);
-        break;        
+        if(newTab != undefined) {
+            openInBrowser(ancestorAnchor.getAttribute('href'), newTab);
+            event.preventDefault();
+        }
     }
 }
 
