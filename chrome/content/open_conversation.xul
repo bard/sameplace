@@ -61,7 +61,7 @@
         <label value="Account:" control="accounts" accesskey="c"/>
         <menulist id="account" oncommand="refresh();"
                   flex="1" label="" sizetopopup="none">
-          <menupopup id="xmpp-menu-accounts"/>
+          <menupopup id="xmpp-popup-accounts"/>
         </menulist>
       </row>
     </rows>

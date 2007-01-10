@@ -83,7 +83,7 @@
     </menu>
   </menupopup>
 
-  <menupopup id="xmpp-menu-accounts-secondary">
+  <menupopup id="xmpp-popup-accounts-secondary">
     <menuitem label="Toggle SamePlace"
               key="sameplace-key-toggle-sidebar"
               class="menuitem-iconic"
