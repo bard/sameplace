@@ -64,7 +64,7 @@ function init(event) {
                 return (s.@type == undefined || s.@type == 'unavailable') &&
                     s.ns_muc::x == undefined && s.@to == undefined;
             }},
-        function(presence) { sentPresence(presence) });
+        function(presence) { sentAvailablePresence(presence) });
     channel.on(
         {event: 'message', direction: 'in', stanza: function(s) {
                 return s.body.length() > 0 && s.@type != 'error';
@@ -84,7 +84,7 @@ function init(event) {
         openAttachPanel(account, address, null, type, url, target);
     };
 
-    XMPP.cache.presenceOut.forEach(sentPresence);
+    XMPP.cache.presenceOut.forEach(sentAvailablePresence);
 
     _('conversations').addEventListener(
         'DOMNodeInserted', function(event) {
@@ -562,7 +562,7 @@ function seenChatMessage(message) {
 
 }
 
-function sentPresence(presence) {
+function sentAvailablePresence(presence) {
     _('status-message').value = presence.stanza.status.toString() || '[no status message]';
     _('status-message').setAttribute('draft', 'false');
 }
