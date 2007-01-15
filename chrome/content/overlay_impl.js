@@ -86,10 +86,18 @@ function initOverlay(event) {
 
     setTimeout(function() { addBookmark(); }, 250);
 
-    if(prefBranch.getBoolPref('firstRun')) {
-        prefBranch.setBoolPref('firstRun', false);
-        if(XMPP.accounts.length == 0)
+    var version = getExtensionVersion('sameplace@hyperstruct.net');
+
+    // No first run/upgrade action should be made if this is not the
+    // stable branch but instead the testing
+    // (sameplace-testing@hyperstruct.net) or other branches
+    
+    if(version) {
+        if(prefBranch.getCharPref('version') == '' &&
+           XMPP.accounts.length == 0) 
             runWizard();
+        
+        prefBranch.setCharPref('version', version);
     }
 }
 
@@ -157,3 +165,12 @@ function log(msg) {
 }
 
 
+// UTILITIES
+// ----------------------------------------------------------------------
+
+function getExtensionVersion(id) {
+    return Cc["@mozilla.org/extensions/manager;1"]
+        .getService(Ci.nsIExtensionManager)
+        .QueryInterface(Ci.nsIExtensionManager_MOZILLA_1_8_BRANCH)
+        .getItemForID(id).version;
+}
