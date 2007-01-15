@@ -61,7 +61,8 @@ function init(event) {
 
     channel.on(
         {event: 'presence', direction: 'out', stanza: function(s) {
-                return s.@type == undefined || s.@type == 'unavailable';
+                return (s.@type == undefined || s.@type == 'unavailable') &&
+                    s.ns_muc::x == undefined && s.@to == undefined;
             }},
         function(presence) { sentPresence(presence) });
     channel.on(
