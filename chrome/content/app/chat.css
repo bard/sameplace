@@ -42,7 +42,7 @@ a:hover {
 
 #chat-input {
     position: fixed;
-    height: 18px;
+    height: 36px;
     left: 0;
     right: 0;
     bottom: 0;
@@ -76,7 +76,7 @@ a:hover {
 
 .menu-bar.lower {
     border-bottom: 1px solid #dedede;
-    bottom: 28px;
+    bottom: 46px;
 }
 
 .menu {
@@ -232,7 +232,7 @@ a:hover {
     top: 21px;
     left: 0;
     right: 0;
-    bottom: 33px;
+    bottom: 51px;
     padding-right: 5px;
     padding-left: 5px;
     margin-bottom: 16px;
