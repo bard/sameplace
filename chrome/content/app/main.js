@@ -510,7 +510,10 @@ function seenPresence(stanza) {
                 displayEvent('leave', JID(stanza.@from).resource + ' left the room');
             else if(stanza.@type == 'error')
                 displayEvent('error', 'Error: code ' + stanza.error.@code);
-        }
+        } else
+            if(JID(stanza.@from).resource == contactResource &&
+               stanza.@type == 'unavailable')
+                contactResource = undefined;
     
         info.updateAddress(JID(stanza.@from).address);
         info.updateResources(JID(stanza.@from).resource, stanza.@type);
