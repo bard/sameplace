@@ -31,7 +31,6 @@
 
   <wizardpage id="page-current-status"
               pageid="current-status"
-              onpageshow="shownPageAccountExisting();"
               onpageadvanced="return advancedPageCurrentStatus();"
               next="page-account-existing"
               description="This wizard will guide you through the configuration of an account.">
@@ -64,6 +63,7 @@
 
   <wizardpage id="page-account-existing"
               pageid="account-existing"
+              onpageshow="shownPageAccountExisting();"
               onpageadvanced="return advancedPageAccountExisting();"
               next="finish">
     <grid>

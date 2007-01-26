@@ -80,9 +80,11 @@ function updatePageAccountExisting(event) {
 
     if(address) {
         var serverPart = address.split('@')[1];
-        _('account-existing.server-hostname').value =
-            (serverPart == 'gmail.com' || serverPart == 'googlemail.com') ?
-            'talk.google.com' : (serverPart || '');
+        if(serverPart == 'gmail.com' || serverPart == 'googlemail.com') {
+            _('account-existing.server-hostname').value = 'talk.google.com';
+            _('account-existing.server-port').value = 443;
+        } else 
+            _('account-existing.server-hostname').value = serverPart || '';
     }
 
     _('wizard').canAdvance = address &&
@@ -107,7 +109,7 @@ function updatePageAccountNew() {
 // ----------------------------------------------------------------------
 
 function shownPageAccountExisting() {
-
+    updatePageAccountExisting();
 }
 
 function shownPageAccountNew() {
