@@ -126,8 +126,15 @@ Input.prototype.pressedKey = function(event) {
         if(body.innerHTML == '<br>')
             return;
 
-        this.onAcceptContent(
-            conv.htmlDOMToXHTML(body));
+        xhtmlBody = conv.htmlDOMToXHTML(body);
+
+        // Stripping trailing <br/>, if present.
+        var lastChildIndex = xhtmlBody.children().length()-1;
+        if(xhtmlBody.*::*[lastChildIndex] &&
+           xhtmlBody.*::*[lastChildIndex].name().localName == 'br')
+            delete xhtmlBody.*::*[lastChildIndex];
+
+        this.onAcceptContent(xhtmlBody);
         this.reset();
 
     } else if(event.charCode == 'h'.charCodeAt(0) &&
