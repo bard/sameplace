@@ -488,11 +488,11 @@ function seenMessage(stanza) {
 
     if(stanza.@type == 'error')
         displayEvent('error', 'Error: code ' + stanza.error.@code);
-    else
+    else {
         displayMessage(stanza);
-
-    if(stanza.@from != undefined && !isGroupchat)
-        contactResource = JID(stanza.@from).resource;
+        if(stanza.@from != undefined && !isGroupchat)
+            contactResource = JID(stanza.@from).resource;
+    }
 }
 
 function seenPresence(stanza) {
