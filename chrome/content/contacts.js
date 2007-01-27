@@ -27,6 +27,9 @@ var Ci = Components.interfaces;
 
 var srvPrompt = Cc["@mozilla.org/embedcomp/prompt-service;1"]
     .getService(Ci.nsIPromptService);
+var prefBranch = Cc["@mozilla.org/preferences-service;1"]
+    .getService(Ci.nsIPrefService)
+    .getBranch('extensions.sameplace.');
 
 var ns_roster   = 'jabber:iq:roster';
 var ns_muc_user = 'http://jabber.org/protocol/muc#user';
@@ -346,8 +349,7 @@ function requestedRemoveContact(element) {
 }
 
 function clickedContact(contact) {
-    if(onClickedContact)
-        onClickedContact(contact);
+    requestedCommunicate(contact, getDefaultAppUrl())
 }
 
 function requestedCommunicate(contact, url, target) {
@@ -356,6 +358,15 @@ function requestedCommunicate(contact, url, target) {
             attr(contact, 'account'),
             attr(contact, 'address'),
             attr(contact, 'type') || 'chat',
-            url,
-            target);
+            url, target);
 }
+
+
+// GUI UTILITIES (SPECIFIC)
+// ----------------------------------------------------------------------
+
+function getDefaultAppUrl() {
+    var url = prefBranch.getCharPref('defaultAppUrl');
+    return isChromeUrl(url) ? chromeToFileUrl(url) : url;
+}
+

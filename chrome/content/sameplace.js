@@ -79,10 +79,7 @@ function init(event) {
             }}, function(presence) { sentMUCPresence(presence) });
 
     contacts = _('contacts').contentWindow;
-    contacts.onClickedContact = clickedContact;
-    contacts.onRequestedCommunicate = function(account, address, type, url, target) {
-        openAttachPanel(account, address, null, type, url, target);
-    };
+    contacts.onRequestedCommunicate = requestedCommunicate;
 
     XMPP.cache.presenceOut.forEach(sentAvailablePresence);
 
@@ -109,35 +106,6 @@ function finish() {
 }
 
 
-// UTILITIES (GENERIC)
-// ----------------------------------------------------------------------
-// Application-independent functions not dealing with user interface.
-
-function isChromeUrl(string) {
-    return /^chrome:\/\//.test(string);
-}
-
-function chromeToFileUrl(url) {
-    return Cc["@mozilla.org/chrome/chrome-registry;1"]
-        .getService(Ci.nsIChromeRegistry)
-        .convertChromeURL(
-            Cc["@mozilla.org/network/io-service;1"]
-            .getService(Ci.nsIIOService)
-            .newURI(url, null, null)).spec;
-}
-
-function hasAncestor(element, parentName, parentNamespace) {
-    var elementDoc = element.ownerDocument;
-    while(element != elementDoc) {
-        if(element.localName == parentName &&
-           (!parentNamespace || element.isDefaultNamespace(parentNamespace)))
-            return element;
-        element = element.parentNode;
-    }
-    return false;
-}
-
-
 // GUI UTILITIES (GENERIC)
 // ----------------------------------------------------------------------
 // Application-independent functions dealing with user interface.
@@ -156,6 +124,17 @@ function queuePostLoadAction(contentPanel, action) {
                     action(contentPanel);
                 }, false);
         }, true);
+}
+
+function hasAncestor(element, parentName, parentNamespace) {
+    var elementDoc = element.ownerDocument;
+    while(element != elementDoc) {
+        if(element.localName == parentName &&
+           (!parentNamespace || element.isDefaultNamespace(parentNamespace)))
+            return element;
+        element = element.parentNode;
+    }
+    return false;
 }
 
 
@@ -400,6 +379,19 @@ var chatDropObserver = {
     }
 };
 
+function requestedCommunicate(account, address, type, url, target) {
+    if(url == getDefaultAppUrl()) {
+        if(type == 'groupchat' && !isConversationOpen(account, address))        
+            promptOpenConversation(account, address, type);
+        else 
+            withConversation(
+                account, address, null, type, true, function() {
+                    focusConversation(account, address);
+                });
+    } else
+        openAttachPanel(account, address, null, type, url, target);
+};
+
 function clickedElementInConversation(event) {
     var ancestorAnchor = hasAncestor(event.target, 'a', ns_xhtml);
     if(ancestorAnchor) {
@@ -455,20 +447,6 @@ function requestedAttachBrowser(element) {
                     attr(element, 'resource'),
                     attr(element, 'type'),
                     null, 'browser-current');
-}
-
-function clickedContact(contact) {
-    var account = contact.getAttribute('account');
-    var address = contact.getAttribute('address');
-    var type = contact.getAttribute('type');
-
-    if(type == 'groupchat' && !isConversationOpen(account, address))        
-        promptOpenConversation(account, address, type);
-    else 
-        withConversation(
-            account, address, null, type, true, function() {
-                focusConversation(account, address);
-            });
 }
 
 function requestedCloseConversation(element) {
