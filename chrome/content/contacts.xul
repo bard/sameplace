@@ -142,10 +142,11 @@
   <!-- MAIN -->
 
   <vbox id="contacts" flex="1" style="overflow: auto;">
-    <spacer role="open"/>
-    <spacer role="online"/>
+    <label role="open" value="In conversation"/>
+    <label role="online" value="Online"/>
     <spacer role="away"/>
     <spacer role="dnd"/>
+    <label role="offline" value="Offline"/>
     <spacer role="offline"/>
   </vbox>
 

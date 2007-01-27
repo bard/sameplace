@@ -25,6 +25,7 @@
 
 #contacts [role="contact"][availability="unavailable"][open="false"] {
     color: graytext;
+    font-size: smaller;
 }
 
 #contacts [role="contact"][open="false"] { 
@@ -32,7 +33,7 @@
 }
 
 #contacts [role="contact"][open="true"] {
-    font-size: 105%;
+
 }
 
 /* CONVERSATION FOCUS END */
@@ -75,6 +76,17 @@
 /* STATUS INDICATOR END */
 
 #contacts spacer[role="online"] {
-    height: 1px;
-    background: url("chrome://sameplace/skin/separator.png") center no-repeat;
+/*    height: 1px;*/
+/*    background: url("chrome://sameplace/skin/separator.png") center no-repeat;*/
+}
+
+#contacts label[role="open"],
+#contacts label[role="online"],
+#contacts label[role="offline"] {
+    background: url('chrome://sameplace/skin/label-bg.png') repeat-y;
+    font-size: smaller;
+    font-style: italic;
+    margin-left: 0;
+    margin-top: 2px;
+    padding-left: 1em;
 }
