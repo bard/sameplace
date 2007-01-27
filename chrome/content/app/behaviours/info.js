@@ -62,7 +62,7 @@ info.updateResources = function(resource, availability) {
     if(!resource)
         return;
 
-    var domResource = x(this._('resources'), '//*[text()="' + resource + '"]');
+    var domResource = getElementByContent(this._('resources'), resource);
     
     if(domResource) {
         if(availability == 'unavailable')
@@ -98,6 +98,5 @@ info.refresh = function(element) {
 // ----------------------------------------------------------------------
 
 info._ = function(role) {
-    return x(this._root, '//*[@role="' + role + '"]');
+    return getElementByAttribute(this._root, 'role', role);
 };
-

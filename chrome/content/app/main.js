@@ -168,38 +168,74 @@ function copyDomContents(srcElement, dstElement) {
 }
 
 function getElementByAttribute(parent, name, value) {
-    for(var child = parent.firstChild; child; child = child.nextSibling)
-        if(child.getAttribute && child.getAttribute(name) == value)
-            return child;
+    function impl(parent, name, value) {
+        for(var child = parent.firstChild; child; child = child.nextSibling) {
+            if(child.getAttribute && child.getAttribute(name) == value)
+                return child;
+        }
 
-    for(var child = parent.firstChild; child; child = child.nextSibling) {
-        var matchingChild = getElementByAttribute(child, name, value);
-        if(matchingChild)
-            return matchingChild;
+        for(var child = parent.firstChild; child; child = child.nextSibling) {
+            var matchingChild = arguments.callee(child, name, value);
+            if(matchingChild)
+                return matchingChild;
+        }
+        return undefined;
     }
 
-    return undefined;
+    // Only use XPath if available and if element is inserted in the
+    // document (it will not work otherwise)
+
+    if(typeof(x) == 'function' && parent.parentNode) 
+        return x(parent, './/*[@' + name + '="' + value + '"]');
+    else
+        return impl(parent, name, value);
 }
 
-function x() {
-    var contextNode, path;
-    if(typeof(arguments[0]) == 'string') {
-        contextNode = document;
-        path = arguments[0];
-    } else {
-        contextNode = arguments[0];
-        path = arguments[1];
+function getElementByContent(parent, textContent) {
+    function impl(parent, textContent) {
+        for(var child = parent.firstChild; child; child = child.nextSibling) {
+            if(child.textContent == textContent)
+                return child;
+        }
+
+        for(var child = parent.firstChild; child; child = child.nextSibling) {
+            var matchingChild = getElementByContent(child, content);
+            if(matchingChild)
+                return matchingChild;
+        }
+        return undefined;
     }
 
-    function resolver(prefix) {
-        return 'http://www.w3.org/1999/xhtml';
-    }
+    // Only use XPath if available and if element is inserted in the
+    // document (it will not work otherwise)
 
-    return document.evaluate(
-        path, contextNode, resolver,
-        XPathResult.ANY_UNORDERED_NODE_TYPE, null).singleNodeValue;
+    if(typeof(x) == 'function' && parent.parentNode)
+        return x(parent, '//*[text()="' + textContent + '"]');
+    else
+        return impl(parent, textContent);
 }
 
+if(typeof(document.evaluate) == 'function') {
+    function x() {
+        var contextNode, path;
+        if(typeof(arguments[0]) == 'string') {
+            contextNode = document;
+            path = arguments[0];
+        } else {
+            contextNode = arguments[0];
+            path = arguments[1];
+        }
+
+        function resolver(prefix) {
+            return 'http://www.w3.org/1999/xhtml';
+        }
+
+        return document.evaluate(
+            path, contextNode, resolver,
+            XPathResult.ANY_UNORDERED_NODE_TYPE, null).singleNodeValue;
+    }
+}
+    
 function isNearBottom(domElement, threshold) {
     return Math.abs(domElement.scrollHeight -
                     (domElement.scrollTop + domElement.clientHeight)) < (threshold || 24);
@@ -283,8 +319,7 @@ function M(domElement) {
 }
 
 function cloneBlueprint(name) {
-    return x('//*[@id="blueprints"]' +
-             '//*[@class="' + name + '"]')
+    return getElementByAttribute(_('blueprints'), 'class', name)
         .cloneNode(true);
 }
 
@@ -358,6 +393,7 @@ function displayMessage(stanza) {
                 else
                     M(domMessage).sender.textContent =
                         contactName || JID(stanza.@from).username || stanza.@from;
+
             
             M(domMessage).sender.setAttribute(
                 'class', stanza.@from.toString() ? 'contact' : 'user');
@@ -529,5 +565,3 @@ function seenIq(stanza) {
             info.updateAddress(stanza..ns_roster::item.@jid);
     }
 }
-
-
