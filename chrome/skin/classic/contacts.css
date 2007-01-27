@@ -75,11 +75,6 @@
 
 /* STATUS INDICATOR END */
 
-#contacts spacer[role="online"] {
-/*    height: 1px;*/
-/*    background: url("chrome://sameplace/skin/separator.png") center no-repeat;*/
-}
-
 #contacts label[role="open"],
 #contacts label[role="online"],
 #contacts label[role="offline"] {
