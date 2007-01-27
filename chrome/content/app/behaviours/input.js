@@ -130,8 +130,7 @@ Input.prototype.pressedKey = function(event) {
 
         // Stripping trailing <br/>, if present.
         var lastChildIndex = xhtmlBody.children().length()-1;
-        if(xhtmlBody.*::*[lastChildIndex] &&
-           xhtmlBody.*::*[lastChildIndex].name().localName == 'br')
+        if(xhtmlBody.*::*[lastChildIndex].localName() == 'br')
             delete xhtmlBody.*::*[lastChildIndex];
 
         this.onAcceptContent(xhtmlBody);
