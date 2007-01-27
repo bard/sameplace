@@ -125,6 +125,7 @@
             
             <toolbarbutton role="attach"
                            tooltip="attach-tooltip"
+                           count="0"
                            oncommand="requestedAttachBrowser(this);"/>
 
             <toolbarbutton role="close"
