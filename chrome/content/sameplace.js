@@ -179,10 +179,21 @@ function withConversation(account, address, resource, type, forceOpen, action) {
         action(_(conversation, {role: 'chat'}).contentDocument);
 }
 
-function getConversation(account, address) {
-    return x('//*[@id="conversations"]' +
-             '//*[@account="' + account + '" and ' +
-             '    @address="' + address + '"]');
+if(typeof(x) == 'function') {
+    function getConversation(account, address) {    
+        return x('//*[@id="conversations"]' +
+                 '//*[@account="' + account + '" and ' +
+                 '    @address="' + address + '"]');
+    }
+} else {
+    function getConversation(account, address){
+        var conversationsForAccount =
+            _('conversations').getElementsByAttribute('account', account);
+        for(var i=0; i<conversationsForAccount.length; i++){
+            if(conversationsForAccount[i].getAttribute('address') == address)
+                return conversationsForAccount[i];
+        }
+    }
 }
 
 
