@@ -165,13 +165,14 @@ function withConversation(account, address, resource, type, forceOpen, action) {
     var conversation = getConversation(account, address);
 
     if(!conversation && forceOpen)
-        openAttachPanel(
+        interactWith(
             account, address, resource, type,
-            getDefaultAppUrl(),
-            'sidebar', function(contentPanel) {
+            getDefaultAppUrl(), 'main',
+            function(contentPanel) {
                 action(contentPanel);
                 openedConversation(account, address, type);
             });
+
     else
         action(_(conversation, {role: 'chat'}).contentDocument);
 }
@@ -244,72 +245,80 @@ function changeStatusMessage(message) {
         }
 }
 
-function openAttachPanel(account, address, resource, type, url, target, action) {
-    function getPanel(url, target) {
-        switch(target) {
-        case 'browser-tab':
-            if(!(url.match(/^javascript:/) ||
-                 getBrowser().contentDocument.location.href == 'about:blank')) {
-                getBrowser().selectedTab = getBrowser().addTab();
-            }
-            
-            return getBrowser().selectedBrowser;
-            break;
+/**
+ * Interact with a contact in a new or existing interaction space.
+ *
+ * If "where" is a string, it is assumed to be an URL.  A new
+ * interaction space is created and afterLoadAction is executed
+ * immediately thereafter.  Target can be "main" (tipically for
+ * conversation, opened in sidebar) or "additional".
+ *
+ */
 
-        case 'browser-current':
-            return getBrowser().selectedBrowser;
-            break;
+function interactWith(account, address, resource, type,
+                      where, target, afterLoadAction) {
+    if(typeof(where) == 'string') 
+        // "where" is a url
+        createInteractionPanel(account, address, resource, type,
+                               where, target, afterLoadAction);
+    else
+        // "where" is a content panel
+        XMPP.enableContentDocument(where, account, address, type);
+}
 
-        case 'sidebar':
-            var conversation = cloneBlueprint('conversation');
-            _('conversations').appendChild(conversation);
-            _(conversation, {role: 'contact'}).value = XMPP.nickFor(account, address);
-            conversation.setAttribute('account', account);
-            conversation.setAttribute('address', address);
-            conversation.setAttribute('resource', resource);
-            conversation.setAttribute('type', type);
-            conversation.setAttribute('url', url);
-            var contentPanel = _(conversation, {role: 'chat'});
-            contentPanel.addEventListener(
-                'click', function(event) {
-                    clickedElementInConversation(event);
-                }, true);
-            return contentPanel;
+function createInteractionPanel(account, address, resource, type,
+                                url, target,
+                                afterLoadAction) {
+    switch(target) {
+    case 'additional':
+        if(!(url.match(/^javascript:/) ||
+             getBrowser().contentDocument.location.href == 'about:blank')) {
+            getBrowser().selectedTab = getBrowser().addTab();
 
-            break;
+            var contentPanel = getBrowser().selectedBrowser;
 
-        default:
-            throw new Error('Unexpected. (' + target + ')');
-            break;
+            queuePostLoadAction(
+                contentPanel, function(document) {
+                    XMPP.enableContentDocument(contentPanel, account, address, type);
+                    if(afterLoadAction)
+                        afterLoadAction(contentPanel);
+                });
+
+            contentPanel.contentDocument.location.href = url;
         }
-    }
+            
+        return contentPanel;
+        break;
 
+    case 'main':
+        var conversation = cloneBlueprint('conversation');
+        _('conversations').appendChild(conversation);
+        _(conversation, {role: 'contact'}).value = XMPP.nickFor(account, address);
+        conversation.setAttribute('account', account);
+        conversation.setAttribute('address', address);
+        conversation.setAttribute('resource', resource);
+        conversation.setAttribute('type', type);
+        var contentPanel = _(conversation, {role: 'chat'});
+        contentPanel.addEventListener(
+            'click', function(event) {
+                clickedElementInConversation(event);
+            }, true);
 
-    var contentPanel = getPanel(url, target);
-
-
-    if(target != 'browser-current')
-        contentPanel.contentDocument.location.href = url;
-
-
-    if(!url || url.match(/^javascript:/)) {
-        XMPP.enableContentDocument(contentPanel, account, address, type, true);
-
-        if(action)
-            action(contentPanel);
-    } else
         queuePostLoadAction(
             contentPanel, function(document) {
                 XMPP.enableContentDocument(contentPanel, account, address, type);
-
-                if(url == getDefaultAppUrl())
-                    openedConversation(account, address, type);
-
-                if(action) 
-                    action(contentPanel);
+                if(afterLoadAction)
+                    afterLoadAction(contentPanel);
             });
 
-    return contentPanel;
+        contentPanel.contentDocument.location.href = url;
+        return contentPanel;
+        break;
+
+    default:
+        throw new Error('Unexpected. (' + target + ')');
+        break;
+    }
 }
 
 function focusConversation(account, address) {
@@ -391,7 +400,7 @@ var chatDropObserver = {
     }
 };
 
-function requestedCommunicate(account, address, type, url, target) {
+function requestedCommunicate(account, address, type, url) {
     if(url == getDefaultAppUrl()) {
         if(type == 'groupchat' && !isConversationOpen(account, address))        
             promptOpenConversation(account, address, type);
@@ -401,7 +410,9 @@ function requestedCommunicate(account, address, type, url, target) {
                     focusConversation(account, address);
                 });
     } else
-        openAttachPanel(account, address, null, type, url, target);
+        interactWith(
+            account, address, null, type,
+            url, 'additional');
 };
 
 function clickedElementInConversation(event) {
@@ -454,11 +465,11 @@ function requestedAddContact() {
 }
 
 function requestedAttachBrowser(element) {
-    openAttachPanel(attr(element, 'account'),
-                    attr(element, 'address'),
-                    attr(element, 'resource'),
-                    attr(element, 'type'),
-                    null, 'browser-current');
+    interactWith(attr(element, 'account'),
+                 attr(element, 'address'),
+                 attr(element, 'resource'),
+                 attr(element, 'type'),
+                 getBrowser().selectedBrowser);
 }
 
 function requestedCloseConversation(element) {
@@ -531,15 +542,16 @@ function seenChatMessage(message) {
 
     var wConversation = getConversation(message.session.name, contact.address);
     if(!wConversation) {
-        openAttachPanel(
+        interactWith(
             message.session.name, contact.address,
             contact.resource, message.stanza.@type,
-            getDefaultAppUrl(),
-            'sidebar',
+            getDefaultAppUrl(), 'main',
             function(contentPanel) {
+                openedConversation(message.session.name,
+                                   contact.address,
+                                   message.stanza.@type);
                 contentPanel.xmppChannel.receive(message);
             });
-        openedConversation(message.session.name, contact.address, message.stanza.@type);
     } else if(!wConversation.contentDocument ||
               (wConversation.contentDocument &&
                !wConversation.contentDocument.getElementById('xmpp-incoming'))) {
@@ -559,12 +571,17 @@ function sentAvailablePresence(presence) {
 
 function sentMUCPresence(presence) {
     var room = XMPP.JID(presence.stanza.@to);
+    var account = presence.session.name;
+    var address = room.address;
+    var resource = room.resource;
+    var type = 'groupchat';
 
-    openAttachPanel(
-        presence.session.name, room.address, room.resource, 'groupchat',
-        getDefaultAppUrl(), 'sidebar',
-        function(contentPanel) {
-            focusConversation(presence.session.name, room.address);
+    interactWith(
+        account, address, resource, type,
+        getDefaultAppUrl(), 'main',
+        function(interactionPanel) {
+            openedConversation(account, address, type);
+            focusConversation(account, address);
         });
 }
 

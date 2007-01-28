@@ -362,13 +362,13 @@ function clickedContact(contact) {
     requestedCommunicate(contact, getDefaultAppUrl())
 }
 
-function requestedCommunicate(contact, url, target) {
+function requestedCommunicate(contact, url) {
     if(onRequestedCommunicate)
         onRequestedCommunicate(
             attr(contact, 'account'),
             attr(contact, 'address'),
             attr(contact, 'type') || 'chat',
-            url, target);
+            url);
 }
 
 

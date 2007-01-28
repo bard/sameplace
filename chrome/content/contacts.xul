@@ -47,9 +47,11 @@
       <menuitem label="Remove" oncommand="requestedRemoveContact(document.popupNode);"/>
       <menuseparator/>
 
-      <menu label="Communicate in browser using...">
+      <menu label="Interact using...">
         <menupopup  datasources="rdf:bookmarks" ref="NC:BookmarksRoot"
                     onpopupshowing="this.builder.rebuild();">
+<!--           <menuitem label="Current Page" -->
+<!--                     oncommand="requestedCommunicate(document.popupNode, null, 'current');"/> -->
           <template>
             <rule>
               <conditions>
@@ -68,43 +70,41 @@
               </conditions>
               <action>
                 <menuitem uri="?app" label="?name" value="?url"
-                          oncommand="requestedCommunicate(document.popupNode, this.value, 'browser-tab');"/>
+                          oncommand="requestedCommunicate(document.popupNode, this.value);"/>
               </action>
             </rule>
           </template>          
         </menupopup>
       </menu>
 
-      <menu label="Communicate in sidebar using...">
-        <menupopup  datasources="rdf:bookmarks" ref="NC:BookmarksRoot"
-                    onpopupshowing="this.builder.rebuild();">
-          <template>
-            <rule>
-              <conditions>
-                <content uri="?root"/>
-                <member container="?root" child="?menu"/>
-                <triple subject="?menu"
-                        predicate="http://home.netscape.com/NC-rdf#Name"
-                        object="SamePlace"/>
-                <member container="?menu" child="?app"/>
-                <triple subject="?app"
-                        predicate="http://home.netscape.com/NC-rdf#Name"
-                        object="?name"/>
-                <triple subject="?app"
-                        predicate="http://home.netscape.com/NC-rdf#URL"
-                        object="?url"/>
-              </conditions>
-              <action>
-                <menuitem uri="?app" label="?name" value="?url"
-                          oncommand="requestedCommunicate(document.popupNode, this.value, 'sidebar');"/>
-              </action>
-            </rule>
-          </template>          
-        </menupopup>
-      </menu>
+<!--       <menu label="Communicate in sidebar using..."> -->
+<!--         <menupopup  datasources="rdf:bookmarks" ref="NC:BookmarksRoot" -->
+<!--                     onpopupshowing="this.builder.rebuild();"> -->
+<!--           <template> -->
+<!--             <rule> -->
+<!--               <conditions> -->
+<!--                 <content uri="?root"/> -->
+<!--                 <member container="?root" child="?menu"/> -->
+<!--                 <triple subject="?menu" -->
+<!--                         predicate="http://home.netscape.com/NC-rdf#Name" -->
+<!--                         object="SamePlace"/> -->
+<!--                 <member container="?menu" child="?app"/> -->
+<!--                 <triple subject="?app" -->
+<!--                         predicate="http://home.netscape.com/NC-rdf#Name" -->
+<!--                         object="?name"/> -->
+<!--                 <triple subject="?app" -->
+<!--                         predicate="http://home.netscape.com/NC-rdf#URL" -->
+<!--                         object="?url"/> -->
+<!--               </conditions> -->
+<!--               <action> -->
+<!--                 <menuitem uri="?app" label="?name" value="?url" -->
+<!--                           oncommand="requestedCommunicate(document.popupNode, this.value, 'main');"/> -->
+<!--               </action> -->
+<!--             </rule> -->
+<!--           </template>           -->
+<!--         </menupopup> -->
+<!--       </menu> -->
 
-      <menuitem label="Communicate using current web page"
-                oncommand="requestedCommunicate(document.popupNode, null, 'browser-current');"/>
     </popup>
 
     <tooltip id="contact-tooltip" noautohide="true"
