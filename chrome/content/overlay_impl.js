@@ -65,7 +65,7 @@ function initOverlay(event) {
         function(iq) {
             if(window == Cc["@mozilla.org/appshell/window-mediator;1"]
                .getService(Ci.nsIWindowMediator)
-               .getMostRecentWindow('navigator:browser'))
+               .getMostRecentWindow(''))
                 loadSidebar();
         });
 
