@@ -92,11 +92,21 @@ function finish() {
 // INTERFACE GLUE
 // ----------------------------------------------------------------------
 
-function get(account, address) {
-    return x('//*[@id="contacts"]//*[' +
-             '@address="' + address + '" and ' +
-             '@account="' + account + '"]');
+if(typeof(x) == 'function') {
+    function get(account, address) {
+        return x('//*[@id="contacts"]//*[' +
+                 '@address="' + address + '" and ' +
+                 '@account="' + account + '"]');
+    }
+} else {
+    function get(account, address) {
+        var addresses = _('contacts').getElementsByAttribute('address', address);
+        for(var i=0; i<addresses.length; i++)
+            if(addresses[i].getAttributeNode('account').value == account)
+                return addresses[i];
+    }
 }
+
 
 function add(account, address) {
     var contact;
