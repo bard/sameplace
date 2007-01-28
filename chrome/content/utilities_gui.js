@@ -18,38 +18,49 @@
   Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
 */
 
-
-function x() {
-    var contextNode, path;
-    if(arguments[0] instanceof Ci.nsIDOMElement ||
-       arguments[0] instanceof Ci.nsIDOMDocument) {
-        contextNode = arguments[0];
-        path = arguments[1];
-    }
-    else {
-        path = arguments[0];
-        contextNode = document;
-    }
-
-    function resolver(prefix) {
-        switch(prefix) {
-        case 'xul':
-            return 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul';
-            break;
-        case 'html':
-            return 'http://www.w3.org/1999/xhtml';
-            break;
+if(typeof(document.evaluate) == 'function') {
+    function x() {
+        var contextNode, path;
+        if(arguments[0] instanceof Ci.nsIDOMElement ||
+           arguments[0] instanceof Ci.nsIDOMDocument) {
+            contextNode = arguments[0];
+            path = arguments[1];
         }
-    }
+        else {
+            path = arguments[0];
+            contextNode = document;
+        }
 
-    return document.evaluate(
-        path, contextNode, resolver, XPathResult.ANY_UNORDERED_NODE_TYPE, null).
-        singleNodeValue;
+        function resolver(prefix) {
+            switch(prefix) {
+            case 'xul':
+                return 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul';
+                break;
+            case 'html':
+                return 'http://www.w3.org/1999/xhtml';
+                break;
+            }
+        }
+
+        return document.evaluate(
+            path, contextNode, resolver, XPathResult.ANY_UNORDERED_NODE_TYPE, null).
+            singleNodeValue;
+    }
 }
 
-function cloneBlueprint(role) {
-    return x('//*[@id="blueprints"]/*[@role="' + role + '"]').
-        cloneNode(true);
+if(typeof(x) == 'function') {
+    function cloneBlueprint(role) {  
+        return x('//*[@id="blueprints"]/*[@role="' + role + '"]')
+            .cloneNode(true);
+    }
+} else {
+    function cloneBlueprint(role) {
+        var blueprints = _('blueprints').childNodes;
+        for(var i=0; i<blueprints.length; i++){
+            if(blueprints[i].getAttribute('role') == role)
+                return blueprints[i].cloneNode(true);
+        }
+    }
 }
 
 function _(element, descendantQuery) {
