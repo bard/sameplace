@@ -149,11 +149,8 @@ function getDefaultAppUrl() {
 }
 
 function getBrowser() {
-    return top.getBrowser();
-}
-
-function getTop() {
-    return top;
+    if(top.getBrowser)
+        return top.getBrowser();
 }
 
 function isConversationOpen(account, address) {
@@ -597,7 +594,7 @@ function hoveredMousePointer(event) {
         (function(attributeName) { return event.target.getAttribute(attributeName); }) :
         (function(attributeName) { return getAncestorAttribute(event.target, attributeName); });
 
-    getTop().document.getElementById('statusbar-display').label =
+    top.document.getElementById('statusbar-display').label =
         'Account: <' + get('account') + '>, ' +
         'Address: <' + get('address') + '>, ' +
         'Resource: <' + get('resource') + '>, ' +
