@@ -172,6 +172,5 @@ function log(msg) {
 function getExtensionVersion(id) {
     return Cc["@mozilla.org/extensions/manager;1"]
         .getService(Ci.nsIExtensionManager)
-        .QueryInterface(Ci.nsIExtensionManager_MOZILLA_1_8_BRANCH)
         .getItemForID(id).version;
 }
