@@ -245,44 +245,48 @@ function changeStatusMessage(message) {
 }
 
 function openAttachPanel(account, address, resource, type, url, target, action) {
-    var contentPanel;
+    function getPanel(url, target) {
+        switch(target) {
+        case 'browser-tab':
+            if(!(url.match(/^javascript:/) ||
+                 getBrowser().contentDocument.location.href == 'about:blank')) {
+                getBrowser().selectedTab = getBrowser().addTab();
+            }
+            
+            return getBrowser().selectedBrowser;
+            break;
 
-    switch(target) {
-    case 'browser-tab':
-        if(!(url.match(/^javascript:/) ||
-             getBrowser().contentDocument.location.href == 'about:blank')) {
-            getBrowser().selectedTab = getBrowser().addTab();
+        case 'browser-current':
+            return getBrowser().selectedBrowser;
+            break;
+
+        case 'sidebar':
+            var conversation = cloneBlueprint('conversation');
+            _('conversations').appendChild(conversation);
+            _(conversation, {role: 'contact'}).value = XMPP.nickFor(account, address);
+            conversation.setAttribute('account', account);
+            conversation.setAttribute('address', address);
+            conversation.setAttribute('resource', resource);
+            conversation.setAttribute('type', type);
+            conversation.setAttribute('url', url);
+            var contentPanel = _(conversation, {role: 'chat'});
+            contentPanel.addEventListener(
+                'click', function(event) {
+                    clickedElementInConversation(event);
+                }, true);
+            return contentPanel;
+
+            break;
+
+        default:
+            throw new Error('Unexpected. (' + target + ')');
+            break;
         }
-
-        contentPanel = getBrowser().selectedBrowser;
-        break;
-
-    case 'browser-current':
-        contentPanel = getBrowser().selectedBrowser;
-        break;
-
-    case 'sidebar':
-        var conversation = cloneBlueprint('conversation');
-        _('conversations').appendChild(conversation);
-        _(conversation, {role: 'contact'}).value = XMPP.nickFor(account, address);
-        contentPanel = _(conversation, {role: 'chat'});
-        conversation.setAttribute('account', account);
-        conversation.setAttribute('address', address);
-        conversation.setAttribute('resource', resource);
-        conversation.setAttribute('type', type);
-        conversation.setAttribute('url', url);
-
-        contentPanel.addEventListener(
-            'click', function(event) {
-                clickedElementInConversation(event);
-            }, true);
-
-        break;
-    
-    default:
-        throw new Error('Unexpected. (' + target + ')');
-        break;
     }
+
+
+    var contentPanel = getPanel(url, target);
+
 
     if(target != 'browser-current')
         contentPanel.contentDocument.location.href = url;
