@@ -28,8 +28,9 @@ const RDF = Cc["@mozilla.org/rdf/rdf-service;1"]
     .getService(Ci.nsIRDFService);    
 const RDFCU = Cc["@mozilla.org/rdf/container-utils;1"]
     .getService(Ci.nsIRDFContainerUtils);
-const BMSVC = Cc['@mozilla.org/browser/bookmarks-service;1']
-    .getService(Ci.nsIBookmarksService);
+if(Cc['@mozilla.org/browser/bookmarks-service;1'])
+    const BMSVC = Cc['@mozilla.org/browser/bookmarks-service;1']
+        .getService(Ci.nsIBookmarksService);
 const prefBranch = Cc["@mozilla.org/preferences-service;1"]
     .getService(Ci.nsIPrefService)
     .getBranch('extensions.sameplace.');
@@ -84,7 +85,7 @@ function initOverlay(event) {
                 toggleSidebar();
         }, false);
 
-    setTimeout(function() { addBookmark(); }, 250);
+    setTimeout(function() { if(BMSVC) addBookmark(); }, 250);
 
     var version = getExtensionVersion('sameplace@hyperstruct.net');
 
