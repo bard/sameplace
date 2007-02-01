@@ -28,11 +28,19 @@ function isChromeUrl(string) {
 }
 
 function chromeToFileUrl(url) {
-    return Cc["@mozilla.org/chrome/chrome-registry;1"]
-        .getService(Ci.nsIChromeRegistry)
-        .convertChromeURL(
-            Cc["@mozilla.org/network/io-service;1"]
-            .getService(Ci.nsIIOService)
-            .newURI(url, null, null)).spec;
+    if(isThunderbird())
+        return url;
+    else
+        return Cc["@mozilla.org/chrome/chrome-registry;1"]
+            .getService(Ci.nsIChromeRegistry)
+            .convertChromeURL(
+                Cc["@mozilla.org/network/io-service;1"]
+                .getService(Ci.nsIIOService)
+                .newURI(url, null, null)).spec;
 }
 
+function isThunderbird() {
+    return (Cc['@mozilla.org/xre/app-info;1']
+            .getService(Ci.nsIXULAppInfo)
+            .ID == '{3550f703-e582-4d05-9a08-453d09bdfdc6}');
+}
