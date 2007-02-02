@@ -93,6 +93,10 @@ info.refresh = function(element) {
     }
 };
 
+info.hasResource = function(resource) {
+    return getElementByContent(this._('resources'), resource);
+};
+
 
 // INTERNALS
 // ----------------------------------------------------------------------

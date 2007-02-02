@@ -199,7 +199,7 @@ function getElementByContent(parent, textContent) {
         }
 
         for(var child = parent.firstChild; child; child = child.nextSibling) {
-            var matchingChild = getElementByContent(child, content);
+            var matchingChild = getElementByContent(child, textContent);
             if(matchingChild)
                 return matchingChild;
         }
@@ -209,8 +209,8 @@ function getElementByContent(parent, textContent) {
     // Only use XPath if available and if element is inserted in the
     // document (it will not work otherwise)
 
-    if(typeof(x) == 'function' && parent.parentNode)
-        return x(parent, '//*[text()="' + textContent + '"]');
+    if(typeof(x) == 'function' && parent.parentNode) 
+        return x(parent, './/*[text()="' + textContent + '"]');
     else
         return impl(parent, textContent);
 }
@@ -540,7 +540,8 @@ function seenPresence(stanza) {
             x('//xhtml:div[@class="box" and @for="resources"]/xhtml:h3')
                 .textContent = 'Participants';
 
-            if(stanza.@type == undefined)            
+            if(stanza.@type == undefined &&
+               !info.hasResource(JID(stanza.@from).resource)) 
                 displayEvent('join', JID(stanza.@from).resource + ' entered the room');
             else if(stanza.@type == 'unavailable')
                 displayEvent('leave', JID(stanza.@from).resource + ' left the room');
