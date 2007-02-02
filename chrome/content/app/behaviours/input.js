@@ -60,9 +60,19 @@ function Input(container) {
     this._originalHeight = this._iframe.contentDocument.body.scrollHeight;
 
     this._iframe.contentWindow.addEventListener(
-        'scroll', function(event) {            
-            container.style.height =
-                _this._iframe.contentDocument.body.scrollHeight + 'px';
+        'scroll', function(event) {
+            var totalHeight = _this._iframe.contentDocument.body.scrollHeight;
+
+            // If scroll event is caused by appearance of a horizontal
+            // scroll bar, e.g. when only a very long non-wrapping
+            // line has been written, current default height (two
+            // lines) will be less than the total height (one line).
+            // We don't want the input area to shrink below the
+            // default, though, so guarding here against such case.
+
+            if(container.clientHeight < totalHeight)
+                container.style.height = totalHeight + 'px';
+
         }, false);
     this._iframe.contentWindow.addEventListener(
         'resize', function(event) {
