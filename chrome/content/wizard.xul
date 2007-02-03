@@ -85,6 +85,12 @@
 
         <row>
           <spacer/>
+          <checkbox id="account-existing.auto-login"
+                    label="Login automatically at startup" checked="true"/>
+        </row>
+
+        <row>
+          <spacer/>
           <checkbox id="account-existing.password-remember"
                     label="Remember password" accesskey="R"/>
         </row>
@@ -175,6 +181,9 @@
 
     <spacer height="10"/>
     
+    <checkbox id="account-new.auto-login"
+              label="Login automatically at startup" checked="true"/>
+
     <separator class="groove"/>
 
     <hbox pack="end">

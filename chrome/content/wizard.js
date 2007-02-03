@@ -204,6 +204,7 @@ function advancedPageAccountExisting() {
     account.resource = _('account-existing.resource').value;
     if(_('account-existing.password-remember').checked)
         account.password = _('account-existing.password').value;
+    account.autoLogin = _('account-existing.auto-login').checked;
     account.connectionHost = _('account-existing.server-hostname').value;
     account.connectionPort = _('account-existing.server-port').value;
     account.connectionSecurity = _('account-existing.server-security').value;
@@ -211,6 +212,7 @@ function advancedPageAccountExisting() {
 
 function advancedPageAccountNew() {
     account.resource = _('account-new.resource').value;
+    account.autoLogin = _('account-new.auto-login').checked;
     account.connectionHost = _('account-new.server-hostname').value;
     account.connectionPort = _('account-new.server-port').value;
     account.connectionSecurity = _('account-new.server-security').value;
@@ -243,6 +245,7 @@ function createAccount(account) {
     pref.setCharPref(key + '.resource', account.resource);
     if(account.password)
         pref.setCharPref(key + '.password', account.password);
+    pref.setBoolPref(key + '.autoLogin', account.autoLogin);
     pref.setCharPref(key + '.connectionHost', account.connectionHost);
     pref.setIntPref(key + '.connectionPort', account.connectionPort);
     pref.setIntPref(key + '.connectionSecurity', account.connectionSecurity);    

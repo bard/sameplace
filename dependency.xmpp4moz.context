@@ -1,32 +1,17 @@
 
 Context:
 
-[UI: renamed xmpp-menu-accounts to xmpp-popup-accounts.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070110015959] 
+[RT#2 Accounts can be configured to auto-login when host application starts (assuming host application loads xmpp4moz overlay).
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070203020429] 
 
-[Service, Session: moved periodical transmission of whitespace (keepalive) from session to service, bound to session activation, and enabled.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070110013446] 
+[Overlay: moved invocation of routine that adds toolbar button in overlay initialization.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070203003043] 
 
-[Service: when server disconnected, there was no chance to send the unavailable <presence> needed for clearing presenceOut cache.  Doing so on stream closing.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070107200928] 
+[Moved preference overlays at the same level of main overlays, renamed firefox_ and thunderbird_ to browser_ and mail_.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070202233210] 
 
-[Service: not disconnecting transport as a consequence of incoming stream closing, as it is already done as consequence of outgoing stream closing.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070107190441] 
+[Overlay: adding main button to toolbar of Thunderbird 1.5 and 2.0.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070201231559] 
 
-[Overlay: progressmeter was not always shown, added width setting.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061231154913] 
-
-[JS API: removed remaining references to global and luckily-to-be-found-in-outer-scope XMPP object.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061225211535] 
-
-[JS API: removed more references to 'XMPP' object.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061224235041] 
-
-[Removed leftover 'id' module.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061224235022] 
-
-[Preferences: changed default server for account creation to sameplace.cc.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061224234926] 
-
-[TAG 0.4.0rc1
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20061224135531] 
+[TAG 0.4.1
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070201021239] 
