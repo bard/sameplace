@@ -89,7 +89,10 @@ function init(event) {
                event.target.parentNode == _('conversations')) {
                 var hideConversations = _('conversations').childNodes.length == 0;
                 _('conversations').collapsed = hideConversations;
-                _('contact-toolbox').hidden = hideConversations;
+                _('contact-toolbox', {role: 'close'}).hidden = hideConversations;
+                _('contact-toolbox', {role: 'attach'}).hidden = hideConversations;
+                if(hideConversations)
+                    _('contact').value = '';
             }
         }, false);
 
@@ -98,8 +101,10 @@ function init(event) {
             if(event.target instanceof XULElement &&
                event.target.parentNode == _('conversations')) {
                 var hideConversations = _('conversations').childNodes.length == 1;
-                _('conversations').collapsed = hideConversations;
-                _('contact-toolbox').hidden = hideConversations;
+                _('contact-toolbox', {role: 'close'}).hidden = hideConversations;
+                _('contact-toolbox', {role: 'attach'}).hidden = hideConversations;
+                if(hideConversations)
+                    _('contact').value = '';
             }
         }, false);
 

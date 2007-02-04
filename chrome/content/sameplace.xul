@@ -90,7 +90,7 @@
 
     <iframe id="contacts" src="contacts.xul" flex="1"/>    
     <splitter id="splitter-main" orient="vertical"/>
-    <toolbox id="contact-toolbox" hidden="true">
+    <toolbox id="contact-toolbox">
       <toolbar fullscreentoolbar="true">
         <toolbaritem align="center" flex="1">
           <label value="Contact:" accesskey="a"
@@ -99,11 +99,13 @@
           <label id="contact" style="font-weight: bold;"/>
         </toolbaritem>
         <toolbarbutton role="attach"
+                       hidden="true"
                        tooltip="attach-tooltip"
                        count="0"
                        oncommand="requestedAttachBrowser(getCurrentConversation());"
                        class="small-margin"/>
         <toolbarbutton role="close"
+                       hidden="true"
                        tooltiptext="Close this conversation"
                        oncommand="requestedCloseConversation(getCurrentConversation());"
                        class="small-margin"/>
