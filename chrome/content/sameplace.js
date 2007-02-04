@@ -108,6 +108,27 @@ function init(event) {
             }
         }, false);
 
+    new AutoComplete(
+        _('contact'), _('contact-completions'),
+        function(input) {
+            var completions = [];
+            for each(var iq in XMPP.cache.roster) {
+                for each(var item in iq.stanza..ns_roster::item) {
+                    var account = iq.session.name;
+                    var address = item.@jid;
+                    var nick = XMPP.nickFor(account, address);
+                    if(nick.toLowerCase().indexOf(input.toLowerCase()) == 0)
+                        completions.push([nick, account + ' ' + address]);                    
+                }
+            }
+            return completions;
+        },
+        function(choice) {
+            var parts = choice.split(' ');
+            var account = parts[0];
+            var address = parts[1];
+            requestedCommunicate(account, address, 'chat', getDefaultAppUrl());
+        });
 }
 
 function finish() {
