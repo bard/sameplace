@@ -184,6 +184,9 @@
     <checkbox id="account-new.auto-login"
               label="Login automatically at startup" checked="true"/>
 
+    <checkbox id="account-new.password-remember"
+              label="Remember password" accesskey="R"/>
+
     <separator class="groove"/>
 
     <hbox pack="end">
