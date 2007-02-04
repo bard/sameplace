@@ -89,7 +89,7 @@
     </toolbox>
 
     <iframe id="contacts" src="contacts.xul" flex="1"/>    
-    <splitter id="splitter-main" orient="vertical"/>
+    <splitter id="splitter-main" orient="vertical" resizeafter="farthest"/>
     <toolbox id="contact-toolbox">
       <toolbar fullscreentoolbar="true">
         <toolbaritem align="center" flex="1">
@@ -111,14 +111,14 @@
                        class="small-margin"/>
       </toolbar>
     </toolbox>
-    <deck id="conversations" collapsed="true" flex="10"/>
-
+    <deck id="conversations" collapsed="true" flex="1"/>
 
     <!-- BLUEPRINTS -->
 
     <box hidden="true" id="blueprints">
       <vbox role="conversation" 
-            account="" address="" resource="" type="" flex="1">
+            account="" address="" resource="" type=""
+            flex="1">
         <browser type="content"
                  role="chat" src="about:blank" flex="1"
                  ondragdrop="nsDragAndDrop.drop(event, chatDropObserver)"/>
