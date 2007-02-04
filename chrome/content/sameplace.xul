@@ -89,7 +89,26 @@
     </toolbox>
 
     <iframe id="contacts" src="contacts.xul" flex="1"/>    
-    <splitter id="splitter-main" orient="vertical"/>    
+    <splitter id="splitter-main" orient="vertical"/>
+    <toolbox id="contact-toolbox" hidden="true">
+      <toolbar fullscreentoolbar="true">
+        <toolbaritem align="center" flex="1">
+          <label value="Contact:" accesskey="a"
+                 control="contact"
+                 style="font-size: smaller; margin-right: 0;"/>
+          <label id="contact" style="font-weight: bold;"/>
+        </toolbaritem>
+        <toolbarbutton role="attach"
+                       tooltip="attach-tooltip"
+                       count="0"
+                       oncommand="requestedAttachBrowser(getCurrentConversation());"
+                       class="small-margin"/>
+        <toolbarbutton role="close"
+                       tooltiptext="Close this conversation"
+                       oncommand="requestedCloseConversation(getCurrentConversation());"
+                       class="small-margin"/>
+      </toolbar>
+    </toolbox>
     <deck id="conversations" collapsed="true" flex="10"/>
 
 
@@ -98,42 +117,6 @@
     <box hidden="true" id="blueprints">
       <vbox role="conversation" 
             account="" address="" resource="" type="" flex="1">
-        <toolbox>
-          <toolbar fullscreentoolbar="true">
-            <toolbaritem align="center">
-              <label role="contact" class="header"/>
-            </toolbaritem>
-
-            <toolbarspring/>
-
-            <toolbarbutton label="Plugins "
-                           type="menu" tooltiptext="Available plugins"
-                           accesskey="P"
-                           hidden="true">
-              <menupopup role="plugins" id="plugins-menu"/>
-            </toolbarbutton>
-
-            <toolbarbutton label="Options "
-                           type="menu" tooltiptext="Options for this conversation"
-                           accesskey="p"
-                           hidden="true">
-              <menupopup role="options">
-                <menuitem label="Follow URLs" role="follow"
-                          checked="false" accesskey="F" type="checkbox"/>
-              </menupopup>
-            </toolbarbutton>
-            
-            <toolbarbutton role="attach"
-                           tooltip="attach-tooltip"
-                           count="0"
-                           oncommand="requestedAttachBrowser(this);"/>
-
-            <toolbarbutton role="close"
-                           tooltiptext="Close this conversation"
-                           oncommand="requestedCloseConversation(this);"/>
-          </toolbar>
-        </toolbox>
-        
         <browser type="content"
                  role="chat" src="about:blank" flex="1"
                  ondragdrop="nsDragAndDrop.drop(event, chatDropObserver)"/>

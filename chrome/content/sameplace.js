@@ -85,14 +85,22 @@ function init(event) {
 
     _('conversations').addEventListener(
         'DOMNodeInserted', function(event) {
-            _('conversations').collapsed = 
-                (_('conversations').childNodes.length == 0);
+            if(event.target instanceof XULElement &&
+               event.target.parentNode == _('conversations')) {
+                var hideConversations = _('conversations').childNodes.length == 0;
+                _('conversations').collapsed = hideConversations;
+                _('contact-toolbox').hidden = hideConversations;
+            }
         }, false);
 
     _('conversations').addEventListener(
         'DOMNodeRemoved', function(event) {
-            _('conversations').collapsed = 
-                (_('conversations').childNodes.length == 0);
+            if(event.target instanceof XULElement &&
+               event.target.parentNode == _('conversations')) {
+                var hideConversations = _('conversations').childNodes.length == 1;
+                _('conversations').collapsed = hideConversations;
+                _('contact-toolbox').hidden = hideConversations;
+            }
         }, false);
 
 }
@@ -158,7 +166,11 @@ function isConversationOpen(account, address) {
 }
 
 function isConversationCurrent(account, address) {
-    return _('conversations').selectedPanel == getConversation(account, address);
+    return getCurrentConversation() == getConversation(account, address);
+}
+
+function getCurrentConversation() {
+    return _('conversations').selectedPanel;
 }
 
 function withConversation(account, address, resource, type, forceOpen, action) {
@@ -293,7 +305,6 @@ function createInteractionPanel(account, address, resource, type,
     case 'main':
         var conversation = cloneBlueprint('conversation');
         _('conversations').appendChild(conversation);
-        _(conversation, {role: 'contact'}).value = XMPP.nickFor(account, address);
         conversation.setAttribute('account', account);
         conversation.setAttribute('address', address);
         conversation.setAttribute('resource', resource);
@@ -445,6 +456,7 @@ function requestedChangeStatusMessage(event) {
 
 function focusedConversation(account, address) {
     contacts.nowTalkingWith(account, address);
+    _('contact').value = XMPP.nickFor(account, address);
 }
 
 function requestedAddContact() {
