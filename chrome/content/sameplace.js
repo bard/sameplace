@@ -364,6 +364,15 @@ function createInteractionPanel(account, address, resource, type,
     }
 }
 
+function focusCurrentConversation() {
+    var conversation = getCurrentConversation();
+
+    if(conversation) {
+        _(conversation, {role: 'chat'}).contentWindow.focus();
+        document.commandDispatcher.advanceFocus();
+    }
+}
+
 function focusConversation(account, address) {
     var conversation = getConversation(account, address);
 
@@ -456,7 +465,12 @@ function requestedCommunicate(account, address, type, url) {
         interactWith(
             account, address, null, type,
             url, 'additional');
-};
+}
+
+function pressedKeyInContactField(event) {
+    if(event.keyCode == KeyEvent.DOM_VK_RETURN)
+        focusCurrentConversation();
+}
 
 function clickedElementInConversation(event) {
     var ancestorAnchor = hasAncestor(event.target, 'a', ns_xhtml);
