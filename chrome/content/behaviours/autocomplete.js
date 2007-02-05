@@ -1,4 +1,4 @@
-function AutoComplete(textbox, popup, completeFun, acceptFun) {
+function AutoComplete(textbox, popup, buildPopup, acceptInput) {
     this._textbox = textbox;
     this._popup = popup;
 
@@ -11,7 +11,7 @@ function AutoComplete(textbox, popup, completeFun, acceptFun) {
         popup.hidePopup();        
     }
 
-    function synthDownEvent() {
+    function synthKeyEvent(keycode) {
         var event = document.createEvent('KeyEvents');
         event.initKeyEvent(
             'keypress',        //  in DOMString typeArg,
@@ -22,7 +22,7 @@ function AutoComplete(textbox, popup, completeFun, acceptFun) {
             false,            //  in boolean altKeyArg,
             false,            //  in boolean shiftKeyArg,
             false,            //  in boolean metaKeyArg,
-            KeyEvent.DOM_VK_DOWN,               //  in unsigned long keyCodeArg,
+            keycode,               //  in unsigned long keyCodeArg,
             0);              //  in unsigned long charCodeArg);
         return event;
     }
@@ -32,24 +32,17 @@ function AutoComplete(textbox, popup, completeFun, acceptFun) {
             while(popup.firstChild)
                 popup.removeChild(popup.firstChild);
 
-            var completions = completeFun(textbox.value);
-            if(completions.length == 0) {
+            buildPopup(textbox.value, popup);
+            if(popup.childNodes.length == 0) {
                 event.preventDefault();
                 popup.hidePopup();
-            } else
-                for each(var completion in completeFun(textbox.value)) {
-                    var xulCompletion = document.createElement('menuitem');
-                    xulCompletion.setAttribute('label', completion[0]);
-                    xulCompletion.setAttribute('value', completion[1]);
-                    popup.appendChild(xulCompletion);
-                }
-
+            } 
         }, false);
 
     popup.addEventListener(
         'command', function(event) {
             textbox.value = event.target.label;
-            acceptFun(event.target.value);
+            acceptInput(event.target.value);
         }, false);
 
     popup.addEventListener(
@@ -69,14 +62,18 @@ function AutoComplete(textbox, popup, completeFun, acceptFun) {
 
             case KeyEvent.DOM_VK_DOWN:
                 popup.enableKeyboardNavigator(true);
-                popup.dispatchEvent(synthDownEvent());
-                
+                popup.dispatchEvent(synthKeyEvent(KeyEvent.DOM_VK_DOWN));
+                break;
+
+            case KeyEvent.DOM_VK_UP:
+                popup.enableKeyboardNavigator(true);
+                popup.dispatchEvent(synthKeyEvent(KeyEvent.DOM_VK_UP));
                 break;
 
             case KeyEvent.DOM_VK_TAB:
                 event.preventDefault();
                 popup.enableKeyboardNavigator(true);
-                popup.dispatchEvent(synthDownEvent());
+                popup.dispatchEvent(synthKeyEvent(KeyEvent.DOM_VK_DOWN));
                 break;
 
             default:

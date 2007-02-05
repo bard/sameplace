@@ -110,18 +110,24 @@ function init(event) {
 
     new AutoComplete(
         _('contact'), _('contact-completions'),
-        function(input) {
-            var completions = [];
+        function(input, xulCompletions) {
             for each(var iq in XMPP.cache.roster) {
                 for each(var item in iq.stanza..ns_roster::item) {
                     var account = iq.session.name;
                     var address = item.@jid;
                     var nick = XMPP.nickFor(account, address);
-                    if(nick.toLowerCase().indexOf(input.toLowerCase()) == 0)
-                        completions.push([nick, account + ' ' + address]);                    
+                    var presence = XMPP.presenceSummary(account, address);
+                    if(nick.toLowerCase().indexOf(input.toLowerCase()) == 0) {
+                        var xulCompletion = document.createElement('menuitem');
+                        xulCompletion.setAttribute('class', 'menuitem-iconic');
+                        xulCompletion.setAttribute('label', nick);
+                        xulCompletion.setAttribute('value', account + ' ' + address);
+                        xulCompletion.setAttribute('availability', presence.stanza.@type.toString() || 'available');
+                        xulCompletion.setAttribute('show', presence.stanza.show.toString());
+                        xulCompletions.appendChild(xulCompletion);
+                    }
                 }
             }
-            return completions;
         },
         function(choice) {
             var parts = choice.split(' ');
