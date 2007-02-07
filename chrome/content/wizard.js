@@ -163,6 +163,7 @@ function changedServerSelectionMode(event) {
     case 'custom':
         _('account-new.server-custom').hidden = false;
         _('account-new.server-list').hidden = true;
+        setTimeout(function() {_('account-new.server-custom').focus()}, 0);
         break;
     case 'list':
         _('account-new.server-custom').hidden = true;
