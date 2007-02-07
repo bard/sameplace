@@ -1,6 +1,12 @@
 
 Context:
 
+[JS API: Guarding against attaching already attached panel to a different account/address pair.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070207163139] 
+
+[JS API: unclear failures reported when reading accounts; wrapping in try/catch to avoid stopping reading accounts altogether (and presenting an empty account menu).
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070204052021] 
+
 [RT#2 Accounts can be configured to auto-login when host application starts (assuming host application loads xmpp4moz overlay).
 Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070203020429] 
 

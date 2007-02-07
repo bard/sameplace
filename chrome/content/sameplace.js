@@ -216,9 +216,8 @@ function withConversation(account, address, resource, type, forceOpen, action) {
                 action(contentPanel);
                 openedConversation(account, address, type);
             });
-
     else
-        action(_(conversation, {role: 'chat'}).contentDocument);
+        action(conversation.contentDocument);
 }
 
 if(typeof(x) == 'function') {
@@ -337,25 +336,33 @@ function createInteractionPanel(account, address, resource, type,
     case 'main':
         var conversation = cloneBlueprint('conversation');
         _('conversations').appendChild(conversation);
+        conversation.setAttribute('resource', resource);
+        conversation.setAttribute('message-type', type);
+
+        // XMPP.enableContentDocument will set this as well, but if
+        // several messages arrive in a flurry (is when we come online
+        // and the server sends in those messages that were addressed
+        // to us while we were offline) we will need to identify the
+        // newly created panel *before* XMPP.enableContentDocument has
+        // a chance to do its work.
+        
         conversation.setAttribute('account', account);
         conversation.setAttribute('address', address);
-        conversation.setAttribute('resource', resource);
-        conversation.setAttribute('type', type);
-        var contentPanel = _(conversation, {role: 'chat'});
-        contentPanel.addEventListener(
+        
+        conversation.addEventListener(
             'click', function(event) {
                 clickedElementInConversation(event);
             }, true);
 
         queuePostLoadAction(
-            contentPanel, function(document) {
-                XMPP.enableContentDocument(contentPanel, account, address, type);
+            conversation, function(document) {
+                XMPP.enableContentDocument(conversation, account, address, type);
                 if(afterLoadAction)
-                    afterLoadAction(contentPanel);
+                    afterLoadAction(conversation);
             });
 
-        contentPanel.contentDocument.location.href = url;
-        return contentPanel;
+        conversation.contentDocument.location.href = url;
+        return conversation;
         break;
 
     default:
@@ -365,11 +372,11 @@ function createInteractionPanel(account, address, resource, type,
 }
 
 function focusCurrentConversation() {
-    var conversation = getCurrentConversation();
+    var conversation = getCurrentConversation2();
 
     if(conversation) {
-        _(conversation, {role: 'chat'}).contentWindow.focus();
-        document.commandDispatcher.advanceFocus();
+        conversation.contentWindow.focus();
+        document.commandDispatcher.advanceFocus(); //XXX maybe not needed
     }
 }
 
@@ -379,7 +386,7 @@ function focusConversation(account, address) {
     if(conversation) {
         _('conversations').selectedPanel = conversation;
         focusedConversation(account, address);
-        _(conversation, {role: 'chat'}).contentWindow.focus();
+        conversation.contentWindow.focus();
         document.commandDispatcher.advanceFocus();
     }
 }
@@ -526,12 +533,12 @@ function requestedAttachBrowser(element) {
     interactWith(attr(element, 'account'),
                  attr(element, 'address'),
                  attr(element, 'resource'),
-                 attr(element, 'type'),
+                 attr(element, 'message-type'),
                  getBrowser().selectedBrowser);
 }
 
 function requestedCloseConversation(element) {
-    if(attr(element, 'type') == 'groupchat')
+    if(attr(element, 'message-type') == 'groupchat')
         exitRoom(attr(element, 'account'),
                  attr(element, 'address'),
                  attr(element, 'resource'));
@@ -539,7 +546,7 @@ function requestedCloseConversation(element) {
     closeConversation(attr(element, 'account'),
                       attr(element, 'address'),
                       attr(element, 'resource'),
-                      attr(element, 'type'));
+                      attr(element, 'message-type'));
 }
 
 function requestedOpenConversation() {
@@ -610,12 +617,16 @@ function seenChatMessage(message) {
                                    message.stanza.@type);
                 contentPanel.xmppChannel.receive(message);
             });
-    } else if(!wConversation.contentDocument ||
-              (wConversation.contentDocument &&
-               !wConversation.contentDocument.getElementById('xmpp-incoming'))) {
+    } else {
+        // with wConversation formerly being the container of
+        // conversation, this was always true.        
+        //if(!wConversation.contentDocument ||
+        //(wConversation.contentDocument &&
+        //!wConversation.contentDocument.getElementById('xmpp-incoming')))
+        //{
 
         queuePostLoadAction(
-            _(wConversation, {role: 'chat'}), function(contentPanel) {
+            wConversation, function(contentPanel) {
                 contentPanel.xmppChannel.receive(message);
             });
     }
@@ -678,6 +689,6 @@ function hoveredMousePointer(event) {
         'Address: <' + get('address') + '>, ' +
         'Resource: <' + get('resource') + '>, ' +
         'Subscription: <' + get('subscription') + '>, ' +
-        'Type: <' + get('type') + '>';
+        'Type: <' + get('message-type') + '>';
 }
 

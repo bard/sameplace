@@ -120,13 +120,11 @@
     <!-- BLUEPRINTS -->
 
     <box hidden="true" id="blueprints">
-      <vbox role="conversation" 
-            account="" address="" resource="" type=""
-            flex="1">
-        <browser type="content"
-                 role="chat" src="about:blank" flex="1"
-                 ondragdrop="nsDragAndDrop.drop(event, chatDropObserver)"/>
-      </vbox>
+      <browser type="content"
+               role="conversation"
+               resource="" message-type=""
+               src="about:blank" flex="1"
+               ondragdrop="nsDragAndDrop.drop(event, chatDropObserver)"/>
     </box>
   </vbox>
 </page>
