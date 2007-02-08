@@ -31,9 +31,6 @@ var prefBranch = Cc["@mozilla.org/preferences-service;1"]
     .getService(Ci.nsIPrefService)
     .getBranch('extensions.sameplace.');
 
-var ns_roster   = 'jabber:iq:roster';
-var ns_muc_user = 'http://jabber.org/protocol/muc#user';
-
 
 // GLOBAL STATE
 // ----------------------------------------------------------------------
