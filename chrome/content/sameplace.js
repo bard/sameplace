@@ -311,7 +311,7 @@ function createInteractionPanel(account, address, resource, type,
                         afterLoadAction(contentPanel);
                 });
 
-            contentPanel.contentDocument.location.href = url;
+            contentPanel.loadURI(url);
         }
             
         return contentPanel;
