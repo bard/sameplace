@@ -159,6 +159,10 @@ function hideSidebar() {
     _('sidebar-splitter').hidden = true;    
 }
 
+function getSidebarContent() {
+    return _('sidebar').firstChild.contentWindow;
+}
+
 function log(msg) {
     Cc[ "@mozilla.org/consoleservice;1" ]
         .getService(Ci.nsIConsoleService)
