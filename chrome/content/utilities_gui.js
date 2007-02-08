@@ -110,3 +110,19 @@ function getAncestorAttribute(element, attributeName) {
     }
     return null;
 }
+
+function queuePostLoadAction(contentPanel, action) {
+    contentPanel.addEventListener(
+        'load', function(event) {
+            if(event.target != contentPanel.contentDocument)
+                return;
+
+            // The following appears not to work if reference to
+            // contentPanel is not the one carried by event object.
+            contentPanel = event.currentTarget;
+            contentPanel.contentWindow.addEventListener(
+                'load', function(event) {
+                    action(contentPanel);
+                }, false);
+        }, true);
+}
