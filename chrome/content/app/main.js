@@ -96,22 +96,30 @@ function makeEmoticonRegexp(emoticons) {
 }
 
 function JID(string) {
-    var m = string.match(/^(.+?@)?(.+?)(?:\/|$)(.*$)/);
+    try {
+        var m = string.match(/^(.+?@)?(.+?)(?:\/|$)(.*$)/);
 
-    var jid = {};
+        var jid = {};
 
-    if(m[1])
-        jid.username = m[1].slice(0, -1);
+        if(m[1])
+            jid.username = m[1].slice(0, -1);
 
-    jid.hostname = m[2];
-    jid.resource = m[3];
-    jid.nick     = m[3];
-    jid.full     = m[3] ? string : null;
-    jid.address  = jid.username ?
-        jid.username + '@' + jid.hostname :
-        jid.hostname;
+        jid.hostname = m[2];
+        jid.resource = m[3];
+        jid.nick     = m[3];
+        jid.full     = m[3] ? string : null;
+        jid.address  = jid.username ?
+            jid.username + '@' + jid.hostname :
+            jid.hostname;
 
-    return jid;    
+        return jid;
+    }catch(e){
+        window.alert('Error report: ' + e + '\n' +
+                     'userAddress: ' + userAddress + '\n' +
+                     'contactResource: ' + contactResource + '\n' +
+                     'contactName: ' + contactName + '\n' +
+                     'Stack trace:\n' + e.stack);
+    }
 }
 
 function stripUriFragment(uri) {
