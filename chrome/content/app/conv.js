@@ -101,6 +101,7 @@ conv.htmlDOMToXHTML = function(node) {
     default:
         throw new Error('Unexpected. (' + node.nodeType + ')');
     }
+    return undefined;
 };
 
 /**
@@ -152,6 +153,7 @@ conv.xhtmlToStringTree = function(src, convertFn) {
     default:
         throw new Error('Unexpected. (' + src.nodeKind() + ')');
     }
+    return undefined;
 };
 
 /**
@@ -184,6 +186,7 @@ conv.xhtmlElementToMarkup = function(element) {
             return function(children) { return ['_', children, '_']; }
         break;
     }
+    return undefined;
 };
 
 /**
@@ -205,6 +208,8 @@ conv.xhtmlToText = function(src) {
                 depthFirst(element, fn);
         } else 
             return fn(thing);
+
+        return undefined;
     }
 
     var flatList = [];

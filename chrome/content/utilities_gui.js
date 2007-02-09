@@ -40,6 +40,7 @@ if(typeof(document.evaluate) == 'function') {
                 return 'http://www.w3.org/1999/xhtml';
                 break;
             }
+            return undefined;
         }
 
         return document.evaluate(
@@ -60,6 +61,7 @@ if(typeof(x) == 'function') {
             if(blueprints[i].getAttribute('role') == role)
                 return blueprints[i].cloneNode(true);
         }
+        return undefined;
     }
 }
 

@@ -412,6 +412,7 @@ filter.escapeXML = function(text) {
                             default:
                                 throw new Error('Unexpected. (' + c + ')');
                             }
+                            return undefined;
                         })
 };
 

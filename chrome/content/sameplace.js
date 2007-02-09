@@ -168,6 +168,8 @@ function getDefaultAppUrl() {
 function getBrowser() {
     if(top.getBrowser)
         return top.getBrowser();
+
+    return undefined;
 }
 
 function isConversationOpen(account, address) {
@@ -211,6 +213,7 @@ if(typeof(x) == 'function') {
             if(conversationsForAccount[i].getAttribute('address') == address)
                 return conversationsForAccount[i];
         }
+        return undefined;
     }
 }
 
@@ -346,6 +349,7 @@ function createInteractionPanel(account, address, resource, type,
         throw new Error('Unexpected. (' + target + ')');
         break;
     }
+    return undefined;
 }
 
 function focusCurrentConversation() {

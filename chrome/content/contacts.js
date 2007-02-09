@@ -101,6 +101,7 @@ if(typeof(x) == 'function') {
         for(var i=0; i<addresses.length; i++)
             if(addresses[i].getAttributeNode('account').value == account)
                 return addresses[i];
+        return undefined;
     }
 }
 
