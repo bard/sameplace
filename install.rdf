@@ -39,7 +39,7 @@
     </em:targetApplication>
    
     <em:name>SamePlace</em:name>
-    <em:description>Extensible instant messaging client (Unstable branch)</em:description>
+    <em:description>Extensible instant messaging client</em:description>
     <em:creator>Massimiliano Mirra</em:creator>
     <em:updateURL>http://repo.hyperstruct.net/sameplace/unstable/update.rdf</em:updateURL>
     <em:homepageURL>http://dev.hyperstruct.net/xmpp4moz</em:homepageURL>
