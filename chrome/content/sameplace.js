@@ -133,7 +133,8 @@ function init(event) {
 function finish() {
     for(var conversation, i=0; conversation = _('conversations').childNodes[i]; i++)
         closeConversation(
-            attr(conversation, 'account'), attr(conversation, 'address'));
+            conversation.getAttribute('account'),
+            conversation.getAttribute('address'));
 
     channel.release();
 }
