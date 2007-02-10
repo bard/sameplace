@@ -184,21 +184,6 @@ function getCurrentConversation() {
     return _('conversations').selectedPanel;
 }
 
-function withConversation(account, address, resource, type, forceOpen, action) {
-    var conversation = getConversation(account, address);
-
-    if(!conversation && forceOpen)
-        interactWith(
-            account, address, resource, type,
-            getDefaultAppUrl(), 'main',
-            function(contentPanel) {
-                action(contentPanel);
-                openedConversation(account, address, type);
-            });
-    else
-        action(conversation.contentDocument);
-}
-
 if(typeof(x) == 'function') {
     function getConversation(account, address) {    
         return x('//*[@id="conversations"]' +
@@ -206,7 +191,7 @@ if(typeof(x) == 'function') {
                  '    @address="' + address + '"]');
     }
 } else {
-    function getConversation(account, address){
+    function getConversation(account, address) {
         var conversationsForAccount =
             _('conversations').getElementsByAttribute('account', account);
         for(var i=0; i<conversationsForAccount.length; i++){
@@ -398,14 +383,18 @@ function promptOpenConversation(account, address, type, nick) {
     if(request.confirm)
         if(request.type == 'groupchat')
             joinRoom(request.account, request.address, request.nick);
-        else           
+        else
+            // XXX consider having interactWith accomplish the first
+            // if clause by itself, i.e. bring the interaction (if
+            // already open) in the background when it is called.
             if(isConversationOpen(request.account, request.address))
                 focusConversation(request.account, request.address);
             else
-                withConversation(
-                    request.account, request.address, null, 'chat', true, 
-                    function() {
+                interactWith(
+                    request.account, request.address, null, request.type,
+                    getDefaultAppUrl(), 'main', function(conversation) {
                         focusConversation(request.account, request.address);
+                        openedConversation(request.account, request.address);
                     });
 }
 
@@ -441,15 +430,20 @@ var chatDropObserver = {
 };
 
 function requestedCommunicate(account, address, type, url) {
-    if(url == getDefaultAppUrl()) {
-        if(type == 'groupchat' && !isConversationOpen(account, address))        
-            promptOpenConversation(account, address, type);
+    if(url == getDefaultAppUrl())
+        if(isConversationOpen(account, address))
+            focusConversation(account, address);
         else 
-            withConversation(
-                account, address, null, type, true, function() {
-                    focusConversation(account, address);
-                });
-    } else
+            if(type == 'groupchat') 
+                promptOpenConversation(account, address, type);
+            else
+                interactWith(
+                    account, address, null, type,
+                    url, 'main', function(conversation) {
+                        focusConversation(account, address);
+                        openedConversation(account, address, type);
+                    });
+    else
         interactWith(
             account, address, null, type,
             url, 'additional');
