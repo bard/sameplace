@@ -149,7 +149,6 @@
     <spacer role="away"/>
     <spacer role="dnd"/>
     <label role="offline" value="Offline"/>
-    <spacer role="offline"/>
   </vbox>
 
   <box hidden="true" id="blueprints">

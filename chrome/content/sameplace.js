@@ -265,10 +265,14 @@ function changeStatusMessage(message) {
 
 function interactWith(account, address, resource, type,
                       where, target, afterLoadAction) {
-    if(typeof(where) == 'string') 
+    if(typeof(where) == 'string')
         // "where" is a url
-        createInteractionPanel(account, address, resource, type,
-                               where, target, afterLoadAction);
+        if(isConversationOpen(account, address)) {
+            focusConversation(account, address);
+            afterLoadAction(getConversation(account, address));
+        } else
+            createInteractionPanel(account, address, resource, type,
+                                   where, target, afterLoadAction);
     else
         // "where" is a content panel
         XMPP.enableContentDocument(where, account, address, type);
@@ -384,18 +388,12 @@ function promptOpenConversation(account, address, type, nick) {
         if(request.type == 'groupchat')
             joinRoom(request.account, request.address, request.nick);
         else
-            // XXX consider having interactWith accomplish the first
-            // if clause by itself, i.e. bring the interaction (if
-            // already open) in the background when it is called.
-            if(isConversationOpen(request.account, request.address))
-                focusConversation(request.account, request.address);
-            else
-                interactWith(
-                    request.account, request.address, null, request.type,
-                    getDefaultAppUrl(), 'main', function(conversation) {
-                        focusConversation(request.account, request.address);
-                        openedConversation(request.account, request.address);
-                    });
+            interactWith(
+                request.account, request.address, null, request.type,
+                getDefaultAppUrl(), 'main', function(conversation) {
+                    focusConversation(request.account, request.address);
+                    openedConversation(request.account, request.address);
+                });
 }
 
 
@@ -431,18 +429,15 @@ var chatDropObserver = {
 
 function requestedCommunicate(account, address, type, url) {
     if(url == getDefaultAppUrl())
-        if(isConversationOpen(account, address))
-            focusConversation(account, address);
-        else 
-            if(type == 'groupchat') 
-                promptOpenConversation(account, address, type);
-            else
-                interactWith(
-                    account, address, null, type,
-                    url, 'main', function(conversation) {
-                        focusConversation(account, address);
-                        openedConversation(account, address, type);
-                    });
+        if(type == 'groupchat' && isConversationOpen(account, adrress)) 
+            promptOpenConversation(account, address, type);
+        else
+            interactWith(
+                account, address, null, type,
+                url, 'main', function(conversation) {
+                    focusConversation(account, address);
+                    openedConversation(account, address, type);
+                });
     else
         interactWith(
             account, address, null, type,

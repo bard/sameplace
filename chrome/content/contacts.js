@@ -199,11 +199,18 @@ function _reposition(contact) {
     fadeIn(contact);
 }
 
+// XXX now actually asserting an interaction that might be already
+// happening.  interactingWith() might be a better name.  Also
+// there might be some overlap with nowTalkingWith().
+
 function startedConversationWith(account, address, type) {
     var contact = get(account, address) || add(account, address);
-    contact.setAttribute('open', 'true');
     contact.setAttribute('type', type);
-    _reposition(contact);
+
+    if(getContactPosition(contact) != 'open') {
+        contact.setAttribute('open', 'true');
+        _reposition(contact);
+    }
 }
 
 function stoppedConversationWith(account, address) {
@@ -295,6 +302,28 @@ function receivedMUCPresence(presence) {
         from.address,
         from.resource,
         presence.stanza.@type);
+}
+
+
+// GUI ACTIONS
+// ----------------------------------------------------------------------
+
+function getContactPosition(contact) {
+    var previousElement = contact.previousSibling;
+    while(previousElement) {
+        // XXX Hackish.  These are not "roles"... "status" would be
+        // more appropriate.
+        
+        if(previousElement.nodeName == 'label' ||
+           previousElement.nodeName == 'spacer') {
+            var role = previousElement.getAttribute('role');
+            if(['open', 'online', 'away', 'dnd', 'offline'].indexOf(role) != -1)
+                return role;
+        }
+        
+        previousElement = previousElement.previousSibling;
+    }
+    return undefined;        
 }
 
 
