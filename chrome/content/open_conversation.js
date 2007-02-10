@@ -47,6 +47,15 @@ function init() {
     else
         _('address').select();
 
+    xmpp.ui.refreshAccounts(_('xmpp-popup-accounts'));
+
+    for each(var account in XMPP.accounts) {
+        if(XMPP.isUp(account.jid)) {
+            _('account').value = account.jid;
+            break;
+        }
+    }
+
     refresh();
 }
 
@@ -87,17 +96,4 @@ function refresh() {
 
 function _(id) {
     return document.getElementById(id);
-}
-
-
-// HOOKS
-// ----------------------------------------------------------------------
-
-xmpp.ui.loadedAccounts = function() {
-    for each(var account in XMPP.accounts) {
-        if(XMPP.isUp(account.jid)) {
-            _('account').value = account.jid;
-            break;
-        }
-    }
 }

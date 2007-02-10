@@ -38,6 +38,16 @@ var request;
 function init() {
     request = window.arguments[0];
     _('address').select();
+
+    xmpp.ui.refreshAccounts(_('xmpp-popup-accounts'));
+
+    for each(var account in XMPP.accounts) {
+        if(XMPP.isUp(account.jid)) {
+            _('account').value = account.jid;
+            break;
+        }
+    }
+
     refresh();
 }
 
@@ -48,7 +58,7 @@ function init() {
 function doOk() {
     request.contactAddress = _('address').value;
     request.subscribeToPresence = _('subscribe').checked;
-    request.account = _('accounts').value;
+    request.account = _('account').value;
     request.confirm = true;
     return true;
 }
@@ -70,21 +80,8 @@ function _(id) {
 // ----------------------------------------------------------------------
 
 function refresh() {
-    if(_('accounts').value && _('address').value)
+    if(_('account').value && _('address').value)
         _('main').getButton('accept').disabled = false;
     else
         _('main').getButton('accept').disabled = true;
-}
-
-
-// HOOKS
-// ----------------------------------------------------------------------
-
-xmpp.ui.loadedAccounts = function() {
-    for each(var account in XMPP.accounts) {
-        if(XMPP.isUp(account.jid)) {
-            _('accounts').value = account.jid;
-            break;
-        }
-    }
 }
