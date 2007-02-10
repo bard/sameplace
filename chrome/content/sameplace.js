@@ -342,7 +342,7 @@ function createInteractionPanel(account, address, resource, type,
 }
 
 function focusCurrentConversation() {
-    var conversation = getCurrentConversation2();
+    var conversation = getCurrentConversation();
 
     if(conversation) {
         conversation.contentWindow.focus();
