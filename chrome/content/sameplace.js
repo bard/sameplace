@@ -344,8 +344,10 @@ function createInteractionPanel(account, address, resource, type,
 function focusCurrentConversation() {
     var conversation = getCurrentConversation();
 
-    if(conversation) 
+    if(conversation) {
         conversation.contentWindow.focus();
+        document.commandDispatcher.advanceFocus(); //XXX maybe not needed
+    }
 }
 
 function focusConversation(account, address) {
@@ -355,6 +357,7 @@ function focusConversation(account, address) {
         _('conversations').selectedPanel = conversation;
         focusedConversation(account, address);
         conversation.contentWindow.focus();
+        document.commandDispatcher.advanceFocus();
     }
 }
 
