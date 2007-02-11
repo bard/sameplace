@@ -429,7 +429,7 @@ var chatDropObserver = {
 
 function requestedCommunicate(account, address, type, url) {
     if(url == getDefaultAppUrl())
-        if(type == 'groupchat' && isConversationOpen(account, adrress)) 
+        if(type == 'groupchat' && isConversationOpen(account, address)) 
             promptOpenConversation(account, address, type);
         else
             interactWith(
