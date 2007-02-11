@@ -309,16 +309,6 @@ function createInteractionPanel(account, address, resource, type,
         conversation.setAttribute('resource', resource);
         conversation.setAttribute('message-type', type);
 
-        // XMPP.enableContentDocument will set this as well, but if
-        // several messages arrive in a flurry (is when we come online
-        // and the server sends in those messages that were addressed
-        // to us while we were offline) we will need to identify the
-        // newly created panel *before* XMPP.enableContentDocument has
-        // a chance to do its work.
-        
-        conversation.setAttribute('account', account);
-        conversation.setAttribute('address', address);
-        
         conversation.addEventListener(
             'click', function(event) {
                 clickedElementInConversation(event);
@@ -331,7 +321,16 @@ function createInteractionPanel(account, address, resource, type,
                     afterLoadAction(conversation);
             });
 
-        conversation.contentDocument.location.href = url;
+        // XMPP.enableContentDocument will set account and address as
+        // well, but if several messages arrive in a flurry (as when
+        // we come online and the server sends in those messages that
+        // were addressed to us while we were offline) we will need to
+        // identify the newly created panel *before*
+        // XMPP.enableContentDocument has a chance to do its work.
+        
+        conversation.setAttribute('account', account);
+        conversation.setAttribute('address', address);        
+        conversation.setAttribute('src', url);
         return conversation;
         break;
 
