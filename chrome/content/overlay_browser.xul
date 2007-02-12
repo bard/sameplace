@@ -45,10 +45,12 @@
              label="Run Account Wizard..."
              oncommand="sameplace.runWizard();"
              accesskey="W"/>
-    <command id="sameplace-command-open-window"
-             label="SamePlace (window)"
+    <command id="sameplace-command-open-standalone"
+             label="Open Standalone"
              accesskey="S"
-             oncommand="window.open('chrome://sameplace/content/sameplace.xul', 'sameplace', 'chrome');"/>
+             oncommand="window.open(
+                        'chrome://sameplace/content/standalone/contacts.xul',
+                        'SamePlace:Contacts', 'chrome,toolbar=no');"/>
     <command id="sameplace-command-load-sidebar-force"
              oncommand="sameplace.loadSidebar(true);"/>
     <command id="sameplace-command-import-contacts"
@@ -78,6 +80,8 @@
         <menuitem command="sameplace-command-import-contacts"
                   class="menuitem-iconic"/>
         <menuitem command="sameplace-command-run-wizard"
+                  class="menuitem-iconic"/>
+        <menuitem command="sameplace-command-open-standalone"
                   class="menuitem-iconic"/>
       </menupopup>      
     </menu>

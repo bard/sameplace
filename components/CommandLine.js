@@ -29,8 +29,8 @@ const Handler = {
             .getService(Ci.nsIWindowWatcher);
             
             windowWatcher.openWindow(
-                null, 'chrome://sameplace/content/sameplace.xul',
-                'sameplace', 'chrome', null)
+                null, 'chrome://sameplace/content/standalone/contacts.xul',
+                'SamePlace:Contacts', 'chrome,toolbar=no', null)
 
             cmdLine.preventDefault = true;
         }

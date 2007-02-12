@@ -1,0 +1,272 @@
+/**********************************************************************
+This css files specifies the images for everything in the main
+application window.
+
+For colors, see mainwin_colors.css.  For size and positioning, see
+mainwin_layout.css.
+
+All other styles affecting the elements below are found in
+sameplace.css.
+**********************************************************************/
+
+
+/**********************************************************************
+SCROLLBARS
+**********************************************************************/
+
+scrollbar {   
+  background-image: none !important;
+}
+scrollbar > scrollbarbutton[sbattr="scrollbar-up-top"],  
+scrollbar > scrollbarbutton[sbattr="scrollbar-up-bottom"] {   
+  background-image: url(default/chrome_scroll_up.png) !important;
+} 
+scrollbar > scrollbarbutton[sbattr="scrollbar-down-top"],  
+scrollbar > scrollbarbutton[sbattr="scrollbar-down-bottom"] {   
+  background-image: url(default/chrome_scroll_down.png) !important;
+} 
+
+
+/**********************************************************************
+THE WINDOW CHROME
+**********************************************************************/
+
+#layout-content, /* added */
+#mainwin_chrome_bkgd,
+#mainwin_chrome_e,
+#mainwin_chrome_w {
+  background-image: url(default/chrm_bkgd.png) !important; /** <img src="chrm_bkgd.png"> */
+  background-repeat: repeat-x !important;  
+}
+
+/** chrm_n.png is offset by 9 pixels to make up for the 8px height of the top frame */
+#mainwin_chrome_nw,
+#mainwin_chrome_n,
+#mainwin_chrome_ne {
+  background-image: url(default/chrm_n.png) !important; /** <img src="chrm_n.png"> */
+  background-repeat: repeat-x !important;   
+}
+
+
+/**********************************************************************
+#chrome_se, #chrome_s, #chrome_sw are not in use
+**********************************************************************/
+
+/**********************************************************************
+CHROME - Top Bar
+Minimize, Maximize, Restore, and Switch to Mini-Mode
+**********************************************************************/
+
+#app_icon {
+  background-image: url(default/app_close.png) !important;
+}
+
+#sysbtn_close {
+  background-image: url(default/sysbtn_close_9x9.png) !important; /** <img src="defaultsysbtn_close_9x9.png"> */
+}
+
+#sysbtn_maximize hbox,
+#sysbtn_maximize { 
+  background-image: none !important;
+  list-style-image: none !important;
+}
+
+#sysbtn_maximize > hbox > image,
+#sysbtn_maximize > hbox > label,
+#sysbtn_maximize > hbox {
+  background-image: none !important;
+  list-style-image: none !important;
+}
+
+#sysbtn_maximize .checkbox-check {
+  list-style-image: none !important;
+  background-image: url(default/sysbtn_maximize_9x9.png) !important; 
+}
+
+#sysbtn_maximize[checked="true"] .checkbox-check /* Restore */ {
+  list-style-image: none !important;
+  background-image: url(default/sysbtn_restore_9x9.png) !important;
+}
+
+#sysbtn_minimize {
+  background-image: url(default/sysbtn_minimize_9x9.png) !important;  
+}
+
+#sysbtn_minimode {
+  background-image: url(default/sysbtn_minimode_9x9.png) !important; 
+}
+
+#sysbtn_hide {
+  background-image: url(default/sysbtn_hide_9x9.png) !important;
+}
+
+
+/**********************************************************************
+MAC OSX SPECIFIC CHROME - Top Bar
+Minimize, Maximize, Restore, and Switch to Mini-Mode
+**********************************************************************/
+
+
+.mac > #sysbtn_maximize hbox,
+.mac > #sysbtn_maximize { 
+  background-image: none !important;
+  list-style-image: none !important;
+}
+
+.mac > #sysbtn_maximize > hbox > image,
+.mac > #sysbtn_maximize > hbox > label,
+.mac > #sysbtn_maximize > hbox {
+  background-image: none !important;
+  list-style-image: none !important;
+}
+
+.mac > #sysbtn_maximize .checkbox-check {
+  list-style-image: none !important;
+  background-image: url(default/sysbtn_max_normal_15x15mac.png) !important; 
+}
+
+.mac > #sysbtn_maximize[checked="true"] .checkbox-check /* Restore */ {
+  list-style-image: none !important;
+  background-image: url(default/sysbtn_max_normal_15x15mac.png) !important;
+}
+
+.mac > #sysbtn_maximize:hover .checkbox-check {
+  list-style-image: none !important;	
+  background-image: url(default/sysbtn_max_hover_15x15mac.png) !important;
+}
+.mac > #sysbtn_maximize:active .checkbox-check {
+  list-style-image: none !important;	
+  background-image: url(default/sysbtn_max_active_15x15mac.png) !important;
+}
+.mac > #sysbtn_maximize .checkbox-check[disabled="true"] {
+  list-style-image: none !important;	
+  background-image: url(default/sysbtn_max_disabled_15x15mac.png) !important;
+}
+
+
+.mac > #sysbtn_minimize {
+  background-image: url(default/sysbtn_min_normal_15x15mac.png) !important;  
+}
+.mac > #sysbtn_minimize:hover {
+  background-image: url(default/sysbtn_min_hover_15x15mac.png) !important;
+}
+.mac > #sysbtn_minimize:active {
+  background-image: url(default/sysbtn_min_active_15x15mac.png) !important;
+}
+.mac > #sysbtn_minimize[disabled="true"] {
+  background-image: url(default/sysbtn_min_disabled_15x15mac.png) !important;
+}
+
+.mac > #sysbtn_close {
+  background-image: url(default/sysbtn_cl_normal_15x15mac.png) !important;
+}
+.mac > #sysbtn_close:hover {
+  background-image: url(default/sysbtn_cl_hover_15x15mac.png) !important;
+}
+.mac > #sysbtn_close:active {
+  background-image: url(default/sysbtn_cl_active_15x15mac.png) !important;
+}
+.mac > #sysbtn_close[disabled="true"] {
+  background-image: url(default/sysbtn_cl_disabled_15x15mac.png) !important;
+}
+
+.mac > #sysbtn_minimode {
+  background-image: url(default/sysbtn_mini_normal_25x15mac.png) !important;  
+}
+.mac > #sysbtn_minimode:hover {
+  background-image: url(default/sysbtn_mini_hover_25x15mac.png) !important;
+}
+.mac > #sysbtn_minimode:active {
+  background-image: url(default/sysbtn_mini_active_25x15mac.png) !important;
+}
+.mac > #sysbtn_minimode[disabled="true"] {
+  background-image: url(default/sysbtn_mini_disabled_15x15mac.png) !important;
+}
+/* END CHROME **/
+
+/**********************************************************************
+SERVICE PANE
+**********************************************************************/
+
+/* Twisty and Shouty **/
+#frame_service_tree > treechildren::-moz-tree-twisty( open ) {
+  list-style-image: url(default/twisty_open.png) !important;
+}
+
+#frame_service_tree > treechildren::-moz-tree-twisty( closed ) {
+  list-style-image: url(default/twisty_closed.png) !important;
+}
+
+/* Service Pane Icons **/
+#frame_service_tree > treechildren::-moz-tree-image( playlist ) {
+  list-style-image: url(default/icon_playlist_16x16.png) !important;
+}
+
+#frame_service_tree > treechildren::-moz-tree-image( playlist smart ) {
+  list-style-image: url(default/icon_smplaylist_16x16.png) !important;
+}
+
+#frame_service_tree > treechildren::-moz-tree-image( playlist dynamic ) {
+  list-style-image: url(default/icon_dynplaylist_16x16.png) !important;
+}
+
+#frame_service_tree > treechildren::-moz-tree-image( playlist download ) {
+  list-style-image: url(default/icon_downloads_16x16.png) !important;
+}
+
+#frame_service_tree > treechildren::-moz-tree-image( playlist webplaylist ) {
+  list-style-image: url(default/icon_webplaylist_16x16.png) !important;
+}
+
+/** Bind images to the button and button-popup on the Service Pane */
+/** NOTE: IDs containing periods are bad.. */
+clickholdbutton[id="file.new"] {
+  list-style-image: url(default/icon_playlist_16x16.png) !important;
+}
+
+.menuitem-iconic[id="file.new"]  {
+  list-style-image: url(default/icon_playlist_16x16.png) !important;
+}
+
+.menuitem-iconic[id="file.smart"] {
+  list-style-image: url(default/icon_smplaylist_16x16.png) !important;
+}
+
+.menuitem-iconic[id="file.remote"]{
+  list-style-image: url(default/icon_dynplaylist_16x16.png) !important;
+}
+
+
+
+
+/* END SERVICE PANE **/
+
+
+/**********************************************************************
+RESIZERS
+**********************************************************************/
+#frame_resize_t {  
+  background-image: none !important;
+  list-style-image: none !important;
+}
+
+#frame_resize_to {  
+  background-image: none !important;
+  list-style-image: none !important;
+}
+
+#frame_resize_m {
+  background-image: none !important;
+  list-style-image: none !important;
+}
+
+#frame_resize_mo {  
+  background-image: none !important;
+  list-style-image: none !important;
+}
+
+#resize {
+  background-image: none !important;
+  list-style-image: none !important;
+}
+

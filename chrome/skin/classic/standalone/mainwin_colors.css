@@ -1,0 +1,254 @@
+/**********************************************************************
+MAINWIN COLORS
+**********************************************************************/
+
+.mainwin {
+  background-color: #000 !important; /* color of the Main Window **/
+}
+
+#layout-content, /* added */
+.chrome_iframe_bkgd,
+#mainwin_chrome_bkgd {
+  background-color: #000 !important; /* color of the Main Window **/
+}
+
+#mainwin_chrome_nw {
+  -moz-border-top-colors: #7a7c7c #ccc !important;
+  -moz-border-left-colors: #686a6a #ccc !important;
+  background-color: #000 !important;
+}
+#mainwin_chrome_n {
+  -moz-border-top-colors: #7a7c7c #ccc !important;
+  background-color: #000 !important;
+}
+#mainwin_chrome_ne {
+  -moz-border-top-colors: #7a7c7c #ccc !important;
+  -moz-border-right-colors: #505154 #999 !important;
+  background-color: #000 !important;
+}
+#mainwin_chrome_e {
+  -moz-border-right-colors: #505154 #999 !important;
+  background-color: #000 !important;
+}
+#mainwin_chrome_se {
+  -moz-border-bottom-colors: #666 #999 !important;
+  -moz-border-right-colors: #505154 #999 !important;
+  background-color: #000 !important;
+}
+
+#mainwin_chrome_s {
+  -moz-border-bottom-colors: #666 #999 !important;
+  background-color: #000 !important;
+}
+#mainwin_chrome_w {
+  -moz-border-left-colors: #686a6a #ccc !important;
+  background-color: #000 !important;
+}
+#mainwin_chrome_sw {
+  -moz-border-bottom-colors: #666 #999 !important;
+  -moz-border-left-colors: #686a6a #ccc !important;
+  background-color: #000 !important;
+}
+
+
+
+/**********************************************************************
+CHROME - Top Bar
+Minimize, Maximize, Restore, and Switch to Mini-Mode
+**********************************************************************/
+
+#mainwin_app_title,
+#video_window_title {
+  color: #FFF !important;
+}
+
+#sysbtn_close,
+#sysbtn_maximize hbox,
+#sysbtn_maximize,
+#sysbtn_maximize > hbox > image,
+#sysbtn_maximize > hbox > label,
+#sysbtn_maximize > hbox,
+#sysbtn_maximize > image,
+#sysbtn_maximize[checked="true"] > image, /* Restore */
+#sysbtn_minimize,
+#sysbtn_minimode,
+#sysbtn_hide {
+  background-color: transparent !important;
+}
+/* END CHROME **/
+
+/**********************************************************************
+SCROLLBARS
+**********************************************************************/
+
+scrollbar {   
+  background-color: #000 !important;
+  background-image: none !important; 
+} 
+
+scrollbar > scrollbarbutton[sbattr="scrollbar-up-top"],  
+scrollbar > scrollbarbutton[sbattr="scrollbar-up-bottom"],
+scrollbar > scrollbarbutton[sbattr="scrollbar-down-top"],  
+scrollbar > scrollbarbutton[sbattr="scrollbar-down-bottom"] {   
+  -moz-border-top-colors: #666 #333 !important;
+  -moz-border-right-colors: #333 #000 !important;
+  -moz-border-bottom-colors: #333 #000 !important;
+  -moz-border-left-colors: #666 #333 !important;
+  border: 2px solid !important; 
+  background-color: #343d42 !important;  
+  background-position: center center !important; 
+} 
+
+scrollbar > scrollbarbutton:active,
+scrollbar > slider > thumb:active {   	
+  -moz-border-top-colors: #333 #000 !important;
+  -moz-border-right-colors: #666 #333 !important;
+  -moz-border-bottom-colors: #666 #333 !important;
+  -moz-border-left-colors: #333 #000 !important;
+} 
+ 
+scrollbar > slider > thumb > gripper {   
+  background-color: transparent !important; 
+} 
+
+scrollbar > slider > thumb {   
+  -moz-border-top-colors: #666 #333 !important;
+  -moz-border-right-colors: #333 #000 !important;
+  -moz-border-bottom-colors: #333 #000 !important;
+  -moz-border-left-colors: #666 #333 !important;
+  border: 2px solid !important; 
+  background-color: #343d42 !important;
+} 
+
+scrollbar > slider {   
+  background-color: #000 !important;
+} 
+
+/* END SCROLLBARS **/
+
+
+/**********************************************************************
+THE TOOLBAR
+The Toolbar is a way for a user to discover pertinent contextual menu 
+features without having to know how to right-click.  You'll see styles
+for both the toolbar buttons and the corresponding entries in the 
+contextual menu.
+**********************************************************************/
+
+/* the generic style for all playlist toolbarbuttons */
+button[class="sb_faceplate"][disabled="true"],
+button[class="sb_faceplate"][disabled="true"]:active,
+button[class="sb_faceplate"][disabled="true"]:hover {
+  -moz-border-top-colors: #000 !important;
+  -moz-border-left-colors: #000 !important;
+  -moz-border-bottom-colors: #000 !important;
+  -moz-border-right-colors: #000 !important;
+  background-color: #000 !important;
+  color: #333 !important;
+}
+
+button[class="sb_faceplate"][disabled="false"] {  
+  background-color: #333 !important;
+  color: #99A195 !important;  
+}
+
+button[class="sb_faceplate"] {
+  -moz-border-top-colors: #333 !important;
+  -moz-border-left-colors: #333 !important;
+  -moz-border-bottom-colors: #333 !important;
+  -moz-border-right-colors: #333 !important;
+  background-color: #333 !important;
+  color: #99A195 !important;
+  background-image: none !important; /* added */
+}
+
+.button-box { /* added for compatibility with ifox-smooth (and others) */
+    background-image: none;
+    padding: 0;
+}
+
+button[class="sb_faceplate"]:hover {
+  -moz-border-top-colors: #99A195 !important;
+  -moz-border-left-colors: #99A195 !important;
+  -moz-border-bottom-colors: #535751 !important;
+  -moz-border-right-colors: #535751 !important;
+  color: #FFF !important;  
+}
+
+button[class="sb_faceplate"]:active {
+  -moz-border-top-colors: #535751 !important;
+  -moz-border-left-colors: #535751 !important;
+  -moz-border-bottom-colors: #99A195 !important;
+  -moz-border-right-colors: #99A195 !important;
+}
+
+menuitem[disabled="true"],
+menuitem[disabled="true"]:hover {
+  color: #99A195 !important;
+}
+menuitem {
+  color: #FFF !important;  
+}
+menuitem:hover {
+  color: #505154 !important;
+}
+
+
+
+/**********************************************************************
+TOOLTIPS
+**********************************************************************/
+
+tooltip {  
+  background-color: #EEE !important;
+  color: #333 !important;   
+}
+
+/**********************************************************************
+WEB BAR
+Browser Toolbar, Address Box, and Url-Slurper Button
+**********************************************************************/
+
+/* the box with the url image and the url textbox */
+#browser_url_box {
+  border: 2px solid !important;
+  -moz-border-top-colors: #535751 #333 !important;
+  -moz-border-left-colors: #535751 #333 !important;
+  -moz-border-right-colors: #99A195 #333 !important;
+  -moz-border-bottom-colors: #99A195 #333 !important;
+  background-color: #000 !important; 
+  color: #FFF !important;
+}
+
+#browser_url_box:focus {
+  background-color: #99A195 !important;
+}
+
+#browser_url_image {
+  background-color: transparent !important;
+}
+
+#browser_url,
+#contact {
+  background-color: transparent !important;
+  color: #FFF !important;  
+}
+
+#browser_url input:focus,
+#contact input:focus, {
+  background-color: #99A195 !important;
+  color: #FFF !important;
+}
+
+#browser_url input[selected="true"],
+#contact input[selected="true"] {
+  background-color: #F00 !important;
+  color: #FFF !important;
+}
+
+#browser_toolbar {
+  border-bottom: 1px solid #808583 !important; 
+  background-color: transparent !important;
+}
+
+/* END WEB BAR */

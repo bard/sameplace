@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <vbox id="layout-content" class="sb_faceplate" flex="1">
+
+    <script type="application/x-javascript" src="chrome://xmpp4moz/content/xmpp.js"/>
+    <script type="application/x-javascript" src="../namespaces.js"/>    
+    <script type="application/x-javascript" src="../utilities.js"/>
+    <script type="application/x-javascript" src="../utilities_gui.js"/>
+    <script type="application/x-javascript" src="../behaviours/autocomplete.js"/>
+    <script type="application/x-javascript" src="conversations.js"/>
+
+    <popupset>
+      <popup id="contact-completions"/>      
+    </popupset>
+
+    <commandset>
+      <command id="command-close-current"
+               label="Close Current"
+               accesskey="C"
+               oncommand="requestedCloseCurrentConversation();"/>
+      <command id="command-close-all"
+               label="Close All"
+               accesskey="A"
+               oncommand="requestedCloseAllConversations();"/>
+      <command id="command-toggle-attach-contacts"
+               label="Contact list follows conversations"
+               accesskey="A"
+               checked="false"
+               oncommand="toggleAttachContacts();"/>
+    </commandset>
+    
+    <!-- WINDOW TITLE BAR -->
+
+    <hbox id="sameplace_top" class="sb_faceplate" >
+      <image id="app_icon" ondblclick="close();"/>
+      <label id="mainwin_app_title" value="SamePlace" class="sb_faceplate"/>
+
+      <spacer width="5"/>
+
+      <!-- MENU -->
+
+      <menubar id="sameplace_menu" class="sb_faceplate">
+        <menu id="menu-interaction" label="Conversation"
+              class="sb_faceplate" accesskey="C">
+          <menupopup>
+            <menuitem command="command-close-current"/>
+            <menuitem command="command-close-all"/>
+          </menupopup>
+        </menu>
+
+        <menu id="menu-view" label="View"
+              class="sb_faceplate" accesskey="V"
+              onpopupshowing="refreshViewMenu();">
+          <menupopup id="view-popup">
+            <menuitem command="command-toggle-attach-contacts"
+                      type="checkbox"/>
+          </menupopup>
+        </menu>
+      </menubar>
+
+      <!-- DRAGGABLE AREA -->
+
+      <spacer flex="1" dragwindow="true"/>
+
+      <!-- CLOSE/MAXIMIZE/ETC. WIDGETS -->
+
+      <button id="sysbtn_minimize" class="sb_faceplate"
+              oncommand="requestedMinimize();"
+              tooltiptext="tooltip.minimize;"/>
+      <spacer width="5"/>
+      <checkbox id="sysbtn_maximize" class="sb_faceplate"
+                oncommand="requestedToggleMaximize();"
+                tooltiptext="tooltip.maximize;"/>
+      <spacer width="5"/>
+      <button id="sysbtn_close" class="sb_faceplate"
+              oncommand="requestedClose();"/>
+    </hbox>
+
+    <!-- TOOLBOX -->
+
+    <hbox id="contact-toolbox" class="sb_faceplate" align="center">
+      <hbox class="sb_faceplate" id="browser_url_box" flex="6" align="center">
+        <image id="browser_url_image" class="sb_faceplate, mainwin_location" src="" hidden="true"/>
+        <label value="Contact:" accesskey="a"
+               control="contact"
+               class="sb_faceplate"
+               style="color: white;"/>
+        <textbox id="contact"
+                 class="sb_faceplate, mainwin_location"
+                 flex="1"
+                 onfocus="this.select();"
+                 onkeypress="pressedKeyInContactField(event);"/>
+      </hbox>
+      <button role="attach"
+              tooltip="attach-tooltip"
+              label="Attach"
+              count="0"
+              hidden="true"
+              oncommand="requestedAttachBrowser(getCurrentConversation());"
+              class="sb_faceplate"/>
+      <button role="close"
+              label="Close"
+              tooltiptext="Close this conversation"
+              hidden="true"
+              oncommand="requestedCloseConversation(getCurrentConversation());"
+              class="sb_faceplate"/>
+    </hbox>
+
+    <!-- CONVERSATIONS -->
+
+    <tabbox flex="1">
+      <tabs id="conversation-tabs" closebutton="true"/>
+      <tabpanels id="conversations" flex="1"
+                 onselect="focusedConversation(
+                           this.selectedPanel.firstChild.getAttribute('account'),
+                           this.selectedPanel.firstChild.getAttribute('address'));"/>
+    </tabbox>
+
+    <!-- BLUEPRINTS -->
+
+    <box hidden="true" id="blueprints">
+      <browser type="content"
+               role="conversation"
+               resource="" message-type=""
+               src="about:blank" flex="1"
+               ondragdrop="nsDragAndDrop.drop(event, chatDropObserver)"/>
+    </box>
+  </vbox>
+</overlay>

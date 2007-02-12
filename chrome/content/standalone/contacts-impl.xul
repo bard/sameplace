@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://xmpp4moz/skin/toolbar-button.css" type="text/css"?>
+<?xul-overlay href="chrome://xmpp4moz/content/ui/accounts.xul"?>
+
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+  <script type="application/x-javascript" src="chrome://xmpp4moz/content/xmpp.js"/>
+  <script type="application/x-javascript" src="contacts.js"/>
+
+  <vbox id="layout-content" class="sb_faceplate" flex="1"
+        dragwindow="true">
+
+    <commandset>
+      <command id="command-quit"
+               label="Quit"
+               accesskey="Q"
+               oncommand="quit();"/>
+      <command id="command-add-contact"
+               label="Add"
+               oncommand="requestedAddContact();"
+               tooltiptext="Add a contact to your contact list"
+               accesskey="A"/>
+    </commandset>
+
+    <!-- WINDOW TITLE BAR -->
+
+    <hbox id="sameplace_top" class="sb_faceplate" >
+      <image id="app_icon" ondblclick="requestedClose();"/>
+      <label id="mainwin_app_title" value="SamePlace" class="sb_faceplate"/>
+
+      <spacer width="5"/>
+
+      <!-- MENU -->
+
+      <menubar id="sameplace_menu"
+               class="sb_faceplate">
+        <menu label="Account" class="sb_faceplate"
+              accesskey="A"
+              oncommand="selectedAccount(event);">
+          <menupopup id="xmpp-popup-accounts">
+            <menuseparator/>
+            <menuitem command="command-quit"
+                      class="menuitem-iconic"/>
+          </menupopup>
+        </menu>
+
+        <menu id="sameplace_menu_item"
+              label="Contact" class="sb_faceplate"
+              accesskey="C">
+          <menupopup>
+            <menuitem command="command-add-contact"
+                      class="menuitem-iconic"/>
+          </menupopup>
+        </menu>
+      </menubar>
+
+      <!-- DRAGGABLE AREA -->
+
+      <spacer flex="1" dragwindow="true"/>
+
+      <!-- CLOSE/MAXIMIZE/ETC. WIDGETS -->
+
+      <button id="sysbtn_minimize" class="sb_faceplate"
+              oncommand="requestedMinimize();"
+              tooltiptext="tooltip.minimize;"/>
+      <spacer width="5"/>
+      <checkbox id="sysbtn_maximize" class="sb_faceplate"
+                oncommand="requestedToggleMaximize();"
+                tooltiptext="tooltip.maximize;"/>
+      <spacer width="5"/>
+      <button id="sysbtn_close" class="sb_faceplate"
+              oncommand="requestedClose();"/>
+    </hbox>
+
+    <iframe id="contacts" flex="1" src="chrome://sameplace/content/contacts.xul"
+            style="margin: 4px;" class="box-inset"/>
+  </vbox>
+</overlay>
