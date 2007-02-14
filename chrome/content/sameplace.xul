@@ -47,8 +47,12 @@
   
   <commandset>
     <command id="add-contact" oncommand="requestedAddContact();"
+             label="Add a contact..."
+             accesskey="A"
              tooltiptext="Add a contact to your contact list"/>
     <command id="open-conversation" oncommand="requestedOpenConversation();"
+             label="Open a conversation..."
+             accesskey="c"
              tooltiptext="Open a conversation (single or multi-user)"/>
   </commandset>
 
@@ -81,14 +85,16 @@
                    flex="1"/>
         </toolbaritem>
 
-        <toolbarbutton command="add-contact"/>
-
-        <toolbarbutton command="open-conversation"/>
-
-        <toolbarbutton command="cycle-maximize" hidden="true"/>
-
-        <toolbarbutton id="devel-shortcut" oncommand="quickTest();"
-                       label="Shortcut" accesskey="T" hidden="true"/>
+        <toolbaritem>
+          <menubar>
+            <menu label="Actions" accesskey="c">
+              <menupopup>
+                <menuitem class="menuitem-iconic" command="add-contact"/>
+                <menuitem class="menuitem-iconic" command="open-conversation"/>                
+              </menupopup>
+            </menu>
+          </menubar>
+        </toolbaritem>
       </toolbar>
     </toolbox>
 
