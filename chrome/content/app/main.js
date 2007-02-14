@@ -545,8 +545,7 @@ function seenPresence(stanza) {
             isGroupchat = true;
     } else {
         if(stanza.ns_muc_user::x.length() > 0) {
-            x('//xhtml:div[@class="box" and @for="resources"]/xhtml:h3')
-                .textContent = 'Participants';
+            info.setMode('groupchat');
 
             if(stanza.@type == undefined &&
                !info.hasResource(JID(stanza.@from).resource)) 

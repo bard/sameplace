@@ -97,6 +97,18 @@ info.hasResource = function(resource) {
     return getElementByContent(this._('resources'), resource);
 };
 
+info.setMode = function(mode) {
+    switch(mode) {
+        case 'groupchat':
+        getElementByAttribute(this._root, 'role', 'heading-resources')
+        .textContent = 'Participants';
+        break;
+        case 'chat':
+        
+        break;
+    }
+};
+
 
 // INTERNALS
 // ----------------------------------------------------------------------
