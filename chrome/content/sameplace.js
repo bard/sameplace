@@ -103,25 +103,7 @@ function init(event) {
 
     new AutoComplete(
         _('contact'), _('contact-completions'),
-        function(input, xulCompletions) {
-            for each(var iq in XMPP.cache.roster) {
-                for each(var item in iq.stanza..ns_roster::item) {
-                    var account = iq.session.name;
-                    var address = item.@jid;
-                    var nick = XMPP.nickFor(account, address);
-                    var presence = XMPP.presenceSummary(account, address);
-                    if(nick.toLowerCase().indexOf(input.toLowerCase()) == 0) {
-                        var xulCompletion = document.createElement('menuitem');
-                        xulCompletion.setAttribute('class', 'menuitem-iconic');
-                        xulCompletion.setAttribute('label', nick);
-                        xulCompletion.setAttribute('value', account + ' ' + address);
-                        xulCompletion.setAttribute('availability', presence.stanza.@type.toString() || 'available');
-                        xulCompletion.setAttribute('show', presence.stanza.show.toString());
-                        xulCompletions.appendChild(xulCompletion);
-                    }
-                }
-            }
-        },
+        buildContactCompletions,
         function(choice) {
             var parts = choice.split(' ');
             var account = parts[0];
@@ -208,6 +190,71 @@ if(typeof(x) == 'function') {
 // ----------------------------------------------------------------------
 // Application-dependent functions dealing with user interface.  They
 // affect the domain.
+
+function buildContactCompletions(input, xulCompletions) {
+    function presenceDegree(stanza) {
+        if(stanza.@type == undefined && stanza.show == undefined)
+            return 4;
+        else if(stanza.@type == 'unavailable')
+            return 0;
+        else
+            switch(stanza.show.toString()) {
+            case 'chat': return 5; break;
+            case 'dnd':  return 3; break;
+            case 'away': return 2; break;
+            case 'xa':   return 1; break;
+            default:
+                throw new Error('Unexpected. (' + stanza.toXMLString() + ')');
+            }
+    }
+
+    var completions = [];
+
+    for each(var iq in XMPP.cache.roster) {
+        for each(var item in iq.stanza..ns_roster::item) {
+            var account = iq.session.name;
+            var address = item.@jid;
+            var nick = XMPP.nickFor(account, address);
+            var presence = XMPP.presenceSummary(account, address);
+            if(nick.toLowerCase().indexOf(input.toLowerCase()) == 0)
+                completions.push({
+                    label: nick,
+                    value: account + ' ' + address,
+                    show: presence.stanza.show.toString(),
+                    presence: presence,
+                    availability: presence.stanza.@type.toString() || 'available' });
+        }
+    }
+
+    for each(var presence in XMPP.cache.presenceOut)
+        if(presence.stanza && presence.stanza.ns_muc::x.length() > 0) {
+            var account = presence.session.name;
+            var address = XMPP.JID(presence.stanza.@to).address;
+            if(address.toLowerCase().indexOf(input.toLowerCase()) == 0) 
+                completions.push({
+                    label: address,
+                    value: account + ' ' + address,
+                    show: presence.stanza.show.toString(),
+                    presence: presence,
+                    availability: 'available' });
+        }
+
+    completions
+        .sort(
+            function(a, b) {
+                return presenceDegree(b.presence.stanza) - presenceDegree(a.presence.stanza);
+            })
+        .forEach(
+            function(completion) {
+                var xulCompletion = document.createElement('menuitem');
+                xulCompletion.setAttribute('class', 'menuitem-iconic');
+                xulCompletion.setAttribute('label', completion.label);
+                xulCompletion.setAttribute('value', completion.value);
+                xulCompletion.setAttribute('availability', completion.availability);
+                xulCompletion.setAttribute('show', completion.show);
+                xulCompletions.appendChild(xulCompletion);                        
+            });
+}
 
 function switchToUnread() {
     var conversation = _('conversations').firstChild;
