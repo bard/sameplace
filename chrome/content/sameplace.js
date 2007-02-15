@@ -209,6 +209,18 @@ if(typeof(x) == 'function') {
 // Application-dependent functions dealing with user interface.  They
 // affect the domain.
 
+function switchToUnread() {
+    var conversation = _('conversations').firstChild;
+    while(conversation) {
+        if(conversation.getAttribute('unread') == 'true') {
+            focusConversation(conversation.getAttribute('account'),
+                              conversation.getAttribute('address'));
+            return;
+        }
+        conversation = conversation.nextSibling;
+    }
+}
+
 function openInBrowser(url, newTab) {
     if(url.match(/^javascript:/)) {
         srvPrompt.alert(
@@ -478,6 +490,7 @@ function requestedChangeStatusMessage(event) {
 }
 
 function focusedConversation(account, address) {
+    getConversation(account, address).removeAttribute('unread');
     contacts.nowTalkingWith(account, address);
     _('contact').value = XMPP.nickFor(account, address);
 }
@@ -600,6 +613,10 @@ function seenChatMessage(message) {
             conversation, function(contentPanel) {
                 contentPanel.xmppChannel.receive(message);
             });
+
+    if(!isConversationCurrent(message.session.name,
+                              XMPP.JID(message.stanza.@from).address))
+        conversation.setAttribute('unread', 'true');
 }
 
 function sentAvailablePresence(presence) {

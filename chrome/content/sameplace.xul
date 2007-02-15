@@ -54,7 +54,18 @@
              label="Open a conversation..."
              accesskey="c"
              tooltiptext="Open a conversation (single or multi-user)"/>
+    <command id="switch-to-unread" oncommand="switchToUnread();"
+             label="Switch to unread conversation"
+             accesskey="u"
+             tooltiptext="Switch to next conversation in line with unread messages"/>
   </commandset>
+
+  
+  <!-- KEYS -->
+
+  <keyset>
+    <key id="key-switch-to-unread" key="n" modifiers="alt" command="switch-to-unread"/>
+  </keyset>
 
 
   <!-- MENUS -->
@@ -90,7 +101,9 @@
             <menu label="Actions" accesskey="c">
               <menupopup>
                 <menuitem class="menuitem-iconic" command="add-contact"/>
-                <menuitem class="menuitem-iconic" command="open-conversation"/>                
+                <menuitem class="menuitem-iconic" command="open-conversation"/>
+                <menuitem class="menuitem-iconic" command="switch-to-unread"
+                          key="key-switch-to-unread"/>
               </menupopup>
             </menu>
           </menubar>
