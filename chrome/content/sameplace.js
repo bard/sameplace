@@ -575,9 +575,9 @@ function seenChatMessage(message) {
         (message.stanza.@from != undefined ?
          message.stanza.@from : message.stanza.@to));
 
-    var wConversation = getConversation(message.session.name, contact.address);
-    if(!wConversation) {
-        interactWith(
+    var conversation = getConversation(message.session.name, contact.address);
+    if(!conversation) 
+        conversation = interactWith(
             message.session.name, contact.address,
             contact.resource, message.stanza.@type,
             getDefaultAppUrl(), 'main',
@@ -587,20 +587,19 @@ function seenChatMessage(message) {
                                    message.stanza.@type);
                 contentPanel.xmppChannel.receive(message);
             });
-    } else {
-        // with wConversation formerly being the container of
-        // conversation, this was always true.        
-        //if(!wConversation.contentDocument ||
-        //(wConversation.contentDocument &&
-        //!wConversation.contentDocument.getElementById('xmpp-incoming')))
-        //{
+    else if(!conversation.contentDocument ||
+            (conversation.contentDocument &&
+             !conversation.contentDocument.getElementById('xmpp-incoming')))
 
+        // If conversation widget exists but it has no contentDocument
+        // yet, or its contentDocument does not have the xmpp-incoming
+        // element yet, it means that it has not been loaded, so
+        // queing for when it is.
+        
         queuePostLoadAction(
-            wConversation, function(contentPanel) {
+            conversation, function(contentPanel) {
                 contentPanel.xmppChannel.receive(message);
             });
-    }
-
 }
 
 function sentAvailablePresence(presence) {
