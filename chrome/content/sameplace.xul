@@ -135,7 +135,7 @@
                        class="small-margin"/>
       </toolbar>
     </toolbox>
-    <deck id="conversations" collapsed="true" persist="height" flex="1"/>
+    <deck id="conversations" collapsed="true" flex="5" persist="height"/>
 
     <!-- BLUEPRINTS -->
 
