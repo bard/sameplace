@@ -670,7 +670,8 @@ function seenChatMessage(message) {
                 contentPanel.xmppChannel.receive(message);
             });
 
-    if(!isConversationCurrent(message.session.name,
+    if(message.direction == 'in' &&
+       !isConversationCurrent(message.session.name,
                               XMPP.JID(message.stanza.@from).address))
         conversation.setAttribute('unread', 'true');
 }
