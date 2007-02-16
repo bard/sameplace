@@ -1,6 +1,7 @@
-function AutoComplete(textbox, popup, buildPopup, acceptInput) {
-    this._textbox = textbox;
-    this._popup = popup;
+var behaviour = behaviour || {};
+
+behaviour.autoComplete = function(textbox) {
+    var popup = textbox.firstChild;
 
     function showCompletions() {
         popup.showPopup(
@@ -32,7 +33,10 @@ function AutoComplete(textbox, popup, buildPopup, acceptInput) {
             while(popup.firstChild)
                 popup.removeChild(popup.firstChild);
 
-            buildPopup(textbox.value, popup);
+            var completeEvent = document.createEvent('Event');
+            completeEvent.initEvent('complete', true, false);
+            event.target.dispatchEvent(completeEvent);
+
             if(popup.childNodes.length == 0) {
                 event.preventDefault();
                 popup.hidePopup();
@@ -42,7 +46,9 @@ function AutoComplete(textbox, popup, buildPopup, acceptInput) {
     popup.addEventListener(
         'command', function(event) {
             textbox.value = event.target.label;
-            acceptInput(event.target.value);
+            var completedEvent = document.createEvent('Event');
+            completedEvent.initEvent('completed', true, false);
+            event.target.dispatchEvent(completedEvent);
         }, false);
 
     popup.addEventListener(
@@ -92,14 +98,4 @@ function AutoComplete(textbox, popup, buildPopup, acceptInput) {
         'blur', function(event) {
             hideCompletions();
         }, true);
-}
-
-AutoComplete.prototype = {
-    focus: function() {
-        this._textbox.focus();
-    },
-
-    blur: function() {
-        this._textbox.blur();
-    }
 };

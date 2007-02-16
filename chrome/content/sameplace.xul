@@ -76,8 +76,6 @@
       <label role="message"
              value="Make this conversation channel available to this web page"/>
     </tooltip>
-
-    <popup id="contact-completions"/>
   </popupset>
 
 
@@ -120,7 +118,9 @@
                  control="contact"
                  style="font-size: smaller; margin-right: 0;"/>
           <textbox id="contact" flex="1" onfocus="this.select();"
-                   onkeypress="pressedKeyInContactField(event);"/>
+                   onkeypress="pressedKeyInContactField(event);">
+            <popup/>
+          </textbox>
         </toolbaritem>
         <toolbarbutton role="attach"
                        hidden="true"

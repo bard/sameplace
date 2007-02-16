@@ -101,15 +101,20 @@ function init(event) {
             }
         }, false);
 
-    new AutoComplete(
-        _('contact'), _('contact-completions'),
-        buildContactCompletions,
-        function(choice) {
-            var parts = choice.split(' ');
-            var account = parts[0];
-            var address = parts[1];
-            requestedCommunicate(account, address, 'chat', getDefaultAppUrl());
-        });
+    behaviour.autoComplete(_('contact'));
+
+    _('contact').addEventListener(
+        'complete', function(event) {
+            buildContactCompletions(event.target);
+        }, false);
+
+    _('contact').addEventListener(
+        'completed', function(event) {
+            requestedCommunicate(
+                event.target.getAttribute('account'),
+                event.target.getAttribute('address'),
+                'chat', getDefaultAppUrl());
+        }, false);
 }
 
 function finish() {
@@ -191,7 +196,7 @@ if(typeof(x) == 'function') {
 // Application-dependent functions dealing with user interface.  They
 // affect the domain.
 
-function buildContactCompletions(input, xulCompletions) {
+function buildContactCompletions(xulCompletions) {
     function presenceDegree(stanza) {
         if(stanza.@type == undefined && stanza.show == undefined)
             return 4;
@@ -208,6 +213,7 @@ function buildContactCompletions(input, xulCompletions) {
             }
     }
 
+    var input = xulCompletions.parentNode.value;
     var completions = [];
 
     for each(var iq in XMPP.cache.roster) {
@@ -219,7 +225,8 @@ function buildContactCompletions(input, xulCompletions) {
             if(nick.toLowerCase().indexOf(input.toLowerCase()) == 0)
                 completions.push({
                     label: nick,
-                    value: account + ' ' + address,
+                    account: account,
+                    address: address,
                     show: presence.stanza.show.toString(),
                     presence: presence,
                     availability: presence.stanza.@type.toString() || 'available' });
@@ -230,10 +237,11 @@ function buildContactCompletions(input, xulCompletions) {
         if(presence.stanza && presence.stanza.ns_muc::x.length() > 0) {
             var account = presence.session.name;
             var address = XMPP.JID(presence.stanza.@to).address;
-            if(address.toLowerCase().indexOf(input.toLowerCase()) == 0) 
+            if(address.toLowerCase().indexOf(input.toLowerCase()) == 0)
                 completions.push({
                     label: address,
-                    value: account + ' ' + address,
+                    account: account,
+                    address: address,
                     show: presence.stanza.show.toString(),
                     presence: presence,
                     availability: 'available' });
@@ -249,10 +257,11 @@ function buildContactCompletions(input, xulCompletions) {
                 var xulCompletion = document.createElement('menuitem');
                 xulCompletion.setAttribute('class', 'menuitem-iconic');
                 xulCompletion.setAttribute('label', completion.label);
-                xulCompletion.setAttribute('value', completion.value);
+                xulCompletion.setAttribute('account', completion.account);
+                xulCompletion.setAttribute('address', completion.address);
                 xulCompletion.setAttribute('availability', completion.availability);
                 xulCompletion.setAttribute('show', completion.show);
-                xulCompletions.appendChild(xulCompletion);                        
+                xulCompletions.appendChild(xulCompletion);
             });
 }
 
