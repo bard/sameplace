@@ -31,6 +31,13 @@ var prefBranch = Cc["@mozilla.org/preferences-service;1"]
     .getService(Ci.nsIPrefService)
     .getBranch('extensions.sameplace.');
 
+var subscriptionDesc = {
+    'both': 'Both see when other is online',
+    'from': 'Contact sees when you are online',
+    'to': 'You see when contact is online',
+    'none': 'Neither sees when other is online'
+}
+
 
 // GLOBAL STATE
 // ----------------------------------------------------------------------
@@ -336,28 +343,12 @@ function requestedUpdateContactTooltip(element) {
     _('contact-tooltip', {role: 'address'}).value = attr(element, 'address');
     _('contact-tooltip', {role: 'account'}).value = attr(element, 'account');
 
-    if(attr(element, 'type') == 'groupchat') 
-        _('contact-tooltip', {role: 'subscription'}).parentNode.hidden = true;
-    else {
+    var subscriptionState = attr(element, 'subscription');
+    if(subscriptionState) {
+        _('contact-tooltip', {role: 'subscription'}).value = subscriptionDesc[subscriptionState];
         _('contact-tooltip', {role: 'subscription'}).parentNode.hidden = false;
-        var subscription = attr(element, 'subscription');
-        switch(subscription) {
-        case 'both':
-            subscription = 'Both see when other is online';
-            break;
-        case 'from':
-            subscription = 'Contact sees when you are online';
-            break;
-        case 'to':
-            subscription = 'You see when contact is online';
-            break;
-        case 'none':
-            subscription = 'Neither sees when other is online';
-            break;
-        }
-    }
-
-    _('contact-tooltip', {role: 'subscription'}).value = subscription;
+    } else
+        _('contact-tooltip', {role: 'subscription'}).parentNode.hidden = true;
 }
 
 function requestedSetContactAlias(element) {
