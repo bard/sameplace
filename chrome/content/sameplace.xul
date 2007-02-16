@@ -58,6 +58,10 @@
              label="Switch to unread conversation"
              accesskey="u"
              tooltiptext="Switch to next conversation in line with unread messages"/>
+    <command id="switch-to-next" oncommand="switchToNext();"
+             label="Switch to next conversation"
+             accesskey="n"
+             tooltiptext="Switch to next conversation"/>
   </commandset>
 
   
@@ -65,6 +69,7 @@
 
   <keyset>
     <key id="key-switch-to-unread" key="n" modifiers="alt" command="switch-to-unread"/>
+    <key id="key-switch-to-next" key="n" modifiers="control alt" command="switch-to-next"/>
   </keyset>
 
 
@@ -102,6 +107,8 @@
                 <menuitem class="menuitem-iconic" command="open-conversation"/>
                 <menuitem class="menuitem-iconic" command="switch-to-unread"
                           key="key-switch-to-unread"/>
+                <menuitem class="menuitem-iconic" command="switch-to-next"
+                          key="key-switch-to-next"/>
               </menupopup>
             </menu>
           </menubar>

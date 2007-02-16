@@ -280,6 +280,20 @@ function switchToUnread() {
     }
 }
 
+function switchToNext() {
+    var current = getCurrentConversation();
+    var next;
+
+    if(!current || current == _('conversations').firstChild)
+        next = _('conversations').lastChild;
+    else
+        next = current.previousSibling;
+
+    if(next)
+        focusConversation(next.getAttribute('account'),
+                          next.getAttribute('address'));
+}
+
 function openInBrowser(url, newTab) {
     if(url.match(/^javascript:/)) {
         srvPrompt.alert(
