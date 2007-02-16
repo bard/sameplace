@@ -252,7 +252,7 @@ function buildContactCompletions(xulCompletions) {
             function(a, b) {
                 var diff = presenceDegree(b.presence.stanza) - presenceDegree(a.presence.stanza);
                 if(diff == 0)
-                    diff = (a.label < b.label) ? -1 : 1;
+                    diff = (a.label.toLowerCase() < b.label.toLowerCase()) ? -1 : 1;
                 return diff;
             })
         .forEach(
