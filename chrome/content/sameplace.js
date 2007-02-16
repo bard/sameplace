@@ -250,7 +250,10 @@ function buildContactCompletions(xulCompletions) {
     completions
         .sort(
             function(a, b) {
-                return presenceDegree(b.presence.stanza) - presenceDegree(a.presence.stanza);
+                var diff = presenceDegree(b.presence.stanza) - presenceDegree(a.presence.stanza);
+                if(diff == 0)
+                    diff = (a.label < b.label) ? -1 : 1;
+                return diff;
             })
         .forEach(
             function(completion) {
