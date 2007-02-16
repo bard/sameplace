@@ -640,6 +640,13 @@ function joinRoom(account, roomAddress, roomNick) {
 // ----------------------------------------------------------------------
 
 function seenChatMessage(message) {
+    function maybeSetUnread(conversation) {
+        if(message.direction == 'in' &&
+           !isConversationCurrent(message.session.name,
+                                  XMPP.JID(message.stanza.@from).address))
+            conversation.setAttribute('unread', 'true');
+    }
+
     var contact = XMPP.JID(
         (message.stanza.@from != undefined ?
          message.stanza.@from : message.stanza.@to));
@@ -654,11 +661,13 @@ function seenChatMessage(message) {
                 openedConversation(message.session.name,
                                    contact.address,
                                    message.stanza.@type);
+
                 contentPanel.xmppChannel.receive(message);
+                maybeSetUnread(contentPanel);
             });
     else if(!conversation.contentDocument ||
             (conversation.contentDocument &&
-             !conversation.contentDocument.getElementById('xmpp-incoming')))
+             !conversation.contentDocument.getElementById('xmpp-incoming'))) {
 
         // If conversation widget exists but it has no contentDocument
         // yet, or its contentDocument does not have the xmpp-incoming
@@ -668,12 +677,10 @@ function seenChatMessage(message) {
         queuePostLoadAction(
             conversation, function(contentPanel) {
                 contentPanel.xmppChannel.receive(message);
+                maybeSetUnread(conversation);
             });
-
-    if(message.direction == 'in' &&
-       !isConversationCurrent(message.session.name,
-                              XMPP.JID(message.stanza.@from).address))
-        conversation.setAttribute('unread', 'true');
+    } else
+        maybeSetUnread(conversation);
 }
 
 function sentAvailablePresence(presence) {
