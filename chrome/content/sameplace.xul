@@ -52,7 +52,7 @@
              tooltiptext="Add a contact to your contact list"/>
     <command id="open-conversation" oncommand="requestedOpenConversation();"
              label="Open a conversation..."
-             accesskey="c"
+             accesskey="O"
              tooltiptext="Open a conversation (single or multi-user)"/>
     <command id="switch-to-unread" oncommand="switchToUnread();"
              label="Switch to unread conversation"
