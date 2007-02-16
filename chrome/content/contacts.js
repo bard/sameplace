@@ -83,6 +83,11 @@ function init() {
         {event: 'presence', direction: 'in', stanza: function(s) {
                 return s.ns_muc_user::x.length() > 0;
             }}, function(presence) { receivedMUCPresence(presence) });
+    channel.on(
+        {event: 'iq', direction: 'in', stanza: function(s) {
+                return s.@type == 'result' &&
+                    s.ns_private::query.ns_bookmarks::storage != undefined;
+            }}, function(iq) { receivedBookmarks(iq); });
 
     XMPP.cache.roster.forEach(receivedRoster);
     XMPP.cache.presenceIn.forEach(receivedPresence);
@@ -252,6 +257,18 @@ function acceptSubscriptionRequest(account, address) {
 
 // NETWORK REACTIONS
 // ----------------------------------------------------------------------
+
+function receivedBookmarks(iq) {
+    for each(var room in iq
+             .stanza.ns_private::query
+             .ns_bookmarks::storage
+             .ns_bookmarks::conference) {
+        var account = iq.session.name;
+        var address = XMPP.JID(room.@jid).address;
+        var xulRoom = get(account, address) || add(account, address);
+        xulRoom.setAttribute('type', 'groupchat');
+    }
+}
 
 function receivedPresence(presence) {
     var from = XMPP.JID(presence.stanza.@from);
