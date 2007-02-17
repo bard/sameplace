@@ -364,20 +364,31 @@ function init(event) {
         'scroll', function(event) { scrolledWindow(event); }, false);
 
     window.addEventListener(
-        'focus', function(event) { input.focus(); }, false);
+        'focus', function(event) { _('chat-input').focus(); }, false);
 
     window.addEventListener(
-        'blur', function(event) { input.blur(); }, false);
+        'blur', function(event) { _('chat-input').blur(); }, false);
 
-    input = new Input(_('chat-input'));
-    input.onLoad = function() { input.focus(); };
-    input.onAcceptContent = function(xhtmlBody) { sendXHTML(xhtmlBody); };
-    input.onResize = function(height) {
-        // XXX This should not be hardcoded.
-        _('chat-output').style.bottom = height + 8 + 'px';
-        _('lower-menus').style.bottom = height + 2 + 'px';
-        repositionOutput();
-    };
+
+    behaviour.input(_('chat-input'));
+
+    _('chat-input').addEventListener(
+        'load', function(event) {
+            _('chat-input').focus();
+        }, false);
+
+    _('chat-input').addEventListener(
+        'accept', function(event) {
+            sendXHTML(event.target.xhtml);
+        }, false);
+    
+    _('chat-input').addEventListener(
+        'resizing', function(event) {
+            // XXX This should not be hardcoded.
+            _('chat-output').style.bottom = event.target.clientHeight + 8 + 'px';
+            _('lower-menus').style.bottom = event.target.clientHeight + 2 + 'px';
+            repositionOutput();
+        }, false);
 }
 
 
@@ -479,9 +490,9 @@ function requestedFormatCommand(event) {
     if(event.target.getAttribute('class') != 'command')
         return;
 
-    input.execCommand(event.target.getAttribute('id'), null);
+    _('chat-input').execCommand(event.target.getAttribute('id'), null);
     event.target.blur();
-    input.focus();
+    _('chat-input').focus();
 }
 
 

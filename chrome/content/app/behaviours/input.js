@@ -19,49 +19,50 @@
 */
 
 
+var behaviour = behaviour || {};
+
 /**
  * Behaviour for a <div> containing an <iframe>, which will be turned
  * into an edit area.
  *
- * Custom callbacks:
+ * Custom events:
  *
- *   - onLoad(): called when edit area is ready.
+ *   - 'load': thrown when edit area is ready.
  *
- *   - onAcceptContent(xhtml): called when user presses Enter; passed
- *     argument is an XML object with XHTML content.
+ *   - 'accept' thrown when user presses Enter; use "xhtml" property
+ *     to retrieve xhtml content.
  *
- *   - onResize(height): called when edit area grows to accomodate
- *     input; passed argument is the new height of the <div>.
+ *   - 'resizing': thrown when edit area grows to accomodate
+ *     input.
  *
  * Dependencies: conv.js
  *
  */
 
+behaviour.input = function(container) {
+    var iframe = container.getElementsByTagName('iframe')[0];
+    var originalHeight = iframe.contentDocument.body.scrollHeight;
 
-// INITIALIZATION
-// ----------------------------------------------------------------------
-
-function Input(container) {
-    var _this = this;
-    this._container = container;
-    this._iframe = container.getElementsByTagName('iframe')[0];
-
-    this._iframe.contentDocument.open();
-    this._iframe.contentDocument.write(
+    // Setting up iframe content
+    // ------------------------------------------------------------
+    
+    iframe.contentDocument.open();
+    iframe.contentDocument.write(
         '<html xmlns="http://www.w3.org/1999/xhtml">' +
         '<head><title></title>' +
         '<style type="text/css">' +
         'body { margin: 0; font-family: sans-serif; font-size: 10pt; }' +
         '</style></head>' +
         '<body></body></html>');
-    this._iframe.contentDocument.close();
-    this._iframe.contentDocument.designMode = 'on';
+    iframe.contentDocument.close();
+    iframe.contentDocument.designMode = 'on';
 
-    this._originalHeight = this._iframe.contentDocument.body.scrollHeight;
-
-    this._iframe.contentWindow.addEventListener(
+    // Wiring iframe events and reactions
+    // ------------------------------------------------------------
+    
+    iframe.contentWindow.addEventListener(
         'scroll', function(event) {
-            var totalHeight = _this._iframe.contentDocument.body.scrollHeight;
+            var totalHeight = _iframe.contentDocument.body.scrollHeight;
 
             // If scroll event is caused by appearance of a horizontal
             // scroll bar, e.g. when only a very long non-wrapping
@@ -74,81 +75,79 @@ function Input(container) {
                 container.style.height = totalHeight + 'px';
 
         }, false);
-    this._iframe.contentWindow.addEventListener(
+
+    iframe.contentWindow.addEventListener(
         'resize', function(event) {
-            _this.onResize(container.clientHeight); }, false);
-    this._iframe.contentWindow.addEventListener(
+            var synthResizingEvent = document.createEvent('Event');
+            synthResizingEvent.initEvent('resizing', true, false);
+            container.dispatchEvent(synthResizingEvent);
+        }, false);
+
+    iframe.contentWindow.addEventListener(
         'keypress', function(event) {
-            _this.pressedKey(event); }, false);
-    this._iframe.addEventListener(
+            if(event.keyCode == KeyEvent.DOM_VK_RETURN) {
+                event.preventDefault();
+                if(event.currentTarget.document.body.innerHTML == '<br>')
+                    return;
+                
+                var content = container.xhtml;
+                if(content) {
+                    var synthEvent = document.createEvent('Event');
+                    synthEvent.initEvent('accept', true, false);
+                    container.dispatchEvent(synthEvent);
+                    container.reset();
+                }
+            }
+        }, false);
+
+    iframe.addEventListener(
         'load', function(event) {
-            event.currentTarget && _this.onLoad(); }, true);    
-}
+            if(event.currentTarget) {
+                var synthLoadEvent = document.createEvent('Event');
+                synthLoadEvent.initEvent('load', true, false);
+                container.dispatchEvent(synthLoadEvent);
+            }
+        }, true);
 
+    // Adding/overriding container methods
+    // ------------------------------------------------------------
 
-// CALLBACKS
-// ----------------------------------------------------------------------
+    container.focus = function() {
+        iframe.contentWindow.focus();
+    };
 
-Input.prototype.onLoad = function() {};
+    container.blur = function() {
+        iframe.blur();
+    };
 
-Input.prototype.onAcceptContent = function(content) {};
+    container.execCommand = function(command, argument) {
+        iframe.contentDocument.execCommand(
+            command, false, argument);
+    };
 
-Input.prototype.onResize = function(height) {};
+    container.__defineGetter__(
+        'xhtml', function() {
+            var body = iframe.contentDocument.body;
 
+            var xhtmlBody = conv.htmlDOMToXHTML(body);
 
-// PUBLIC FUNCTIONALITY
-// ----------------------------------------------------------------------
+            // Stripping trailing <br/>, if present.
+            var lastChildIndex = xhtmlBody.children().length()-1;
+            if(xhtmlBody.*::*[lastChildIndex].localName() == 'br')
+                delete xhtmlBody.*::*[lastChildIndex];
 
-Input.prototype.focus = function() {
-    this._iframe.contentWindow.focus();
-};
+            return xhtmlBody;
+        });
 
-Input.prototype.blur = function() {
-    this._iframe.blur();
-};
-
-Input.prototype.reset = function() {
-    var document = this._iframe.contentDocument;
-    this._container.style.height = this._originalHeight + 'px';
-    
-    window.setTimeout(
-        function() {
-            document.body.innerHTML = '';
-            document.designMode = 'off';
-            document.designMode = 'on';
-        }, 0);
-};
-
-Input.prototype.execCommand = function(command, argument) {
-    this._iframe.contentDocument.execCommand(
-        command, false, argument);
-};
-
-
-// INTERNALS
-// ----------------------------------------------------------------------
-
-Input.prototype.pressedKey = function(event) {
-    if(event.keyCode == KeyEvent.DOM_VK_RETURN) {
-        var body = event.currentTarget.document.body;
+    container.reset = function() {
+        var document = iframe.contentDocument;
+        container.style.height = originalHeight + 'px';
         
-        event.preventDefault();
-        if(body.innerHTML == '<br>')
-            return;
-
-        xhtmlBody = conv.htmlDOMToXHTML(body);
-
-        // Stripping trailing <br/>, if present.
-        var lastChildIndex = xhtmlBody.children().length()-1;
-        if(xhtmlBody.*::*[lastChildIndex].localName() == 'br')
-            delete xhtmlBody.*::*[lastChildIndex];
-
-        this.onAcceptContent(xhtmlBody);
-        this.reset();
-
-    } else if(event.charCode == 'h'.charCodeAt(0) &&
-              event.ctrlKey == true) {
-        event.preventDefault();
-    }
-};
-
+        window.setTimeout(
+            function() {
+                document.body.innerHTML = '';
+                document.designMode = 'off';
+                document.designMode = 'on';
+            }, 0);
+    };
+}
