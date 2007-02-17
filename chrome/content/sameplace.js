@@ -349,7 +349,7 @@ function changeStatusMessage(message) {
  *
  */
 
-function interactWith(account, address, resource, type,
+function interactWith(account, address, resource,
                       where, target, afterLoadAction) {
     if(typeof(where) == 'string')
         // "where" is a url
@@ -357,14 +357,15 @@ function interactWith(account, address, resource, type,
             focusConversation(account, address);
             afterLoadAction(getConversation(account, address));
         } else
-            createInteractionPanel(account, address, resource, type,
+            createInteractionPanel(account, address, resource,
                                    where, target, afterLoadAction);
     else
         // "where" is a content panel
-        XMPP.enableContentDocument(where, account, address, type);
+        XMPP.enableContentDocument(where, account, address,
+                                   isMUC(account, address) ? 'groupchat' : 'chat');
 }
 
-function createInteractionPanel(account, address, resource, type,
+function createInteractionPanel(account, address, resource,
                                 url, target,
                                 afterLoadAction) {
     switch(target) {
@@ -377,7 +378,8 @@ function createInteractionPanel(account, address, resource, type,
 
             queuePostLoadAction(
                 contentPanel, function(document) {
-                    XMPP.enableContentDocument(contentPanel, account, address, type);
+                    XMPP.enableContentDocument(contentPanel, account, address,
+                                               isMUC(account, address) ? 'groupchat' : 'chat');
                     if(afterLoadAction)
                         afterLoadAction(contentPanel);
                 });
@@ -392,7 +394,6 @@ function createInteractionPanel(account, address, resource, type,
         var conversation = cloneBlueprint('conversation');
         _('conversations').appendChild(conversation);
         conversation.setAttribute('resource', resource);
-        conversation.setAttribute('message-type', type);
 
         conversation.addEventListener(
             'click', function(event) {
@@ -401,7 +402,8 @@ function createInteractionPanel(account, address, resource, type,
 
         queuePostLoadAction(
             conversation, function(document) {
-                XMPP.enableContentDocument(conversation, account, address, type);
+                XMPP.enableContentDocument(conversation, account, address, 
+                                           isMUC(account, address) ? 'groupchat' : 'chat');
                 if(afterLoadAction)
                     afterLoadAction(conversation);
             });
@@ -474,7 +476,7 @@ function promptOpenConversation(account, address, type, nick) {
             joinRoom(request.account, request.address, request.nick);
         else
             interactWith(
-                request.account, request.address, null, request.type,
+                request.account, request.address, null,
                 getDefaultAppUrl(), 'main', function(conversation) {
                     focusConversation(request.account, request.address);
                     openedConversation(request.account, request.address);
@@ -512,21 +514,19 @@ var chatDropObserver = {
     }
 };
 
-function requestedCommunicate(account, address, type, url) {
+function requestedCommunicate(account, address, url) {
     if(url == getDefaultAppUrl())
-        if(type == 'groupchat' && !isConversationOpen(account, address))
-            promptOpenConversation(account, address, type);
+        if(isMUC(account, address) && !isConversationOpen(account, address))
+            promptOpenConversation(account, address, isMUC(account, address) ? 'groupchat' : 'chat');
         else
             interactWith(
-                account, address, null, type,
+                account, address, null,
                 url, 'main', function(conversation) {
                     focusConversation(account, address);
-                    openedConversation(account, address, type);
+                    openedConversation(account, address);
                 });
     else
-        interactWith(
-            account, address, null, type,
-            url, 'additional');
+        interactWith(account, address, null, url, 'additional');
 }
 
 function pressedKeyInContactField(event) {
@@ -590,28 +590,26 @@ function requestedAttachBrowser(element) {
     interactWith(attr(element, 'account'),
                  attr(element, 'address'),
                  attr(element, 'resource'),
-                 attr(element, 'message-type'),
                  getBrowser().selectedBrowser);
 }
 
 function requestedCloseConversation(element) {
-    if(attr(element, 'message-type') == 'groupchat')
-        exitRoom(attr(element, 'account'),
-                 attr(element, 'address'),
-                 attr(element, 'resource'));
+    var account = attr(element, 'account');
+    var address = attr(element, 'address');
+    var resource = attr(element, 'resource');
 
-    closeConversation(attr(element, 'account'),
-                      attr(element, 'address'),
-                      attr(element, 'resource'),
-                      attr(element, 'message-type'));
+    if(isMUC(account, address))
+        exitRoom(account, address, resource);
+
+    closeConversation(account, address);
 }
 
 function requestedOpenConversation() {
     promptOpenConversation();    
 }
 
-function openedConversation(account, address, type) {
-    contacts.startedConversationWith(account, address, type);
+function openedConversation(account, address) {
+    contacts.startedConversationWith(account, address);
     
     if(_('conversations').childNodes.length == 1)
         contacts.nowTalkingWith(account, address);
@@ -641,7 +639,9 @@ function closedConversation(account, address) {
 
 function exitRoom(account, roomAddress, roomNick) {
     XMPP.send(account,
-              <presence to={roomAddress + '/' + roomNick} type="unavailable"/>);
+              <presence to={roomAddress + '/' + roomNick} type="unavailable">
+              <x xmlns={ns_muc}/>
+              </presence>);
 }
 
 function joinRoom(account, roomAddress, roomNick) {
@@ -649,6 +649,16 @@ function joinRoom(account, roomAddress, roomNick) {
               <presence to={roomAddress + '/' + roomNick}>
               <x xmlns='http://jabber.org/protocol/muc'/>
               </presence>);
+}
+
+function isMUC(account, address) {
+    for each(var presence in XMPP.cache.presenceOut)
+        if(presence.stanza.@to != undefined &&
+           XMPP.JID(presence.stanza.@to).address == address &&
+           presence.stanza.ns_muc::x.length() > 0)
+            return true;
+
+    return false;
 }
 
 
@@ -670,8 +680,7 @@ function seenChatMessage(message) {
     var conversation = getConversation(message.session.name, contact.address);
     if(!conversation) 
         conversation = interactWith(
-            message.session.name, contact.address,
-            contact.resource, message.stanza.@type,
+            message.session.name, contact.address, contact.resource,
             getDefaultAppUrl(), 'main',
             function(contentPanel) {
                 openedConversation(message.session.name,
@@ -709,13 +718,12 @@ function sentMUCPresence(presence) {
     var account = presence.session.name;
     var address = room.address;
     var resource = room.resource;
-    var type = 'groupchat';
 
     interactWith(
-        account, address, resource, type,
+        account, address, resource,
         getDefaultAppUrl(), 'main',
         function(interactionPanel) {
-            openedConversation(account, address, type);
+            openedConversation(account, address);
             focusConversation(account, address);
         });
 }
@@ -754,7 +762,6 @@ function hoveredMousePointer(event) {
         'Account: <' + get('account') + '>, ' +
         'Address: <' + get('address') + '>, ' +
         'Resource: <' + get('resource') + '>, ' +
-        'Subscription: <' + get('subscription') + '>, ' +
-        'Type: <' + get('message-type') + '>';
+        'Subscription: <' + get('subscription') + '>'
 }
 

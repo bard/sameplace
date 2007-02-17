@@ -123,7 +123,6 @@ function add(account, address) {
     contact = cloneBlueprint('contact');
     contact.setAttribute('address', address);
     contact.setAttribute('account', account);
-    contact.setAttribute('type', 'chat');
     contact.setAttribute('availability', 'unavailable');
     contact.getElementsByAttribute('role', 'name')[0].setAttribute('value', address);
     _('contacts').appendChild(contact);
@@ -215,9 +214,8 @@ function _reposition(contact) {
 // happening.  interactingWith() might be a better name.  Also
 // there might be some overlap with nowTalkingWith().
 
-function startedConversationWith(account, address, type) {
+function startedConversationWith(account, address) {
     var contact = get(account, address) || add(account, address);
-    contact.setAttribute('type', type);
 
     if(getContactPosition(contact) != 'open') {
         contact.setAttribute('open', 'true');
@@ -266,7 +264,6 @@ function receivedBookmarks(iq) {
         var account = iq.session.name;
         var address = XMPP.JID(room.@jid).address;
         var xulRoom = get(account, address) || add(account, address);
-        xulRoom.setAttribute('type', 'groupchat');
     }
 }
 
@@ -402,7 +399,6 @@ function requestedCommunicate(contact, url) {
         onRequestedCommunicate(
             attr(contact, 'account'),
             attr(contact, 'address'),
-            attr(contact, 'type') || 'chat',
             url);
 }
 
