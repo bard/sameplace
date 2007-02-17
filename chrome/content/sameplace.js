@@ -560,6 +560,7 @@ function requestedChangeStatusMessage(event) {
         changeStatusMessage(event.target.value);
     
     document.commandDispatcher.advanceFocus();
+    focusCurrentConversation();
 }
 
 function focusedConversation(account, address) {
