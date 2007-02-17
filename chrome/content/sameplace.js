@@ -620,15 +620,13 @@ function closedConversation(account, address) {
     contacts.stoppedConversationWith(account, address);
     if(_('conversations').childNodes.length == 0)
         _('conversations').collapsed = true;
-    else if(!_('conversations').selectedPanel) {
-        _('conversations').selectedPanel = _('conversations').lastChild;
-        focusedConversation(
-            _('conversations').lastChild.getAttribute('account'),
-            _('conversations').lastChild.getAttribute('address'));
-    } else
-        focusedConversation(
-            _('conversations').selectedPanel.getAttribute('account'),
-            _('conversations').selectedPanel.getAttribute('address'));
+    else {
+        var conversation =
+            _('conversations').selectedPanel ||
+            _('conversations').lastChild;
+        focusConversation(conversation.getAttribute('account'),
+                          conversation.getAttribute('address'));
+    }
 }
 
 
