@@ -22,12 +22,14 @@
 // GLOBAL DEFINITIONS
 // ----------------------------------------------------------------------
 
-const ns_xhtml     = 'http://www.w3.org/1999/xhtml';
-const ns_xhtml_im  = 'http://jabber.org/protocol/xhtml-im';
-const ns_muc_user  = 'http://jabber.org/protocol/muc#user';
-const ns_muc       = 'http://jabber.org/protocol/muc';
-const ns_roster    = 'jabber:iq:roster';
-const ns_delay     = 'jabber:x:delay';
-const ns_xul       = 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul';
-const ns_private   = 'jabber:iq:private';
-const ns_bookmarks = 'storage:bookmarks';
+const ns_xhtml      = 'http://www.w3.org/1999/xhtml';
+const ns_xhtml_im   = 'http://jabber.org/protocol/xhtml-im';
+const ns_muc_user   = 'http://jabber.org/protocol/muc#user';
+const ns_muc        = 'http://jabber.org/protocol/muc';
+const ns_roster     = 'jabber:iq:roster';
+const ns_delay      = 'jabber:x:delay';
+const ns_xul        = 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul';
+const ns_private    = 'jabber:iq:private';
+const ns_bookmarks  = 'storage:bookmarks';
+const ns_chatstates = 'http://jabber.org/protocol/chatstates';
+const ns_event      = 'jabber:x:event';

@@ -85,3 +85,23 @@
     margin-top: 2px;
     padding-left: 1em;
 }
+
+#contacts [role="contact"][chatstate="active"] [role="name"]{
+    color: black;
+}
+
+#contacts [role="contact"][chatstate="composing"] [role="name"]{
+    color: #E8871E;
+}
+
+#contacts [role="contact"][chatstate="paused"] [role="name"]{
+    color: #C4823B;
+}
+
+#contacts [role="contact"][chatstate="inactive"] [role="name"]{
+    color: #A66E32;
+}
+
+#contacts [role="contact"][chatstate="gone"] [role="name"]{
+    color: black;
+}

@@ -153,7 +153,7 @@
 
   <box hidden="true" id="blueprints">
     <vbox role="contact"
-          account="" address="" open="false" current="false"
+          account="" address="" open="false" current="false" chatstate=""
           onclick="if(event.button == 0) clickedContact(this);"
           context="contact-menu" 
           tooltip="contact-tooltip">

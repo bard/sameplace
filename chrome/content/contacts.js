@@ -66,8 +66,7 @@ function init() {
     channel.on(
         {event: 'message', direction: 'in'},
         function(message) {
-            gotMessageFrom(
-                message.session.name, XMPP.JID(message.stanza.@from).address);
+            receivedMessage(message);
         });
     channel.on(
         {event: 'presence', direction: 'in', stanza: function(s) {
@@ -133,13 +132,27 @@ function add(account, address) {
 // DOMAIN REACTIONS
 // ----------------------------------------------------------------------
 
-function gotMessageFrom(account, address) {
+function receivedMessage(message) {
+    var account = message.session.name;
+    var address = XMPP.JID(message.stanza.@from).address;
+
     var contact = get(account, address) || add(account, address);
 
-    if(contact.getAttribute('current') != 'true') {
+    if(contact.getAttribute('current') != 'true' &&
+       message.stanza.body.length() > 0) {
         var pending = parseInt(_(contact, {role: 'pending'}).value);
         _(contact, {role: 'pending'}).value = pending + 1;
     }
+
+    if(message.stanza.ns_event::x.length() > 0)
+        if(message.stanza.ns_event::x.composing.length() > 0)
+            contact.setAttribute('chatstate', 'composing');
+        else
+            contact.setAttribute('chatstate', 'active');
+    
+    if(message.stanza.ns_chatstates::*.length() > 0)
+        contact.setAttribute(
+            'chatstate', message.stanza.ns_chatstates::*[0].localName());
 }
 
 function messagesSeen(account, address) {
