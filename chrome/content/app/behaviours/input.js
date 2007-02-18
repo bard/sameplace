@@ -40,6 +40,35 @@ var behaviour = behaviour || {};
  */
 
 behaviour.input = function(container) {
+    // Utilities
+    // ------------------------------------------------------------
+
+    function forwardKeyEvent(event, target) {
+        var synthKeyEvent = document.createEvent('KeyEvents');
+        synthKeyEvent.initKeyEvent(
+            event.type,      //  in DOMString typeArg,
+            false,           //  in boolean canBubbleArg,
+            false,           //  in boolean cancelableArg,
+            null,            //  in nsIDOMAbstractView viewArg,
+                             //     Specifies UIEvent.view. This value may be null.
+            event.ctrlKey,   //  in boolean ctrlKeyArg,
+            event.altKey,    //  in boolean altKeyArg,
+            event.shiftKey,  //  in boolean shiftKeyArg,
+            event.metaKey,   //  in boolean metaKeyArg,
+            event.keyCode,   //  in unsigned long keyCodeArg,
+            event.charCode); //  in unsigned long charCodeArg);
+        target.dispatchEvent(synthKeyEvent);
+    }
+
+    function dispatchSimpleEvent(eventType, target) {
+        var synthEvent = document.createEvent('Event');
+        synthEvent.initEvent(eventType, true, false);
+        target.dispatchEvent(synthEvent);
+    }
+    
+    // Local state
+    // ------------------------------------------------------------
+
     var iframe = container.getElementsByTagName('iframe')[0];
     var originalHeight = iframe.contentDocument.body.scrollHeight;
 
@@ -78,9 +107,7 @@ behaviour.input = function(container) {
 
     iframe.contentWindow.addEventListener(
         'resize', function(event) {
-            var synthResizingEvent = document.createEvent('Event');
-            synthResizingEvent.initEvent('resizing', true, false);
-            container.dispatchEvent(synthResizingEvent);
+            dispatchSimpleEvent('resizing', container);
         }, false);
 
     iframe.contentWindow.addEventListener(
@@ -92,25 +119,34 @@ behaviour.input = function(container) {
                 
                 var content = container.xhtml;
                 if(content) {
-                    var synthEvent = document.createEvent('Event');
-                    synthEvent.initEvent('accept', true, false);
-                    container.dispatchEvent(synthEvent);
+                    dispatchSimpleEvent('accept', container);
                     container.reset();
                 }
             }
         }, false);
 
+    iframe.contentWindow.addEventListener(
+        'keypress', function(event) {
+            forwardKeyEvent(event, container);
+        }, false);
+
+    iframe.contentWindow.addEventListener(
+        'keyup', function(event) {
+            forwardKeyEvent(event, container);
+        }, false);
+    
     iframe.addEventListener(
         'load', function(event) {
-            if(event.currentTarget) {
-                var synthLoadEvent = document.createEvent('Event');
-                synthLoadEvent.initEvent('load', true, false);
-                container.dispatchEvent(synthLoadEvent);
-            }
+            if(event.currentTarget)
+                dispatchSimpleEvent('load', container);
         }, true);
 
     // Adding/overriding container methods
     // ------------------------------------------------------------
+
+    container.isEmpty = function() {
+        return container.html == '<br>';
+    };
 
     container.focus = function() {
         iframe.contentWindow.focus();
@@ -126,10 +162,13 @@ behaviour.input = function(container) {
     };
 
     container.__defineGetter__(
-        'xhtml', function() {
-            var body = iframe.contentDocument.body;
+        'html', function() {
+            return iframe.contentDocument.body.innerHTML;
+        });
 
-            var xhtmlBody = conv.htmlDOMToXHTML(body);
+    container.__defineGetter__(
+        'xhtml', function() {
+            var xhtmlBody = conv.htmlDOMToXHTML(iframe.contentDocument.body);
 
             // Stripping trailing <br/>, if present.
             var lastChildIndex = xhtmlBody.children().length()-1;

@@ -389,6 +389,27 @@ function init(event) {
             _('lower-menus').style.bottom = event.target.clientHeight + 2 + 'px';
             repositionOutput();
         }, false);
+
+
+    var composing = false;
+    _('chat-input').addEventListener(
+        'keyup', function(event) {
+            if(!composing)
+                return;
+
+            if(event.target.isEmpty()) {
+                composing = false;
+                sendEvent('active');
+            }
+        }, false);
+
+    _('chat-input').addEventListener(
+        'keypress', function(event) {
+            if(event.target.isEmpty() && event.charCode != 0) {
+                composing = true;
+                sendEvent('composing');
+            }
+        }, false);
 }
 
 
@@ -505,7 +526,8 @@ function requestedFormatCommand(event) {
  */
 
 function sendText(text) {
-    var message = <message/>;
+    var message =
+        <message><x xmlns={ns_event}><composing/></x><active xmlns={ns_chatstates}/></message>;
 
     if(contactResource) 
         message.@to = '/' + contactResource;
@@ -530,6 +552,22 @@ function sendXHTML(xhtmlBody) {
     message.ns_xhtml_im::html.body =
         filter.xhtmlIM.keepRecommended(xhtmlBody);
 
+    _('xmpp-outgoing').textContent = message.toXMLString();
+}
+
+function sendEvent(event) {
+    var message;
+    switch(event) {
+    case 'composing':
+        message = <message><x xmlns={ns_event}><composing/></x><composing xmlns={ns_chatstates}/></message>;
+
+        break;
+    case 'active':
+        message = <message><x xmlns={ns_event}/><active xmlns={ns_chatstates}/></message>;
+        
+        break;
+    }
+    
     _('xmpp-outgoing').textContent = message.toXMLString();
 }
 
