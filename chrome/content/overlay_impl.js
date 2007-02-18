@@ -71,7 +71,7 @@ function initOverlay(event) {
 
     channel.on(
         {event: 'message', direction: 'in', stanza: function(s) {
-                return s.@type == 'chat';
+                return s.@type == 'chat' && s.body.length() > 0;
             }},
         function(message) {
             if(prefBranch.getBoolPref('getAttentionOnMessage'))
