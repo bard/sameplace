@@ -74,10 +74,10 @@ var isGroupchat = false;
 var userAddress;
 var contactResource;
 var contactName;
-var input;
 
 XML.prettyPrinting = false;
 XML.ignoreWhitespace = false;
+
 
 // UTILITIES
 // ----------------------------------------------------------------------
