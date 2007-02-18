@@ -540,7 +540,8 @@ function sendText(text) {
 }
 
 function sendXHTML(xhtmlBody) {
-    var message = <message/>;
+    var message =
+        <message><x xmlns={ns_event}><composing/></x><active xmlns={ns_chatstates}/></message>;
 
     if(contactResource)
         message.@to = '/' + contactResource;
