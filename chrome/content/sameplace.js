@@ -113,7 +113,7 @@ function init(event) {
             requestedCommunicate(
                 event.target.getAttribute('account'),
                 event.target.getAttribute('address'),
-                'chat', getDefaultAppUrl());
+                getDefaultAppUrl());
         }, false);
 }
 
