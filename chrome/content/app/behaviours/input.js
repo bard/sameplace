@@ -62,7 +62,7 @@ behaviour.input = function(container) {
     
     iframe.contentWindow.addEventListener(
         'scroll', function(event) {
-            var totalHeight = _iframe.contentDocument.body.scrollHeight;
+            var totalHeight = iframe.contentDocument.body.scrollHeight;
 
             // If scroll event is caused by appearance of a horizontal
             // scroll bar, e.g. when only a very long non-wrapping
