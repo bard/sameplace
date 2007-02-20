@@ -203,6 +203,9 @@ function resourceChangedPresence(account, address) {
         _(contact, {role: 'status'}).removeAttribute('value');
     else
         _(contact, {role: 'status'}).value = summary.stanza.status;
+
+    if(summary.stanza.@type == 'unavailable')
+        contact.setAttribute('chatstate', '');
 }
 
 function _reposition(contact) {
