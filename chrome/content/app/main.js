@@ -390,22 +390,13 @@ function init(event) {
             repositionOutput();
         }, false);
 
-
     var composing = false;
     _('chat-input').addEventListener(
         'keyup', function(event) {
-            if(!composing)
-                return;
-
-            if(event.target.isEmpty()) {
+            if(composing && event.target.isEmpty()) {
                 composing = false;
                 sendEvent('active');
-            }
-        }, false);
-
-    _('chat-input').addEventListener(
-        'keypress', function(event) {
-            if(event.target.isEmpty() && event.charCode != 0) {
+            } else if(!composing && !event.target.isEmpty()) {
                 composing = true;
                 sendEvent('composing');
             }
