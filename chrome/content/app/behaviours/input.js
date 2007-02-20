@@ -134,7 +134,34 @@ behaviour.input = function(container) {
         'keyup', function(event) {
             forwardKeyEvent(event, container);
         }, false);
-    
+
+    iframe.contentWindow.addEventListener(
+        'keypress', function(event) {
+            if(event.ctrlKey &&
+               !event.altKey &&
+               !event.shiftKey &&
+               !event.metaKey) {
+
+                var command;
+                switch(String.fromCharCode(event.charCode)) {
+                case 'b':
+                    command = 'bold';
+                    break;
+                case 'i':
+                    command = 'italic';
+                    break;
+                case 'u':
+                    command = 'underline';
+                    break;
+                }
+
+                if(command) {
+                    event.preventDefault();
+                    iframe.contentDocument.execCommand(command, false, null);
+                }
+            }
+        }, false);
+
     iframe.addEventListener(
         'load', function(event) {
             if(event.currentTarget)
