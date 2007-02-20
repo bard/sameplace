@@ -59,14 +59,23 @@ function initOverlay(event) {
     channel = XMPP.createChannel();
 
     channel.on(
+        {event: 'transport', direction: 'out', state: 'start'},
+        function() {
+           if(window == Cc["@mozilla.org/appshell/window-mediator;1"]
+              .getService(Ci.nsIWindowMediator)
+              .getMostRecentWindow(''))
+               loadSidebar();
+        });
+
+    channel.on(
         {event: 'iq', direction: 'out', stanza: function(s) {
                 return s.ns_auth::query.length() > 0;
             }},
         function(iq) {
-            if(window == Cc["@mozilla.org/appshell/window-mediator;1"]
-               .getService(Ci.nsIWindowMediator)
-               .getMostRecentWindow(''))
-                loadSidebar();
+           if(window == Cc["@mozilla.org/appshell/window-mediator;1"]
+              .getService(Ci.nsIWindowMediator)
+              .getMostRecentWindow(''))
+               showSidebar();
         });
 
     channel.on(
@@ -128,28 +137,18 @@ function addBookmark() {
 }
 
 function loadSidebar(force) {
-    var frame = _('sidebar').firstChild.contentWindow;
-
-    if(force || frame.location.href != 'chrome://sameplace/content/sameplace.xul') 
-        frame.location.href = 'chrome://sameplace/content/sameplace.xul';
-
-    showSidebar();
+    if(force || getSidebarContent().location.href != 'chrome://sameplace/content/sameplace.xul') 
+        getSidebarContent().location.href = 'chrome://sameplace/content/sameplace.xul';
 }
 
 function toggleSidebar() {
     if(_('sidebar').collapsed)
-        showSidebar(true);
+        showSidebar();
     else 
         hideSidebar();
 }
 
 function showSidebar(load) {
-    if(load) {
-        var frame = _('sidebar').firstChild.contentWindow;
-        if(frame.location.href != 'chrome://sameplace/content/sameplace.xul') 
-            frame.location.href = 'chrome://sameplace/content/sameplace.xul';
-    }
-        
     _('sidebar').collapsed = false;
     _('sidebar-splitter').hidden = false;
 }
