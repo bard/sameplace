@@ -70,10 +70,11 @@ conv.toDOM = function(thing) {
 /**
  * Returns a well-formed translation of an HTML DOM as an XML object.
  *
- *   node.innerHTML; // -> '<BODY><IMG src="file.jpg"><P>hello<BR>world</P></BODY>'
+ *   var node = document.body;
+ *   node.innerHTML; // -> '<BODY><IMG src="file.jpg"><P>hello,<BR>world</P></BODY>'
  *   conv.htmlDOMToXHTML(node);
  *     // -> <body xmlns="http://www.w3.org/1999/xhtml">
- *     //    <img src="file.jpg"/><p>hello<br/></p></body>
+ *     //    <img src="file.jpg"/><p>hello,<br/>world</p></body>
  *  
  */
 
