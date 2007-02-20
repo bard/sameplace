@@ -36,6 +36,7 @@ const srvPrompt = Cc["@mozilla.org/embedcomp/prompt-service;1"]
 // ----------------------------------------------------------------------
 
 var channel;
+var messageCache = {};
 
 
 // GUI INITIALIZATION AND FINALIZATION
@@ -67,6 +68,10 @@ function init(event) {
         {event: 'message', direction: 'out', stanza: function(s) {
                 return s.body.length() > 0 && s.@type != 'groupchat';
             }}, function(message) { seenChatMessage(message) });
+    channel.on(
+        {event: 'message', stanza: function(s) {
+                return s.@type != 'error' && s.body.length() > 0;
+            }}, function(message) { seenCachableMessage(message); });
     channel.on(
         {event: 'presence', direction: 'out', stanza: function(s) {
                 return s.ns_muc::x.length() > 0 && s.@type != 'unavailable';
@@ -405,6 +410,11 @@ function createInteractionPanel(account, address, resource,
             conversation, function(document) {
                 XMPP.enableContentDocument(conversation, account, address, 
                                            isMUC(account, address) ? 'groupchat' : 'chat');
+
+                if(messageCache[account] && messageCache[account][address])
+                    for each(var message in messageCache[account][address])
+                        conversation.xmppChannel.receive(message);
+
                 if(afterLoadAction)
                     afterLoadAction(conversation);
             });
@@ -665,6 +675,20 @@ function isMUC(account, address) {
 
 // NETWORK REACTIONS
 // ----------------------------------------------------------------------
+
+function seenCachableMessage(message) {
+    var account = message.session.name;
+    var address = message.direction == 'in' ?
+        XMPP.JID(message.stanza.@from).address : XMPP.JID(message.stanza.@to).address;
+    if(!messageCache[account])
+        messageCache[account] = {};
+    if(!messageCache[account][address])
+        messageCache[account][address] = [];
+    var cache = messageCache[account][address];
+    if(cache.length > 10)
+        cache.shift();
+    cache.push(message);
+}
 
 function seenChatMessage(message) {
     function maybeSetUnread(conversation) {
