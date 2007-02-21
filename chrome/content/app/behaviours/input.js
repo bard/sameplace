@@ -126,11 +126,6 @@ behaviour.input = function(container) {
         }, false);
 
     iframe.contentWindow.addEventListener(
-        'keypress', function(event) {
-            forwardKeyEvent(event, container);
-        }, false);
-
-    iframe.contentWindow.addEventListener(
         'keyup', function(event) {
             forwardKeyEvent(event, container);
         }, false);
