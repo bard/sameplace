@@ -148,7 +148,8 @@ function toggleSidebar() {
         hideSidebar();
 }
 
-function showSidebar(load) {
+function showSidebar() {
+    loadSidebar();
     _('sidebar').collapsed = false;
     _('sidebar-splitter').hidden = false;
 }
