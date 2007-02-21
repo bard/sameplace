@@ -10,10 +10,6 @@
     <script type="application/x-javascript" src="../behaviours/autocomplete.js"/>
     <script type="application/x-javascript" src="conversations.js"/>
 
-    <popupset>
-      <popup id="contact-completions"/>      
-    </popupset>
-
     <commandset>
       <command id="command-close-current"
                label="Close Current"
@@ -90,7 +86,9 @@
                  class="sb_faceplate, mainwin_location"
                  flex="1"
                  onfocus="this.select();"
-                 onkeypress="pressedKeyInContactField(event);"/>
+                 onkeypress="pressedKeyInContactField(event);">
+          <popup/>
+        </textbox>
       </hbox>
       <button role="attach"
               tooltip="attach-tooltip"

@@ -73,14 +73,14 @@ function nowTalkingWith() {
     contacts.nowTalkingWith.apply(contacts, arguments);
 }
 
-function requestedCommunicate(account, address, type, url) {
+function requestedCommunicate(account, address, url) {
     withConversations(
         function(conversations) {
             conversations.interactWith(
-                account, address, null, type, url, 'main',
+                account, address, null, url, 'main',
                 function() {
                     conversations.requestedCommunicate(
-                        account, address, type, url);
+                        account, address, url);
                 }); 
         });
 }

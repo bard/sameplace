@@ -27,33 +27,20 @@ window.addEventListener(
     'unload', function(event) { finish(); }, false);
 
 function init(event) {
-    new AutoComplete(
-        _('contact'), _('contact-completions'),
-        function(input, xulCompletions) {
-            for each(var iq in XMPP.cache.roster) {
-                for each(var item in iq.stanza..ns_roster::item) {
-                    var account = iq.session.name;
-                    var address = item.@jid;
-                    var nick = XMPP.nickFor(account, address);
-                    var presence = XMPP.presenceSummary(account, address);
-                    if(nick.toLowerCase().indexOf(input.toLowerCase()) == 0) {
-                        var xulCompletion = document.createElement('menuitem');
-                        xulCompletion.setAttribute('class', 'menuitem-iconic');
-                        xulCompletion.setAttribute('label', nick);
-                        xulCompletion.setAttribute('value', account + ' ' + address);
-                        xulCompletion.setAttribute('availability', presence.stanza.@type.toString() || 'available');
-                        xulCompletion.setAttribute('show', presence.stanza.show.toString());
-                        xulCompletions.appendChild(xulCompletion);
-                    }
-                }
-            }
-        },
-        function(choice) {
-            var parts = choice.split(' ');
-            var account = parts[0];
-            var address = parts[1];
-            requestedCommunicate(account, address, 'chat', getDefaultAppUrl());
-        });
+    behaviour.autoComplete(_('contact'));
+
+    _('contact').addEventListener(
+        'complete', function(event) {
+            buildContactCompletions(event.target);
+        }, false);
+
+    _('contact').addEventListener(
+        'completed', function(event) {
+            requestedCommunicate(
+                event.target.getAttribute('account'),
+                event.target.getAttribute('address'),
+                getDefaultAppUrl());
+        }, false);
 }
 
 function finish(event) {
@@ -65,25 +52,97 @@ function finish(event) {
     }
 }
 
-function interactWith(account, address, resource, type,
+function interactWith(account, address, resource, 
                       where, target, afterLoadAction) {
     if(typeof(where) == 'string')
         // "where" is a url
         if(isConversationOpen(account, address)) {
             focusConversation(account, address);
-            if(afterLoadAction)
-                afterLoadAction(getConversation(account, address));
+            afterLoadAction(getConversation(account, address));
         } else
-            createInteractionPanel(account, address, resource, type,
+            createInteractionPanel(account, address, resource,
                                    where, target, afterLoadAction);
     else
         // "where" is a content panel
-        XMPP.enableContentDocument(where, account, address, type);
+        XMPP.enableContentDocument(where, account, address,
+                                   isMUC(account, address) ? 'groupchat' : 'chat');
 }
 
 
 // GUI ACTIONS
 // ----------------------------------------------------------------------
+
+function buildContactCompletions(xulCompletions) {
+    function presenceDegree(stanza) {
+        if(stanza.@type == undefined && stanza.show == undefined)
+            return 4;
+        else if(stanza.@type == 'unavailable')
+            return 0;
+        else
+            switch(stanza.show.toString()) {
+            case 'chat': return 5; break;
+            case 'dnd':  return 3; break;
+            case 'away': return 2; break;
+            case 'xa':   return 1; break;
+            default:
+                throw new Error('Unexpected. (' + stanza.toXMLString() + ')');
+            }
+    }
+
+    var input = xulCompletions.parentNode.value;
+    var completions = [];
+
+    for each(var iq in XMPP.cache.roster) {
+        for each(var item in iq.stanza..ns_roster::item) {
+            var account = iq.session.name;
+            var address = item.@jid;
+            var nick = XMPP.nickFor(account, address);
+            var presence = XMPP.presenceSummary(account, address);
+            if(nick.toLowerCase().indexOf(input.toLowerCase()) == 0)
+                completions.push({
+                    label: nick,
+                    account: account,
+                    address: address,
+                    show: presence.stanza.show.toString(),
+                    presence: presence,
+                    availability: presence.stanza.@type.toString() || 'available' });
+        }
+    }
+
+    for each(var presence in XMPP.cache.presenceOut)
+        if(presence.stanza && presence.stanza.ns_muc::x.length() > 0) {
+            var account = presence.session.name;
+            var address = XMPP.JID(presence.stanza.@to).address;
+            if(address.toLowerCase().indexOf(input.toLowerCase()) == 0)
+                completions.push({
+                    label: address,
+                    account: account,
+                    address: address,
+                    show: presence.stanza.show.toString(),
+                    presence: presence,
+                    availability: 'available' });
+        }
+
+    completions
+        .sort(
+            function(a, b) {
+                var diff = presenceDegree(b.presence.stanza) - presenceDegree(a.presence.stanza);
+                if(diff == 0)
+                    diff = (a.label.toLowerCase() < b.label.toLowerCase()) ? -1 : 1;
+                return diff;
+            })
+        .forEach(
+            function(completion) {
+                var xulCompletion = document.createElement('menuitem');
+                xulCompletion.setAttribute('class', 'menuitem-iconic');
+                xulCompletion.setAttribute('label', completion.label);
+                xulCompletion.setAttribute('account', completion.account);
+                xulCompletion.setAttribute('address', completion.address);
+                xulCompletion.setAttribute('availability', completion.availability);
+                xulCompletion.setAttribute('show', completion.show);
+                xulCompletions.appendChild(xulCompletion);
+            });
+}
 
 function toggleAttachContacts() {
     if(tracker.onMove) 
@@ -174,7 +233,7 @@ if(typeof(x) == 'function') {
 
 // FROM SAMEPLACE...
 
-function createInteractionPanel(account, address, resource, type,
+function createInteractionPanel(account, address, resource, 
                                 url, target,
                                 afterLoadAction) {
 //     switch(target) {
@@ -228,7 +287,9 @@ function createInteractionPanel(account, address, resource, type,
 
         queuePostLoadAction(
             conversation, function(document) {
-                XMPP.enableContentDocument(conversation, account, address, type);
+                XMPP.enableContentDocument(conversation, account, address, 
+                                           isMUC(account, address) ? 'groupchat' : 'chat');
+
                 if(afterLoadAction)
                     afterLoadAction(conversation);
             });
@@ -247,7 +308,6 @@ function createInteractionPanel(account, address, resource, type,
         // No real use for this now.
 
         conversation.setAttribute('resource', resource);
-        conversation.setAttribute('message-type', type);
 
         if(_('conversations').childNodes.length == 1) {
             _('conversations').selectedIndex = 0;
@@ -303,25 +363,24 @@ function pressedKeyInContactField(event) {
         focusCurrentConversation();
 }
 
-function requestedCommunicate(account, address, type, url) {
+function requestedCommunicate(account, address, url) {
     if(url == getDefaultAppUrl()) 
-        if(type == 'groupchat' && isConversationOpen(account, adrress)) 
-            promptOpenConversation(account, address, type);
+        if(isMUC(account, address) && !isConversationOpen(account, address))
+            promptOpenConversation(account, address, isMUC(account, address) ? 'groupchat' : 'chat');
         else
             interactWith(
-                account, address, null, type,
+                account, address, null,
                 url, 'main', function(conversation) {
                     focusConversation(account, address);
-                    openedConversation(account, address, type);
+                    openedConversation(account, address);
                 });
     else
         interactWith(
-            account, address, null, type,
-            url, 'additional');
+            account, address, null, url, 'additional');
 }
 
-function openedConversation(account, address, type) {
-    contacts.startedConversationWith(account, address, type);
+function openedConversation(account, address) {
+    contacts.startedConversationWith(account, address);
     
     if(_('conversations').childNodes.length == 1)
         contacts.nowTalkingWith(account, address);
@@ -367,3 +426,28 @@ function getDefaultAppUrl() {
     return isChromeUrl(url) ? chromeToFileUrl(url) : url;
 }
 
+function isMUC(account, address) {
+    for each(var presence in XMPP.cache.presenceOut)
+        if(presence.stanza.@to != undefined &&
+           XMPP.JID(presence.stanza.@to).address == address &&
+           presence.stanza.ns_muc::x.length() > 0)
+            return true;
+
+    return false;
+}
+
+
+// DEVELOPER UTILITIES
+// ----------------------------------------------------------------------
+
+function getStackTrace() {
+    var frame = Components.stack.caller;
+    var str = "<top>";
+
+    while (frame) {
+        str += '\n' + frame;
+        frame = frame.caller;
+    }
+
+    return str;
+}
