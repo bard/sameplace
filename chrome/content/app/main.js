@@ -143,6 +143,46 @@ function formatTime(dateTime) {
 }
 
 
+function textToRGB(text) {
+    function hsv2rgb(h, s, v) {
+        var colr = [2, 1, 0, 0, 3, 2];
+        var colg = [3, 2, 2, 1, 0, 0];
+        var colb = [0, 0, 3, 2, 2, 1];
+        var colp = [4];
+        var r = g = b = 0;
+        var nh, ic, fc, ts;
+
+        if(s == 0) {
+            r = g = b = Math.round(255*v);
+        } else {
+            h = h % 360;
+            nh = h/60;
+            ic = Math.round(nh);
+            fc = nh-ic;
+            colp[2] = 255*v;
+            colp[0] = colp[2]*(1-s);
+            colp[1] = colp[2]*(1-s*fc);
+            colp[3] = colp[2]*(1-s*(1-fc));
+            r = Math.round(colp[colr[ic]]);
+            g = Math.round(colp[colg[ic]]);
+            b = Math.round(colp[colb[ic]]);
+        }
+        return [r, g, b];
+    }
+
+    function toRange(srcValue, srcRange, dstRange) {
+        return srcValue / srcRange * dstRange;
+    }
+
+    var positiveCRC = crc32.crc(text) + Math.pow(2, 31);
+    var hue = Math.round(toRange(positiveCRC, Math.pow(2, 32), 360));
+    const value = 0.40;
+    const saturation = 0.92;
+
+    return hsv2rgb(hue, saturation, value);
+};
+
+
 // GUI UTILITIES (GENERIC)
 // ----------------------------------------------------------------------
 
@@ -429,6 +469,10 @@ function displayMessage(stanza) {
                         contactName || JID(stanza.@from).username || stanza.@from;
 
             
+            if(stanza.@type == 'groupchat')
+                M(domMessage).sender.setAttribute(
+                    'style', 'color: rgb(' + textToRGB(JID(stanza.@from).nick).join(',') + ')');
+
             M(domMessage).sender.setAttribute(
                 'class', stanza.@from.toString() ? 'contact' : 'user');
 

@@ -220,4 +220,3 @@ conv.xhtmlToText = function(src) {
                });
     return flatList.join('');
 };
-
