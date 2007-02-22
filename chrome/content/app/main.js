@@ -144,6 +144,10 @@ function formatTime(dateTime) {
 
 
 function textToRGB(text) {
+    var memo = arguments.callee.memo;
+    if(memo[text])
+        return memo[text];
+    
     function hsv2rgb(h, s, v) {
         var colr = [2, 1, 0, 0, 3, 2];
         var colg = [3, 2, 2, 1, 0, 0];
@@ -179,8 +183,10 @@ function textToRGB(text) {
     const value = 0.40;
     const saturation = 0.92;
 
-    return hsv2rgb(hue, saturation, value);
+    memo[text] = hsv2rgb(hue, saturation, value);
+    return memo[text];
 };
+textToRGB.memo = {};
 
 
 // GUI UTILITIES (GENERIC)
