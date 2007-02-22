@@ -78,7 +78,9 @@ function init(event) {
             }}, function(presence) { sentMUCPresence(presence) });
 
     contacts = _('contacts').contentWindow;
-    contacts.onRequestedCommunicate = requestedCommunicate;
+    contacts.onRequestedCommunicate = function() {
+        requestedCommunicate.apply(null, arguments);
+    };
 
     XMPP.cache.presenceOut.forEach(sentAvailablePresence);
 
