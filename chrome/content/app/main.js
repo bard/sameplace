@@ -393,6 +393,9 @@ function init(event) {
     var composing = false;
     _('chat-input').addEventListener(
         'keyup', function(event) {
+            if(isGroupchat)
+                return;
+            
             if(composing && event.target.isEmpty()) {
                 composing = false;
                 sendEvent('active');
