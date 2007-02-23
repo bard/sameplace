@@ -1,7 +1,8 @@
 var behaviour = behaviour || {};
 
 behaviour.autoComplete = function(textbox) {
-    var popup = textbox.firstChild;
+    var popup = document.createElement('popup');
+    textbox.appendChild(popup);
 
     function showCompletions() {
         popup.showPopup(

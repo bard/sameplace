@@ -125,9 +125,7 @@
                  control="contact"
                  style="font-size: smaller; margin-right: 0;"/>
           <textbox id="contact" flex="1" onfocus="this.select();"
-                   onkeypress="pressedKeyInContactField(event);">
-            <popup/>
-          </textbox>
+                   onkeypress="pressedKeyInContactField(event);"/>
         </toolbaritem>
         <toolbarbutton role="attach"
                        hidden="true"
