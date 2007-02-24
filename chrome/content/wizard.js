@@ -83,8 +83,10 @@ function updatePageAccountExisting(event) {
         if(serverPart == 'gmail.com' || serverPart == 'googlemail.com') {
             _('account-existing.server-hostname').value = 'talk.google.com';
             _('account-existing.server-port').value = 443;
-        } else 
+        } else {
             _('account-existing.server-hostname').value = serverPart || '';
+            _('account-existing.server-port').value = 5223;
+        }
     }
 
     _('wizard').canAdvance = address &&
