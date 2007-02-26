@@ -311,6 +311,9 @@ ul#messages {
 .message.contact > .sender:before {
     content: "<";
 }
+.message.contact > .sender:after {
+    content: "";
+}
 
 .message.user + .message.user > .sender,
 .message.contact + .message.contact > .sender {
