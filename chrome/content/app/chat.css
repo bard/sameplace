@@ -258,7 +258,73 @@ ul#messages {
     padding: 0;
 }
 
-.time {
+
+/* MESSAGE - GENERAL */
+
+.message {
+    margin-bottom: 0.25em;
+    margin-top: 0.25em;
+    line-height: 120%;
+    clear: both;
+}
+
+.message.user {
+    border-top: 1px dotted #e1e5e8;
+}
+
+.message.contact {
+    border-top: 1px dotted #e8d8d8;
+}
+
+.message.user + .message.user,
+.message.contact + .message.contact {
+    border: none;
+}
+
+
+/* MESSAGE - SENDER */
+
+.message > .sender {
+    font-weight: bold;
+    margin-right: 0.5em;
+    font-size: smaller;
+    display: block;
+}
+
+.message > .sender,
+.message.user > .sender {
+    float: left;
+    color: #0c5588;
+}
+
+.message.contact > .sender {
+    color: #9e0909;
+    float: right;
+    margin-left: 5px;
+}
+
+.message > .sender:after,
+.message.user > .sender:after {
+    content: ">";
+}
+
+.message.contact > .sender:before {
+    content: "<";
+}
+
+.message.user + .message.user > .sender,
+.message.contact + .message.contact > .sender {
+    display: none;
+}
+
+
+/* MESSAGE - TIME */
+
+.message:hover > .time {
+    display: block;
+}
+
+.message > .time {
     position: fixed;
     display: none;
     z-index: 100;
@@ -275,32 +341,25 @@ ul#messages {
     -moz-border-radius-bottomright: 8px;
 }
 
-.message {
-    margin-bottom: 0.25em;
-    margin-top: 0.25em;
-    line-height: 120%;
-}
 
-.message:hover > .time {
+/* MESSAGE - CONTENT */
+
+.message > .content {
     display: block;
 }
 
-.user {
-    color: #0c5588;
+.message > .content,
+.message.user > .content {
+    margin-left: 2em;
 }
 
-.contact {
-    color: #9e0909;
+.message.contact > .content {
+    margin-right: 2em;
+    text-align: right;
 }
 
-.user, .contact {
-    font-weight: bold;
-    margin-right: 0.5em;
-    font-size: smaller;
-}
-.user:after, .contact:after {
-    content: ">";
-}
+
+/* EVENTS */
 
 .join, .leave, .error {
     font-style: italic;
@@ -330,6 +389,7 @@ img.emoticon {
     max-width: 32px;
     vertical-align: text-bottom;
 }
+
 
 
 /* SOCKET */
