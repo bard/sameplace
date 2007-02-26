@@ -479,8 +479,11 @@ function displayMessage(stanza) {
                 M(domMessage).sender.setAttribute(
                     'style', 'color: rgb(' + textToRGB(JID(stanza.@from).nick).join(',') + ')');
 
-            M(domMessage).sender.setAttribute(
-                'class', stanza.@from.toString() ? 'contact' : 'user');
+            if(stanza.@type != 'groupchat')
+                domMessage.setAttribute(
+                    'class',
+                    domMessage.getAttribute('class') + ' ' +
+                    (stanza.@from.toString() ? 'contact' : 'user'));
 
             var body;
             if(stanza.ns_xhtml_im::html == undefined) {
