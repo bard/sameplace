@@ -317,9 +317,17 @@ ul#messages {
     font-weight: bold;
 }
 
+/* IMAGES */
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
 img.emoticon {
     margin: 0 0;
     padding: 0 0;
+    max-width: 32px;
     vertical-align: text-bottom;
 }
 
