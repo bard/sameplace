@@ -379,21 +379,20 @@ function createInteractionPanel(account, address, resource,
     switch(target) {
     case 'additional':
         if(!(url.match(/^javascript:/) ||
-             getBrowser().contentDocument.location.href == 'about:blank')) {
+             getBrowser().contentDocument.location.href == 'about:blank'))
             getBrowser().selectedTab = getBrowser().addTab();
-
-            var contentPanel = getBrowser().selectedBrowser;
-
-            queuePostLoadAction(
-                contentPanel, function(document) {
-                    XMPP.enableContentDocument(contentPanel, account, address,
-                                               isMUC(account, address) ? 'groupchat' : 'chat');
-                    if(afterLoadAction)
-                        afterLoadAction(contentPanel);
-                });
-
-            contentPanel.loadURI(url);
-        }
+        
+        var contentPanel = getBrowser().selectedBrowser;
+        
+        queuePostLoadAction(
+            contentPanel, function(document) {
+                XMPP.enableContentDocument(contentPanel, account, address,
+                                           isMUC(account, address) ? 'groupchat' : 'chat');
+                if(afterLoadAction)
+                    afterLoadAction(contentPanel);
+            });
+        
+        contentPanel.loadURI(url);
             
         return contentPanel;
         break;
