@@ -152,9 +152,7 @@
     <box hidden="true" id="blueprints">
       <browser type="content"
                role="conversation"
-               resource="" message-type=""
-               src="about:blank" flex="1"
-               ondragdrop="nsDragAndDrop.drop(event, chatDropObserver)"/>
+               resource="" src="about:blank" flex="1"/>
     </box>
   </vbox>
 </page>

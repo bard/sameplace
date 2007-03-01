@@ -261,7 +261,8 @@ function initApplicationMenu(menuPopup) {
                 if(!menus[category]) {
                     var menu = document.createElement('menu');
                     menu.setAttribute('label', category);
-                    menuPopup.appendChild(menu);
+                    menuPopup.insertBefore(menu, menuPopup.getElementsByTagName('menuseparator')[0]);
+
                     var popup = document.createElement('menupopup');
                     menu.appendChild(popup);
                     menus[category] = popup;
@@ -486,6 +487,12 @@ function createInteractionPanel(account, address, resource,
         conversation.addEventListener(
             'click', function(event) {
                 clickedElementInConversation(event);
+            }, true);
+
+        conversation.addEventListener(
+            'dragdrop', function(event) {
+                nsDragAndDrop.drop(event, chatDropObserver);
+                event.stopPropagation();
             }, true);
 
         queuePostLoadAction(

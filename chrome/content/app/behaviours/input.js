@@ -184,6 +184,11 @@ behaviour.input = function(container) {
     };
 
     container.__defineGetter__(
+        'editArea', function() {
+            return iframe.contentWindow;
+        });
+
+    container.__defineGetter__(
         'html', function() {
             return iframe.contentDocument.body.innerHTML;
         });

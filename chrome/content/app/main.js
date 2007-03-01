@@ -398,16 +398,20 @@ function init(event) {
             }
         }, false);
 
+    info.init(_('info'));
+
+    behaviour.input(_('chat-input'));
+
+
     _('chat-output').addEventListener(
         'hsDrop', function(event) { droppedDataInConversation(event); }, false);
 
-    info.init(_('info'));
+    _('chat-output').addEventListener(
+        'scroll', function(event) { scrolledWindow(event); }, false);
+
 
     window.addEventListener(
         'resize', function(event) { resizedWindow(event); }, false);
-
-    _('chat-output').addEventListener(
-        'scroll', function(event) { scrolledWindow(event); }, false);
 
     window.addEventListener(
         'focus', function(event) { _('chat-input').focus(); }, false);
@@ -416,7 +420,8 @@ function init(event) {
         'blur', function(event) { _('chat-input').blur(); }, false);
 
 
-    behaviour.input(_('chat-input'));
+    _('chat-input').editArea.addEventListener(
+        'hsDrop', function(event) { droppedDataInInput(event)}, false);
 
     _('chat-input').addEventListener(
         'load', function(event) {
@@ -522,6 +527,22 @@ function displayEvent(eventClass, text) {
 
 // GUI REACTIONS
 // ----------------------------------------------------------------------
+
+function droppedDataInInput(event) {
+    var data = new XML(_('dnd-sink').textContent);
+    var contentType = data['@content-type'].toString();
+    
+    switch(contentType) {
+    case 'text/unicode':
+    case 'text/html':
+        _('chat-input').execCommand('insertHTML', data.toString());
+        _('chat-input').focus();
+
+        break;
+    default:
+        throw new Error('Unexpected. (' + contentType + ')');
+    }
+}
 
 function droppedDataInConversation(event) {
     var data = new XML(_('dnd-sink').textContent);
