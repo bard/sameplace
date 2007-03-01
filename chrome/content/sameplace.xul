@@ -133,6 +133,13 @@
                        count="0"
                        oncommand="requestedAttachBrowser(getCurrentConversation());"
                        class="small-margin"/>
+        <toolbarbutton role="application"
+                       hidden="true"
+                       tooltiptext="Use a different application to interact with contact"
+                       type="menu"
+                       class="small-margin">
+          <menupopup id="menu-applications" oncommand="requestedAdditionalInteraction(event);"/>
+        </toolbarbutton>
         <toolbarbutton role="close"
                        hidden="true"
                        tooltiptext="Close this conversation"

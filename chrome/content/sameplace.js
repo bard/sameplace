@@ -92,6 +92,7 @@ function init(event) {
                 _('conversations').collapsed = hideConversations;
                 _('contact-toolbox', {role: 'close'}).hidden = hideConversations;
                 _('contact-toolbox', {role: 'attach'}).hidden = hideConversations;
+                _('contact-toolbox', {role: 'application'}).hidden = hideConversations;
                 if(hideConversations)
                     _('contact').value = '';
             }
@@ -104,6 +105,7 @@ function init(event) {
                 var hideConversations = _('conversations').childNodes.length == 1;
                 _('contact-toolbox', {role: 'close'}).hidden = hideConversations;
                 _('contact-toolbox', {role: 'attach'}).hidden = hideConversations;
+                _('contact-toolbox', {role: 'application'}).hidden = hideConversations;
                 if(hideConversations)
                     _('contact').value = '';
             }
@@ -123,6 +125,8 @@ function init(event) {
                 event.target.getAttribute('address'),
                 getDefaultAppUrl());
         }, false);
+
+    initApplicationMenu(_('menu-applications'));
 }
 
 function finish() {
@@ -132,6 +136,50 @@ function finish() {
             conversation.getAttribute('address'));
 
     channel.release();
+}
+
+
+// NETWORK UTILITIES
+// ----------------------------------------------------------------------
+
+function fetchFeed(feedUrl, continuation) {
+    if(!Ci.nsIFeed) {
+        continuation(null);
+        return;
+    }
+    
+    var req = new XMLHttpRequest();
+
+    req.onload = function() {
+        var data = req.responseText;
+
+        var ioService = Cc['@mozilla.org/network/io-service;1']
+        .getService(Ci.nsIIOService);
+        var uri = ioService.newURI(feedUrl, null, null);
+
+        if(data.length) {
+            var parser = Cc['@mozilla.org/feed-processor;1']
+                .createInstance(Ci.nsIFeedProcessor);
+            try {
+                parser.listener = {
+                    handleResult: function(result) {
+                        continuation(result.doc.QueryInterface(Ci.nsIFeed));
+                    }
+                };
+                parser.parseFromString(data, uri);
+            }
+            catch(e) {
+                continuation(null, e);
+            }
+        }
+    };
+
+    req.open('GET', feedUrl, true);
+    try {
+        req.send(null);
+    } catch(e) {
+        continuation(null, e)
+    }
 }
 
 
@@ -203,6 +251,36 @@ if(typeof(x) == 'function') {
 // ----------------------------------------------------------------------
 // Application-dependent functions dealing with user interface.  They
 // affect the domain.
+
+function initApplicationMenu(menuPopup) {
+    fetchFeed(
+        'http://apps.sameplace.cc/feed.xml',
+        function(feed, e) {
+            if(!feed) throw e;
+
+            var menus = {};
+            function menuFor(category) {
+                if(!menus[category]) {
+                    var menu = document.createElement('menu');
+                    menu.setAttribute('label', category);
+                    menuPopup.appendChild(menu);
+                    var popup = document.createElement('menupopup');
+                    menu.appendChild(popup);
+                    menus[category] = popup;
+                }
+                return menus[category];
+            }
+
+            for(var i=0; i<feed.items.length; i++) {
+                var item = feed.items.queryElementAt(i, Ci.nsIFeedEntry);
+
+                var menuItem = document.createElement('menuitem');
+                menuItem.setAttribute('label', item.fields.getProperty('title'));
+                menuItem.setAttribute('value', item.fields.getProperty('link'));
+                menuFor(item.fields.getProperty('dc:subject')).appendChild(menuItem);
+            }
+        });
+}
 
 function buildContactCompletions(xulCompletions) {
     function presenceDegree(stanza) {
@@ -359,15 +437,20 @@ function changeStatusMessage(message) {
 
 function interactWith(account, address, resource,
                       where, target, afterLoadAction) {
-    if(typeof(where) == 'string')
+    if(typeof(where) == 'string') {
         // "where" is a url
-        if(isConversationOpen(account, address)) {
-            focusConversation(account, address);
-            afterLoadAction(getConversation(account, address));
-        } else
+        if(target == 'main') {
+            if(isConversationOpen(account, address)) {
+                focusConversation(account, address);
+                afterLoadAction(getConversation(account, address));
+            } else
+                createInteractionPanel(account, address, resource,
+                                       where, target, afterLoadAction);
+        } else {
             createInteractionPanel(account, address, resource,
                                    where, target, afterLoadAction);
-    else
+        }
+    } else
         // "where" is a content panel
         XMPP.enableContentDocument(where, account, address,
                                    isMUC(account, address) ? 'groupchat' : 'chat');
@@ -525,6 +608,15 @@ var chatDropObserver = {
         dropTarget.dispatchEvent(synthEvent);
     }
 };
+
+function requestedAdditionalInteraction(event) {
+    var conversation = getCurrentConversation();
+    var account = attr(conversation, 'account');
+    var address = attr(conversation, 'address');
+    var url = event.target.value;
+
+    requestedCommunicate(account, address, url);
+}
 
 function requestedCommunicate(account, address, url) {
     if(url == getDefaultAppUrl())

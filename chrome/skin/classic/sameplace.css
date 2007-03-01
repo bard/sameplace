@@ -23,6 +23,10 @@
     list-style-image: url("attached.png");
 }
 
+[role="application"] {
+    list-style-image: url("applications.png");
+}
+
 [role="conversation"] [role="contact"] {
 
 }
