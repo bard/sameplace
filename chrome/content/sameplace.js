@@ -92,7 +92,6 @@ function init(event) {
                 _('conversations').collapsed = hideConversations;
                 _('contact-toolbox', {role: 'close'}).hidden = hideConversations;
                 _('contact-toolbox', {role: 'attach'}).hidden = hideConversations;
-                _('contact-toolbox', {role: 'application'}).hidden = hideConversations;
                 if(hideConversations)
                     _('contact').value = '';
             }
@@ -105,7 +104,6 @@ function init(event) {
                 var hideConversations = _('conversations').childNodes.length == 1;
                 _('contact-toolbox', {role: 'close'}).hidden = hideConversations;
                 _('contact-toolbox', {role: 'attach'}).hidden = hideConversations;
-                _('contact-toolbox', {role: 'application'}).hidden = hideConversations;
                 if(hideConversations)
                     _('contact').value = '';
             }
@@ -615,7 +613,10 @@ function requestedAdditionalInteraction(event) {
     var address = attr(conversation, 'address');
     var url = event.target.value;
 
-    requestedCommunicate(account, address, url);
+    if(url == 'current')
+        interactWith(account, address, null, getBrowser().selectedBrowser);
+    else
+        requestedCommunicate(account, address, url);
 }
 
 function requestedCommunicate(account, address, url) {
@@ -688,13 +689,6 @@ function requestedAddContact() {
 
     if(request.confirm)
         contacts.addContact(request.account, request.contactAddress, request.subscribeToPresence);
-}
-
-function requestedAttachBrowser(element) {
-    interactWith(attr(element, 'account'),
-                 attr(element, 'address'),
-                 attr(element, 'resource'),
-                 getBrowser().selectedBrowser);
 }
 
 function requestedCloseConversation(element) {

@@ -129,16 +129,14 @@
         </toolbaritem>
         <toolbarbutton role="attach"
                        hidden="true"
-                       tooltip="attach-tooltip"
-                       count="0"
-                       oncommand="requestedAttachBrowser(getCurrentConversation());"
-                       class="small-margin"/>
-        <toolbarbutton role="application"
-                       hidden="true"
-                       tooltiptext="Use a different application to interact with contact"
+                       tooltiptext="Use an additional application to interact with contact"
                        type="menu"
                        class="small-margin">
-          <menupopup id="menu-applications" oncommand="requestedAdditionalInteraction(event);"/>
+          <menupopup id="menu-applications"
+                     oncommand="requestedAdditionalInteraction(event);">
+            <menuseparator/>
+            <menuitem label="Current Page" value="current" tooltip="Interact with contact on current page"/>
+          </menupopup>
         </toolbarbutton>
         <toolbarbutton role="close"
                        hidden="true"

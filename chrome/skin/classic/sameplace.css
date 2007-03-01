@@ -15,16 +15,8 @@
     -moz-image-region: rect(0px, 32px, 16px, 16px);
 }
 
-[role="attach"][count="0"] {
-    list-style-image: url("attach.png");
-}
-
 [role="attach"] {
-    list-style-image: url("attached.png");
-}
-
-[role="application"] {
-    list-style-image: url("applications.png");
+    list-style-image: url("attach.png");
 }
 
 [role="conversation"] [role="contact"] {
