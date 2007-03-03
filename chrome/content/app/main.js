@@ -535,7 +535,11 @@ function droppedDataInInput(event) {
     switch(contentType) {
     case 'text/unicode':
     case 'text/html':
-        _('chat-input').execCommand('insertHTML', data.toString());
+        var m = data.match(/^(?:<a.*[^>]>)?<img.*src=(?:\"|\')([^\"\']+).*[^>]+>$/i);
+        if(m)
+            _('chat-input').execCommand('insertImage', m[1]);
+        else
+            _('chat-input').execCommand('insertHTML', data.toString());
         _('chat-input').focus();
 
         break;
