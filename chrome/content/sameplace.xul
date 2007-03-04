@@ -135,7 +135,8 @@
           <menupopup id="menu-applications"
                      oncommand="requestedAdditionalInteraction(event);">
             <menuseparator/>
-            <menuitem label="Current Page" value="current" tooltip="Interact with contact on current page"/>
+            <menuitem label="Current Page" value="current"
+                      tooltiptext="Interact with contact on current page (current page must be a shared application)"/>
           </menupopup>
         </toolbarbutton>
         <toolbarbutton role="close"

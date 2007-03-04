@@ -261,6 +261,7 @@ function initApplicationMenu(menuPopup) {
                 if(!menus[category]) {
                     var menu = document.createElement('menu');
                     menu.setAttribute('label', category);
+                    menu.setAttribute('tooltiptext', category);
                     menuPopup.insertBefore(menu, menuPopup.getElementsByTagName('menuseparator')[0]);
 
                     var popup = document.createElement('menupopup');
@@ -276,6 +277,7 @@ function initApplicationMenu(menuPopup) {
                 var menuItem = document.createElement('menuitem');
                 menuItem.setAttribute('label', item.fields.getProperty('title'));
                 menuItem.setAttribute('value', item.fields.getProperty('link'));
+                menuItem.setAttribute('tooltiptext', item.fields.getProperty('description'));
                 menuFor(item.fields.getProperty('dc:subject')).appendChild(menuItem);
             }
         });
