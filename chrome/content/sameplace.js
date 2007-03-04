@@ -456,75 +456,57 @@ function interactWith(account, address,
 }
 
 function createInteractionPanel(account, address,
-                                url, target,
+                                url, container,
                                 afterLoadAction) {
-    switch(target) {
-    case 'additional':
+    var panel;
+    if(container == 'additional') {
         if(!(url.match(/^javascript:/) ||
              getBrowser().contentDocument.location.href == 'about:blank'))
             getBrowser().selectedTab = getBrowser().addTab();
         
-        var contentPanel = getBrowser().selectedBrowser;
-        
-        queuePostLoadAction(
-            contentPanel, function(document) {
-                XMPP.enableContentDocument(contentPanel, account, address,
-                                           isMUC(account, address) ? 'groupchat' : 'chat');
-                if(afterLoadAction)
-                    afterLoadAction(contentPanel);
-            });
-        
-        contentPanel.loadURI(url);
-            
-        return contentPanel;
-        break;
+        panel = getBrowser().selectedBrowser;
+    } else {
+        panel = cloneBlueprint('conversation');
+        _('conversations').appendChild(panel);
 
-    case 'main':
-        var conversation = cloneBlueprint('conversation');
-        _('conversations').appendChild(conversation);
-
-        conversation.addEventListener(
+        panel.addEventListener(
             'click', function(event) {
                 clickedElementInConversation(event);
             }, true);
 
-        conversation.addEventListener(
+        panel.addEventListener(
             'dragdrop', function(event) {
                 nsDragAndDrop.drop(event, chatDropObserver);
                 event.stopPropagation();
             }, true);
-
-        queuePostLoadAction(
-            conversation, function(document) {
-                XMPP.enableContentDocument(conversation, account, address, 
-                                           isMUC(account, address) ? 'groupchat' : 'chat');
-
-                if(messageCache[account] && messageCache[account][address])
-                    for each(var message in messageCache[account][address])
-                        conversation.xmppChannel.receive(message);
-
-                if(afterLoadAction)
-                    afterLoadAction(conversation);
-            });
-
-        // XMPP.enableContentDocument will set account and address as
-        // well, but if several messages arrive in a flurry (as when
-        // we come online and the server sends in those messages that
-        // were addressed to us while we were offline) we will need to
-        // identify the newly created panel *before*
-        // XMPP.enableContentDocument has a chance to do its work.
-        
-        conversation.setAttribute('account', account);
-        conversation.setAttribute('address', address);        
-        conversation.setAttribute('src', url);
-        return conversation;
-        break;
-
-    default:
-        throw new Error('Unexpected. (' + target + ')');
-        break;
     }
-    return undefined;
+
+    // XMPP.enableContentDocument will set account and address as
+    // well, but if several messages arrive in a flurry (as when
+    // we come online and the server sends in those messages that
+    // were addressed to us while we were offline) we will need to
+    // identify the newly created panel *before*
+    // XMPP.enableContentDocument has a chance to do its work.
+    
+    panel.setAttribute('account', account);
+    panel.setAttribute('address', address);
+
+    if(url.match(/^javascript:/)) {
+        XMPP.enableContentDocument(panel, account, address, 
+                                   isMUC(account, address) ? 'groupchat' : 'chat', true);
+        panel.loadURI(url);
+    } else {
+        queuePostLoadAction(
+            panel, function(p) {
+                XMPP.enableContentDocument(panel, account, address, 
+                                           isMUC(account, address) ? 'groupchat' : 'chat');
+                if(afterLoadAction)
+                    afterLoadAction(panel);
+            });
+        panel.setAttribute('src', url);
+    }
+
+    return panel;
 }
 
 function focusCurrentConversation() {
@@ -620,7 +602,8 @@ function requestedAdditionalInteraction(event) {
     var url = event.target.value;
 
     if(url == 'current')
-        interactWith(account, address, getBrowser().selectedBrowser);
+        XMPP.enableContentDocument(getBrowser().selectedBrowser, account, address,
+                                   isMUC(account, address) ? 'groupchat' : 'chat');
     else
         requestedCommunicate(account, address, url);
 }
