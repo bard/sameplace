@@ -434,7 +434,7 @@ function changeStatusMessage(message) {
  *
  */
 
-function interactWith(account, address, resource,
+function interactWith(account, address,
                       where, target, afterLoadAction) {
     if(typeof(where) == 'string') {
         // "where" is a url
@@ -443,10 +443,10 @@ function interactWith(account, address, resource,
                 focusConversation(account, address);
                 afterLoadAction(getConversation(account, address));
             } else
-                createInteractionPanel(account, address, resource,
+                createInteractionPanel(account, address,
                                        where, target, afterLoadAction);
         } else {
-            createInteractionPanel(account, address, resource,
+            createInteractionPanel(account, address,
                                    where, target, afterLoadAction);
         }
     } else
@@ -455,7 +455,7 @@ function interactWith(account, address, resource,
                                    isMUC(account, address) ? 'groupchat' : 'chat');
 }
 
-function createInteractionPanel(account, address, resource,
+function createInteractionPanel(account, address,
                                 url, target,
                                 afterLoadAction) {
     switch(target) {
@@ -482,7 +482,6 @@ function createInteractionPanel(account, address, resource,
     case 'main':
         var conversation = cloneBlueprint('conversation');
         _('conversations').appendChild(conversation);
-        conversation.setAttribute('resource', resource);
 
         conversation.addEventListener(
             'click', function(event) {
@@ -576,7 +575,7 @@ function promptOpenConversation(account, address, type, nick) {
             joinRoom(request.account, request.address, request.nick);
         else
             interactWith(
-                request.account, request.address, null,
+                request.account, request.address,
                 getDefaultAppUrl(), 'main', function(conversation) {
                     focusConversation(request.account, request.address);
                     openedConversation(request.account, request.address);
@@ -621,7 +620,7 @@ function requestedAdditionalInteraction(event) {
     var url = event.target.value;
 
     if(url == 'current')
-        interactWith(account, address, null, getBrowser().selectedBrowser);
+        interactWith(account, address, getBrowser().selectedBrowser);
     else
         requestedCommunicate(account, address, url);
 }
@@ -632,13 +631,13 @@ function requestedCommunicate(account, address, url) {
             promptOpenConversation(account, address, isMUC(account, address) ? 'groupchat' : 'chat');
         else
             interactWith(
-                account, address, null,
+                account, address,
                 url, 'main', function(conversation) {
                     focusConversation(account, address);
                     openedConversation(account, address);
                 });
     else
-        interactWith(account, address, null, url, 'additional');
+        interactWith(account, address, url, 'additional');
 }
 
 function pressedKeyInContactField(event) {
@@ -701,7 +700,7 @@ function requestedAddContact() {
 function requestedCloseConversation(element) {
     var account = attr(element, 'account');
     var address = attr(element, 'address');
-    var resource = attr(element, 'resource');
+    var resource = XMPP.JID(getJoinPresence(account, address).stanza.@to).resource;
 
     if(isMUC(account, address))
         exitRoom(account, address, resource);
@@ -756,6 +755,17 @@ function joinRoom(account, roomAddress, roomNick) {
               </presence>);
 }
 
+function getJoinPresence(account, address) {
+    for each(var presence in XMPP.cache.presenceOut)
+        if(presence.session.name == account &&
+           presence.stanza.@to != undefined &&
+           XMPP.JID(presence.stanza.@to).address == address &&
+           presence.stanza.ns_muc::x.length() > 0)
+            return presence;
+
+    return undefined;
+}
+
 function isMUC(account, address) {
     for each(var presence in XMPP.cache.presenceOut)
         if(presence.stanza.@to != undefined &&
@@ -799,7 +809,7 @@ function seenChatMessage(message) {
     var conversation = getConversation(message.session.name, contact.address);
     if(!conversation) 
         conversation = interactWith(
-            message.session.name, contact.address, contact.resource,
+            message.session.name, contact.address,
             getDefaultAppUrl(), 'main',
             function(contentPanel) {
                 openedConversation(message.session.name,
@@ -836,10 +846,9 @@ function sentMUCPresence(presence) {
     var room = XMPP.JID(presence.stanza.@to);
     var account = presence.session.name;
     var address = room.address;
-    var resource = room.resource;
 
     interactWith(
-        account, address, resource,
+        account, address,
         getDefaultAppUrl(), 'main',
         function(interactionPanel) {
             openedConversation(account, address);
