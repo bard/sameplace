@@ -700,10 +700,10 @@ function requestedAddContact() {
 function requestedCloseConversation(element) {
     var account = attr(element, 'account');
     var address = attr(element, 'address');
-    var resource = XMPP.JID(getJoinPresence(account, address).stanza.@to).resource;
 
     if(isMUC(account, address))
-        exitRoom(account, address, resource);
+        exitRoom(account, address,
+                 XMPP.JID(getJoinPresence(account, address).stanza.@to).resource);
 
     closeConversation(account, address);
 }
