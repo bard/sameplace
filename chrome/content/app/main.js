@@ -690,7 +690,7 @@ function seenPresence(stanza) {
 
 function seenIq(stanza) {
     if(stanza.ns_roster::query.length() > 0) {
-        userAddress = JID(stanza.@to).address;
+        userAddress = JID(stanza.@from).address;
         contactName = stanza..ns_roster::item.@name.toString();
         if(stanza..ns_roster::item.length() > 0)
             info.updateAddress(stanza..ns_roster::item.@jid);
