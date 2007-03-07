@@ -30,6 +30,7 @@
         onload="init();">
 
   <script type="application/x-javascript" src="chrome://xmpp4moz/content/xmpp.js"/>
+  <script type="application/x-javascript" src="namespaces.js"/>
   <script type="application/x-javascript" src="open_conversation.js"/>
 
   <grid flex="1">

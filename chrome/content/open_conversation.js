@@ -74,11 +74,22 @@ function init() {
 // ----------------------------------------------------------------------
 
 function doOk() {
-    request.address = _('address').value;
-    request.nick = _('nick').value;
-    request.type = _('type').value;
-    request.confirm = true;
-    request.account = _('account').value;
+    function v(id) { return _(id).value; }
+    
+    switch(v('type')) {
+    case 'chat':
+        XMPP.send(v('account'),
+                  <message to={v('address')}>
+                  <active xmlns={ns_chatstates}/>
+                  </message>);
+        break;
+    case 'groupchat':
+        XMPP.send(v('account'),
+                  <presence to={v('address') + '/' + v('nick')}>
+                  <x xmlns='http://jabber.org/protocol/muc'/>
+                  </presence>);
+        break;
+    }
     return true;
 }
 

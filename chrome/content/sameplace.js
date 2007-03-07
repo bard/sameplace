@@ -69,6 +69,10 @@ function init(event) {
                 return s.body.length() > 0 && s.@type != 'groupchat';
             }}, function(message) { seenChatMessage(message) });
     channel.on(
+        {event: 'message', direction: 'out', stanza: function(s) {
+                return s.ns_chatstates::active.length() > 0;
+            }}, function(message) { seenOutgoingChatActivation(message); });
+    channel.on(
         {event: 'message', stanza: function(s) {
                 return s.@type != 'error' && s.body.length() > 0;
             }}, function(message) { seenCachableMessage(message); });
@@ -540,32 +544,6 @@ function closeConversation(account, address) {
     }
 }
 
-function promptOpenConversation(account, address, type, nick) {
-    var request = {
-        address: address,
-        account: account,
-        type: type,
-        nick: nick,
-        confirm: false
-    }
-
-    window.openDialog(
-        'chrome://sameplace/content/open_conversation.xul',
-        'sameplace-open-conversation', 'modal,centerscreen',
-        request);   
-
-    if(request.confirm)
-        if(request.type == 'groupchat')
-            joinRoom(request.account, request.address, request.nick);
-        else
-            interactWith(
-                request.account, request.address,
-                getDefaultAppUrl(), 'main', function(conversation) {
-                    focusConversation(request.account, request.address);
-                    openedConversation(request.account, request.address);
-                });
-}
-
 
 // GUI REACTIONS
 // ----------------------------------------------------------------------
@@ -694,7 +672,9 @@ function requestedCloseConversation(element) {
 }
 
 function requestedOpenConversation() {
-    promptOpenConversation();    
+    window.openDialog(
+        'chrome://sameplace/content/open_conversation.xul',
+        'sameplace-open-conversation', 'centerscreen', {});
 }
 
 function openedConversation(account, address) {
@@ -777,6 +757,40 @@ function seenCachableMessage(message) {
     if(cache.length > 10)
         cache.shift();
     cache.push(message);
+}
+
+// XXX Refactor this and seenChatMessage
+
+function seenOutgoingChatActivation(message) {
+    var contact = XMPP.JID(message.stanza.@to);
+
+    var conversation = getConversation(message.session.name, contact.address);
+    if(!conversation) 
+        conversation = interactWith(
+            message.session.name, contact.address,
+            getDefaultAppUrl(), 'main',
+            function(contentPanel) {
+                focusConversation(message.session.name, contact.address);
+                openedConversation(message.session.name,
+                                   contact.address,
+                                   message.stanza.@type);
+
+                contentPanel.xmppChannel.receive(message);
+            });
+    else if(!conversation.contentDocument ||
+            (conversation.contentDocument &&
+             !conversation.contentDocument.getElementById('xmpp-incoming'))) {
+
+        // If conversation widget exists but it has no contentDocument
+        // yet, or its contentDocument does not have the xmpp-incoming
+        // element yet, it means that it has not been loaded, so
+        // queing for when it is.
+        
+        queuePostLoadAction(
+            conversation, function(contentPanel) {
+                contentPanel.xmppChannel.receive(message);
+            });
+    }
 }
 
 function seenChatMessage(message) {
