@@ -30,6 +30,8 @@ const prefBranch = Cc["@mozilla.org/preferences-service;1"]
     .getBranch('extensions.sameplace.');
 const srvPrompt = Cc["@mozilla.org/embedcomp/prompt-service;1"]
     .getService(Ci.nsIPromptService);
+const srvProtocol = Cc['@mozilla.org/uriloader/external-protocol-service;1']
+    .getService(Ci.nsIExternalProtocolService);
 
 
 // GLOBAL STATE
@@ -255,11 +257,11 @@ if(typeof(x) == 'function') {
 // affect the domain.
 
 function visitForum() {
-    openInBrowser('http://forum.sameplace.cc', true);
+    openLink('http://forum.sameplace.cc', true);
 }
 
 function reportBug() {
-    openInBrowser('http://bugs.sameplace.cc', true);
+    openLink('http://bugs.sameplace.cc', true);
 }
 
 function initApplicationMenu(menuPopup) {
@@ -393,14 +395,27 @@ function switchToNext() {
                           next.getAttribute('address'));
 }
 
-function openInBrowser(url, newTab) {
-    if(url.match(/^javascript:/)) {
+function openLink(url, newTab) {
+    if(url.match(/^javascript:/))
         srvPrompt.alert(
             window, 'SamePlace: Security Notification',
             'This link contains javascript code and has been disabled as a security measure.');
-        return;
-    }
+    else if(hostAppIsBrowser() &&
+            url.match(/^(https?|ftp|file):\/\//))
+        // XXX handle xmpp and mailto as well
+        openLinkInternally(url, newTab);
+    else
+        openLinkExternally(url);
+}
 
+function openLinkExternally(url) {
+    srvProtocol.loadUrl(
+        Cc['@mozilla.org/network/io-service;1']
+        .getService(Ci.nsIIOService)
+        .newURI(url, null, null));
+}
+
+function openLinkInternally(url, newTab) {
     if(newTab) 
         getBrowser().selectedTab = getBrowser().addTab(url);        
     else
@@ -627,7 +642,7 @@ function clickedElementInConversation(event) {
         }
 
         if(newTab != undefined) {
-            openInBrowser(ancestorAnchor.getAttribute('href'), newTab);
+            openLink(ancestorAnchor.getAttribute('href'), newTab);
             event.preventDefault();
         }
     }
