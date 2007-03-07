@@ -254,6 +254,14 @@ if(typeof(x) == 'function') {
 // Application-dependent functions dealing with user interface.  They
 // affect the domain.
 
+function visitForum() {
+    openInBrowser('http://forum.sameplace.cc', true);
+}
+
+function reportBug() {
+    openInBrowser('http://bugs.sameplace.cc', true);
+}
+
 function initApplicationMenu(menuPopup) {
     fetchFeed(
         'http://apps.sameplace.cc/feed.xml',

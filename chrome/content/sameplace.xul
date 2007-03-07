@@ -62,6 +62,14 @@
              label="Switch to next conversation"
              accesskey="n"
              tooltiptext="Switch to next conversation"/>
+    <command id="visit-forum" oncommand="visitForum();"
+             label="Visit forum"
+             accesskey="V"
+             tooltiptext="Visit forum"/>
+    <command id="report-bug" oncommand="reportBug();"
+             label="Report bug/Request features"
+             accesskey="R"
+             tooltiptext="Report bug/Request features"/>
   </commandset>
 
   
@@ -109,6 +117,9 @@
                           key="key-switch-to-unread"/>
                 <menuitem class="menuitem-iconic" command="switch-to-next"
                           key="key-switch-to-next"/>
+                <menuseparator/>
+                <menuitem class="menuitem-iconic" command="visit-forum"/>
+                <menuitem class="menuitem-iconic" command="report-bug"/>
               </menupopup>
             </menu>
           </menubar>
