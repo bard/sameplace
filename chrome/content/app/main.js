@@ -494,6 +494,7 @@ function displayMessage(stanza) {
             if(stanza.ns_xhtml_im::html == undefined) {
                 body = filter.applyTextProcessors(stanza.body, textProcessors);
                 body.setNamespace(ns_xhtml);
+                M(domMessage).content.setAttribute('style', 'white-space: -moz-pre-wrap;');
             } else
                 body = filter.applyTextProcessors(
                     filter.xhtmlIM.keepRecommended(stanza.ns_xhtml_im::html.ns_xhtml::body),
