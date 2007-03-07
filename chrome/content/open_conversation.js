@@ -22,6 +22,9 @@
 // GLOBAL DEFINITIONS
 // ----------------------------------------------------------------------
 
+const Cc = Components.classes;
+const Ci = Components.interfaces;
+
 var xmpp = xmpp || {};
 xmpp.ui = xmpp.ui || {};
 
@@ -36,9 +39,16 @@ var request;
 // ----------------------------------------------------------------------
 
 function init() {
-    request = window.arguments[0];
+    var arg = window.arguments[0];
+    if(arg instanceof Ci.nsIProperties) {
+        request = {};
+        for each(var property in ['account', 'address', 'nick', 'type']) 
+            request[property] = (arg.has(property) ?
+                                 arg.get(property, Ci.nsISupportsString).toString() : '');
+    } else
+        request = arg;
 
-    for each(var fieldName in ['account', 'address', 'nick'])
+    for each(var fieldName in ['account', 'address', 'nick', 'type'])
         if(request[fieldName])
             _(fieldName).value = request[fieldName];
 
