@@ -94,8 +94,6 @@ function initOverlay(event) {
                 toggleSidebar();
         }, false);
 
-    setTimeout(function() { if(BMSVC) addBookmark(); }, 250);
-
     var version = getExtensionVersion('sameplace@hyperstruct.net');
 
     // No first run/upgrade action should be made if this is not the
