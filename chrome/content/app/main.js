@@ -624,6 +624,9 @@ function sendXHTML(xhtmlBody) {
     if(contactResource)
         message.@to = '/' + contactResource;
 
+    // Should not be needed, but apparently is.
+    XML.prettyPrinting = false;
+    XML.ignoreWhitespace = false;
     message.body = <body>{filter.htmlEntitiesToCodes(
                               conv.xhtmlToText(
                                   xhtmlBody))}</body>;
