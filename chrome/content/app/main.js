@@ -490,6 +490,11 @@ function displayMessage(stanza) {
                     domMessage.getAttribute('class') + ' ' +
                     (stanza.@from.toString() ? 'contact' : 'user'));
 
+            // Without this, applyTextProcessors will add whitespace
+            // and indentation.  Wo don't want that, especially with a
+            // -moz-pre-wrap around the corner.
+            XML.prettyPrinting = false;
+            XML.ignoreWhitespace = false;
             var body;
             if(stanza.ns_xhtml_im::html == undefined) {
                 body = filter.applyTextProcessors(stanza.body, textProcessors);
