@@ -256,6 +256,10 @@ if(typeof(x) == 'function') {
 // Application-dependent functions dealing with user interface.  They
 // affect the domain.
 
+function viewHelp() {
+    openLink('http://help.sameplace.cc', true);
+}
+
 function visitForum() {
     openLink('http://forum.sameplace.cc', true);
 }
