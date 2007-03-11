@@ -1,56 +1,5 @@
 
 Context:
 
-[Accounts: removed loadedAccounts hook, expecting caller to refresh menu at initialization through xmpp.ui.refreshAccounts().
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070210205541] 
-
-[Accounts: no longer relying on the presence of xmpp.ui.selectedAccount(), instead expecting overlay user to attach an oncommand handler to the menu containing the accounts popup.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070210202722] 
-
-[Console: added splitter between cache/roster panes; printing cached presences sorted by account.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070210160947] 
-
-[RT#22 Presence cache: was in some circumstances inserting unavailable presences in the cache.  Fixed.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070210160633] 
-
-[Presence cache: internal refactoring.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070210154240] 
-
-[Added branch name (unstable) to name field in install.rdf.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070209201708] 
-
-[Removed branch name from description.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070209201636] 
-
-[JS API: rearranged sequence of actions when connecting an app.  Looking for relevant roster/presence info *before* connecting, to lessen the chance for race conditions.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070209183534] 
-
-[Changed build system to allow server-side building of XPI package, tarball, and update.rdf.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070209090252] 
-
-[Preferences: integer fields were (still) not recognized properly.  Fixed.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070208220944] 
-
-[Preferences: was not recognizing numerical fields when returned as strings (e.g. port, security setting).  Fixed.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070207200042] 
-
-[JS API: Guarding against attaching already attached panel to a different account/address pair.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070207163139] 
-
-[JS API: unclear failures reported when reading accounts; wrapping in try/catch to avoid stopping reading accounts altogether (and presenting an empty account menu).
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070204052021] 
-
-[RT#2 Accounts can be configured to auto-login when host application starts (assuming host application loads xmpp4moz overlay).
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070203020429] 
-
-[Overlay: moved invocation of routine that adds toolbar button in overlay initialization.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070203003043] 
-
-[Moved preference overlays at the same level of main overlays, renamed firefox_ and thunderbird_ to browser_ and mail_.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070202233210] 
-
-[Overlay: adding main button to toolbar of Thunderbird 1.5 and 2.0.
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070201231559] 
-
-[TAG 0.4.1
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070201021239] 
+[TAG 0.4.2
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070311193420] 
