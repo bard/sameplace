@@ -77,6 +77,7 @@ function updatePageAccountExisting(event) {
     }
 
     var address = _('account-existing.address').value;
+    var password = _('account-existing.password').value;
 
     if(address) {
         var serverPart = address.split('@')[1];
@@ -88,6 +89,8 @@ function updatePageAccountExisting(event) {
             _('account-existing.server-port').value = 5223;
         }
     }
+
+    _('account-existing.password-remember').checked = (password != '')
 
     _('wizard').canAdvance = address &&
         _('account-existing.server-hostname').value &&
@@ -158,6 +161,11 @@ function shownPageAccountRegistration() {
 
 function shownPageFinish() {
     createAccount(account);
+}
+
+function finished() {
+    if(_('connect-now').checked)
+        XMPP.up(account.address + '/' + account.resource);
 }
 
 function changedServerSelectionMode(event) {
@@ -251,7 +259,7 @@ function createAccount(account) {
     pref.setBoolPref(key + '.autoLogin', account.autoLogin);
     pref.setCharPref(key + '.connectionHost', account.connectionHost);
     pref.setIntPref(key + '.connectionPort', account.connectionPort);
-    pref.setIntPref(key + '.connectionSecurity', account.connectionSecurity);    
+    pref.setIntPref(key + '.connectionSecurity', account.connectionSecurity);
 }
 
 

@@ -24,7 +24,8 @@
 
 <wizard xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
         id="wizard" title="SamePlace Configuration Wizard"
-        onload="init();">
+        onload="init();"
+        onwizardfinish="finished();">
 
   <script type="application/x-javascript" src="chrome://xmpp4moz/content/xmpp.js"/>
   <script type="application/x-javascript" src="wizard.js"/>
@@ -53,7 +54,7 @@
              accesskey="G"
              selected="true"/>
       <radio label="I have an account with another Jabber server"
-             accesskey="J"
+             accesskey="I"
              value="other"/>
       <radio label="I don't have a Jabber account yet"
              accesskey="d"
@@ -80,19 +81,19 @@
 
         <row align="center" id="account-existing.field-password">
           <label control="account-existing.password" value="Password:" accesskey="P"/>
-          <textbox id="account-existing.password" type="password"/>
+          <textbox id="account-existing.password" type="password" onkeyup="updatePageAccountExisting(event);"/>
         </row>
 
         <row>
           <spacer/>
           <checkbox id="account-existing.auto-login"
-                    label="Login automatically at startup" checked="true"/>
+                    label="Login automatically at startup" checked="true" accesskey="o"/>
         </row>
 
         <row>
           <spacer/>
           <checkbox id="account-existing.password-remember"
-                    label="Remember password" accesskey="R"/>
+                    label="Remember password" checked="false" accesskey="e"/>
         </row>
       </rows>
     </grid>
@@ -100,7 +101,7 @@
     <separator class="groove"/>
 
     <hbox pack="end">
-      <button label="Advanced..." accesskey="v"
+      <button label="Advanced..." accesskey="d"
               oncommand="_('account-existing.advanced').hidden =
                          !_('account-existing.advanced').hidden;"/>          
     </hbox>
@@ -114,7 +115,7 @@
       <rows>
         <row align="center">
           <label control="account-existing.resource"
-                 value="Resource:" accesskey="R"/>
+                 value="Resource:" accesskey="e"/>
           <textbox id="account-existing.resource" value="SamePlace"/>
         </row>
 
@@ -182,10 +183,10 @@
     <spacer height="10"/>
     
     <checkbox id="account-new.auto-login"
-              label="Login automatically at startup" checked="true"/>
+              label="Login automatically at startup" accesskey="L" checked="true"/>
 
     <checkbox id="account-new.password-remember"
-              label="Remember password" accesskey="R"/>
+              label="Remember password" accesskey="R" checked="false"/>
 
     <separator class="groove"/>
 
@@ -269,7 +270,7 @@
 
     <spacer height="10"/>
 
-    <description>
+    <description style="font-weight: bold;">
       To connect, select your account from the Jabber menu:
     </description>
     
@@ -280,6 +281,8 @@
                                      height: 169px;
                                      border: 1px solid #666;"/>
     </hbox>
+
+    <checkbox label="Connect now" id="connect-now" checked="true"/>
   </wizardpage>
 </wizard>
 
