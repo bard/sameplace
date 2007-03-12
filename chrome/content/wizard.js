@@ -160,6 +160,7 @@ function shownPageAccountRegistration() {
 }
 
 function shownPageFinish() {
+    _('wizard').canRewind = false;
     createAccount(account);
 }
 
