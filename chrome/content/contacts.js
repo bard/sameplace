@@ -219,6 +219,8 @@ function _reposition(contact) {
         _('contacts').insertBefore(contact, _('contacts', {role: 'online'}).nextSibling);
     else if(availability == 'available' && show == 'away')
         _('contacts').insertBefore(contact, _('contacts', {role: 'away'}).nextSibling);
+    else if(availability == 'available' && show == 'xa')
+        _('contacts').insertBefore(contact, _('contacts', {role: 'away'}).nextSibling);
     else if(availability == 'available' && show == 'dnd')
         _('contacts').insertBefore(contact, _('contacts', {role: 'dnd'}).nextSibling);
     else
