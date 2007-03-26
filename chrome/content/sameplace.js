@@ -486,8 +486,20 @@ function interactWith(account, address,
         }
     } else
         // "where" is a content panel
-        XMPP.enableContentDocument(where, account, address,
-                                   isMUC(account, address) ? 'groupchat' : 'chat');
+        enableInteraction(account, address, where);
+}
+
+function enableInteraction(account, address, panel, createSocket) {
+    XMPP.enableContentDocument(
+        panel, account, address,
+        isMUC(account, address) ? 'groupchat' : 'chat');
+
+    var url = panel.getAttribute('src');
+    if(/^https?:\/\//.test(url))
+        XMPP.send(account,
+                  <presence to={address}>
+                  <interact xmlns="http://dev.hyperstruct.net/xmpp4moz/protocol" url={url}/>
+                  </presence>);
 }
 
 function createInteractionPanel(account, address,
@@ -527,14 +539,12 @@ function createInteractionPanel(account, address,
     panel.setAttribute('address', address);
 
     if(url.match(/^javascript:/)) {
-        XMPP.enableContentDocument(panel, account, address, 
-                                   isMUC(account, address) ? 'groupchat' : 'chat', true);
+        enableInteraction(account, address, panel, true);
         panel.loadURI(url);
     } else {
         queuePostLoadAction(
             panel, function(p) {
-                XMPP.enableContentDocument(panel, account, address, 
-                                           isMUC(account, address) ? 'groupchat' : 'chat');
+                enableInteraction(account, address, panel);
                 if(afterLoadAction)
                     afterLoadAction(panel);
             });
@@ -611,8 +621,7 @@ function requestedAdditionalInteraction(event) {
     var url = event.target.value;
 
     if(url == 'current')
-        XMPP.enableContentDocument(getBrowser().selectedBrowser, account, address,
-                                   isMUC(account, address) ? 'groupchat' : 'chat');
+        enableInteraction(account, address, getBrowser().selectedBrowser);
     else
         requestedCommunicate(account, address, url);
 }
