@@ -1,5 +1,239 @@
 
 Context:
 
-[TAG 0.4.2
-Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070311193420] 
+[Cache: now also indexing event name.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070326032344] 
+
+[JS API: allow local (chrome://, file://) hybrid apps to set an arbitrary receiver on outgoing stanzas.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070326015626] 
+
+[JS API: tidied source up.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070326015553] 
+
+[JS API, Cache: made JID utility self-contained.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070326004607] 
+
+[JS API: de-wrapped part of the cache API, so that "fetch" can be used, returns an array and further iteration/filter operations are done on the array.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070326004138] 
+
+[Cache: do not cache directed presences other than the ones used to join rooms.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070326002346] 
+
+[Service: removed cache enumerators from IDL.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070325203041] 
+
+[JS API: using pseudo-memoized function to convert DOM to E4X xml objects.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070325162918] 
+
+[Cache, Service: replaced ad-hoc roster cache with new cache.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070325162903] 
+
+[Removed no longer needed tests and libraries.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070325154211] 
+
+[Service, Cache: replaced ad-hoc presence cache with generic cache with explicit policies plus new in-memory object db.  Significantly increases performance and comes with test suite.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070325024602] 
+
+[Removed no longer used mixin.js and event_handling.js files.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070325020730] 
+
+[Overlay: updating status via updateStatusIndicator() upon outgoing closed stream.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070323210156] 
+
+[Overlay: added explanation of how auth response is caught.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070323205514] 
+
+[Overlay: moved connection of autologin accounts to separate function.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070323205102] 
+
+[Overlay: when new windows were opened, status indicator started as unavailable even if accounts were online.  Fixed by updating status indicator also on overlay init.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070323202641] 
+
+[Overlay: if connection was impossible (e.g. unknown host), connection progress bar would appear but not disappear.  Fixed by listening to 'stop' state for 'transport' event.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070323201833] 
+
+[Service: changed session collection so that it uses a hash as a backend.  Using an array was (apparently) causing race conditions when accounts were brought up in close succession.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070316104955] 
+
+[Service: not fetching session from session collection when sending some stanzas to cache as it could have been already removed from collection.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070316003612] 
+
+[Console: when log was cleared, entry blueprint was removed as well, and subsequent stanzas would not appear.  Fixed by moving blueprint out of reach.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070314230607] 
+
+[Session: fixed trigger for close stream event (was '<stream:stream/>' instead of '</stream:stream>') and handling case where stanza comes in with closing '</stream:stream>' immediately thereafter.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070313201442] 
+
+[Session: document creation would fail erratically on Windows.  Avoiding creating it for now since it is not really needed.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070223184003] 
+
+[Session: parse error message appears not to be consistent on various installations, reducing to sub-message.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070223174927] 
+
+[Overlay: clearer menu item names.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070312235500] 
+
+[Overlay: url-bar was made unusable after first install for lack of finalization of toolbar customization.  Fixed.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070311193246] 
+
+[JS API: when disabling panel, was not removing xmppChannel.  Fixed.  (Reported by Fabio Masetti.)
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070308195604] 
+
+[JS API: when connecting panel, silently return if it has already an xmppChannel property, otherwise panel gets connected twice.  This allows loading more than one XMPP bookmarklet in one page.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070304231154] 
+
+[JS API: when connecting page and then changing location, 'unload' event would not get sent to panel and cleanup would not happen; it gets sent to contentWindow, though, so listening for that.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070304222901] 
+
+[Console: bad event selector for roster cache, fixed.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070304112801] 
+
+[RT#31 JS API: direction for wrapped event (when missing) was not inferred correctly in the case of roster iq (which, in the case of Google server, has no "to" attribute, but still it should have direction 'in').
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070304112114] 
+
+[Roster cache: storing rosters in hash instead of array; instead of modifying a roster in-place, replace it with a modified clone.  (Making objects immutable helps optimizations later on.)
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070304032632] 
+
+[RT#31 JS API: using event-like API for roster cache, too.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070304010106] 
+
+[RT#31 JS API: More convergence of cache API to channel API: replaced cache.presence.*({...}) functions with of cache.*({event: 'presence', ...}).
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070303225256] 
+
+[JS API: Ensuring that event objects have an 'account' field (currently deriving from event.session.name).
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070303225216] 
+
+[RT#31 Wrong condition when checking whether contact to be connected to hybrid app has a presence.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070302205912] 
+
+[RT#31 First steps in converging cache API and channel API.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070302195343] 
+
+[Presence Cache: storing presence items in trees instead of an array for perfomance.  Preserving backward-compatible copy() function.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070227214602] 
+
+[Preferences: scheme to infer type of preference to save was wrong (would fail on e.g. a "123abc" password, interpreting it as a number). Fixed.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070223211127] 
+
+[Preferences: default connection server was missing.  Fixed.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070223211110] 
+
+[Session: some servers (e.g. Google Talk) put spaces between stanzas.  Skipping them.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070223202929] 
+
+[Service: when data read by transport does not end with ">", it is necessarily a non-complete stanza, so instead of passing it to session immediately, put it into a buffer and wait for the rest.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070223202825] 
+
+[JS API: finding out account properties by reading existing accounts would (obviously) not work on first installation.  Hardcoding account properties now.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070221190800] 
+
+[Overlay: only define browser functions if getBrowser() is available *and* it has a selectedBrowser member.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070221190651] 
+
+[JS API: when connecting a remote application to a MUC, also send occupants' presences along with user's presence.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070221190514] 
+
+[Overlay Mail: was missing field for autoLogin account preference.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070221190220] 
+
+[Overlay Mail: was not preventing command event on main button when account menuitem was selected.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070221190121] 
+
+[Service: made logging optional via xmpp.logTargets preference.  (Setting it to "console" restores logging.)
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070221000757] 
+
+[JS API: added experimental accessor for presence, that can be passed jid without resource (and returns summary of all presences of contact) or jid with resource (and returns just that presence).
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070220005430] 
+
+[JS API: extracting subroster was missing "from" attribute.  Fixed.  (Reported by Domenico De Felice.)
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070220005418] 
+
+[JS API: presenceSummary() was always returning <presence> without <show> (thus also presences with type="unavailable") as most-available presence.  Fixed.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070218201819] 
+
+[RT#20 Initializing cache to empty roster just before session is opened.  Sending initial presence after roster has being received, so that events don't start coming in before we have a contact list.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070218164504] 
+
+[Service: muc users where removed from cache when receiving unavailable presence from *any* of them.  Ensuring that this is only done when unavailable presence is received from the user's occupant.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070217210253] 
+
+[Service: was using outgoing directed presence as a cue that a room was being left; not accurate; using incoming unavailable presence with muc#user payload instead.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070217143039] 
+
+[Session: using Mozilla DOM parser instead of xmljs parser.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070217141533] 
+
+[JS API: replaced fat accounts wrapper (that read all information from preferences upfront) with thin wrapper than reads information lazily.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070216232118] 
+
+[Service: added documentation on handling of outgoing directed unavailable presence.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070216211307] 
+
+[Presence cache: when receiving an unavailable presence from a room occupant, don't cache an unavailable presence, instead remove corresponding available presence from cache.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070216211006] 
+
+[JS API: memoized JID().
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070216210901] 
+
+[Console: added templates for password change, time request, get/set conference bookmarks.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070216210639] 
+
+[Console: added splitter between log and input area.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070216210611] 
+
+[Overlay: simply clicking main button was invoking handler for account selection.  Fixed.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070211110620] 
+
+[Accounts: removed loadedAccounts hook, expecting caller to refresh menu at initialization through xmpp.ui.refreshAccounts().
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070210205541] 
+
+[Accounts: no longer relying on the presence of xmpp.ui.selectedAccount(), instead expecting overlay user to attach an oncommand handler to the menu containing the accounts popup.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070210202722] 
+
+[Console: added splitter between cache/roster panes; printing cached presences sorted by account.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070210160947] 
+
+[RT#22 Presence cache: was in some circumstances inserting unavailable presences in the cache.  Fixed.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070210160633] 
+
+[Presence cache: internal refactoring.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070210154240] 
+
+[Added branch name (unstable) to name field in install.rdf.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070209201708] 
+
+[Removed branch name from description.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070209201636] 
+
+[JS API: rearranged sequence of actions when connecting an app.  Looking for relevant roster/presence info *before* connecting, to lessen the chance for race conditions.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070209183534] 
+
+[Changed build system to allow server-side building of XPI package, tarball, and update.rdf.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070209090252] 
+
+[Preferences: integer fields were (still) not recognized properly.  Fixed.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070208220944] 
+
+[Preferences: was not recognizing numerical fields when returned as strings (e.g. port, security setting).  Fixed.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070207200042] 
+
+[JS API: Guarding against attaching already attached panel to a different account/address pair.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070207163139] 
+
+[JS API: unclear failures reported when reading accounts; wrapping in try/catch to avoid stopping reading accounts altogether (and presenting an empty account menu).
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070204052021] 
+
+[RT#2 Accounts can be configured to auto-login when host application starts (assuming host application loads xmpp4moz overlay).
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070203020429] 
+
+[Overlay: moved invocation of routine that adds toolbar button in overlay initialization.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070203003043] 
+
+[Moved preference overlays at the same level of main overlays, renamed firefox_ and thunderbird_ to browser_ and mail_.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070202233210] 
+
+[Overlay: adding main button to toolbar of Thunderbird 1.5 and 2.0.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070201231559] 
+
+[TAG 0.4.1
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070201021239] 

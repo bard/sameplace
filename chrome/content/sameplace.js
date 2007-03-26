@@ -88,7 +88,10 @@ function init(event) {
         requestedCommunicate.apply(null, arguments);
     };
 
-    XMPP.cache.presenceOut.forEach(sentAvailablePresence);
+    XMPP.cache.fetch({
+        event: 'presence',
+        direction: 'out',
+        }).forEach(sentAvailablePresence);
 
     _('conversations').addEventListener(
         'DOMNodeInserted', function(event) {
@@ -320,38 +323,44 @@ function buildContactCompletions(xulCompletions) {
 
     var input = xulCompletions.parentNode.value;
     var completions = [];
-
     for each(var iq in XMPP.cache.roster) {
         for each(var item in iq.stanza..ns_roster::item) {
             var account = iq.session.name;
             var address = item.@jid;
-            var nick = XMPP.nickFor(account, address);
-            var presence = XMPP.presenceSummary(account, address);
-            if(nick.toLowerCase().indexOf(input.toLowerCase()) == 0)
+            var nick    = XMPP.nickFor(account, address);
+            if(nick.toLowerCase().indexOf(input.toLowerCase()) == 0) {
+                var presence = XMPP.presenceSummary(account, address);
                 completions.push({
-                    label: nick,
-                    account: account,
-                    address: address,
-                    show: presence.stanza.show.toString(),
-                    presence: presence,
-                    availability: presence.stanza.@type.toString() || 'available' });
+                    label        : nick,
+                    account      : account,
+                    address      : address,
+                    show         : presence.stanza.show.toString(),
+                    presence     : presence,
+                    availability : presence.stanza.@type.toString() || 'available' });
+            }
         }
     }
 
-    for each(var presence in XMPP.cache.presenceOut)
-        if(presence.stanza && presence.stanza.ns_muc::x.length() > 0) {
-            var account = presence.session.name;
-            var address = XMPP.JID(presence.stanza.@to).address;
-            if(address.toLowerCase().indexOf(input.toLowerCase()) == 0)
-                completions.push({
-                    label: address,
-                    account: account,
-                    address: address,
-                    show: presence.stanza.show.toString(),
-                    presence: presence,
-                    availability: 'available' });
-        }
-
+    XMPP.cache.fetch({
+        event: 'presence',
+        direction: 'out',
+        stanza: function(s) {
+                return s.ns_muc::x.length() > 0;
+            }
+        }).forEach(
+            function(presence) {
+                var account = presence.session.name;
+                var address = XMPP.JID(presence.stanza.@to).address;
+                if(address.toLowerCase().indexOf(input.toLowerCase()) == 0)
+                    completions.push({
+                        label: address,
+                        account: account,
+                        address: address,
+                        show: presence.stanza.show.toString(),
+                        presence: presence,
+                        availability: 'available' });
+            });
+        
     completions
         .sort(
             function(a, b) {
@@ -435,24 +444,17 @@ function updateAttachTooltip() {
 function changeStatusMessage(message) {
     for each(var account in XMPP.accounts)
         if(XMPP.isUp(account)) {
-            var stanza;
-            for each(var presence in XMPP.cache.presenceOut)
-                if(presence.session.name == account.jid) {
-                    stanza = presence.stanza.copy();
-                    if(message)
-                        stanza.status = message;
-                    else
-                        delete stanza.status;
-                    break;
-                }
-
-            if(!stanza) {
-                if(message)
-                    stanza = <presence><status>{message}</status></presence>;
-                else
-                    stanza = <presence/>;
-            }
-
+            var stanza = XMPP.cache.find({
+                event: 'presence',
+                direction: 'out',
+                account: account.jid
+                }).stanza.copy();
+            
+            if(message)
+                stanza.status = message;
+            else
+                delete stanza.status;
+            
             XMPP.send(account, stanza);
         }
 }
@@ -748,14 +750,15 @@ function joinRoom(account, roomAddress, roomNick) {
 }
 
 function getJoinPresence(account, address) {
-    for each(var presence in XMPP.cache.presenceOut)
-        if(presence.session.name == account &&
-           presence.stanza.@to != undefined &&
-           XMPP.JID(presence.stanza.@to).address == address &&
-           presence.stanza.ns_muc::x.length() > 0)
-            return presence;
-
-    return undefined;
+    return XMPP.cache.find({
+        event: 'presence',
+        direction: 'out',
+        account: account,
+        stanza: function(s) {
+                return (s.@to != undefined &&
+                        s.ns_muc::x.length() > 0 &&
+                        XMPP.JID(s.@to).address == address);
+            }});
 }
 
 function isMUC(account, address) {

@@ -88,8 +88,19 @@ function init() {
                     s.ns_private::query.ns_bookmarks::storage != undefined;
             }}, function(iq) { receivedBookmarks(iq); });
 
-    XMPP.cache.roster.forEach(receivedRoster);
-    XMPP.cache.presenceIn.forEach(receivedPresence);
+	XMPP.cache.fetch({
+        event: 'iq',
+        direction: 'in',
+        stanza: function(s) {
+                return s.ns_roster::query.length() > 0;
+            }})
+        .forEach(receivedRoster);
+
+    XMPP.cache.fetch({
+        event: 'presence',
+        direction: 'in',
+        })
+        .forEach(receivedPresence);
 }
 
 function finish() {
