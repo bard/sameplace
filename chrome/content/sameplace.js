@@ -492,7 +492,7 @@ function interactWith(account, address,
 function enableInteraction(account, address, panel, createSocket) {
     XMPP.enableContentDocument(
         panel, account, address,
-        isMUC(account, address) ? 'groupchat' : 'chat');
+        isMUC(account, address) ? 'groupchat' : 'chat', createSocket);
 
     var url = panel.getAttribute('src');
     if(/^https?:\/\//.test(url))
