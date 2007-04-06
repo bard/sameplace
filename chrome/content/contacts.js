@@ -313,35 +313,44 @@ function receivedRoster(iq) {
 }
 
 function receivedSubscriptionRequest(presence) {
-    var account = presence.session.name;
-    var address = presence.stanza.@from.toString();
-    var accept, reciprocate;
-    if(get(account, address) == undefined ||
-       get(account, address).getAttribute('subscription') == 'none') {
-        var check = {value: true};
-        accept = srvPrompt.confirmCheck(
-            null, 'Contact notification',
-            address + ' wants to add ' + presence.stanza.@to + ' to his/her contact list.\nDo you accept?',
-            'Also add ' + address + ' to my contact list', check);
-        reciprocate = check.value;
-    }
-    else {
-        accept = srvPrompt.confirm(
-            null, 'Contact notification',
-            address + ' wants to add ' + presence.stanza.@to + ' you to his/her contact list.\nDo you accept?');
+    _('notify').appendNotification(
+            'Request from ' + presenec.stanza.@from,
+            'sameplace-presence-subscription',
+            null, _('notify').PRIORITY_INFO_HIGH,
+            [{label: 'View', accessKey: 'V', callback: onView}]);
 
-    }
-    if(accept) {
-        acceptSubscriptionRequest(account, address);
-        if(reciprocate)
-            addContact(account, address);
+    function onView() {
+        var account = presence.session.name;
+        var address = presence.stanza.@from.toString();
+        var accept, reciprocate;
+
+        if(get(account, address) == undefined ||
+           get(account, address).getAttribute('subscription') == 'none') {
+            var check = {value: true};
+            accept = srvPrompt.confirmCheck(
+                null, 'Contact notification',
+                address + ' wants to add ' + presence.stanza.@to + ' to his/her contact list.\nDo you accept?',
+                'Also add ' + address + ' to my contact list', check);
+            reciprocate = check.value;
+        }
+        else
+            accept = srvPrompt.confirm(
+                null, 'Contact notification',
+                address + ' wants to add ' + presence.stanza.@to + ' you to his/her contact list.\nDo you accept?');
+
+        if(accept) {
+            acceptSubscriptionRequest(account, address);
+            if(reciprocate)
+                addContact(account, address);
+        }        
     }
 }
 
 function receivedSubscriptionApproval(presence) {
-    srvPrompt.alert(
-        null, 'Contact Notification',
-        presence.stanza.@from + ' has accepted to be added to your contact list.');
+    _('notify').appendNotification(
+        presence.stanza.@from + ' has accepted to be in your contact list.',
+        'sameplace-presence-subscription',
+        null, _('notify').PRIORITY_INFO_HIGH, []);
 }
 
 function receivedMUCPresence(presence) {

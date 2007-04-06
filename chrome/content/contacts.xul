@@ -141,13 +141,15 @@
 
   <!-- MAIN -->
 
-  <vbox id="contacts" flex="1" style="overflow: auto;">
-    <label role="open" value="In conversation"/>
-    <label role="online" value="Online"/>
-    <spacer role="away"/>
-    <spacer role="dnd"/>
-    <label role="offline" value="Offline"/>
-  </vbox>
+  <notificationbox id="notify" flex="1">
+    <vbox id="contacts" flex="1" style="overflow: auto;" context="contacts-menu">
+      <label role="open" value="In conversation"/>
+      <label role="online" value="Online"/>
+      <spacer role="away"/>
+      <spacer role="dnd"/>
+      <label role="offline" value="Offline"/>
+    </vbox>
+  </notificationbox>
 
   <box hidden="true" id="blueprints">
     <vbox role="contact"
