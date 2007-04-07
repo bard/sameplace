@@ -126,5 +126,7 @@ function queuePostLoadAction(contentPanel, action) {
                 'load', function(event) {
                     action(contentPanel);
                 }, false);
+
+            contentPanel.removeEventListener('load', arguments.callee, true);
         }, true);
 }
