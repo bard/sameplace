@@ -19,100 +19,88 @@
 */
 
 
+var behaviour = behaviour || {};
+
 /**
- * Wrapper for popup showing contact information.
+ * Behaviour for info popup.
+ *
+ * Dependencies: getElementByContent() and getElementByAttribute() from main.js.
  *
  */
 
+behaviour.info = function(info) {
+    function _(role) {
+        return getElementByAttribute(info, 'role', role);
+    }
 
-// GLOBAL STATE
-// ----------------------------------------------------------------------
-
-var info = {};
-
-
-// PUBLIC FUNCTIONALITY
-// ----------------------------------------------------------------------
-
-info.init = function(element) {
-    this._root = element;
-    
     for each(role in ['resources']) {
-        this._(role).addEventListener(
+        _(role).addEventListener(
             'DOMNodeInserted', function(event) {
                 info.refresh(event.currentTarget);
             }, false);
-
-        this._(role).addEventListener(
+        
+        _(role).addEventListener(
             'DOMNodeRemoved', function(event) {
                 info.refresh(event.currentTarget);
             }, false);
-    }
-};
+    };
 
-info.updateAddress = function(address) {
-    this._('address').textContent = address;
-};
+    info.updateAddress = function(address) {
+        _('address').textContent = address;
+    };
 
-info.updateTitle = function(address) {
-    document.title = address;
-};
+    info.updateResources = function(resource, availability) {
+        if(!resource)
+            return;
 
-info.updateResources = function(resource, availability) {
-    if(!resource)
-        return;
-
-    var domResource = getElementByContent(this._('resources'), resource);
+        var domResource = getElementByContent(_('resources'), resource);
     
-    if(domResource) {
-        if(availability == 'unavailable')
-            this._('resources').removeChild(domResource);
-    }
-    else 
-        if(availability != 'unavailable') {
-            domResource = document.createElement('li');
-            domResource.textContent = resource;
-            this._('resources').insertBefore(domResource, this._('resources').firstChild);
+        if(domResource) {
+            if(availability == 'unavailable')
+                _('resources').removeChild(domResource);
         }
-};
-
-info.refresh = function(element) {
-    switch(element.getAttribute('role')) {
-    case 'topic':
-        (element.textContent ? visible : hidden)
-            (element.parentNode);
-        break;
-    case 'resources':
-    case 'groups':
-        if(element.getElementsByTagName('li').length > 0)
-            visible(element.parentNode);
         else 
-            hidden(element.parentNode);
-        break;
-    default: throw new Error('Unexpected.');
-    }
-};
+            if(availability != 'unavailable') {
+                domResource = document.createElement('li');
+                domResource.textContent = resource;
+                _('resources').insertBefore(domResource, _('resources').firstChild);
+            }
+    };
 
-info.hasResource = function(resource) {
-    return getElementByContent(this._('resources'), resource);
-};
+    info.refresh = function(element) {
+        switch(element.getAttribute('role')) {
+            case 'topic':
+            (element.textContent ? visible : hidden)
+            (element.parentNode);
+            break;
+            case 'resources':
+            case 'groups':
+            if(element.getElementsByTagName('li').length > 0)
+                visible(element.parentNode);
+            else 
+                hidden(element.parentNode);
+            break;
+            default: throw new Error('Unexpected.');
+        }
+    };
 
-info.setMode = function(mode) {
-    switch(mode) {
-        case 'groupchat':
-        getElementByAttribute(this._root, 'role', 'heading-resources')
-        .textContent = 'Participants';
-        break;
-        case 'chat':
+    info.hasResource = function(resource) {
+        return getElementByContent(_('resources'), resource);
+    };
+
+    info.setMode = function(mode) {
+        switch(mode) {
+            case 'groupchat':
+            _('heading-resources').textContent = 'Participants';
+            break;
+            case 'chat':
         
-        break;
-    }
+            break;
+        }
+    };    
 };
 
 
 // INTERNALS
 // ----------------------------------------------------------------------
 
-info._ = function(role) {
-    return getElementByAttribute(this._root, 'role', role);
-};

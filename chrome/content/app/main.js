@@ -398,9 +398,9 @@ function init(event) {
             }
         }, false);
 
-    info.init(_('info'));
-
+    behaviour.info(_('info'));
     behaviour.input(_('chat-input'));
+    behaviour.palette(_('palette'));
 
 
     _('chat-output').addEventListener(
@@ -676,10 +676,10 @@ function seenPresence(stanza) {
             isGroupchat = true;
     } else {
         if(stanza.ns_muc_user::x.length() > 0) {
-            info.setMode('groupchat');
+            _('info').setMode('groupchat');
 
             if(stanza.@type == undefined &&
-               !info.hasResource(JID(stanza.@from).resource)) 
+               !_('info').hasResource(JID(stanza.@from).resource)) 
                 displayEvent('join', JID(stanza.@from).resource + ' entered the room');
             else if(stanza.@type == 'unavailable')
                 displayEvent('leave', JID(stanza.@from).resource + ' left the room');
@@ -690,9 +690,9 @@ function seenPresence(stanza) {
                stanza.@type == 'unavailable')
                 contactResource = undefined;
     
-        info.updateAddress(JID(stanza.@from).address);
-        info.updateResources(JID(stanza.@from).resource, stanza.@type);
-        info.updateTitle(JID(stanza.@from).address);
+        _('info').updateAddress(JID(stanza.@from).address);
+        _('info').updateResources(JID(stanza.@from).resource, stanza.@type);
+        document.title = JID(stanza.@from).address;
     }
 }
 
@@ -702,8 +702,8 @@ function seenIq(stanza) {
         
         if(stanza..ns_roster::item.length() > 0) {
             contactName = stanza..ns_roster::item.@name.toString();
-            info.updateTitle(stanza..ns_roster::item.@jid);
-            info.updateAddress(stanza..ns_roster::item.@jid);
+            _('info').updateAddress(stanza..ns_roster::item.@jid);
+            document.title = JID(stanza.@from).address;
         }
     }
 }
