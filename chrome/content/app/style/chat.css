@@ -121,6 +121,12 @@ a:hover {
     list-style-type: none;
 }
 
+.menu > .menu-content {
+    display: none;
+    margin: 0;
+    padding: 0;
+}
+
 .menu:hover {
     opacity: 0.9;
     width: auto;
@@ -128,6 +134,10 @@ a:hover {
 }
 
 .menu:hover > ul {
+    display: block;
+}
+
+.menu:hover > .menu-content {
     display: block;
 }
 
@@ -182,6 +192,24 @@ a:hover {
 
 #styles #underline {
     text-decoration: underline;
+}
+
+/* POPUP - PALETTE */
+
+#palette {
+    display: none;
+    left: 150px;
+    max-width: 150px;
+}
+
+#palette > .menu-content > img {
+    border: 1px solid transparent;
+    max-width: 32px;
+    max-height: 32px;
+}
+
+#palette > .menu-content > img:hover {
+    border: 1px dotted gray;
 }
 
 

@@ -402,7 +402,12 @@ function init(event) {
     behaviour.input(_('chat-input'));
     behaviour.palette(_('palette'));
 
-
+    _('palette').addEventListener(
+        'click', function(event) {
+            _('chat-input').execCommand(
+                'insertImage', event.target.getAttribute('src'));
+        }, false);
+        
     _('chat-output').addEventListener(
         'hsDrop', function(event) { droppedDataInConversation(event); }, false);
 
