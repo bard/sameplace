@@ -95,110 +95,9 @@ function makeEmoticonRegexp(emoticons) {
         'g');
 }
 
-function JID(string) {
-    try {
-        var m = string.match(/^(.+?@)?(.+?)(?:\/|$)(.*$)/);
-
-        var jid = {};
-
-        if(m[1])
-            jid.username = m[1].slice(0, -1);
-
-        jid.hostname = m[2];
-        jid.resource = m[3];
-        jid.nick     = m[3];
-        jid.full     = m[3] ? string : null;
-        jid.address  = jid.username ?
-            jid.username + '@' + jid.hostname :
-            jid.hostname;
-
-        return jid;
-    }catch(e){
-        window.alert('Error report: ' + e + '\n' +
-                     'userAddress: ' + userAddress + '\n' +
-                     'contactResource: ' + contactResource + '\n' +
-                     'contactName: ' + contactName + '\n' +
-                     'Stack trace:\n' + e.stack);
-    }
-}
-
-function stripUriFragment(uri) {
-    var hashPos = uri.lastIndexOf('#');
-    return (hashPos != -1 ?
-            uri.slice(0, hashPos) :
-            uri);}
-
-function padLeft(string, character, length) {
-    string = string.toString();
-    while(string.length < length)
-        string = character + string;
-    
-    return string;
-}
-
-function formatTime(dateTime) {
-    return padLeft(dateTime.getHours(), '0', 2) + ':' +
-        padLeft(dateTime.getMinutes(), '0', 2) + ':' +
-        padLeft(dateTime.getSeconds(), '0', 2)
-}
-
-
-function textToRGB(text) {
-    var memo = arguments.callee.memo;
-    if(memo[text])
-        return memo[text];
-    
-    function hsv2rgb(h, s, v) {
-        var colr = [2, 1, 0, 0, 3, 2];
-        var colg = [3, 2, 2, 1, 0, 0];
-        var colb = [0, 0, 3, 2, 2, 1];
-        var colp = [4];
-        var r = g = b = 0;
-        var nh, ic, fc, ts;
-
-        if(s == 0) {
-            r = g = b = Math.round(255*v);
-        } else {
-            h = h % 360;
-            nh = h/60;
-            ic = Math.round(nh);
-            fc = nh-ic;
-            colp[2] = 255*v;
-            colp[0] = colp[2]*(1-s);
-            colp[1] = colp[2]*(1-s*fc);
-            colp[3] = colp[2]*(1-s*(1-fc));
-            r = Math.round(colp[colr[ic]]);
-            g = Math.round(colp[colg[ic]]);
-            b = Math.round(colp[colb[ic]]);
-        }
-        return [r, g, b];
-    }
-
-    function toRange(srcValue, srcRange, dstRange) {
-        return srcValue / srcRange * dstRange;
-    }
-
-    var positiveCRC = crc32.crc(text) + Math.pow(2, 31);
-    var hue = Math.round(toRange(positiveCRC, Math.pow(2, 32), 360));
-    const value = 0.40;
-    const saturation = 0.92;
-
-    memo[text] = hsv2rgb(hue, saturation, value);
-    return memo[text];
-};
-textToRGB.memo = {};
-
 
 // GUI UTILITIES (GENERIC)
 // ----------------------------------------------------------------------
-
-function visible(element) {
-    element.style.display = '';
-}
-
-function hidden(element) {
-    element.style.display = 'none';
-}
 
 function _(thing) {
     switch(typeof(thing)) {
@@ -214,127 +113,6 @@ function _(thing) {
     return undefined;
 }
 
-function copyDomContents(srcElement, dstElement) {
-    for(var i=srcElement.childNodes.length-1; i>=0; i--) 
-        dstElement.insertBefore(
-            srcElement.childNodes[i],
-            dstElement.firstChild);
-}
-
-function getElementByAttribute(parent, name, value) {
-    function impl(parent, name, value) {
-        for(var child = parent.firstChild; child; child = child.nextSibling) {
-            if(child.getAttribute && child.getAttribute(name) == value)
-                return child;
-        }
-
-        for(var child = parent.firstChild; child; child = child.nextSibling) {
-            var matchingChild = arguments.callee(child, name, value);
-            if(matchingChild)
-                return matchingChild;
-        }
-        return undefined;
-    }
-
-    // Only use XPath if available and if element is inserted in the
-    // document (it will not work otherwise)
-
-    if(typeof(x) == 'function' && parent.parentNode) 
-        return x(parent, './/*[@' + name + '="' + value + '"]');
-    else
-        return impl(parent, name, value);
-}
-
-function getElementByContent(parent, textContent) {
-    function impl(parent, textContent) {
-        for(var child = parent.firstChild; child; child = child.nextSibling) {
-            if(child.textContent == textContent)
-                return child;
-        }
-
-        for(var child = parent.firstChild; child; child = child.nextSibling) {
-            var matchingChild = getElementByContent(child, textContent);
-            if(matchingChild)
-                return matchingChild;
-        }
-        return undefined;
-    }
-
-    // Only use XPath if available and if element is inserted in the
-    // document (it will not work otherwise)
-
-    if(typeof(x) == 'function' && parent.parentNode) 
-        return x(parent, './/*[text()="' + textContent + '"]');
-    else
-        return impl(parent, textContent);
-}
-
-if(typeof(document.evaluate) == 'function') {
-    function x() {
-        var contextNode, path;
-        if(typeof(arguments[0]) == 'string') {
-            contextNode = document;
-            path = arguments[0];
-        } else {
-            contextNode = arguments[0];
-            path = arguments[1];
-        }
-
-        function resolver(prefix) {
-            return 'http://www.w3.org/1999/xhtml';
-        }
-
-        return document.evaluate(
-            path, contextNode, resolver,
-            XPathResult.ANY_UNORDERED_NODE_TYPE, null).singleNodeValue;
-    }
-}
-    
-function isNearBottom(domElement, threshold) {
-    return Math.abs(domElement.scrollHeight -
-                    (domElement.scrollTop + domElement.clientHeight)) < (threshold || 24);
-}
-
-function isAtBottom(domElement) {
-    return domElement.scrollHeight == domElement.scrollTop + domElement.clientHeight;
-}
-
-function smoothScroll(domElement, stepsLeft) {
-    if(stepsLeft == undefined)
-        stepsLeft = 4;
-    else if(stepsLeft == 0)
-        return;
-
-    var targetScrollTop = domElement.scrollHeight - domElement.clientHeight;
-    var deltaScrollTop = Math.abs(domElement.scrollTop - targetScrollTop);
-    var nextStep = deltaScrollTop / stepsLeft;
-    domElement.scrollTop += nextStep;
-
-    window.setTimeout(
-        function() { smoothScroll(domElement, stepsLeft - 1); }, 5);
-}
-
-function scrollToBottom(domElement, smooth) {
-    if(isAtBottom(domElement) ||
-       (smooth && scrolling))
-        return;
-
-    if(smooth == undefined)
-        smooth = true;
-
-    if(smooth)
-        smoothScroll(domElement);
-    else        
-        domElement.scrollTop =
-            domElement.scrollHeight - domElement.clientHeight;
-}
-
-function scrollingOnlyIfAtBottom(domElement, action) {
-    var shouldScroll = isNearBottom(domElement);
-    action();
-    if(shouldScroll)
-        scrollToBottom(domElement);
-}
 
 
 // GUI UTILITIES (SPECIFIC)
@@ -357,15 +135,15 @@ function scrollingOnlyIfAtBottom(domElement, action) {
 function M(domElement) {
     var wrapper = {
         get sender() {
-            return getElementByAttribute(domElement, 'class', 'sender');
+            return $('.sender', domElement)[0];
         },
 
         get time() {
-            return getElementByAttribute(domElement, 'class', 'time');
+            return $('.time', domElement)[0];
         },
 
         get content() {
-            return getElementByAttribute(domElement, 'class', 'content');
+            return $('.content', domElement)[0];
         }   
     };
 
@@ -373,8 +151,7 @@ function M(domElement) {
 }
 
 function cloneBlueprint(name) {
-    return getElementByAttribute(_('blueprints'), 'class', name)
-        .cloneNode(true);
+    return $('#blueprints > .' + name).clone(true)[0];
 }
 
 
@@ -639,7 +416,7 @@ function sendXHTML(xhtmlBody) {
     message.ns_xhtml_im::html.body =
         filter.xhtmlIM.keepRecommended(xhtmlBody);
 
-    _('xmpp-outgoing').textContent = message.toXMLString();
+    $('#xmpp-outgoing').text(message.toString());
 }
 
 function sendEvent(event) {
@@ -654,8 +431,8 @@ function sendEvent(event) {
         
         break;
     }
-    
-    _('xmpp-outgoing').textContent = message.toXMLString();
+
+    $('#xmpp-outgoing').text(message.toXMLString());
 }
 
 

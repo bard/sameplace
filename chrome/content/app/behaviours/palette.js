@@ -24,25 +24,25 @@ var behaviour = behaviour || {};
 /**
  * Behaviour for popup showing image palette(s).
  *
- * Dependencies: getElementsByAttribute() from main.js.
+ * Dependencies: jQuery.js
  *
  */
 
-behaviour.palette = function(palette) {
+behaviour.palette = function(pal) {
     var defaultEmoticons = [
         'angel', 'crying', 'devil-grin', 'glasses', 'kiss',
         'monkey', 'plain', 'sad', 'smile-big', 'smile', 'grin',
         'surprise', 'wink' ];
 
-    palette.add = function(imageUrl) {
+    pal.add = function(imageUrl) {
         var thumb = document.createElement('img');
         thumb.setAttribute('src', imageUrl);
-        getElementByAttribute(palette, 'class', 'menu-content').appendChild(thumb);
+        $('.menu-content', pal).append(thumb);
     };
 
     defaultEmoticons.forEach(
         function(name) {
-            palette.add('./emoticons/' + name + '.png?alt="' + name + '"');
+            pal.add('./emoticons/' + name + '.png?alt="' + name + '"');
         });
 };
 

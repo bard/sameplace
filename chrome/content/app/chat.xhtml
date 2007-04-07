@@ -27,11 +27,13 @@
     <!-- Utilities -->
 
     <script type="text/javascript" src="lib/namespaces.js"/>
+    <script type="text/javascript" src="lib/utilities.js"/>
     <script type="text/javascript" src="lib/filter.js"/>
     <script type="text/javascript" src="lib/conv.js"/>
     <script type="text/javascript" src="lib/text.js"/>
     <script type="text/javascript" src="lib/xml.js"/>
     <script type="text/javascript" src="lib/crc32.js"/>
+    <script type="text/javascript" src="lib/jquery.js"/>
 
     <!-- XHTML lightweight widgets -->
     
@@ -97,19 +99,17 @@
     </div>
 
     <div id="blueprints">
-      <ul>
-        <li class="message">
-          <span class="sender"/>
-          <span class="time"/>
-          <span class="content"/>
-        </li>
-
-        <li class="error"/>
-        
-        <li class="join"/>
-
-        <li class="leave"/>
-      </ul>
+      <li class="message">
+        <span class="sender"/>
+        <span class="time"/>
+        <span class="content"/>
+      </li>
+      
+      <li class="error"/>
+      
+      <li class="join"/>
+      
+      <li class="leave"/>
     </div>
     
     <div id="socket">

@@ -24,13 +24,27 @@ var behaviour = behaviour || {};
 /**
  * Behaviour for info popup.
  *
- * Dependencies: getElementByContent() and getElementByAttribute() from main.js.
+ * Dependencies: jQuery.js
  *
  */
 
 behaviour.info = function(info) {
+    function getElementByContent(parent, textContent) {
+        for(var child = parent.firstChild; child; child = child.nextSibling) {
+            if(child.textContent == textContent)
+                return child;
+        }
+
+        for(var child = parent.firstChild; child; child = child.nextSibling) {
+            var matchingChild = getElementByContent(child, textContent);
+            if(matchingChild)
+                return matchingChild;
+        }
+        return undefined;
+    }
+
     function _(role) {
-        return getElementByAttribute(info, 'role', role);
+        return $('[@role=' + role + ']', info)[0];
     }
 
     for each(role in ['resources']) {
@@ -76,9 +90,11 @@ behaviour.info = function(info) {
             case 'resources':
             case 'groups':
             if(element.getElementsByTagName('li').length > 0)
-                visible(element.parentNode);
-            else 
-                hidden(element.parentNode);
+                $(element.parentNode).css({visible: ''});
+            else {
+                alert('here')
+                $(element.parentNode).css({visible: 'none'});
+            }
             break;
             default: throw new Error('Unexpected.');
         }
@@ -97,10 +113,6 @@ behaviour.info = function(info) {
         
             break;
         }
-    };    
+    };
 };
-
-
-// INTERNALS
-// ----------------------------------------------------------------------
 
