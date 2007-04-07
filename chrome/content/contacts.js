@@ -314,7 +314,7 @@ function receivedRoster(iq) {
 
 function receivedSubscriptionRequest(presence) {
     _('notify').appendNotification(
-            'Request from ' + presenec.stanza.@from,
+            'Request from ' + presence.stanza.@from,
             'sameplace-presence-subscription',
             null, _('notify').PRIORITY_INFO_HIGH,
             [{label: 'View', accessKey: 'V', callback: onView}]);
