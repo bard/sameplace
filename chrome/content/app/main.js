@@ -702,6 +702,7 @@ function seenIq(stanza) {
         
         if(stanza..ns_roster::item.length() > 0) {
             contactName = stanza..ns_roster::item.@name.toString();
+            info.updateTitle(stanza..ns_roster::item.@jid);
             info.updateAddress(stanza..ns_roster::item.@jid);
         }
     }
