@@ -39,6 +39,8 @@ const srvProtocol = Cc['@mozilla.org/uriloader/external-protocol-service;1']
 
 var channel;
 var messageCache = {};
+var conversations = {};
+load('chrome://sameplace/content/conversations.js', conversations);
 
 
 // GUI INITIALIZATION AND FINALIZATION
@@ -93,30 +95,45 @@ function init(event) {
         direction: 'out',
         }).forEach(sentAvailablePresence);
 
+
+    // Wiring events from conversation subsystem to contact subsystem
+    // and elsewhere
+
+    conversations.init(_('conversations'));
+
     _('conversations').addEventListener(
-        'DOMNodeInserted', function(event) {
-            if(event.target instanceof XULElement &&
-               event.target.parentNode == _('conversations')) {
-                var hideConversations = _('conversations').childNodes.length == 0;
-                _('conversations').collapsed = hideConversations;
-                _('contact-toolbox', {role: 'close'}).hidden = hideConversations;
-                _('contact-toolbox', {role: 'attach'}).hidden = hideConversations;
-                if(hideConversations)
-                    _('contact').value = '';
-            }
+        'conversation/open', function(event) {
+            var panel = event.originalTarget;
+            contacts.startedConversationWith(panel.getAttribute('account'),
+                                             panel.getAttribute('address'));
+            _('contact-toolbox', {role: 'attach'}).hidden = false;
         }, false);
 
     _('conversations').addEventListener(
-        'DOMNodeRemoved', function(event) {
-            if(event.target instanceof XULElement &&
-               event.target.parentNode == _('conversations')) {
-                var hideConversations = _('conversations').childNodes.length == 1;
-                _('contact-toolbox', {role: 'close'}).hidden = hideConversations;
-                _('contact-toolbox', {role: 'attach'}).hidden = hideConversations;
-                if(hideConversations)
-                    _('contact').value = '';
+        'conversation/focus', function(event) {
+            var panel = event.originalTarget;
+            contacts.nowTalkingWith(panel.getAttribute('account'),
+                                    panel.getAttribute('address'));
+
+            _('contact').value = XMPP.nickFor(panel.getAttribute('account'),
+                                              panel.getAttribute('address'));
+        }, false);
+
+    _('conversations').addEventListener(
+        'conversation/close', function(event) {
+            var panel = event.originalTarget;
+            contacts.stoppedConversationWith(
+                panel.getAttribute('account'),
+                panel.getAttribute('address'));
+
+            if(conversations.count == 1) {
+                _('conversations').collapsed = true;
+                _('contact-toolbox', {role: 'attach'}).hidden = true;
+                _('contact').value = '';
             }
         }, false);
+
+    // Setting up contact autocompletion
 
     behaviour.autoComplete(_('contact'));
 
@@ -127,21 +144,25 @@ function init(event) {
 
     _('contact').addEventListener(
         'completed', function(event) {
+
+            // Switching tab.  Need to focus current content window,
+            // since going back will restore focus, and we don't want
+            // focus on contact textbox.  XXX This must be handled by
+            // the conversation subsystem.
+
+            _('conversations').contentWindow.focus();
             requestedCommunicate(
                 event.target.getAttribute('account'),
                 event.target.getAttribute('address'),
                 getDefaultAppUrl());
         }, false);
 
+    // Filling shared application menu
+
     initApplicationMenu(_('menu-applications'));
 }
 
 function finish() {
-    for(var conversation, i=0; conversation = _('conversations').childNodes[i]; i++)
-        closeConversation(
-            conversation.getAttribute('account'),
-            conversation.getAttribute('address'));
-
     channel.release();
 }
 
@@ -221,36 +242,6 @@ function getBrowser() {
         return top.getBrowser();
 
     return undefined;
-}
-
-function isConversationOpen(account, address) {
-    return getConversation(account, address) != undefined;
-}
-
-function isConversationCurrent(account, address) {
-    return getCurrentConversation() == getConversation(account, address);
-}
-
-function getCurrentConversation() {
-    return _('conversations').selectedPanel;
-}
-
-if(typeof(x) == 'function') {
-    function getConversation(account, address) {    
-        return x('//*[@id="conversations"]' +
-                 '//*[@account="' + account + '" and ' +
-                 '    @address="' + address + '"]');
-    }
-} else {
-    function getConversation(account, address) {
-        var conversationsForAccount =
-            _('conversations').getElementsByAttribute('account', account);
-        for(var i=0; i<conversationsForAccount.length; i++){
-            if(conversationsForAccount[i].getAttribute('address') == address)
-                return conversationsForAccount[i];
-        }
-        return undefined;
-    }
 }
 
 
@@ -382,32 +373,6 @@ function buildContactCompletions(xulCompletions) {
             });
 }
 
-function switchToUnread() {
-    var conversation = _('conversations').firstChild;
-    while(conversation) {
-        if(conversation.getAttribute('unread') == 'true') {
-            focusConversation(conversation.getAttribute('account'),
-                              conversation.getAttribute('address'));
-            return;
-        }
-        conversation = conversation.nextSibling;
-    }
-}
-
-function switchToNext() {
-    var current = getCurrentConversation();
-    var next;
-
-    if(!current || current == _('conversations').firstChild)
-        next = _('conversations').lastChild;
-    else
-        next = current.previousSibling;
-
-    if(next)
-        focusConversation(next.getAttribute('account'),
-                          next.getAttribute('address'));
-}
-
 function openLink(url, newTab) {
     if(url.match(/^javascript:/))
         srvPrompt.alert(
@@ -474,10 +439,9 @@ function interactWith(account, address,
     if(typeof(where) == 'string') {
         // "where" is a url
         if(target == 'main') {
-            if(isConversationOpen(account, address)) {
-                focusConversation(account, address);
-                afterLoadAction(getConversation(account, address));
-            } else
+            if(conversations.isOpen(account, address))
+                afterLoadAction(conversations.get(account, address));
+            else
                 createInteractionPanel(account, address,
                                        where, target, afterLoadAction);
         } else {
@@ -513,8 +477,11 @@ function createInteractionPanel(account, address,
         
         panel = getBrowser().selectedBrowser;
     } else {
-        panel = cloneBlueprint('conversation');
-        _('conversations').appendChild(panel);
+        // XXX move to conversation subsystem
+        
+        panel = _('conversations').currentURI.spec == 'about:blank' ?
+            _('conversations').selectedBrowser :
+            _('conversations').getBrowserForTab(_('conversations').addTab());
 
         panel.addEventListener(
             'click', function(event) {
@@ -537,13 +504,17 @@ function createInteractionPanel(account, address,
     
     panel.setAttribute('account', account);
     panel.setAttribute('address', address);
-
+    
     if(url.match(/^javascript:/)) {
         enableInteraction(account, address, panel, true);
         panel.loadURI(url);
     } else {
         queuePostLoadAction(
             panel, function(p) {
+                panel.contentWindow.addEventListener(
+                    'beforeunload', function(event) {
+                        conversations.closed(account, address);
+                    }, true);
                 enableInteraction(account, address, panel);
                 if(afterLoadAction)
                     afterLoadAction(panel);
@@ -554,33 +525,8 @@ function createInteractionPanel(account, address,
     return panel;
 }
 
-function focusCurrentConversation() {
-    var conversation = getCurrentConversation();
-
-    if(conversation) {
-        conversation.contentWindow.focus();
-        document.commandDispatcher.advanceFocus(); //XXX maybe not needed
-    }
-}
-
-function focusConversation(account, address) {
-    var conversation = getConversation(account, address);
-
-    if(conversation) {
-        _('conversations').selectedPanel = conversation;
-        focusedConversation(account, address);
-        conversation.contentWindow.focus();
-        document.commandDispatcher.advanceFocus();
-    }
-}
-
 function closeConversation(account, address) {
-    var conversation = getConversation(account, address);
-
-    if(conversation) {
-        conversation.parentNode.removeChild(conversation);
-        closedConversation(account, address);
-    }
+    conversations.close(account, address);
 }
 
 
@@ -615,7 +561,7 @@ var chatDropObserver = {
 };
 
 function requestedAdditionalInteraction(event) {
-    var conversation = getCurrentConversation();
+    var conversation = conversations.current;
     var account = attr(conversation, 'account');
     var address = attr(conversation, 'address');
     var url = event.target.value;
@@ -628,14 +574,14 @@ function requestedAdditionalInteraction(event) {
 
 function requestedCommunicate(account, address, url) {
     if(url == getDefaultAppUrl())
-        if(isMUC(account, address) && !isConversationOpen(account, address))
+        if(isMUC(account, address) && !conversations.isOpen(account, address))
             promptOpenConversation(account, address, isMUC(account, address) ? 'groupchat' : 'chat');
         else
             interactWith(
                 account, address,
                 url, 'main', function(conversation) {
-                    focusConversation(account, address);
-                    openedConversation(account, address);
+                    conversations.focus(account, address);
+                    conversations.opened(account, address);
                 });
     else
         interactWith(account, address, url, 'additional');
@@ -643,7 +589,7 @@ function requestedCommunicate(account, address, url) {
 
 function pressedKeyInContactField(event) {
     if(event.keyCode == KeyEvent.DOM_VK_RETURN)
-        focusCurrentConversation();
+        conversations.focusCurrent();
 }
 
 function clickedElementInConversation(event) {
@@ -672,13 +618,7 @@ function requestedChangeStatusMessage(event) {
         changeStatusMessage(event.target.value);
     
     document.commandDispatcher.advanceFocus();
-    focusCurrentConversation();
-}
-
-function focusedConversation(account, address) {
-    getConversation(account, address).removeAttribute('unread');
-    contacts.nowTalkingWith(account, address);
-    _('contact').value = XMPP.nickFor(account, address);
+    conversations.focusCurrent();
 }
 
 function requestedAddContact() {
@@ -713,26 +653,6 @@ function requestedOpenConversation() {
     window.openDialog(
         'chrome://sameplace/content/open_conversation.xul',
         'sameplace-open-conversation', 'centerscreen', {});
-}
-
-function openedConversation(account, address) {
-    contacts.startedConversationWith(account, address);
-    
-    if(_('conversations').childNodes.length == 1)
-        contacts.nowTalkingWith(account, address);
-}
-
-function closedConversation(account, address) {
-    contacts.stoppedConversationWith(account, address);
-    if(_('conversations').childNodes.length == 0)
-        _('conversations').collapsed = true;
-    else {
-        var conversation =
-            _('conversations').selectedPanel ||
-            _('conversations').lastChild;
-        focusConversation(conversation.getAttribute('account'),
-                          conversation.getAttribute('address'));
-    }
 }
 
 
@@ -803,17 +723,17 @@ function seenCachableMessage(message) {
 function seenOutgoingChatActivation(message) {
     var contact = XMPP.JID(message.stanza.@to);
 
-    var conversation = getConversation(message.session.name, contact.address);
+    var conversation = conversations.get(message.session.name, contact.address);
     if(!conversation) 
         conversation = interactWith(
             message.session.name, contact.address,
             getDefaultAppUrl(), 'main',
             function(contentPanel) {
-                focusConversation(message.session.name, contact.address);
-                openedConversation(message.session.name,
-                                   contact.address,
-                                   message.stanza.@type);
-
+                conversations.focus(message.session.name, contact.address);
+                conversations.opened(message.session.name,
+                                     contact.address,
+                                     message.stanza.@type);
+                
                 contentPanel.xmppChannel.receive(message);
             });
     else if(!conversation.contentDocument ||
@@ -835,7 +755,7 @@ function seenOutgoingChatActivation(message) {
 function seenChatMessage(message) {
     function maybeSetUnread(conversation) {
         if(message.direction == 'in' &&
-           !isConversationCurrent(message.session.name,
+           !conversations.isCurrent(message.session.name,
                                   XMPP.JID(message.stanza.@from).address))
             conversation.setAttribute('unread', 'true');
     }
@@ -844,15 +764,15 @@ function seenChatMessage(message) {
         (message.stanza.@from != undefined ?
          message.stanza.@from : message.stanza.@to));
 
-    var conversation = getConversation(message.session.name, contact.address);
+    var conversation = conversations.get(message.session.name, contact.address);
     if(!conversation) 
         conversation = interactWith(
             message.session.name, contact.address,
             getDefaultAppUrl(), 'main',
             function(contentPanel) {
-                openedConversation(message.session.name,
-                                   contact.address,
-                                   message.stanza.@type);
+                conversations.opened(message.session.name,
+                                     contact.address,
+                                     message.stanza.@type);
 
                 contentPanel.xmppChannel.receive(message);
                 maybeSetUnread(contentPanel);
@@ -889,9 +809,19 @@ function sentMUCPresence(presence) {
         account, address,
         getDefaultAppUrl(), 'main',
         function(interactionPanel) {
-            openedConversation(account, address);
-            focusConversation(account, address);
+            conversations.opened(account, address);
+            conversations.focus(account, address);
         });
+}
+
+
+// UTILITIES (GENERIC)
+// ----------------------------------------------------------------------
+
+function load(url, context) {
+    Cc['@mozilla.org/moz/jssubscript-loader;1']
+        .getService(Ci.mozIJSSubScriptLoader)
+        .loadSubScript(url, context);
 }
 
 

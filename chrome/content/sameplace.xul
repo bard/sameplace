@@ -54,11 +54,11 @@
              label="Open a conversation..."
              accesskey="O"
              tooltiptext="Open a conversation (single or multi-user)"/>
-    <command id="switch-to-unread" oncommand="switchToUnread();"
+    <command id="switch-to-unread" oncommand="conversations.switchToUnread();"
              label="Switch to unread conversation"
              accesskey="u"
              tooltiptext="Switch to next conversation in line with unread messages"/>
-    <command id="switch-to-next" oncommand="switchToNext();"
+    <command id="switch-to-next" oncommand="conversations.switchToNext();"
              label="Switch to next conversation"
              accesskey="n"
              tooltiptext="Switch to next conversation"/>
@@ -155,14 +155,16 @@
                       tooltiptext="Interact with contact on current page (current page must be a shared application)"/>
           </menupopup>
         </toolbarbutton>
-        <toolbarbutton role="close"
-                       hidden="true"
-                       tooltiptext="Close this conversation"
-                       oncommand="requestedCloseConversation(getCurrentConversation());"
-                       class="small-margin"/>
       </toolbar>
     </toolbox>
-    <deck id="conversations" collapsed="true" flex="5" persist="height"/>
+    <tabbrowser id="conversations" collapsed="true" flex="10" persist="height"/>
+
+    <!-- HACK FOR TABBROWSER -->
+    
+    <box hidden="true">
+      <menuitem id="menu_closeWindow"/>
+      <menuitem id="menu_close"/>
+    </box>
 
     <!-- BLUEPRINTS -->
 
