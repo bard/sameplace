@@ -45,23 +45,7 @@
   </head>
 
   <body onload="init(event);">
-    <div class="menu-bar upper">
-      <div id="info" class="menu upper">
-        <div class="header">
-          Info
-        </div>
-        
-        <div class="box" for="address">
-          <h3 role="heading-address">Address:</h3>
-          <span role="address"></span>
-        </div>
-
-        <div class="box" for="resources">
-          <h3 role="heading-resources">Logged from:</h3>
-          <ul role="resources"/>
-        </div>
-      </div>
-    </div>
+    <div class="menu-bar upper"/>
 
     <div id="chat-area">
       <div id="chat-output">
@@ -79,6 +63,19 @@
             </ul>
           </div>
           
+          <div id="info" class="menu lower">
+            <div class="header">Info</div>
+            <div class="box" for="address">
+              <h3 role="heading-address">Address:</h3>
+              <span role="address"></span>
+            </div>
+              
+            <div class="box" for="resources">
+              <h3 role="heading-resources">Logged from:</h3>
+              <ul role="resources"/>
+            </div>
+          </div>
+
           <div class="menu lower" id="options">
             <div class="header">Options</div>
             <ul>

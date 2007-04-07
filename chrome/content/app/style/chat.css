@@ -61,6 +61,8 @@ a:hover {
     width: 100%;
 }
 
+/* MENU BAR */
+
 .menu-bar {
     left: 0;
     right: 0;
@@ -72,12 +74,15 @@ a:hover {
 .menu-bar.upper {
     border-top: 1px solid #dedede;
     top: 0px;
+    display: none;
 }
 
 .menu-bar.lower {
     border-bottom: 1px solid #dedede;
     bottom: 46px;
 }
+
+/* MENU */
 
 .menu {
     position: absolute;
@@ -88,7 +93,6 @@ a:hover {
     padding-right: 10px;
     font-size: 10px;
     background: #C4C4FF;
-    white-space: nowrap;
     opacity: 0.6;
     width: 40px;
 }
@@ -100,6 +104,7 @@ a:hover {
 }
 
 .menu.upper {
+    top: 0;
     -moz-border-radius-bottomright: 12px;
     -moz-border-radius-bottomleft: 12px;
 }
@@ -183,8 +188,7 @@ a:hover {
 /* POPUP - INFO */
 
 #info {
-    top: 0;
-    left: 10px;
+    left: 80px;
     z-index: 1000;
     min-height: 10px;
     white-space: nowrap;
@@ -229,7 +233,7 @@ a:hover {
 
 #chat-output {
     position: absolute;
-    top: 21px;
+    top: 0;
     left: 0;
     right: 0;
     bottom: 51px;
