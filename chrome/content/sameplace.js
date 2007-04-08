@@ -686,16 +686,6 @@ function getJoinPresence(account, address) {
             }});
 }
 
-function isMUC(account, address) {
-    for each(var presence in XMPP.cache.presenceOut)
-        if(presence.stanza.@to != undefined &&
-           XMPP.JID(presence.stanza.@to).address == address &&
-           presence.stanza.ns_muc::x.length() > 0)
-            return true;
-
-    return false;
-}
-
 
 // NETWORK REACTIONS
 // ----------------------------------------------------------------------
