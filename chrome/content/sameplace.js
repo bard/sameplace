@@ -525,10 +525,6 @@ function createInteractionPanel(account, address,
     return panel;
 }
 
-function closeConversation(account, address) {
-    conversations.close(account, address);
-}
-
 
 // GUI REACTIONS
 // ----------------------------------------------------------------------
@@ -646,7 +642,7 @@ function requestedCloseConversation(element) {
         exitRoom(account, address,
                  XMPP.JID(getJoinPresence(account, address).stanza.@to).resource);
 
-    closeConversation(account, address);
+    conversations.close(account, address);
 }
 
 function requestedOpenConversation() {
