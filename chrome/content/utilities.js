@@ -50,3 +50,9 @@ function hostAppIsBrowser() {
             .getService(Ci.nsIXULAppInfo)
             .ID == '{ec8030f7-c20a-464f-9b0e-13a3a9e97384}');
 }
+
+function load(url, context) {
+    Cc['@mozilla.org/moz/jssubscript-loader;1']
+        .getService(Ci.mozIJSSubScriptLoader)
+        .loadSubScript(url, context);
+}

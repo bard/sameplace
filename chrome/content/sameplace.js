@@ -801,16 +801,6 @@ function sentMUCPresence(presence) {
 }
 
 
-// UTILITIES (GENERIC)
-// ----------------------------------------------------------------------
-
-function load(url, context) {
-    Cc['@mozilla.org/moz/jssubscript-loader;1']
-        .getService(Ci.mozIJSSubScriptLoader)
-        .loadSubScript(url, context);
-}
-
-
 // DEVELOPER UTILITIES
 // ----------------------------------------------------------------------
 
