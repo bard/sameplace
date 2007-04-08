@@ -477,11 +477,7 @@ function createInteractionPanel(account, address,
         
         panel = getBrowser().selectedBrowser;
     } else {
-        // XXX move to conversation subsystem
-        
-        panel = _('conversations').currentURI.spec == 'about:blank' ?
-            _('conversations').selectedBrowser :
-            _('conversations').getBrowserForTab(_('conversations').addTab());
+        panel = conversations.create(account, address);
 
         panel.addEventListener(
             'click', function(event) {
@@ -577,7 +573,6 @@ function requestedCommunicate(account, address, url) {
                 account, address,
                 url, 'main', function(conversation) {
                     conversations.focus(account, address);
-                    conversations.opened(account, address);
                 });
     else
         interactWith(account, address, url, 'additional');

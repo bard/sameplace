@@ -56,6 +56,7 @@ function init(_dom) {
         'load', function(event) {
             if(event.originalTarget != dom)
                 return;
+
             dom.collapsed = false;
         }, true);
 
@@ -100,6 +101,27 @@ function closed(account, address) {
 
 // ACTIONS
 // ----------------------------------------------------------------------
+
+function create(account, address) {
+    var browser = (dom.currentURI.spec == 'about:blank' ?
+                   dom.selectedBrowser :
+                   dom.getBrowserForTab(dom.addTab()));
+
+    browser.addEventListener(
+        'load', function(event) {
+            if(!event.target)
+                return;
+            if(event.target.location.href == 'about:blank')
+                return;
+            
+            opened(account, address);
+            
+            browser.removeEventListener(
+                'load', arguments.callee, true);
+        }, true);
+
+    return browser;
+}
 
 function switchToNext() {
     var i = getIndexForConversation(
@@ -151,7 +173,6 @@ function focus(account, address) {
                        conversation.contentWindow.focus();
                        document.commandDispatcher.advanceFocus();
                    }, 0);
-
     }
 }
 
