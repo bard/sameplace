@@ -198,6 +198,8 @@ function contactChangedRelationship(account, address, subscription, name) {
         nameElement.setAttribute('value', name);
     else if(name == '' || !nameElement.hasAttribute('value'))
         nameElement.setAttribute('value', address);
+
+    _reposition(contact);
 }
 
 function resourceChangedPresence(account, address) {
@@ -223,19 +225,34 @@ function _reposition(contact) {
     var availability = contact.getAttribute('availability');
     var show = contact.getAttribute('show');
 
+    _('contacts').removeChild(contact);
     contact.style.opacity = 0;
+
+    var sibling;
     if(contact.getAttribute('open') == 'true')
-        _('contacts').insertBefore(contact, _('contacts', {role: 'open'}).nextSibling);
+        sibling = _('contacts', {role: 'open'}).nextSibling;
     else if(availability == 'available' && show == '')
-        _('contacts').insertBefore(contact, _('contacts', {role: 'online'}).nextSibling);
+        sibling = _('contacts', {role: 'online'}).nextSibling;
     else if(availability == 'available' && show == 'away')
-        _('contacts').insertBefore(contact, _('contacts', {role: 'away'}).nextSibling);
+        sibling = _('contacts', {role: 'away'}).nextSibling;
     else if(availability == 'available' && show == 'xa')
-        _('contacts').insertBefore(contact, _('contacts', {role: 'away'}).nextSibling);
+        sibling = _('contacts', {role: 'away'}).nextSibling;
     else if(availability == 'available' && show == 'dnd')
-        _('contacts').insertBefore(contact, _('contacts', {role: 'dnd'}).nextSibling);
+        sibling = _('contacts', {role: 'dnd'}).nextSibling;
     else
-        _('contacts').insertBefore(contact, _('contacts', {role: 'offline'}).nextSibling);
+        sibling = _('contacts', {role: 'offline'}).nextSibling;
+
+    while(sibling &&
+          sibling.getAttribute('role') == 'contact' &&
+          sibling.getElementsByAttribute('role', 'name')[0].getAttribute('value').toLowerCase() < 
+          contact.getElementsByAttribute('role', 'name')[0].getAttribute('value').toLowerCase())
+        sibling = sibling.nextSibling;
+    
+    if(!sibling)
+        _('contacts').appendChild(contact);
+    else
+        _('contacts').insertBefore(contact, sibling);
+    
     fadeIn(contact);
 }
 
