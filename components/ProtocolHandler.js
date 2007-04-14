@@ -30,16 +30,26 @@ function xpcomize(thing) {
 }
 
 function onNewChannel(URI) {
-    var m = URI.spec.match(/^xmpp:([^\?$]+)(\?join)?$/);
+    var m = URI.spec.match(/^xmpp:([^\?$]+)(\?\w+)?(;.+)?$/);
     var jid = encodeURI(m[1]);
-    var request = Cc['@mozilla.org/properties;1'].createInstance(Ci.nsIProperties);
-    request.set('address', xpcomize(jid));
-    request.set('type', xpcomize(m[2] ? 'groupchat' : 'chat'));
-    
-    ww.openWindow(
-        null, 'chrome://sameplace/content/open_conversation.xul',
-        'SamePlace:OpenConversation', '', request);
-    
+
+    switch(m[2]) {
+    case '?roster':
+    case '?remove':
+    case '?subscribe':
+    case '?unsubscribe':
+
+    case '?join':
+    case '?message':
+    default:
+        var request = Cc['@mozilla.org/properties;1'].createInstance(Ci.nsIProperties);
+        request.set('address', xpcomize(jid));
+        request.set('type', xpcomize(m[2] == '?join' ? 'groupchat' : 'chat'));
+        ww.openWindow(
+            null, 'chrome://sameplace/content/open_conversation.xul',
+            'SamePlace:OpenConversation', '', request);
+    }    
+
     return new Channel(URI);
 }
 
