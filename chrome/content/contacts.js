@@ -233,6 +233,8 @@ function _reposition(contact) {
         sibling = _('contacts', {role: 'open'}).nextSibling;
     else if(availability == 'available' && show == '')
         sibling = _('contacts', {role: 'online'}).nextSibling;
+    else if(availability == 'available' && show == 'chat')
+        sibling = _('contacts', {role: 'online'}).nextSibling;
     else if(availability == 'available' && show == 'away')
         sibling = _('contacts', {role: 'away'}).nextSibling;
     else if(availability == 'available' && show == 'xa')
