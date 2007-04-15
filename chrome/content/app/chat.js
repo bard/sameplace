@@ -485,7 +485,7 @@ function seenIq(stanza) {
         if(stanza..ns_roster::item.length() > 0) {
             contactName = stanza..ns_roster::item.@name.toString();
             _('info').updateAddress(stanza..ns_roster::item.@jid);
-            document.title = JID(stanza.@from).address;
+            document.title = stanza..ns_roster::item.@jid;
         }
     }
 }
