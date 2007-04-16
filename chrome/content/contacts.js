@@ -370,6 +370,9 @@ function receivedSubscriptionApproval(presence) {
         presence.stanza.@from + ' has accepted to be in your contact list.',
         'sameplace-presence-subscription',
         null, _('notify').PRIORITY_INFO_HIGH, []);
+
+    XMPP.send(presence.account,
+              <presence to={XMPP.JID(presence.stanza.@from).address} type="subscribe"/>);
 }
 
 function receivedMUCPresence(presence) {
