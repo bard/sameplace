@@ -6,15 +6,6 @@
     list-style-image: url("open.png");
 }
 
-[role="close"] {
-    list-style-image: url("close.png");
-    -moz-image-region: rect(0px, 16px, 16px, 0px);
-}
-
-[role="close"]:hover {
-    -moz-image-region: rect(0px, 32px, 16px, 16px);
-}
-
 [role="attach"] {
     list-style-image: url("attach.png");
 }
