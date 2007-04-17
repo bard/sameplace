@@ -107,6 +107,10 @@
           <textbox id="status-message"
                    onkeypress="requestedChangeStatusMessage(event);"
                    oninput="this.setAttribute('draft', 'true');"
+                   onfocus="if(this.getAttribute('draft') == 'true')
+                            this.value = '';
+                            else
+                            this.select();"
                    draft="true"
                    tooltiptext="Change your status message"
                    flex="1"/>

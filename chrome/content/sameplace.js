@@ -250,6 +250,10 @@ function getBrowser() {
 // Application-dependent functions dealing with user interface.  They
 // affect the domain.
 
+function focusStatus() {
+    _('status-message').focus();
+}
+
 function viewHelp() {
     openLink('http://help.sameplace.cc', true);
 }
@@ -777,8 +781,14 @@ function seenChatMessage(message) {
 }
 
 function sentAvailablePresence(presence) {
-    _('status-message').value = presence.stanza.status.toString() || '[no status message]';
-    _('status-message').setAttribute('draft', 'false');
+    var status = presence.stanza.status.toString();
+    if(status) {
+        _('status-message').value = status;
+        _('status-message').setAttribute('draft', 'false');
+    } else {
+        _('status-message').value = '[Click or Ctrl+Alt+T to change status]';
+        _('status-message').setAttribute('draft', 'true');
+    }
 }
 
 function sentMUCPresence(presence) {

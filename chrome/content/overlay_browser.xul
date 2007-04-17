@@ -63,6 +63,11 @@
   <!-- KEYS -->
 
   <keyset id="mainKeyset">
+    <key id="sameplace-key-focus-status"
+         key="t"
+         modifiers="control alt"
+         phase="capture"
+         oncommand="sameplace.getSidebarContent().focusStatus();"/>
     <key id="sameplace-key-toggle-sidebar"
          keycode="VK_F12" 
          command="sameplace-command-toggle-sidebar"/>
