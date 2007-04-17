@@ -119,14 +119,14 @@
         <toolbaritem>
           <menubar>
             <menu label="Actions" accesskey="c">
-              <menupopup>
+              <menupopup id="actions-popup">
                 <menuitem class="menuitem-iconic" command="add-contact"/>
                 <menuitem class="menuitem-iconic" command="open-conversation"/>
                 <menuitem class="menuitem-iconic" command="switch-to-unread"
                           key="key-switch-to-unread"/>
                 <menuitem class="menuitem-iconic" command="switch-to-next"
                           key="key-switch-to-next"/>
-                <menuseparator/>
+                <menuseparator id="actions-separator"/>
                 <menuitem class="menuitem-iconic" command="view-help"/>
                 <menuitem class="menuitem-iconic" command="visit-forum"/>
                 <menuitem class="menuitem-iconic" command="report-bug"/>
