@@ -122,6 +122,13 @@ function init(event) {
     _('conversations').addEventListener(
         'conversation/close', function(event) {
             var panel = event.originalTarget;
+            var account = attr(panel, 'account');
+            var address = attr(panel, 'address');
+            
+            if(isMUC(account, address))
+                exitRoom(account, address,
+                         XMPP.JID(getJoinPresence(account, address).stanza.@to).resource);
+
             contacts.stoppedConversationWith(
                 panel.getAttribute('account'),
                 panel.getAttribute('address'));
@@ -631,17 +638,6 @@ function requestedAddContact() {
 
     if(request.confirm)
         contacts.addContact(request.account, request.contactAddress, request.subscribeToPresence);
-}
-
-function requestedCloseConversation(element) {
-    var account = attr(element, 'account');
-    var address = attr(element, 'address');
-
-    if(isMUC(account, address))
-        exitRoom(account, address,
-                 XMPP.JID(getJoinPresence(account, address).stanza.@to).resource);
-
-    conversations.close(account, address);
 }
 
 function requestedOpenConversation() {
