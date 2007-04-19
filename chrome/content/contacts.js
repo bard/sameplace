@@ -75,11 +75,6 @@ function init() {
         function(presence) { receivedSubscriptionRequest(presence); });
     channel.on(
         {event: 'presence', direction: 'in', stanza: function(s) {
-                return s.@type == 'subscribed';
-            }},
-        function(presence) { receivedSubscriptionApproval(presence); });
-    channel.on(
-        {event: 'presence', direction: 'in', stanza: function(s) {
                 return s.ns_muc_user::x.length() > 0;
             }}, function(presence) { receivedMUCPresence(presence) });
     channel.on(
@@ -322,7 +317,24 @@ function receivedPresence(presence) {
 }
 
 function receivedRoster(iq) {
+    function watchForSubscriptionApproval(item) {
+        var listener = channel.on({
+            event     : 'presence',
+            direction : 'in',
+            stanza    : function(s) {
+                    return (s.@type == 'subscribed' &&
+                            s.@from == item.@jid);
+                }},
+            function(presence) {
+                channel.forget(listener);
+                receivedSubscriptionApproval(presence);
+            });
+    }
+
     for each(var item in iq.stanza..ns_roster::item) {
+        if(item.@ask == 'subscribe')
+            watchForSubscriptionApproval(item);
+
         contactChangedRelationship(
             iq.session.name,
             item.@jid,
