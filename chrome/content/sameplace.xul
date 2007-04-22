@@ -99,7 +99,7 @@
 
   <!-- MAIN -->
 
-  <vbox flex="1">
+  <notificationbox id="notify" flex="1">
 
     <toolbox>
       <toolbar fullscreentoolbar="true">
@@ -178,5 +178,5 @@
                role="conversation"
                resource="" src="about:blank" flex="1"/>
     </box>
-  </vbox>
+  </notificationbox>
 </page>
