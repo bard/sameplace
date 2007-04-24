@@ -159,7 +159,7 @@
           tooltip="contact-tooltip">
       <hbox flex="1" align="center">
         <image role="status-indicator"/>
-        <label role="name"/>
+        <label role="name" flex="1" crop="end"/>
         <spacer flex="1"/>
         <label role="pending" value="0"/>
       </hbox>
