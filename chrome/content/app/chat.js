@@ -474,7 +474,7 @@ function seenPresence(stanza) {
     
         _('info').updateAddress(JID(stanza.@from).address);
         _('info').updateResources(JID(stanza.@from).resource, stanza.@type);
-        document.title = JID(stanza.@from).address;
+        document.title = contactName || JID(stanza.@from).username;
     }
 }
 
@@ -485,7 +485,6 @@ function seenIq(stanza) {
         if(stanza..ns_roster::item.length() > 0) {
             contactName = stanza..ns_roster::item.@name.toString();
             _('info').updateAddress(stanza..ns_roster::item.@jid);
-            document.title = stanza..ns_roster::item.@jid;
         }
     }
 }
