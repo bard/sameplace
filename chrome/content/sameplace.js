@@ -421,9 +421,12 @@ function changeStatusMessage(message) {
     for each(var account in XMPP.accounts)
         if(XMPP.isUp(account)) {
             var stanza = XMPP.cache.find({
-                event: 'presence',
-                direction: 'out',
-                account: account.jid
+                event     : 'presence',
+                direction : 'out',
+                account   : account.jid,
+                stanza    : function(s) {
+                        return s.ns_muc::x == undefined
+                    }
                 }).stanza.copy();
             
             if(message)
