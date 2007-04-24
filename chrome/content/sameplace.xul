@@ -99,7 +99,7 @@
 
   <!-- MAIN -->
 
-  <notificationbox id="notify" flex="1">
+  <notificationbox id="notify" flex="1" style="overflow: hidden;">
 
     <toolbox>
       <toolbar fullscreentoolbar="true">
@@ -126,6 +126,15 @@
                           key="key-switch-to-unread"/>
                 <menuitem class="menuitem-iconic" command="switch-to-next"
                           key="key-switch-to-next"/>
+                <menu class="menuitem-iconic" label="Scriptlets">
+                  <menupopup id="scriptlets-popup">
+                    <menuitem class="menuitem-iconic" label="Twitter"
+                              oncommand="showScriptlet('twitter');"/>
+                    <menuseparator id="scriptlets-separator"/>
+                    <menuitem class="menuitem-iconic" label="Manage..."/>
+                  </menupopup>
+                </menu>
+                          
                 <menuseparator id="actions-separator"/>
                 <menuitem class="menuitem-iconic" command="view-help"/>
                 <menuitem class="menuitem-iconic" command="visit-forum"/>
