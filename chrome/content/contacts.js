@@ -367,7 +367,7 @@ function receivedSubscriptionRequest(presence) {
         else
             accept = srvPrompt.confirm(
                 null, 'Contact notification',
-                address + ' wants to add ' + presence.stanza.@to + ' you to his/her contact list.\nDo you accept?');
+                address + ' wants to add ' + presence.stanza.@to + ' to his/her contact list.\nDo you accept?');
 
         if(accept) {
             acceptSubscriptionRequest(account, address);
