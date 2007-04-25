@@ -53,9 +53,15 @@ var textProcessors = [
 { name: 'URLs',
   regexp: /(https?:\/\/|xmpp:|www\.)[^ \t\n\f\r"<>|()]*[^ \t\n\f\r"<>|,.!?(){}]/g,
   action: function(match) {
-        var url = /^https?:\/\//.test(match[0]) ?
-        match[0] : 'http://' + match[0];
-        return <a href={url}>{match[0]}</a>;
+        switch(match[1]) {
+            case 'http://':
+            case 'https://':
+            case 'xmpp:':
+            return <a href={match[0]}>{match[0]}</a>;
+            break;
+            default:
+            return <a href={'http://' + match[0]}>{match[0]}</a>;
+        }
     }},
 { name: 'Emoticons',
   regexp: makeEmoticonRegexp(emoticons),
