@@ -51,7 +51,7 @@ var emoticons = {
 
 var textProcessors = [
 { name: 'URLs',
-  regexp: /(https?:\/\/|www\.)[^ \t\n\f\r"<>|()]*[^ \t\n\f\r"<>|,.!?(){}]/g,
+  regexp: /(https?:\/\/|xmpp:|www\.)[^ \t\n\f\r"<>|()]*[^ \t\n\f\r"<>|,.!?(){}]/g,
   action: function(match) {
         var url = /^https?:\/\//.test(match[0]) ?
         match[0] : 'http://' + match[0];
