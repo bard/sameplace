@@ -390,8 +390,8 @@ function openLink(url, newTab) {
             window, 'SamePlace: Security Notification',
             'This link contains javascript code and has been disabled as a security measure.');
     else if(hostAppIsBrowser() &&
-            url.match(/^(https?|ftp|file):\/\//))
-        // XXX handle xmpp and mailto as well
+            url.match(/^((https?|ftp|file):\/\/|xmpp:)/))
+        // XXX handle mailto as well
         openLinkInternally(url, newTab);
     else
         openLinkExternally(url);
