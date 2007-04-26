@@ -51,10 +51,14 @@
              label="Add a contact..."
              accesskey="A"
              tooltiptext="Add a contact to your contact list"/>
-    <command id="open-conversation" oncommand="requestedOpenConversation();"
+    <command id="open-conversation" oncommand="requestedOpenConversation('chat');"
              label="Open a conversation..."
              accesskey="O"
-             tooltiptext="Open a conversation (single or multi-user)"/>
+             tooltiptext="Open a conversation"/>
+    <command id="join-room" oncommand="requestedOpenConversation('groupchat');"
+             label="Join a chat room..."
+             accesskey="J"
+             tooltiptext="Join a chat room"/>
     <command id="switch-to-unread" oncommand="conversations.switchToUnread();"
              label="Switch to unread conversation"
              accesskey="u"
@@ -122,6 +126,7 @@
               <menupopup id="actions-popup">
                 <menuitem class="menuitem-iconic" command="add-contact"/>
                 <menuitem class="menuitem-iconic" command="open-conversation"/>
+                <menuitem class="menuitem-iconic" command="join-room"/>
                 <menuitem class="menuitem-iconic" command="switch-to-unread"
                           key="key-switch-to-unread"/>
                 <menuitem class="menuitem-iconic" command="switch-to-next"

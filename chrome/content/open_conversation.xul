@@ -42,7 +42,7 @@
     <rows>
       <row align="center">
         <label value="Address:" control="address" accesskey="A"/>
-        <textbox id="address" value="newusers@places.sameplace.cc" oninput="refresh();"/>
+        <textbox id="address" oninput="refresh();"/>
       </row>
 
       <row align="center">

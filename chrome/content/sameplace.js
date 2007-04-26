@@ -643,10 +643,14 @@ function requestedAddContact() {
         contacts.addContact(request.account, request.contactAddress, request.subscribeToPresence);
 }
 
-function requestedOpenConversation() {
+function requestedOpenConversation(type) {
+    var defaults = {
+        type: type,
+        address: type == 'groupchat' ? 'newusers@sameplace.cc' : ''
+    };
     window.openDialog(
         'chrome://sameplace/content/open_conversation.xul',
-        'sameplace-open-conversation', 'centerscreen', {});
+        'sameplace-open-conversation', 'centerscreen', defaults);
 }
 
 
