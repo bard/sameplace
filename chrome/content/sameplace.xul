@@ -60,11 +60,11 @@
              accesskey="J"
              tooltiptext="Join a chat room"/>
     <command id="switch-to-unread" oncommand="conversations.switchToUnread();"
-             label="Switch to unread conversation"
+             label="Next unread conversation"
              accesskey="u"
              tooltiptext="Switch to next conversation in line with unread messages"/>
     <command id="switch-to-next" oncommand="conversations.switchToNext();"
-             label="Switch to next conversation"
+             label="Next conversation"
              accesskey="n"
              tooltiptext="Switch to next conversation"/>
     <command id="run-wizard"
