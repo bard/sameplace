@@ -67,6 +67,10 @@
              label="Switch to next conversation"
              accesskey="n"
              tooltiptext="Switch to next conversation"/>
+    <command id="run-wizard"
+             label="Run Account Wizard..."
+             oncommand="runWizard();"
+             accesskey="W"/>
     <command id="view-help" oncommand="viewHelp();"
              label="Help"
              accesskey="H"
@@ -141,6 +145,8 @@
                 </menu>
                           
                 <menuseparator id="actions-separator"/>
+
+                <menuitem class="menuitem-iconic" command="run-wizard"/>
                 <menuitem class="menuitem-iconic" command="view-help"/>
                 <menuitem class="menuitem-iconic" command="visit-forum"/>
                 <menuitem class="menuitem-iconic" command="report-bug"/>

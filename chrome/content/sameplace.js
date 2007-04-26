@@ -261,6 +261,12 @@ function focusStatus() {
     _('status-message').focus();
 }
 
+function runWizard() {
+    window.openDialog(
+        'chrome://sameplace/content/wizard.xul',
+        'sameplace-wizard', 'chrome')
+}
+
 function viewHelp() {
     openLink('http://help.sameplace.cc', true);
 }

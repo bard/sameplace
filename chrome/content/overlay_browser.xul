@@ -41,10 +41,6 @@
              label="SamePlace"
              oncommand="sameplace.loadSidebar();"
              accesskey="S"/>
-    <command id="sameplace-command-run-wizard"
-             label="Run Account Wizard..."
-             oncommand="sameplace.runWizard();"
-             accesskey="W"/>
     <command id="sameplace-command-open-standalone"
              label="Open Standalone"
              accesskey="S"
@@ -83,8 +79,6 @@
                   key="sameplace-key-toggle-sidebar"
                   class="menuitem-iconic"/>
         <menuitem command="sameplace-command-import-contacts"
-                  class="menuitem-iconic"/>
-        <menuitem command="sameplace-command-run-wizard"
                   class="menuitem-iconic"/>
         <menuitem command="sameplace-command-open-standalone"
                   class="menuitem-iconic"/>
