@@ -290,9 +290,11 @@ function addContact(account, address, subscribe) {
 }
 
 function acceptSubscriptionRequest(account, address) {
-    XMPP.send(
-        account,
-        <presence to={address} type="subscribed"/>);
+    XMPP.send(account, <presence to={address} type="subscribed"/>);
+}
+
+function denySubscriptionRequest(account, address) {
+    XMPP.send(account, <presence to={address} type="unsubscribed"/>);
 }
 
 
@@ -373,7 +375,8 @@ function receivedSubscriptionRequest(presence) {
             acceptSubscriptionRequest(account, address);
             if(reciprocate)
                 addContact(account, address);
-        }        
+        } else
+            denySubscriptionRequest(account, address);
     }
 }
 
