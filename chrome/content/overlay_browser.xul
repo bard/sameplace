@@ -49,11 +49,6 @@
                         'SamePlace:Contacts', 'chrome,titlebar=no,toolbar=no');"/>
     <command id="sameplace-command-load-sidebar-force"
              oncommand="sameplace.loadSidebar(true);"/>
-    <command id="sameplace-command-import-contacts"
-             label="Import Contacts..."
-             accesskey="I"
-             oncommand="window.open('https://jabber.sameplace.cc/transport/registration',
-                        'sameplace-import', 'width=510,height=640,scrollbars=yes,menubar=no,status=yes');"/>
   </commandset>
 
   <!-- KEYS -->
