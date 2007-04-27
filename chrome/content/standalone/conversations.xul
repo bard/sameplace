@@ -1,5 +1,4 @@
 <?xml version="1.0"?>
-<!--<?xml-stylesheet href="chrome://global/skin" type="text/css"?>-->
 <?xml-stylesheet href="chrome://sameplace/skin/standalone/sameplace.css" type="text/css" title="Skin"?>
 
 <?xul-overlay href="chrome://sameplace/content/standalone/frame.xul"?>

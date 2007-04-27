@@ -55,7 +55,7 @@ function withConversations(action) {
             'chrome://sameplace/content/standalone/conversations.xul',
             'SamePlace:Interactions', 'chrome,toolbar=no,centerscreen=yes');
         conversations.addEventListener(
-            'load', function() {
+            'load', function(event) {
                 action(conversations);
             }, false);        
     }
@@ -77,11 +77,10 @@ function requestedCommunicate(account, address, url) {
     withConversations(
         function(conversations) {
             conversations.interactWith(
-                account, address, null, url, 'main',
+                account, address, url, 'main',
                 function() {
-                    conversations.requestedCommunicate(
-                        account, address, url);
-                }); 
+                    conversations.conversations.focus(account, address);
+                });
         });
 }
 
@@ -108,7 +107,7 @@ function requestedClose() {
     window.close();
 }
 
-function movedConversations() {
+function movedWndConversations() {
     attachTo(window, conversations);
 }
 
@@ -160,3 +159,4 @@ function hide() {
         window.outerWidth,
         window.screenY);
 }
+

@@ -270,3 +270,30 @@ RESIZERS
   list-style-image: none !important;
 }
 
+
+/**********************************************************************
+CONTACT COMPLETION
+**********************************************************************/
+
+#contact > popup > menuitem {
+    list-style-image: url("chrome://xmpp4moz/skin/status/all-small.png"); 
+}
+
+#contact > popup > menuitem[availability="unavailable"] {
+    color: graytext ! important;
+    -moz-image-region: rect(48px 16px 64px 0px);
+}
+
+#contact > popup > menuitem[availability="available"] {
+    -moz-image-region: rect(16px 16px 32px 0px);
+}
+
+#contact > popup > menuitem[availability="available"][show="dnd"] {
+    -moz-image-region: rect(0px 16px 16px 0px);
+}
+
+#contact > popup > menuitem[availability="available"][show="away"],
+#contact > popup > menuitem[availability="available"][show="xa"] {
+    -moz-image-region: rect(32px 16px 48px 0px);
+}
+

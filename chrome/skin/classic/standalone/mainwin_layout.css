@@ -335,7 +335,7 @@ Browser Toolbar, Address Box, and Url-Slurper Button
 #contact .textbox-input,
 #contact .textbox-input:focus {
   border: none !important; 
-  padding: 2px 0px 0px 0px !important;
+//  padding: 2px 0px 0px 0px !important;
   margin-bottom: 4px; /* added */
 }
 

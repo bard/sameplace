@@ -7,7 +7,8 @@
     <script type="application/x-javascript" src="../namespaces.js"/>    
     <script type="application/x-javascript" src="../utilities.js"/>
     <script type="application/x-javascript" src="../utilities_gui.js"/>
-    <script type="application/x-javascript" src="../behaviours/autocomplete.js"/>
+    <script type="application/x-javascript" src="../utilities_xmpp.js"/>
+    <script type="application/x-javascript" src="../lib/autocomplete.js"/>
     <script type="application/x-javascript" src="conversations.js"/>
 
     <commandset>
@@ -90,30 +91,20 @@
           <popup/>
         </textbox>
       </hbox>
-      <button role="attach"
-              tooltip="attach-tooltip"
-              label="Attach"
-              count="0"
-              hidden="true"
-              oncommand="requestedAttachBrowser(getCurrentConversation());"
-              class="sb_faceplate"/>
-      <button role="close"
-              label="Close"
-              tooltiptext="Close this conversation"
-              hidden="true"
-              oncommand="requestedCloseConversation(getCurrentConversation());"
-              class="sb_faceplate"/>
     </hbox>
 
     <!-- CONVERSATIONS -->
 
-    <tabbox flex="1">
-      <tabs id="conversation-tabs" closebutton="true"/>
-      <tabpanels id="conversations" flex="1"
-                 onselect="focusedConversation(
-                           this.selectedPanel.firstChild.getAttribute('account'),
-                           this.selectedPanel.firstChild.getAttribute('address'));"/>
-    </tabbox>
+    <tabbrowser id="conversations" flex="1"/>
+
+
+    <!-- HACK FOR TABBROWSER -->
+    
+    <box hidden="true">
+      <menuitem id="menu_closeWindow"/>
+      <menuitem id="menu_close"/>
+    </box>
+
 
     <!-- BLUEPRINTS -->
 
