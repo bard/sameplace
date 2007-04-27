@@ -130,3 +130,46 @@ function queuePostLoadAction(contentPanel, action) {
             contentPanel.removeEventListener('load', arguments.callee, true);
         }, true);
 }
+
+function hasAncestor(element, parentName, parentNamespace) {
+    var elementDoc = element.ownerDocument;
+    while(element != elementDoc) {
+        if(element.localName == parentName &&
+           (!parentNamespace || element.isDefaultNamespace(parentNamespace)))
+            return element;
+        element = element.parentNode;
+    }
+    return false;
+}
+
+function openLink(url, newTab) {
+    const srvPrompt = Cc['@mozilla.org/embedcomp/prompt-service;1']
+        .getService(Ci.nsIPromptService);
+
+    if(url.match(/^javascript:/))
+        srvPrompt.alert(
+            window, 'SamePlace: Security Notification',
+            'This link contains javascript code and has been disabled as a security measure.');
+    else if(hostAppIsBrowser() &&
+            url.match(/^((https?|ftp|file):\/\/|xmpp:)/))
+        // XXX handle mailto as well
+        openLinkInternally(url, newTab);
+    else
+        openLinkExternally(url);
+}
+
+function openLinkExternally(url) {
+    Cc['@mozilla.org/uriloader/external-protocol-service;1']
+        .getService(Ci.nsIExternalProtocolService)
+        .loadUrl(Cc['@mozilla.org/network/io-service;1']
+                 .getService(Ci.nsIIOService)
+                 .newURI(url, null, null));
+}
+
+function openLinkInternally(url, newTab) {
+    if(newTab)
+        getBrowser().selectedTab = getBrowser().addTab(url);
+    else
+        getBrowser().loadURI(url);
+}
+

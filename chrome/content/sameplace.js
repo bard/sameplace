@@ -30,8 +30,6 @@ const prefBranch = Cc["@mozilla.org/preferences-service;1"]
     .getBranch('extensions.sameplace.');
 const srvPrompt = Cc["@mozilla.org/embedcomp/prompt-service;1"]
     .getService(Ci.nsIPromptService);
-const srvProtocol = Cc['@mozilla.org/uriloader/external-protocol-service;1']
-    .getService(Ci.nsIExternalProtocolService);
 
 
 // GLOBAL STATE
@@ -218,22 +216,6 @@ function fetchFeed(feedUrl, continuation) {
 }
 
 
-// GUI UTILITIES (GENERIC)
-// ----------------------------------------------------------------------
-// Application-independent functions dealing with user interface.
-
-function hasAncestor(element, parentName, parentNamespace) {
-    var elementDoc = element.ownerDocument;
-    while(element != elementDoc) {
-        if(element.localName == parentName &&
-           (!parentNamespace || element.isDefaultNamespace(parentNamespace)))
-            return element;
-        element = element.parentNode;
-    }
-    return false;
-}
-
-
 // GUI UTILITIES (SPECIFIC)
 // ----------------------------------------------------------------------
 // Application-dependent functions dealing with interface.  They do
@@ -313,108 +295,26 @@ function initApplicationMenu(menuPopup) {
 }
 
 function buildContactCompletions(xulCompletions) {
-    function presenceDegree(stanza) {
-        if(stanza.@type == undefined && stanza.show == undefined)
-            return 4;
-        else if(stanza.@type == 'unavailable')
-            return 0;
-        else
-            switch(stanza.show.toString()) {
-            case 'chat': return 5; break;
-            case 'dnd':  return 3; break;
-            case 'away': return 2; break;
-            case 'xa':   return 1; break;
-            default:
-                throw new Error('Unexpected. (' + stanza.toXMLString() + ')');
+    contactCompletionsFor(xulCompletions.parentNode.value).forEach(
+        function(completion) {
+            var address, label;
+            if(completion.stanza.ns_muc::x != undefined) {
+                address = XMPP.JID(completion.stanza.@to).address;
+                label = address;
+            } else {
+                address = XMPP.JID(completion.stanza.@from).address;
+                label = XMPP.nickFor(completion.account, address);
             }
-    }
 
-    var input = xulCompletions.parentNode.value;
-    var completions = [];
-    for each(var iq in XMPP.cache.roster) {
-        for each(var item in iq.stanza..ns_roster::item) {
-            var account = iq.session.name;
-            var address = item.@jid;
-            var nick    = XMPP.nickFor(account, address);
-            if(nick.toLowerCase().indexOf(input.toLowerCase()) == 0) {
-                var presence = XMPP.presenceSummary(account, address);
-                completions.push({
-                    label        : nick,
-                    account      : account,
-                    address      : address,
-                    show         : presence.stanza.show.toString(),
-                    presence     : presence,
-                    availability : presence.stanza.@type.toString() || 'available' });
-            }
-        }
-    }
-
-    XMPP.cache.fetch({
-        event: 'presence',
-        direction: 'out',
-        stanza: function(s) {
-                return s.ns_muc::x.length() > 0;
-            }
-        }).forEach(
-            function(presence) {
-                var account = presence.session.name;
-                var address = XMPP.JID(presence.stanza.@to).address;
-                if(address.toLowerCase().indexOf(input.toLowerCase()) == 0)
-                    completions.push({
-                        label: address,
-                        account: account,
-                        address: address,
-                        show: presence.stanza.show.toString(),
-                        presence: presence,
-                        availability: 'available' });
-            });
-        
-    completions
-        .sort(
-            function(a, b) {
-                var diff = presenceDegree(b.presence.stanza) - presenceDegree(a.presence.stanza);
-                if(diff == 0)
-                    diff = (a.label.toLowerCase() < b.label.toLowerCase()) ? -1 : 1;
-                return diff;
-            })
-        .forEach(
-            function(completion) {
-                var xulCompletion = document.createElement('menuitem');
-                xulCompletion.setAttribute('class', 'menuitem-iconic');
-                xulCompletion.setAttribute('label', completion.label);
-                xulCompletion.setAttribute('account', completion.account);
-                xulCompletion.setAttribute('address', completion.address);
-                xulCompletion.setAttribute('availability', completion.availability);
-                xulCompletion.setAttribute('show', completion.show);
-                xulCompletions.appendChild(xulCompletion);
-            });
-}
-
-function openLink(url, newTab) {
-    if(url.match(/^javascript:/))
-        srvPrompt.alert(
-            window, 'SamePlace: Security Notification',
-            'This link contains javascript code and has been disabled as a security measure.');
-    else if(hostAppIsBrowser() &&
-            url.match(/^((https?|ftp|file):\/\/|xmpp:)/))
-        // XXX handle mailto as well
-        openLinkInternally(url, newTab);
-    else
-        openLinkExternally(url);
-}
-
-function openLinkExternally(url) {
-    srvProtocol.loadUrl(
-        Cc['@mozilla.org/network/io-service;1']
-        .getService(Ci.nsIIOService)
-        .newURI(url, null, null));
-}
-
-function openLinkInternally(url, newTab) {
-    if(newTab) 
-        getBrowser().selectedTab = getBrowser().addTab(url);        
-    else
-        getBrowser().loadURI(url);
+            var xulCompletion = document.createElement('menuitem');
+            xulCompletion.setAttribute('class', 'menuitem-iconic');
+            xulCompletion.setAttribute('label', label);
+            xulCompletion.setAttribute('account', completion.account);
+            xulCompletion.setAttribute('address', address);
+            xulCompletion.setAttribute('availability', completion.stanza.@type.toString() || 'available');
+            xulCompletion.setAttribute('show', completion.stanza.show.toString());
+            xulCompletions.appendChild(xulCompletion);
+        });
 }
 
 function updateAttachTooltip() {
