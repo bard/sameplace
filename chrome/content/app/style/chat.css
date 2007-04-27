@@ -301,11 +301,11 @@ ul#messages {
 }
 
 .message.user {
-    border-top: 1px dotted #e1e5e8;
+
 }
 
 .message.contact {
-    border-top: 1px dotted #e8d8d8;
+
 }
 
 .message.user + .message.user,
@@ -322,25 +322,28 @@ ul#messages {
     margin-right: 0.5em;
     font-size: smaller;
     display: block;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
 }
 
-.message > .sender,
 .message.user > .sender {
-    float: left;
     color: #0c5588;
+    border-bottom: 1px dotted #d1d5d8;
 }
 
 .message.contact > .sender {
+    text-align: right;
     color: #9e0909;
+    border-bottom: 1px dotted #d8c8c8;
 }
 
 .message > .sender:after,
 .message.user > .sender:after {
-    content: ">";
+
 }
 
 .message.contact > .sender:after {
-    content: ">";
+
 }
 
 .message.user + .message.user > .sender,
@@ -381,11 +384,11 @@ ul#messages {
 
 .message > .content,
 .message.user > .content {
-    margin-left: 2em;
+    margin-left: 1em;
 }
 
 .message.contact > .content {
-    margin-right: 2em;
+    margin-right: 1em;
 }
 
 
