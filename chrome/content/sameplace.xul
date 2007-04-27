@@ -83,6 +83,11 @@
              label="Report bug/Request features"
              accesskey="R"
              tooltiptext="Report bug/Request features"/>
+    <command id="import-contacts"
+             label="Import Contacts..."
+             accesskey="I"
+             oncommand="window.open('https://jabber.sameplace.cc/transport/registration',
+                        'sameplace-import', 'width=510,height=640,scrollbars=yes,menubar=no,status=yes');"/>
   </commandset>
 
   
@@ -135,6 +140,10 @@
                           key="key-switch-to-unread"/>
                 <menuitem class="menuitem-iconic" command="switch-to-next"
                           key="key-switch-to-next"/>
+                <menuseparator/>
+
+                <menuitem class="menuitem-iconic" command="import-contacts"/>
+
                 <menu class="menuitem-iconic" label="Scriptlets">
                   <menupopup id="scriptlets-popup">
                     <menuitem class="menuitem-iconic" label="Twitter"
@@ -143,10 +152,11 @@
                     <menuitem class="menuitem-iconic" label="Manage..."/>
                   </menupopup>
                 </menu>
+
+                <menuitem class="menuitem-iconic" command="run-wizard"/>
                           
                 <menuseparator id="actions-separator"/>
 
-                <menuitem class="menuitem-iconic" command="run-wizard"/>
                 <menuitem class="menuitem-iconic" command="view-help"/>
                 <menuitem class="menuitem-iconic" command="visit-forum"/>
                 <menuitem class="menuitem-iconic" command="report-bug"/>

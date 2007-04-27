@@ -78,8 +78,6 @@
         <menuitem command="sameplace-command-toggle-sidebar"
                   key="sameplace-key-toggle-sidebar"
                   class="menuitem-iconic"/>
-        <menuitem command="sameplace-command-import-contacts"
-                  class="menuitem-iconic"/>
         <menuitem command="sameplace-command-open-standalone"
                   class="menuitem-iconic"/>
       </menupopup>      
