@@ -53,7 +53,7 @@ function withConversations(action) {
     else {
         conversations = window.openDialog(
             'chrome://sameplace/content/standalone/conversations.xul',
-            'SamePlace:Interactions', 'chrome,toolbar=no,centerscreen=yes');
+            'SamePlace:Interactions', 'chrome,toolbar=no,centerscreen=yes,titlebar=no');
         conversations.addEventListener(
             'load', function(event) {
                 action(conversations);
