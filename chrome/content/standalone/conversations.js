@@ -4,6 +4,10 @@
 const Cc = Components.classes;
 const Ci = Components.interfaces;
 
+const prefBranch = Cc['@mozilla.org/preferences-service;1']
+    .getService(Ci.nsIPrefService)
+    .getBranch('extensions.sameplace.');
+
 
 // GLOBAL STATE
 // ----------------------------------------------------------------------
@@ -60,6 +64,21 @@ function init(event) {
     _('contact').addEventListener(
         'complete', function(event) {
             buildContactCompletions(event.target);
+        }, false);
+
+    _('contact').addEventListener(
+        'completed', function(event) {
+
+            // Switching tab.  Need to focus current content window,
+            // since going back will restore focus, and we don't want
+            // focus on contact textbox.  XXX This must be handled by
+            // the conversation subsystem.
+
+            _('conversations').contentWindow.focus();
+            requestedCommunicate(
+                event.target.getAttribute('account'),
+                event.target.getAttribute('address'),
+                getDefaultAppUrl());
         }, false);
 }
 
@@ -180,6 +199,19 @@ function buildContactCompletions(xulCompletions) {
 // GUI REACTIONS
 // ----------------------------------------------------------------------
 
+
+function requestedCommunicate(account, address, url) {
+    interactWith(
+        account, address, url, 'main',
+        function() {
+            conversations.focus(account, address);
+        });
+}
+
+function requestedClose() {
+    window.close();
+}
+
 function pressedKeyInContactField(event) {
     if(event.keyCode == KeyEvent.DOM_VK_RETURN)
         conversations.focusCurrent();
@@ -214,4 +246,9 @@ function getBrowser() {
         .getService(Ci.nsIWindowMediator)
         .getMostRecentWindow('navigator:browser')
         .getBrowser();
+}
+
+function getDefaultAppUrl() {
+    var url = prefBranch.getCharPref('defaultAppUrl');
+    return isChromeUrl(url) ? chromeToFileUrl(url) : url;
 }
