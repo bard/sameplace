@@ -165,9 +165,28 @@ function init(event) {
     // Filling shared application menu
 
     initApplicationMenu(_('menu-applications'));
+
+    // Loading and starting scriptlets
+
+    scriptlets = loadScriptlets();
+    for each(var scriptlet in scriptlets)
+        try {
+            scriptlet.init();
+        } catch(e) {
+            dump('Error while initializing scriptlet: ' + e.name + '\n' +
+                 e.stack.replace(/^/mg, '    ') + '\n');
+        }
 }
 
 function finish() {
+    for each(var scriptlet in scriptlets)
+        try {
+            scriptlet.finish();
+        } catch(e) {
+            dump('Error while finalizing scriptlet: ' + e.name + '\n' +
+                 e.stack.replace(/^/mg, '    ') + '\n');
+        }
+
     channel.release();
 }
 
@@ -220,6 +239,66 @@ function fetchFeed(feedUrl, continuation) {
 // ----------------------------------------------------------------------
 // Application-dependent functions dealing with interface.  They do
 // not affect the domain directly.
+
+function loadScriptlets() {
+    var dir = Cc['@mozilla.org/file/directory_service;1']
+        .getService(Ci.nsIProperties)
+        .get('ProfD', Ci.nsIFile);
+    dir.append('sameplace');
+    if(!dir.exists())
+        dir.create(Ci.nsIFile.DIRECTORY_TYPE, 0755);
+
+    dir.append('scriptlets');
+    if(!dir.exists())
+        dir.create(Ci.nsIFile.DIRECTORY_TYPE, 0755);
+
+    var scriptlets = [];
+    var entries = dir.directoryEntries;
+    while(entries.hasMoreElements()) {
+        var entry = entries.getNext();
+        entry.QueryInterface(Ci.nsIFile);
+
+        try {
+            var scriptlet = {};
+            load(entry, scriptlet);
+            scriptlets.push(scriptlet);
+        } catch(e) {
+            dump('Error loading scriptlet ' + entry.path + ': ' + e.name + '\n' +
+                 e.stack.replace(/^/mg, '    ') + '\n');
+        }
+    }
+
+    function load(fileIndicator, context) {
+        function fileToURL(file) {
+            return Cc['@mozilla.org/network/io-service;1']
+                .getService(Ci.nsIIOService)
+                .getProtocolHandler('file')
+                .QueryInterface(Ci.nsIFileProtocolHandler)
+                .getURLSpecFromFile(file);
+        }
+
+        var url;
+        if(fileIndicator instanceof Ci.nsIFile)
+            url = fileToURL(fileIndicator);
+        else if(typeof(fileIndicator) == 'string')
+            if(fileIndicator.match(/^file:\/\//))
+                url = fileIndicator;
+            else {
+                var file = Cc['@mozilla.org/file/local;1']
+                    .createInstance(Ci.nsILocalFile);
+                file.initWithPath(fileIndicator);
+                url = fileToURL(file);
+            }
+        else
+            throw new Error('Unexpected. (' + fileIndicator + ')');
+
+        Cc['@mozilla.org/moz/jssubscript-loader;1']
+            .getService(Ci.mozIJSSubScriptLoader)
+            .loadSubScript(url, context);
+    }
+
+    return scriptlets;
+}
 
 function getDefaultAppUrl() {
     var url = prefBranch.getCharPref('defaultAppUrl');
