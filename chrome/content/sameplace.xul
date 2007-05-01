@@ -144,13 +144,8 @@
 
                 <menuitem class="menuitem-iconic" command="import-contacts"/>
 
-                <menu class="menuitem-iconic" label="Scriptlets" hidden="true">
-                  <menupopup id="scriptlets-popup">
-                    <menuitem class="menuitem-iconic" label="Twitter"
-                              oncommand="showScriptlet('twitter');"/>
-                    <menuseparator id="scriptlets-separator"/>
-                    <menuitem class="menuitem-iconic" label="Manage..."/>
-                  </menupopup>
+                <menu class="menuitem-iconic" label="Scriptlets">
+                  <menupopup id="scriptlets-popup" onpopupshowing="requestedShowScriptletList(this);"/>
                 </menu>
 
                 <menuitem class="menuitem-iconic" command="run-wizard"/>

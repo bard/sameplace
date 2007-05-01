@@ -168,24 +168,12 @@ function init(event) {
 
     // Loading and starting scriptlets
 
-    scriptlets = loadScriptlets();
-    for each(var scriptlet in scriptlets)
-        try {
-            scriptlet.init();
-        } catch(e) {
-            dump('Error while initializing scriptlet: ' + e.name + '\n' +
-                 e.stack.replace(/^/mg, '    ') + '\n');
-        }
+    scriptlets = Scriptlets();
+    scriptlets.start();
 }
 
 function finish() {
-    for each(var scriptlet in scriptlets)
-        try {
-            scriptlet.finish();
-        } catch(e) {
-            dump('Error while finalizing scriptlet: ' + e.name + '\n' +
-                 e.stack.replace(/^/mg, '    ') + '\n');
-        }
+    scriptlets.stop();
 
     channel.release();
 }
@@ -240,7 +228,29 @@ function fetchFeed(feedUrl, continuation) {
 // Application-dependent functions dealing with interface.  They do
 // not affect the domain directly.
 
-function loadScriptlets() {
+function Scriptlets() {
+    function isEnabled(fileName) {
+        var currentlyEnabled = eval(prefBranch.getCharPref('scriptlets.enabled'));
+        return currentlyEnabled.indexOf(fileName) != -1;
+    }
+
+    function setEnabled(fileName) {
+        var currentlyEnabled = eval(prefBranch.getCharPref('scriptlets.enabled'));
+        if(currentlyEnabled.indexOf(fileName) == -1) {
+            currentlyEnabled.push(fileName);
+            prefBranch.setCharPref('scriptlets.enabled', currentlyEnabled.toSource());
+        }
+    }
+
+    function setDisabled(fileName) {
+        var currentlyEnabled = eval(prefBranch.getCharPref('scriptlets.enabled'));
+        var index = currentlyEnabled.indexOf(fileName);
+        if(index != -1) {
+            currentlyEnabled.splice(index, 1);
+            prefBranch.setCharPref('scriptlets.enabled', currentlyEnabled.toSource());
+        }
+    }
+
     var dir = Cc['@mozilla.org/file/directory_service;1']
         .getService(Ci.nsIProperties)
         .get('ProfD', Ci.nsIFile);
@@ -252,52 +262,110 @@ function loadScriptlets() {
     if(!dir.exists())
         dir.create(Ci.nsIFile.DIRECTORY_TYPE, 0755);
 
-    var scriptlets = [];
-    var entries = dir.directoryEntries;
-    while(entries.hasMoreElements()) {
-        var entry = entries.getNext();
-        entry.QueryInterface(Ci.nsIFile);
+    var wrappers = {};
 
-        try {
-            var scriptlet = {};
-            load(entry, scriptlet);
-            scriptlets.push(scriptlet);
-        } catch(e) {
-            dump('Error loading scriptlet ' + entry.path + ': ' + e.name + '\n' +
-                 e.stack.replace(/^/mg, '    ') + '\n');
+    var controller = {
+        isEnabled: function(fileName) {
+            return isEnabled(fileName);
+        },
+
+        start: function() {
+            this.forEach(
+                function(scriptlet) {
+                    if(scriptlet.enabled)
+                        scriptlet.start();
+                });
+        },
+
+        stop: function() {
+            this.forEach(
+                function(scriptlet) {
+                    if(scriptlet.enabled)
+                        scriptlet.stop();
+                });
+        },
+
+        get: function(file) {
+            if(wrappers[file.path])
+                return wrappers[file.path];
+
+            var wrapper = {
+                get enabled() {
+                    return controller.isEnabled(this.fileName);
+                },
+
+                get fileName() {
+                    return file.leafName;
+                },
+
+                get code() {
+                    if(!this._code) {
+                        this._code = {};
+                        load(file, this._code);
+                    }
+                    return this._code;
+                },
+
+                get info() {
+                    return this.code.info;
+                },
+
+                unload: function() {
+                    this._code = null;
+                },
+
+                start: function() {
+                    this.code.init();
+                },
+
+                stop: function() {
+                    this.code.finish();
+                },
+
+                enable: function() {
+                    if(this.enabled)
+                        return;
+
+                    try {
+                        this.start();
+                        setEnabled(this.fileName);
+                    } catch(e) {
+                        dump('Error while initializing scriptlet: ' + e.name + '\n' +
+                             e.stack.replace(/^/mg, '    ') + '\n');
+                        this.disable();
+                    }
+                },
+
+                disable: function() {
+                    if(!this.enabled)
+                        return;
+
+                    try {
+                        this.stop();
+                    } catch(e) {
+                        dump('Error while initializing scriptlet: ' + e.name + '\n' +
+                             e.stack.replace(/^/mg, '    ') + '\n');
+                    } finally {
+                        this.unload();
+                        setDisabled(this.fileName);
+                    }
+                }
+            };
+            wrappers[file.path] = wrapper;
+
+            return wrapper;
+        },
+
+        forEach: function(action) {
+            var list = [];
+            var entries = dir.directoryEntries;
+
+            while(entries.hasMoreElements())
+                action(this.get(entries.getNext().QueryInterface(Ci.nsIFile)));
         }
-    }
+    };
 
-    function load(fileIndicator, context) {
-        function fileToURL(file) {
-            return Cc['@mozilla.org/network/io-service;1']
-                .getService(Ci.nsIIOService)
-                .getProtocolHandler('file')
-                .QueryInterface(Ci.nsIFileProtocolHandler)
-                .getURLSpecFromFile(file);
-        }
-
-        var url;
-        if(fileIndicator instanceof Ci.nsIFile)
-            url = fileToURL(fileIndicator);
-        else if(typeof(fileIndicator) == 'string')
-            if(fileIndicator.match(/^file:\/\//))
-                url = fileIndicator;
-            else {
-                var file = Cc['@mozilla.org/file/local;1']
-                    .createInstance(Ci.nsILocalFile);
-                file.initWithPath(fileIndicator);
-                url = fileToURL(file);
-            }
-        else
-            throw new Error('Unexpected. (' + fileIndicator + ')');
-
-        Cc['@mozilla.org/moz/jssubscript-loader;1']
-            .getService(Ci.mozIJSSubScriptLoader)
-            .loadSubScript(url, context);
-    }
-
-    return scriptlets;
+    return controller;
 }
 
 function getDefaultAppUrl() {
@@ -636,6 +704,26 @@ function requestedOpenConversation(type) {
     window.openDialog(
         'chrome://sameplace/content/open_conversation.xul',
         'sameplace-open-conversation', 'centerscreen', defaults);
+}
+
+function requestedShowScriptletList(xulPopup) {
+    while(xulPopup.lastChild)
+        xulPopup.removeChild(xulPopup.lastChild);
+    scriptlets.forEach(
+        function(scriptlet) {
+            var xulScriptlet = document.createElement('menuitem');
+            xulScriptlet.setAttribute('label', scriptlet.info.name);
+            xulScriptlet.setAttribute('type', 'checkbox');
+            xulScriptlet.setAttribute('checked', scriptlet.enabled ? 'true' : 'false');
+            xulScriptlet.addEventListener(
+                'command', function(event) {
+                    if(scriptlet.enabled)
+                        scriptlet.disable();
+                    else
+                        scriptlet.enable();
+                }, false);
+            xulPopup.appendChild(xulScriptlet);
+        });
 }
 
 
