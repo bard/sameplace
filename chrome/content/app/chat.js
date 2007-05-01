@@ -480,7 +480,7 @@ function seenPresence(stanza) {
     
         _('info').updateAddress(JID(stanza.@from).address);
         _('info').updateResources(JID(stanza.@from).resource, stanza.@type);
-        document.title = contactName || JID(stanza.@from).username;
+        document.title = contactName || JID(stanza.@from).username || stanza.@from;
     }
 }
 
