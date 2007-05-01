@@ -300,8 +300,14 @@ function Scriptlets() {
 
                 get code() {
                     if(!this._code) {
-                        this._code = {};
-                        load(file, this._code);
+                        try {
+                            var code = {};
+                            load(file, code);
+                            this._code = code;
+                        } catch(e) {
+                            dump('Error while loading scriptlet: ' + e.name + '\n' +
+                                 e.stack.replace(/^/mg, '    ') + '\n');
+                        }
                     }
                     return this._code;
                 },
@@ -712,16 +718,26 @@ function requestedShowScriptletList(xulPopup) {
     scriptlets.forEach(
         function(scriptlet) {
             var xulScriptlet = document.createElement('menuitem');
-            xulScriptlet.setAttribute('label', scriptlet.info.name);
+            try {
+                xulScriptlet.setAttribute('label', scriptlet.info.name);
+                xulScriptlet.addEventListener(
+                    'command', function(event) {
+                        if(scriptlet.enabled)
+                            scriptlet.disable();
+                        else
+                            scriptlet.enable();
+                    }, false);
+            } catch(e) {
+                xulScriptlet.setAttribute(
+                    'label', 'Error while reading "' +
+                    scriptlet.fileName + '" (click for trace)');
+                xulScriptlet.addEventListener(
+                    'command', function(event) {
+                        window.alert(e.name + '\n' + e.stack);
+                    }, false);
+            }
             xulScriptlet.setAttribute('type', 'checkbox');
             xulScriptlet.setAttribute('checked', scriptlet.enabled ? 'true' : 'false');
-            xulScriptlet.addEventListener(
-                'command', function(event) {
-                    if(scriptlet.enabled)
-                        scriptlet.disable();
-                    else
-                        scriptlet.enable();
-                }, false);
             xulPopup.appendChild(xulScriptlet);
         });
 }
