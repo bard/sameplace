@@ -39,6 +39,8 @@ var channel;
 var messageCache = {};
 var conversations = {};
 load('chrome://sameplace/content/conversations.js', conversations);
+var scriptlets = {};
+load('chrome://sameplace/contact/scriptlets.js', scriptlets);
 
 
 // GUI INITIALIZATION AND FINALIZATION
@@ -168,7 +170,7 @@ function init(event) {
 
     // Loading and starting scriptlets
 
-    scriptlets = Scriptlets();
+    scriptlets.init();
     scriptlets.start();
 }
 
@@ -227,152 +229,6 @@ function fetchFeed(feedUrl, continuation) {
 // ----------------------------------------------------------------------
 // Application-dependent functions dealing with interface.  They do
 // not affect the domain directly.
-
-function Scriptlets() {
-    function isEnabled(fileName) {
-        var currentlyEnabled = eval(prefBranch.getCharPref('scriptlets.enabled'));
-        return currentlyEnabled.indexOf(fileName) != -1;
-    }
-
-    function setEnabled(fileName) {
-        var currentlyEnabled = eval(prefBranch.getCharPref('scriptlets.enabled'));
-        if(currentlyEnabled.indexOf(fileName) == -1) {
-            currentlyEnabled.push(fileName);
-            prefBranch.setCharPref('scriptlets.enabled', currentlyEnabled.toSource());
-        }
-    }
-
-    function setDisabled(fileName) {
-        var currentlyEnabled = eval(prefBranch.getCharPref('scriptlets.enabled'));
-        var index = currentlyEnabled.indexOf(fileName);
-        if(index != -1) {
-            currentlyEnabled.splice(index, 1);
-            prefBranch.setCharPref('scriptlets.enabled', currentlyEnabled.toSource());
-        }
-    }
-
-    var dir = Cc['@mozilla.org/file/directory_service;1']
-        .getService(Ci.nsIProperties)
-        .get('ProfD', Ci.nsIFile);
-    dir.append('sameplace');
-    if(!dir.exists())
-        dir.create(Ci.nsIFile.DIRECTORY_TYPE, 0755);
-
-    dir.append('scriptlets');
-    if(!dir.exists())
-        dir.create(Ci.nsIFile.DIRECTORY_TYPE, 0755);
-
-    var wrappers = {};
-
-    var controller = {
-        isEnabled: function(fileName) {
-            return isEnabled(fileName);
-        },
-
-        start: function() {
-            this.forEach(
-                function(scriptlet) {
-                    if(scriptlet.enabled)
-                        scriptlet.start();
-                });
-        },
-
-        stop: function() {
-            this.forEach(
-                function(scriptlet) {
-                    if(scriptlet.enabled)
-                        scriptlet.stop();
-                });
-        },
-
-        get: function(file) {
-            if(wrappers[file.path])
-                return wrappers[file.path];
-
-            var wrapper = {
-                get enabled() {
-                    return controller.isEnabled(this.fileName);
-                },
-
-                get fileName() {
-                    return file.leafName;
-                },
-
-                get code() {
-                    if(!this._code) {
-                        try {
-                            var code = {};
-                            load(file, code);
-                            this._code = code;
-                        } catch(e) {
-                            dump('Error while loading scriptlet: ' + e.name + '\n' +
-                                 e.stack.replace(/^/mg, '    ') + '\n');
-                        }
-                    }
-                    return this._code;
-                },
-
-                get info() {
-                    return this.code.info;
-                },
-
-                unload: function() {
-                    this._code = null;
-                },
-
-                start: function() {
-                    this.code.init();
-                },
-
-                stop: function() {
-                    this.code.finish();
-                },
-
-                enable: function() {
-                    if(this.enabled)
-                        return;
-
-                    try {
-                        this.start();
-                        setEnabled(this.fileName);
-                    } catch(e) {
-                        dump('Error while initializing scriptlet: ' + e.name + '\n' +
-                             e.stack.replace(/^/mg, '    ') + '\n');
-                        this.disable();
-                    }
-                },
-
-                disable: function() {
-                    if(!this.enabled)
-                        return;
-
-                    try {
-                        this.stop();
-                    } catch(e) {
-                        dump('Error while initializing scriptlet: ' + e.name + '\n' +
-                             e.stack.replace(/^/mg, '    ') + '\n');
-                    } finally {
-                        this.unload();
-                        setDisabled(this.fileName);
-                    }
-                }
-            };
-            wrappers[file.path] = wrapper;
-
-            return wrapper;
-        },
-
-        forEach: function(action) {
-            var list = [];
-            var entries = dir.directoryEntries;
-
-            while(entries.hasMoreElements())
-                action(this.get(entries.getNext().QueryInterface(Ci.nsIFile)));
-        }
-    };
-
-    return controller;
-}
 
 function getDefaultAppUrl() {
     var url = prefBranch.getCharPref('defaultAppUrl');
