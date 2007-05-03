@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+
+<!--
+  Copyright (C) 2007 by Massimiliano Mirra
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+  Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
+-->
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://sameplace/skin/scriptlets_manager.css" type="text/css"?>
+
+<window title="SamePlace Scriptlets"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        windowtype="SamePlace:Scriptlets"
+        width="560"
+        height="380"
+        onload="init();">
+
+  <script type="application/x-javascript" src="chrome://xmpp4moz/content/xmpp.js"/>
+  <script type="application/x-javascript" src="namespaces.js"/>
+  <script type="application/x-javascript" src="utilities.js"/>
+  <script type="application/x-javascript" src="utilities_gui.js"/>
+  <script type="application/x-javascript" src="lib/css_query.js"/>
+  <script type="application/x-javascript" src="scriptlet_manager.js"/>
+
+  <hbox flex="1" style="padding: 0.5em;">
+    <richlistbox id="scriptlets" flex="1" class="box-inset"/>
+
+    <splitter id="edit-splitter" hidden="true"/>
+    
+    <vbox id="edit-area" collapsed="true">
+      <toolbox>
+        <toolbar>
+          <toolbarbutton label="Save"/>
+          <toolbarbutton label="Cancel" oncommand="cancelledEdit();"/>
+        </toolbar>
+      </toolbox>
+      <textbox id="source" multiline="true" flex="1" rows="10"/>
+    </vbox>
+  </hbox>
+
+  <hbox pack="end">
+    <button label="Close" oncommand="window.close();"/>
+  </hbox>
+
+  <box id="blueprints" hidden="true">
+    <richlistitem class="scriptlet" orient="vertical" style="padding: 1em;">
+      <hbox>
+        <label class="name"/>
+        <label class="version"/>
+      </hbox>
+      <description class="description"/>
+      <hbox class="actions">
+        <button class="edit" label="Edit" accesskey="E" oncommand="edit(this);"/>
+        <spacer flex="1"/>
+        <button class="uninstall" label="Uninstall" accesskey="U" oncommand="uninstall(this);"/>
+      </hbox>          
+    </richlistitem>
+  </box>
+</window>

@@ -1,0 +1,16 @@
+label.name {
+    font-weight: bold;
+}
+
+richlistitem {
+    border-bottom: 1px dotted rgb(192, 192, 192);
+}
+
+richlistbox#scriptlets > richlistitem > .actions {
+    visibility: collapse;
+}
+
+richlistbox#scriptlets > richlistitem[selected="true"] > .actions {
+    visibility: visible;
+}
+    
