@@ -496,7 +496,10 @@ function requestedAdditionalInteraction(event) {
 function requestedCommunicate(account, address, url) {
     if(url == getDefaultAppUrl())
         if(isMUC(account, address) && !conversations.isOpen(account, address))
-            promptOpenConversation(account, address, isMUC(account, address) ? 'groupchat' : 'chat');
+            window.openDialog(
+                'chrome://sameplace/content/open_conversation.xul',
+                'sameplace-open-conversation', 'centerscreen',
+                { type: 'groupchat', account: account, address: address });
         else
             interactWith(
                 account, address,
