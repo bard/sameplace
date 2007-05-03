@@ -561,7 +561,7 @@ function requestedAddContact() {
 function requestedOpenConversation(type) {
     var defaults = {
         type: type,
-        address: type == 'groupchat' ? 'newusers@sameplace.cc' : ''
+        address: type == 'groupchat' ? 'newusers@places.sameplace.cc' : ''
     };
     window.openDialog(
         'chrome://sameplace/content/open_conversation.xul',
