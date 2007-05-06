@@ -394,12 +394,12 @@ function enableInteraction(account, address, panel, createSocket) {
         panel, account, address,
         isMUC(account, address) ? 'groupchat' : 'chat', createSocket);
 
-    var url = panel.getAttribute('src');
-    if(/^https?:\/\//.test(url))
-        XMPP.send(account,
-                  <presence to={address}>
-                  <interact xmlns="http://dev.hyperstruct.net/xmpp4moz/protocol" url={url}/>
-                  </presence>);
+//     var url = panel.getAttribute('src');
+//     if(/^https?:\/\//.test(url))
+//         XMPP.send(account,
+//                   <presence to={address}>
+//                   <interact xmlns="http://dev.hyperstruct.net/xmpp4moz/protocol" url={url}/>
+//                   </presence>);
 }
 
 function createInteractionPanel(account, address,
