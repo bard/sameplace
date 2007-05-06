@@ -21,24 +21,31 @@
 -->
 
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-<?xml-stylesheet href="chrome://sameplace/skin/scriptlets_manager.css" type="text/css"?>
+<?xml-stylesheet href="chrome://sameplace/skin/scriptlet_manager.css" type="text/css"?>
 
-<window title="SamePlace Scriptlets"
+<window title="SamePlace Scriptlet Manager"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-        windowtype="SamePlace:Scriptlets"
+        windowtype="SamePlace:ScriptletManager"
         width="560"
         height="380"
-        onload="init();">
+        onload="init(event);">
+
+  <script type="application/x-javascript" src="chrome://global/content/nsDragAndDrop.js"/>
+  <script type="application/x-javascript" src="chrome://global/content/nsTransferable.js"/>
 
   <script type="application/x-javascript" src="chrome://xmpp4moz/content/xmpp.js"/>
   <script type="application/x-javascript" src="namespaces.js"/>
   <script type="application/x-javascript" src="utilities.js"/>
   <script type="application/x-javascript" src="utilities_gui.js"/>
   <script type="application/x-javascript" src="lib/css_query.js"/>
+  <script type="application/x-javascript" src="lib/process.js"/>
   <script type="application/x-javascript" src="scriptlet_manager.js"/>
 
   <hbox flex="1" style="padding: 0.5em;">
-    <richlistbox id="scriptlets" flex="1" class="box-inset"/>
+    <richlistbox id="scriptlets" flex="1" class="box-inset"
+                 ondragenter="nsDragAndDrop.dragEnter(event, dndObserver);"
+                 ondragover="nsDragAndDrop.dragOver(event, dndObserver);"
+                 ondragdrop="nsDragAndDrop.drop(event, dndObserver);"/>
 
     <splitter id="edit-splitter" hidden="true"/>
     
@@ -62,10 +69,11 @@
       <hbox>
         <label class="name"/>
         <label class="version"/>
+        <label class="filename" hidden="true"/>
       </hbox>
       <description class="description"/>
       <hbox class="actions">
-        <button class="edit" label="Edit" accesskey="E" oncommand="edit(this);"/>
+        <button class="reload" label="Reload" accesskey="R" oncommand="reload(this);"/>
         <spacer flex="1"/>
         <button class="uninstall" label="Uninstall" accesskey="U" oncommand="uninstall(this);"/>
       </hbox>          

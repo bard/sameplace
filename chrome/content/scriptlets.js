@@ -113,9 +113,20 @@ function forEach(action) {
         action(this.get(entries.getNext().QueryInterface(Ci.nsIFile)));
 }
 
-function get(file) {
-    if(wrappers[file.path])
-        return wrappers[file.path];
+function get(fileThing) {
+    var file;
+    if(typeof(fileThing) == 'string') {
+        file = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
+        file.initWithFile(dir);
+        file.append(fileThing);
+    }
+    else if(fileThing instanceof Ci.nsILocalFile)
+        file = fileThing;
+    else
+        throw new Error('Invalid argument. (' + fileThing + ')');
+        
+    if(wrappers[file.leafName])
+        return wrappers[file.leafName];
 
     var wrapper = {
         get enabled() {
@@ -133,15 +144,39 @@ function get(file) {
                     load(file, code);
                     this._code = code;
                 } catch(e) {
-                    dump('Error while loading scriptlet: ' + e.name + '\n' +
-                         e.stack.replace(/^/mg, '    ') + '\n');
+                    Components.utils.reportError(
+                        'Error while loading scriptlet: ' + e.name + '\n' +
+                        e.stack.replace(/^/mg, '    ') + '\n');
                 }
             }
             return this._code;
         },
 
         get info() {
-            return this.code.info;
+            try {
+                return this.code.info;
+            } catch(e) {
+                return {
+                    name: file.path,
+                    version: 'unknown',
+                    description: 'Error while loading (check system console).'
+                }
+            }
+        },
+
+        uninstall: function() {
+            file.remove(false);
+        },
+
+        reload: function() {
+            var wasEnabled = this.enabled;
+            if(this.enabled)
+                this.disable();
+
+            this.unload();
+
+            if(wasEnabled)
+                this.enable();
         },
 
         unload: function() {
@@ -185,7 +220,7 @@ function get(file) {
             }
         }
     };
-    wrappers[file.path] = wrapper;
+    wrappers[file.leafName] = wrapper;
 
     return wrapper;
 }
