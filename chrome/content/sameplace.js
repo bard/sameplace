@@ -46,6 +46,13 @@ load('chrome://sameplace/contact/scriptlets.js', scriptlets);
 // GUI INITIALIZATION AND FINALIZATION
 // ----------------------------------------------------------------------
 
+if(!('@mozilla.org/appshell/component/browser-status-filter;1' in Components.classes))
+    window.addEventListener(
+        'DOMContentLoaded', function(event) {
+            if(event.target == document)
+                thunderbirdTabbrowserFix(_('conversations'));
+        }, false);
+
 function init(event) {
     if(!event.target)
         return;
