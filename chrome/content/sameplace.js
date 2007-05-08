@@ -31,6 +31,11 @@ const prefBranch = Cc["@mozilla.org/preferences-service;1"]
 const srvPrompt = Cc["@mozilla.org/embedcomp/prompt-service;1"]
     .getService(Ci.nsIPromptService);
 
+// Workaround for bug in Firefox 1.5 -- body of tabbrowser.addTab()
+// references nsIWebNavigation but it is not defined anywhere.
+
+const nsIWebNavigation = Ci.nsIWebNavigation;
+
 
 // GLOBAL STATE
 // ----------------------------------------------------------------------
