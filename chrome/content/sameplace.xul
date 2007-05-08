@@ -112,7 +112,7 @@
 
   <!-- MAIN -->
 
-  <notificationbox id="notify" flex="1" style="overflow: hidden;">
+  <notificationbox id="notify" flex="1" style="overflow: hidden;" orient="vertical">
 
     <toolbox>
       <toolbar fullscreentoolbar="true">
