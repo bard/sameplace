@@ -583,9 +583,15 @@ function requestedOpenConversation(type) {
         'sameplace-open-conversation', 'centerscreen', defaults);
 }
 
+function requestedManageScriptlets() {
+    window.open('chrome://sameplace/content/scriptlet_manager.xul', 'SamePlace:ScriptletManager', 'chrome');
+}
+
 function requestedShowScriptletList(xulPopup) {
-    while(xulPopup.lastChild)
-        xulPopup.removeChild(xulPopup.lastChild);
+    var xulSeparator = xulPopup.getElementsByTagName('menuseparator')[0];
+    while(xulPopup.firstChild && xulPopup.firstChild != xulSeparator)
+        xulPopup.removeChild(xulPopup.firstChild);
+    
     scriptlets.forEach(
         function(scriptlet) {
             var xulScriptlet = document.createElement('menuitem');
@@ -609,7 +615,7 @@ function requestedShowScriptletList(xulPopup) {
             }
             xulScriptlet.setAttribute('type', 'checkbox');
             xulScriptlet.setAttribute('checked', scriptlet.enabled ? 'true' : 'false');
-            xulPopup.appendChild(xulScriptlet);
+            xulPopup.insertBefore(xulScriptlet, xulSeparator);
         });
 }
 
