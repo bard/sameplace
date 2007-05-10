@@ -145,7 +145,10 @@
                 <menuitem class="menuitem-iconic" command="import-contacts"/>
 
                 <menu class="menuitem-iconic" label="Scriptlets">
-                  <menupopup id="scriptlets-popup" onpopupshowing="requestedShowScriptletList(this);"/>
+                  <menupopup id="scriptlets-popup" onpopupshowing="requestedShowScriptletList(this);">
+                    <menuseparator/>
+                    <menuitem label="Manage..." accesskey="M" oncommand="requestedManageScriptlets();"/>
+                  </menupopup>
                 </menu>
 
                 <menuitem class="menuitem-iconic" command="run-wizard"/>
