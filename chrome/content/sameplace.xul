@@ -83,6 +83,15 @@
              label="Report bug/Request features"
              accesskey="R"
              tooltiptext="Report bug/Request features"/>
+    <command id="hide" oncommand="hide();"
+             label="Hide"
+             accesskey="H"
+             tooltiptext="Hide sidebar (F12)"/>
+    <command id="import-contacts"
+             label="Import Contacts..."
+             accesskey="I"
+             oncommand="window.open('https://jabber.sameplace.cc/transport/registration',
+                        'sameplace-import', 'width=510,height=640,scrollbars=yes,menubar=no,status=yes');"/>
   </commandset>
 
   
@@ -107,27 +116,11 @@
 
   <!-- MAIN -->
 
-  <vbox flex="1">
-
+  <notificationbox id="notify" flex="1" style="overflow: hidden;" orient="vertical">
     <toolbox>
       <toolbar id="header" align="center">
         <toolbaritem>
-          <menubar>
-            <menu label="Actions" accesskey="c">
-              <menupopup id="actions-popup">
-                <menuitem class="menuitem-iconic" command="add-contact"/>
-                <menuitem class="menuitem-iconic" command="open-conversation"/>
-                <menuitem class="menuitem-iconic" command="switch-to-unread"
-                          key="key-switch-to-unread"/>
-                <menuitem class="menuitem-iconic" command="switch-to-next"
-                          key="key-switch-to-next"/>
-                <menuseparator id="actions-separator"/>
-                <menuitem class="menuitem-iconic" command="view-help"/>
-                <menuitem class="menuitem-iconic" command="visit-forum"/>
-                <menuitem class="menuitem-iconic" command="report-bug"/>
-              </menupopup>
-            </menu>
-          </menubar>
+          <label id="logo"/>        
         </toolbaritem>
         <toolbarspring/>
         <toolbarbutton command="add-contact"/>
@@ -139,10 +132,24 @@
           <menupopup id="actions-popup">
             <menuitem class="menuitem-iconic" command="add-contact"/>
             <menuitem class="menuitem-iconic" command="open-conversation"/>
+            <menuitem class="menuitem-iconic" command="join-room"/>
             <menuitem class="menuitem-iconic" command="switch-to-unread"
                       key="key-switch-to-unread"/>
             <menuitem class="menuitem-iconic" command="switch-to-next"
                       key="key-switch-to-next"/>
+            <menuseparator/>
+
+            <menuitem class="menuitem-iconic" command="import-contacts"/>
+
+            <menu class="menuitem-iconic" label="Scriptlets">
+              <menupopup id="scriptlets-popup" onpopupshowing="requestedShowScriptletList(this);">
+                <menuseparator/>
+                <menuitem label="Manage..." accesskey="M" oncommand="requestedManageScriptlets();"/>
+              </menupopup>
+            </menu>
+
+            <menuitem class="menuitem-iconic" command="run-wizard"/>
+                      
             <menuseparator id="actions-separator"/>
             <menuitem class="menuitem-iconic" command="view-help"/>
             <menuitem class="menuitem-iconic" command="visit-forum"/>
