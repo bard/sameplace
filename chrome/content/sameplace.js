@@ -260,6 +260,10 @@ function getBrowser() {
 // Application-dependent functions dealing with user interface.  They
 // affect the domain.
 
+function hide() {
+    window.frameElement.parentNode.collapsed = true;
+}
+
 function focusStatus() {
     _('status-message').focus();
 }
@@ -758,6 +762,7 @@ function sentAvailablePresence(presence) {
         _('status-message').value = '[Click or Ctrl+Alt+T to change status]';
         _('status-message').setAttribute('draft', 'true');
     }
+    _('profile-username').value = XMPP.JID(presence.account).username;
 }
 
 function sentMUCPresence(presence) {

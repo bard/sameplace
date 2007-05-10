@@ -36,12 +36,26 @@
 
 }
 
+#contacts [role="contact"] [role="conversation-indicator"] {
+    list-style-image: url("in-conversation.png");
+    max-width: 16px;
+    max-height: 16px;    
+}
+
+#contacts [role="contact"][open="false"] [role="conversation-indicator"] {
+    display: none;
+}
+
+#contacts [role="contact"][open="true"] [role="conversation-indicator"] {
+    
+}
+
 /* CONVERSATION FOCUS END */
 
 /* STATUS INDICATOR START */
 
 #contacts [role="contact"] [role="status-indicator"] {
-    list-style-image: url("chrome://xmpp4moz/skin/status/all-small.png");
+    list-style-image: url("all-small.png");
     max-width: 16px;
     max-height: 16px;
     -moz-image-region: rect(48px 16px 64px 0px);
@@ -78,7 +92,7 @@
 #contacts label[role="open"],
 #contacts label[role="online"],
 #contacts label[role="offline"] {
-    background: url('chrome://sameplace/skin/label-bg.png') repeat-y;
+    background: url('label-bg.png') repeat-y;
     font-size: smaller;
     font-style: italic;
     margin-left: 0;

@@ -1,23 +1,6 @@
-[command="add-contact"] {
-    list-style-image: url("contact-add.png");
-}
-
-[command="open-conversation"] {
-    list-style-image: url("open.png");
-}
-
 [role="attach"] {
     list-style-image: url("attach.png");
 }
-
-[role="conversation"] [role="contact"] {
-
-}
-
-#status-message[draft="true"] {
-    color: graytext;
-}
-
 
 #contact > popup > menuitem {
     list-style-image: url("chrome://xmpp4moz/skin/status/all-small.png"); 
@@ -41,3 +24,159 @@
     -moz-image-region: rect(32px 16px 48px 0px);
 }
 
+/* HEADER */
+
+#header {
+    height: 31px;
+    padding: 0;
+    background-image: url("header_bg_1x34.png");
+}
+
+#logo {
+    width: 65px;
+    height: 19px;
+    margin: 0 10px 8px 5px;
+    background-image: url("logo_sp_65x19.png");
+}
+
+/* BUTTONS */
+
+#header > toolbarbutton > .toolbarbutton-text {
+    display: none;
+}
+
+toolbarbutton[command="hide"] {
+    -moz-appearance: none;
+    border: none;
+    width: 10px;
+    height: 12px;
+    margin: 0 5px 0 10px;
+    background: url("hide_10x12.png") top left no-repeat;
+}
+
+toolbarbutton[command="add-contact"] {      
+    -moz-appearance: none;
+    border: none;
+    width: 18px;
+    height: 18px;
+    margin: 0 5px 0 0;
+    background: transparent url("add_button_18x18.png") top left no-repeat;
+}
+
+toolbarbutton[command="open-conversation"] {        
+    -moz-appearance: none;
+    border: none;
+    width: 18px;
+    height: 18px;
+    margin: 0 5px 0 0;
+    background: transparent url("open_conv_button_18x18.png") top left no-repeat;
+}
+
+toolbarbutton[command="switch-to-next"] {      
+    -moz-appearance: none;
+    border: none;
+    width: 18px;
+    height: 18px;
+    margin: 0 5px 0 0;
+    background: transparent url("switch_conv_button_18x18.png") top left no-repeat;
+}
+
+toolbarbutton[command="switch-to-unread"] {  
+    -moz-appearance: none;
+    border: none;
+    width: 18px;
+    height: 18px;
+    margin: 0 10px 0 0;
+    background: transparent url("unread_msg_button_18x18.png") top left no-repeat;
+}
+
+
+toolbarbutton[command="hide"]:hover {  
+    background: transparent url("hide_hover_10x12.png") top left no-repeat;
+}
+
+toolbarbutton[command="add-contact"]:hover {  
+    background: transparent url("add_hover_18x18.png") top left no-repeat;
+}
+
+toolbarbutton[command="open-conversation"]:hover {      
+    background: transparent url("open_conv_hover_18x18.png") top left no-repeat;
+}
+
+toolbarbutton[command="switch-to-next"]:hover {      
+    background: transparent url("switch_conv_hover_18x18.png") top left no-repeat;
+}
+
+toolbarbutton[command="switch-to-unread"]:hover {  
+    background: transparent url("unread_msg_hover_18x18.png") top left no-repeat;
+}
+
+toolbarbutton#actions > .toolbarbutton-menu-dropmarker {
+    display: none !important;
+}
+
+toolbarbutton[command="add-contact"]:active {  
+    background: transparent url("add_click_18x18.png") top left no-repeat;
+}
+
+toolbarbutton[command="open-conversation"]:active {      
+    background: transparent url("open_conv_click_18x18.png") top left no-repeat;
+}
+
+toolbarbutton[command="switch-to-next"]:active {      
+    background: transparent url("switch_conv_click_18x18.png") top left no-repeat;
+}
+
+toolbarbutton[command="switch-to-unread"]:active {  
+    background: transparent url("unread_msg_click_18x18.png") top left no-repeat;
+}
+
+toolbarbutton#actions {  
+    -moz-appearance: none;
+    border: none;
+    width: 48px;
+    height: 16px;
+    background: transparent url("actions_button_48x16.png") top left no-repeat;
+    margin: 0 0 0 0;
+}
+
+toolbarbutton#actions:hover {  
+    background: transparent url("actions_hover_48x16.png") top left no-repeat;
+}
+
+vbox#profile {
+    background-color: #fcfcfc;
+    margin: 0 0 0 0;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+textbox#profile-username {      
+    -moz-appearance: none;
+    height: 20px;
+    margin: 0 0 0 5px;
+    padding: 0 0 0 0;
+    color: #6d008d;
+    font: 600 15px "Trebuchet MS", Trebuchet, Verdana;  
+    border: none;
+    background-color: #fcfcfc;
+}
+
+textbox#status-message[draft="true"] {
+    color: graytext;
+}
+
+textbox#status-message {
+    -moz-appearance: none;
+    height: 25px;
+    margin: 0 0 0 5px;
+    padding: 0 0 5px 0;
+    color: #6c6c6c;
+    font: 400 13px "Trebuchet MS", Trebuchet, Verdana;  
+    border: none;
+    background-color: #fcfcfc;
+}
+
+#contact-toolbox > toolbar {
+    -moz-appearance: none;
+    background: transparent url("conv_bg_1x28.png") top left repeat-x;
+}

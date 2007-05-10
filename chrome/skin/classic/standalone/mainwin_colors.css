@@ -235,7 +235,7 @@ Browser Toolbar, Address Box, and Url-Slurper Button
 }
 
 #browser_url input:focus,
-#contact input:focus, {
+#contact input:focus {
   background-color: #99A195 !important;
   color: #FFF !important;
 }

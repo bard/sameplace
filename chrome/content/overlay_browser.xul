@@ -99,7 +99,6 @@
           persist="width"
           width="300">
       <iframe src="about:blank"
-              class="box-inset"
               flex="1"/>
     </vbox>
 

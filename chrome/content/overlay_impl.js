@@ -107,6 +107,14 @@ function initOverlay(event) {
         
         prefBranch.setCharPref('version', version);
     }
+
+    // Hide splitter whenever sidebar is collapsed
+
+    _('sidebar').addEventListener(
+        'DOMAttrModified', function(event) {
+            if(event.attrName == 'collapsed')
+                _('sidebar-splitter').hidden = (event.newValue.toString() == 'true');
+        }, false);
 }
 
 
@@ -149,12 +157,10 @@ function toggleSidebar() {
 function showSidebar() {
     loadSidebar();
     _('sidebar').collapsed = false;
-    _('sidebar-splitter').hidden = false;
 }
 
 function hideSidebar() {
     _('sidebar').collapsed = true;
-    _('sidebar-splitter').hidden = true;    
 }
 
 function getSidebarContent() {

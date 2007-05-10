@@ -82,13 +82,17 @@ a:hover {
     bottom: 46px;
 }
 
+#lower-menus {
+    background: url('../images/menu_bar_lower_bg_1x21.png') repeat-x;
+}
+
 /* MENU */
 
 .menu {
     position: absolute;
     height: 14px;
     padding-top: 2px;
-    padding-bottom: 4px;
+    padding-bottom: 2px;
     padding-left: 10px;
     padding-right: 10px;
     font-size: 10px;

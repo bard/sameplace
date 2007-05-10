@@ -83,11 +83,6 @@
              label="Report bug/Request features"
              accesskey="R"
              tooltiptext="Report bug/Request features"/>
-    <command id="import-contacts"
-             label="Import Contacts..."
-             accesskey="I"
-             oncommand="window.open('https://jabber.sameplace.cc/transport/registration',
-                        'sameplace-import', 'width=510,height=640,scrollbars=yes,menubar=no,status=yes');"/>
   </commandset>
 
   
@@ -112,49 +107,21 @@
 
   <!-- MAIN -->
 
-  <notificationbox id="notify" flex="1" style="overflow: hidden;" orient="vertical">
+  <vbox flex="1">
 
     <toolbox>
-      <toolbar fullscreentoolbar="true">
-        <toolbaritem flex="1">
-          <textbox id="status-message"
-                   onkeypress="requestedChangeStatusMessage(event);"
-                   oninput="this.setAttribute('draft', 'true');"
-                   onfocus="if(this.getAttribute('draft') == 'true')
-                            this.value = '';
-                            else
-                            this.select();"
-                   draft="true"
-                   tooltiptext="Change your status message"
-                   flex="1"/>
-        </toolbaritem>
-
+      <toolbar id="header" align="center">
         <toolbaritem>
           <menubar>
             <menu label="Actions" accesskey="c">
               <menupopup id="actions-popup">
                 <menuitem class="menuitem-iconic" command="add-contact"/>
                 <menuitem class="menuitem-iconic" command="open-conversation"/>
-                <menuitem class="menuitem-iconic" command="join-room"/>
                 <menuitem class="menuitem-iconic" command="switch-to-unread"
                           key="key-switch-to-unread"/>
                 <menuitem class="menuitem-iconic" command="switch-to-next"
                           key="key-switch-to-next"/>
-                <menuseparator/>
-
-                <menuitem class="menuitem-iconic" command="import-contacts"/>
-
-                <menu class="menuitem-iconic" label="Scriptlets">
-                  <menupopup id="scriptlets-popup" onpopupshowing="requestedShowScriptletList(this);">
-                    <menuseparator/>
-                    <menuitem label="Manage..." accesskey="M" oncommand="requestedManageScriptlets();"/>
-                  </menupopup>
-                </menu>
-
-                <menuitem class="menuitem-iconic" command="run-wizard"/>
-                          
                 <menuseparator id="actions-separator"/>
-
                 <menuitem class="menuitem-iconic" command="view-help"/>
                 <menuitem class="menuitem-iconic" command="visit-forum"/>
                 <menuitem class="menuitem-iconic" command="report-bug"/>
@@ -162,11 +129,59 @@
             </menu>
           </menubar>
         </toolbaritem>
+        <toolbarspring/>
+        <toolbarbutton command="add-contact"/>
+        <toolbarbutton command="open-conversation"/>
+        <toolbarbutton command="switch-to-next"/>
+        <toolbarbutton command="switch-to-unread"/>   
+        <toolbarspring/>
+        <toolbarbutton id="actions" label="" type="menu">
+          <menupopup id="actions-popup">
+            <menuitem class="menuitem-iconic" command="add-contact"/>
+            <menuitem class="menuitem-iconic" command="open-conversation"/>
+            <menuitem class="menuitem-iconic" command="switch-to-unread"
+                      key="key-switch-to-unread"/>
+            <menuitem class="menuitem-iconic" command="switch-to-next"
+                      key="key-switch-to-next"/>
+            <menuseparator id="actions-separator"/>
+            <menuitem class="menuitem-iconic" command="view-help"/>
+            <menuitem class="menuitem-iconic" command="visit-forum"/>
+            <menuitem class="menuitem-iconic" command="report-bug"/>
+          </menupopup>
+        </toolbarbutton>
+        <toolbarbutton command="hide"/>
       </toolbar>
     </toolbox>
 
+    <!-- PROFILE -->
+
+    <vbox id="profile">
+      <hbox>
+        <textbox readonly="true" value="" id="profile-username"/>
+        <toolbarbutton type="menu" label="online" id="status-menu" hidden="true">
+          <menupopup>
+            <menuitem class="menuitem-iconic" label="online"/>
+            <menuitem class="menuitem-iconic" label="offline"/>
+          </menupopup>
+        </toolbarbutton>
+      </hbox>
+      <textbox id="status-message"
+               onkeypress="requestedChangeStatusMessage(event);"
+               oninput="this.setAttribute('draft', 'true');"
+               onfocus="if(this.getAttribute('draft') == 'true')
+                        this.value = '';
+                        else
+                        this.select();"
+               draft="true"
+               tooltiptext="Change your status message"
+               flex="1"/>
+    </vbox>
+
+    <!-- CONTACTS -->
+
     <iframe id="contacts" src="contacts.xul" flex="1"/>    
     <splitter id="splitter-main" orient="vertical" resizeafter="farthest"/>
+
     <toolbox id="contact-toolbox">
       <toolbar fullscreentoolbar="true">
         <toolbaritem align="center" flex="1">
