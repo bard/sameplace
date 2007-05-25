@@ -449,6 +449,17 @@ function seenMessage(stanza) {
     if(stanza.body == undefined)
         return;
 
+    if(!userAddress)
+        // at this point, userAddress should have been initialized,
+        // but if for any reason it wasn't, we take care of it here.
+        if(stanza.@from == undefined)
+            // outgoing message, no information about who we are,
+            // falling back
+            userAddress = 'me@none';
+        else
+            // incoming message, infer from @to
+            userAddress = JID(stanza.@to.toString()).address;
+        
     if(stanza.@type == 'error')
         displayEvent('error', 'Error: code ' + stanza.error.@code);
     else {
