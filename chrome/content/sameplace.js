@@ -452,10 +452,12 @@ function createInteractionPanel(account, address,
     } else {
         queuePostLoadAction(
             panel, function(p) {
-                panel.contentWindow.addEventListener(
-                    'beforeunload', function(event) {
-                        conversations.closed(account, address);
-                    }, true);
+                if(container == 'main')
+                    panel.contentWindow.addEventListener(
+                        'beforeunload', function(event) {
+                            conversations.closed(account, address);
+                        }, true);
+
                 enableInteraction(account, address, panel);
                 if(afterLoadAction)
                     afterLoadAction(panel);
