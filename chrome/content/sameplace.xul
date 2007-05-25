@@ -210,7 +210,7 @@
         </toolbarbutton>
       </toolbar>
     </toolbox>
-    <tabbrowser id="conversations" collapsed="true" flex="10" persist="height"/>
+    <tabbrowser id="conversations" collapsed="true" flex="10" persist="height" closebutton="true"/>
 
     <!-- HACK FOR TABBROWSER -->
     
