@@ -49,8 +49,11 @@ function init(_dom) {
     dom.setStripVisibilityTo(true);
 
     dom.setAttribute('handleCtrlPageUpDown', 'false');
-    document.getAnonymousElementByAttribute(dom, 'anonid', 'tabbox')
-        .setAttribute('handleCtrlTab', false);
+    var tabbox = document.getAnonymousElementByAttribute(dom, 'anonid', 'tabbox') ||
+        // firefox 1.5...
+        document.getAnonymousNodes(dom)[1];
+        
+    tabbox.setAttribute('handleCtrlTab', false);
 
     dom.addEventListener(
         'load', function(event) {
@@ -225,4 +228,20 @@ function load(url, context) {
     Cc['@mozilla.org/moz/jssubscript-loader;1']
         .getService(Ci.mozIJSSubScriptLoader)
         .loadSubScript(url, context);
+}
+
+
+// DEVELOPER TOOLS
+// ----------------------------------------------------------------------
+
+function eventInfo(e) {
+    var lines = [];
+    for each(var name in ['originalTarget', 'target', 'currentTarget'])
+        if(e[name] instanceof XULElement)
+            lines.push(name + ': ' + e[name].tagName);
+        else if(e[name] instanceof HTMLDocument)
+            lines.push(name + ': ' + e[name].location.href);
+        else
+            lines.push(name + ': ' + e[name]);
+    return lines.join('\n');
 }
