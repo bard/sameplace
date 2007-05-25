@@ -46,19 +46,14 @@
                  ondragenter="nsDragAndDrop.dragEnter(event, dndObserver);"
                  ondragover="nsDragAndDrop.dragOver(event, dndObserver);"
                  ondragdrop="nsDragAndDrop.drop(event, dndObserver);"/>
-
-    <splitter id="edit-splitter" hidden="true"/>
-    
-    <vbox id="edit-area" collapsed="true">
-      <toolbox>
-        <toolbar>
-          <toolbarbutton label="Save"/>
-          <toolbarbutton label="Cancel" oncommand="cancelledEdit();"/>
-        </toolbar>
-      </toolbox>
-      <textbox id="source" multiline="true" flex="1" rows="10"/>
-    </vbox>
   </hbox>
+
+  <description style="padding: 0.5em;">
+    To install scriptlets, drag their links from web pages into the
+    above list.  An initial set of scriptlets can be found at
+    http://sameplace.cc/scriptlets.
+  </description>
+
 
   <hbox pack="end">
     <button label="Close" oncommand="window.close();"/>
