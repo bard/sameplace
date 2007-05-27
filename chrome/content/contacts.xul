@@ -47,63 +47,6 @@
       <menuitem label="Set Alias..." oncommand="requestedSetContactAlias(document.popupNode);"/>
       <menuitem label="Remove" oncommand="requestedRemoveContact(document.popupNode);"/>
       <menuseparator/>
-
-<!--       <menu label="Interact using..."> -->
-<!--         <menupopup  datasources="rdf:bookmarks" ref="NC:BookmarksRoot" -->
-<!--                     onpopupshowing="this.builder.rebuild();"> -->
-<!--           <template> -->
-<!--             <rule> -->
-<!--               <conditions> -->
-<!--                 <content uri="?root"/> -->
-<!--                 <member container="?root" child="?menu"/> -->
-<!--                 <triple subject="?menu" -->
-<!--                         predicate="http://home.netscape.com/NC-rdf#Name" -->
-<!--                         object="SamePlace"/> -->
-<!--                 <member container="?menu" child="?app"/> -->
-<!--                 <triple subject="?app" -->
-<!--                         predicate="http://home.netscape.com/NC-rdf#Name" -->
-<!--                         object="?name"/> -->
-<!--                 <triple subject="?app" -->
-<!--                         predicate="http://home.netscape.com/NC-rdf#URL" -->
-<!--                         object="?url"/> -->
-<!--               </conditions> -->
-<!--               <action> -->
-<!--                 <menuitem uri="?app" label="?name" value="?url" -->
-<!--                           oncommand="requestedCommunicate(document.popupNode, this.value);"/> -->
-<!--               </action> -->
-<!--             </rule> -->
-<!--           </template>           -->
-<!--         </menupopup> -->
-<!--       </menu> -->
-
-<!--       <menu label="Communicate in sidebar using..."> -->
-<!--         <menupopup  datasources="rdf:bookmarks" ref="NC:BookmarksRoot" -->
-<!--                     onpopupshowing="this.builder.rebuild();"> -->
-<!--           <template> -->
-<!--             <rule> -->
-<!--               <conditions> -->
-<!--                 <content uri="?root"/> -->
-<!--                 <member container="?root" child="?menu"/> -->
-<!--                 <triple subject="?menu" -->
-<!--                         predicate="http://home.netscape.com/NC-rdf#Name" -->
-<!--                         object="SamePlace"/> -->
-<!--                 <member container="?menu" child="?app"/> -->
-<!--                 <triple subject="?app" -->
-<!--                         predicate="http://home.netscape.com/NC-rdf#Name" -->
-<!--                         object="?name"/> -->
-<!--                 <triple subject="?app" -->
-<!--                         predicate="http://home.netscape.com/NC-rdf#URL" -->
-<!--                         object="?url"/> -->
-<!--               </conditions> -->
-<!--               <action> -->
-<!--                 <menuitem uri="?app" label="?name" value="?url" -->
-<!--                           oncommand="requestedCommunicate(document.popupNode, this.value, 'main');"/> -->
-<!--               </action> -->
-<!--             </rule> -->
-<!--           </template>           -->
-<!--         </menupopup> -->
-<!--       </menu> -->
-
     </popup>
 
     <tooltip id="contact-tooltip" noautohide="true"
