@@ -346,13 +346,16 @@ function receivedRoster(iq) {
 }
 
 function receivedSubscriptionRequest(presence) {
-    _('notify').appendNotification(
-            'Request from ' + presence.stanza.@from,
-            'sameplace-presence-subscription',
-            null, _('notify').PRIORITY_INFO_HIGH,
-            [{label: 'View', accessKey: 'V', callback: onView}]);
+    // Skip notification if appendNotification() not available (as in Firefox 1.5)
+    if(typeof(notify) == 'function')
+        notify('Request from ' + presence.stanza.@from,
+               'sameplace-presence-subscription',
+               null, notify.PRIORITY_INFO_HIGH,
+               [{label: 'View', accessKey: 'V', callback: viewRequest}]);
+    else
+        viewRequest();
 
-    function onView() {
+    function viewRequest() {
         var account = presence.session.name;
         var address = presence.stanza.@from.toString();
         var accept, reciprocate;
@@ -381,13 +384,11 @@ function receivedSubscriptionRequest(presence) {
 }
 
 function receivedSubscriptionApproval(presence) {
-    _('notify').appendNotification(
-        presence.stanza.@from + ' has accepted to be in your contact list.',
-        'sameplace-presence-subscription',
-        null, _('notify').PRIORITY_INFO_HIGH, []);
-
-    XMPP.send(presence.account,
-              <presence to={XMPP.JID(presence.stanza.@from).address} type="subscribe"/>);
+    // Skip notification if appendNotification() not available (as in Firefox 1.5)
+    if(typeof(notify) == 'function')
+        notify(presence.stanza.@from + ' has accepted to be in your contact list.',
+               'sameplace-presence-subscription',
+               null, notify.PRIORITY_INFO_HIGH, []);
 }
 
 function receivedMUCPresence(presence) {
@@ -491,4 +492,17 @@ function getDefaultAppUrl() {
     var url = prefBranch.getCharPref('defaultAppUrl');
     return isChromeUrl(url) ? chromeToFileUrl(url) : url;
 }
+
+var notify;
+window.addEventListener(
+    'load', function(event) {
+        if(typeof($('#notify')._.appendNotification) == 'function') {
+            notify = function() {
+                return $('#notify')._.appendNotification.apply($('#notify')._, arguments);
+            }
+            for(var name in $('#notify')._)
+                if(name.match(/^PRIORITY_/))
+                    notify[name] = $('#notify')._[name];
+        }
+    }, false);
 
