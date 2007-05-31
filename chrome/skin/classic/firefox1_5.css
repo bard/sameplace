@@ -1,0 +1,12 @@
+.tabs-closebutton > .toolbarbutton-icon {
+    list-style-image: url("chrome://global/skin/icons/close.png");
+    -moz-image-region: rect(0px, 16px, 16px, 0px);
+}
+
+.tabs-closebutton:hover > .toolbarbutton-icon {
+    -moz-image-region: rect(0px, 32px, 16px, 16px);
+}
+
+.tabs-closebutton:active > .toolbarbutton-icon {
+    -moz-image-region: rect(0px, 48px, 16px, 32px);
+}

@@ -22,6 +22,7 @@
 
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://sameplace/skin/sameplace.css" type="text/css"?>
+<?xml-stylesheet href="chrome://sameplace/skin/firefox1_5.css" type="text/css"?>
 
 <!DOCTYPE page>
 <page id="sameplace" title="SamePlace"
@@ -210,7 +211,7 @@
         </toolbarbutton>
       </toolbar>
     </toolbox>
-    <tabbrowser id="conversations" collapsed="true" flex="10" persist="height" closebutton="true"/>
+    <tabbrowser id="conversations" collapsed="true" flex="10" persist="height"/>
 
     <!-- HACK FOR TABBROWSER -->
     
