@@ -98,7 +98,12 @@ function opened(account, address) {
 function closed(account, address) {
     var closeEvent = document.createEvent('Event');
     closeEvent.initEvent('conversation/close', true, false);
-    get(account, address).dispatchEvent(closeEvent);
+    var conversation = get(account, address);
+    conversation.dispatchEvent(closeEvent);
+    // Firefox 1.5 doesn't do cleanup on closed browser, so we do.
+    conversation.removeAttribute('src');
+    conversation.removeAttribute('account');
+    conversation.removeAttribute('address');
 }
 
 
