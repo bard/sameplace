@@ -49,7 +49,7 @@ var channel;
 // ----------------------------------------------------------------------
 
 function init() {
-    _('contacts').selectedIndex = -1;
+    $('#contacts')._.selectedIndex = -1;
 
     channel = XMPP.createChannel();
 
@@ -114,7 +114,7 @@ if(typeof(x) == 'function') {
     }
 } else {
     function get(account, address) {
-        var addresses = _('contacts').getElementsByAttribute('address', address);
+        var addresses = $('#contacts .address')._a;
         for(var i=0; i<addresses.length; i++)
             if(addresses[i].getAttributeNode('account').value == account)
                 return addresses[i];
@@ -129,8 +129,8 @@ function add(account, address) {
     contact.setAttribute('address', address);
     contact.setAttribute('account', account);
     contact.setAttribute('availability', 'unavailable');
-    contact.getElementsByAttribute('role', 'name')[0].setAttribute('value', address);
-    _('contacts').appendChild(contact);
+    $(contact).$('[role="name"]')._.setAttribute('value', address);
+    $('#contacts')._.appendChild(contact);
     return contact;
 }
 
@@ -147,7 +147,7 @@ function receivedMessage(message) {
     if(contact.getAttribute('current') != 'true' &&
        message.stanza.body.length() > 0) {
         var pending = parseInt(_(contact, {role: 'pending'}).value);
-        _(contact, {role: 'pending'}).value = pending + 1;
+        $(contact).$('[role="pending"]')._.value = pending + 1;
     }
 
     if(message.stanza.ns_event::x.length() > 0)
@@ -168,13 +168,13 @@ function messagesSeen(account, address) {
 }
 
 function nowTalkingWith(account, address) {
-    var previouslyTalking = _('contacts', {current: 'true'});
+    var previouslyTalking = $('#contacts [current="true"]')._;
     if(previouslyTalking)
         previouslyTalking.setAttribute('current', 'false');
 
     var contact = get(account, address) || add(account, address);
     contact.setAttribute('current', 'true');
-    _(contact, {role: 'pending'}).value = 0;
+    $(contact).$('[role="pending"]')._.value = 0;
 }
 
 function contactChangedRelationship(account, address, subscription, name) {
@@ -182,13 +182,13 @@ function contactChangedRelationship(account, address, subscription, name) {
 
     if(subscription)
         if(subscription == 'remove') {
-            _('contacts').removeChild(contact);
+            $('#contacts')._.removeChild(contact);
             return;
         }
         else
             contact.setAttribute('subscription', subscription);
 
-    var nameElement = contact.getElementsByAttribute('role', 'name')[0];
+    var nameElement = $(contact).$('[role="name"]')._;
     if(name)
         nameElement.setAttribute('value', name);
     else if(name == '' || !nameElement.hasAttribute('value'))
@@ -208,9 +208,9 @@ function resourceChangedPresence(account, address) {
 
     if(summary.stanza.status == undefined ||
        summary.stanza.status == '')
-        _(contact, {role: 'status'}).removeAttribute('value');
+        $(contact).$('[role="status"]')._.removeAttribute('value');
     else
-        _(contact, {role: 'status'}).value = summary.stanza.status;
+        $(contact).$('[role="status"]')._.value = summary.stanza.status;
 
     if(summary.stanza.@type == 'unavailable')
         contact.setAttribute('chatstate', '');
@@ -220,35 +220,35 @@ function _reposition(contact) {
     var availability = contact.getAttribute('availability');
     var show = contact.getAttribute('show');
 
-    _('contacts').removeChild(contact);
+    $('#contacts')._.removeChild(contact);
     contact.style.opacity = 0;
 
     var sibling;
     if(contact.getAttribute('open') == 'true')
-        sibling = _('contacts', {role: 'open'}).nextSibling;
+        sibling = $('#contacts [role="open"]')._.nextSibling;
     else if(availability == 'available' && show == '')
-        sibling = _('contacts', {role: 'online'}).nextSibling;
+        sibling = $('#contacts [role="online"]')._.nextSibling;
     else if(availability == 'available' && show == 'chat')
-        sibling = _('contacts', {role: 'online'}).nextSibling;
+        sibling = $('#contacts [role="online"]')._.nextSibling;
     else if(availability == 'available' && show == 'away')
-        sibling = _('contacts', {role: 'away'}).nextSibling;
+        sibling = $('#contacts [role="away"]')._.nextSibling;
     else if(availability == 'available' && show == 'xa')
-        sibling = _('contacts', {role: 'away'}).nextSibling;
+        sibling = $('#contacts [role="away"]')._.nextSibling;
     else if(availability == 'available' && show == 'dnd')
-        sibling = _('contacts', {role: 'dnd'}).nextSibling;
+        sibling = $('#contacts [role="dnd"]')._.nextSibling;
     else
-        sibling = _('contacts', {role: 'offline'}).nextSibling;
+        sibling = $('#contacts [role="offline"]').nextSibling;
 
     while(sibling &&
           sibling.getAttribute('role') == 'contact' &&
-          sibling.getElementsByAttribute('role', 'name')[0].getAttribute('value').toLowerCase() < 
-          contact.getElementsByAttribute('role', 'name')[0].getAttribute('value').toLowerCase())
+          $(sibling).$('[role="name"]')._.getAttribute('value').toLowerCase() <
+          $(contact).$('[role="name"]')._.getAttribute('value').toLowerCase())
         sibling = sibling.nextSibling;
     
     if(!sibling)
-        _('contacts').appendChild(contact);
+        $('#contacts')._.appendChild(contact);
     else
-        _('contacts').insertBefore(contact, sibling);
+        $('#contacts')._.insertBefore(contact, sibling);
     
     fadeIn(contact);
 }
@@ -427,17 +427,23 @@ function getContactPosition(contact) {
 // ----------------------------------------------------------------------
 
 function requestedUpdateContactTooltip(element) {
-    _('contact-tooltip', {role: 'name'}).value =
+    $('#contact-tooltip [role="name"]')._.value =
         XMPP.nickFor(attr(element, 'account'), attr(element, 'address'));
-    _('contact-tooltip', {role: 'address'}).value = attr(element, 'address');
-    _('contact-tooltip', {role: 'account'}).value = attr(element, 'account');
+    $('#contact-tooltip [role="address"]')._.value = attr(element, 'address');
+    $('#contact-tooltip [role="account"]')._.value = attr(element, 'account');
 
     var subscriptionState = attr(element, 'subscription');
     if(subscriptionState) {
-        _('contact-tooltip', {role: 'subscription'}).value = subscriptionDesc[subscriptionState];
-        _('contact-tooltip', {role: 'subscription'}).parentNode.hidden = false;
+        $('#contact-tooltip [role="subscription"]')._.value = subscriptionDesc[subscriptionState];
+        $('#contact-tooltip [role="subscription"]')._.parentNode.hidden = false;
     } else
-        _('contact-tooltip', {role: 'subscription'}).parentNode.hidden = true;
+        $('#contact-tooltip [role="subscription"]')._.parentNode.hidden = true;
+
+    var image = userImages[attr(element, 'address')];
+    if(image && image.binval)
+        $('#contact-tooltip [role="userimage"]').src = 'data:'+image.type+';base64,'+image.binval;
+    else
+        $('#contact-tooltip [role="userimage"]').src = '';
 }
 
 function requestedSetContactAlias(element) {
