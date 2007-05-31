@@ -185,7 +185,7 @@
     <!-- CONTACTS -->
 
     <iframe id="contacts" src="contacts.xul" flex="1"/>    
-    <splitter id="splitter-main" orient="vertical" resizeafter="farthest"/>
+    <splitter id="splitter-main" orient="vertical" hidden="true" resizeafter="farthest"/>
 
     <toolbox id="contact-toolbox">
       <toolbar fullscreentoolbar="true">
