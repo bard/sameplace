@@ -61,9 +61,7 @@ function initOverlay(event) {
     channel.on(
         {event: 'transport', direction: 'out', state: 'start'},
         function() {
-           if(window == Cc["@mozilla.org/appshell/window-mediator;1"]
-              .getService(Ci.nsIWindowMediator)
-              .getMostRecentWindow(''))
+            if(window == getMostRecentWindow() && window.toolbar.visible)
                loadSidebar();
         });
 
@@ -71,10 +69,8 @@ function initOverlay(event) {
         {event: 'iq', direction: 'out', stanza: function(s) {
                 return s.ns_auth::query.length() > 0;
             }},
-        function(iq) {
-           if(window == Cc["@mozilla.org/appshell/window-mediator;1"]
-              .getService(Ci.nsIWindowMediator)
-              .getMostRecentWindow(''))
+        function() {
+            if(window == getMostRecentWindow() && window.toolbar.visible)
                showSidebar();
         });
 
@@ -181,4 +177,10 @@ function getExtensionVersion(id) {
     return Cc["@mozilla.org/extensions/manager;1"]
         .getService(Ci.nsIExtensionManager)
         .getItemForID(id).version;
+}
+
+function getMostRecentWindow() {
+    return Cc['@mozilla.org/appshell/window-mediator;1']
+        .getService(Ci.nsIWindowMediator)
+        .getMostRecentWindow('navigator:browser');
 }
