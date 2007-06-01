@@ -108,7 +108,6 @@
             persist="height"
             height="400">
         <iframe src="about:blank"
-                class="box-inset"
                 flex="1"/>
       </vbox>
     </vbox>
