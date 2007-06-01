@@ -98,5 +98,5 @@ else
             window.opener.openUILinkIn(aURL, where);
         } else
             window.openDialog('chrome://browser/content/browser.xul',
-                              '_blank', 'chrome,all,dialog=no', aURL, null, null);w        
+                              '_blank', 'chrome,all,dialog=no', aURL, null, null);
     }
