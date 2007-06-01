@@ -52,19 +52,24 @@ function init() {
         if(request[fieldName])
             _(fieldName).value = request[fieldName];
 
-    if(request.address)
-        _('nick').focus();
-    else
-        _('address').select();
-
     xmpp.ui.refreshAccounts(_('xmpp-popup-accounts'));
 
     _('account').value = (request.account ||
                           (XMPP.accounts.filter(XMPP.isUp)[0] || XMPP.accounts[0]).jid);
+    selectedAccount(_('account'));
+
+    _('address').select();
 
     refresh();
 }
 
+
+// GUI REACTIONS
+// ----------------------------------------------------------------------
+
+function selectedAccount(xulAccount) {
+    _('nick').value = XMPP.JID(xulAccount.value).username;
+}
 
 // GUI ACTIONS
 // ----------------------------------------------------------------------
