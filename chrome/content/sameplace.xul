@@ -92,7 +92,7 @@
              oncommand="window.open('https://jabber.sameplace.cc/transport/registration',
                         'sameplace-import', 'width=510,height=640,scrollbars=yes,menubar=no,status=yes');"/>
     <command id="open-standalone"
-             label="Open Standalone (experimental!)"
+             label="Open Standalone (EXPERIMENTAL)"
              accesskey="S"
              oncommand="window.open(
                         'chrome://sameplace/content/standalone/contacts.xul',
