@@ -60,7 +60,7 @@
 
       <row align="center">
         <label value="Account:" control="accounts" accesskey="c"/>
-        <menulist id="account" oncommand="refresh();"
+        <menulist id="account" oncommand="selectedAccount(this);"
                   flex="1" label="" sizetopopup="none">
           <menupopup id="xmpp-popup-accounts"/>
         </menulist>
