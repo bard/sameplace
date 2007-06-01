@@ -40,14 +40,14 @@ function chromeToFileUrl(url) {
 }
 
 function hostAppIsMail() {
-    return (Cc['@mozilla.org/xre/app-info;1']
-            .getService(Ci.nsIXULAppInfo)
+    return (Components.classes['@mozilla.org/xre/app-info;1']
+            .getService(Components.interfaces.nsIXULAppInfo)
             .ID == '{3550f703-e582-4d05-9a08-453d09bdfdc6}');
 }
 
 function hostAppIsBrowser() {
-    return (Cc['@mozilla.org/xre/app-info;1']
-            .getService(Ci.nsIXULAppInfo)
+    return (Components.classes['@mozilla.org/xre/app-info;1']
+            .getService(Components.interfaces.nsIXULAppInfo)
             .ID == '{ec8030f7-c20a-464f-9b0e-13a3a9e97384}');
 }
 
@@ -79,3 +79,24 @@ function load(fileIndicator, context) {
         .getService(Ci.mozIJSSubScriptLoader)
         .loadSubScript(url, context);
 }
+
+// From mozapps/extensions/extensions.js
+if(hostAppIsMail())
+    function openURL(aURL) {
+        var uri = Cc['@mozilla.org/network/io-service;1']
+            .getService(Ci.nsIIOService).newURI(aURL, null, null);
+        var protocolSvc = Cc['@mozilla.org/uriloader/external-protocol-service;1']
+            .getService(Ci.nsIExternalProtocolService);
+        protocolSvc.loadUrl(uri);
+    }
+else
+    function openURL(aURL) {
+        var pref = Cc['@mozilla.org/preferences-service;1']
+            .getService(Ci.nsIPrefBranch);
+        if(window.opener && window.opener.openUILinkIn) {
+            var where = pref.getIntPref('browser.link.open_newwindow') == 3 ? 'tab' : 'window';
+            window.opener.openUILinkIn(aURL, where);
+        } else
+            window.openDialog('chrome://browser/content/browser.xul',
+                              '_blank', 'chrome,all,dialog=no', aURL, null, null);w        
+    }

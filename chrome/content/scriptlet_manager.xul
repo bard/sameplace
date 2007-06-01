@@ -50,8 +50,11 @@
 
   <description style="padding: 0.5em;">
     To install scriptlets, drag their links from web pages into the
-    above list.  An initial set of scriptlets can be found at
-    http://sameplace.cc/scriptlets.
+    above list.  An initial selection of scriptlets can be found at
+    <label class="text-link"
+           style="margin: 0;"
+           onclick="openURL('http://sameplace.cc/scriptlets')"
+           value="http://sameplace.cc/scriptlets"/>
   </description>
 
 
