@@ -31,11 +31,6 @@ const prefBranch = Cc["@mozilla.org/preferences-service;1"]
 const srvPrompt = Cc["@mozilla.org/embedcomp/prompt-service;1"]
     .getService(Ci.nsIPromptService);
 
-// Workaround for bug in Firefox 1.5 -- body of tabbrowser.addTab()
-// references nsIWebNavigation but it is not defined anywhere.
-
-const nsIWebNavigation = Ci.nsIWebNavigation;
-
 
 // GLOBAL STATE
 // ----------------------------------------------------------------------
@@ -50,13 +45,6 @@ load('chrome://sameplace/contact/scriptlets.js', scriptlets);
 
 // GUI INITIALIZATION AND FINALIZATION
 // ----------------------------------------------------------------------
-
-if(!('@mozilla.org/appshell/component/browser-status-filter;1' in Components.classes))
-    window.addEventListener(
-        'DOMContentLoaded', function(event) {
-            if(event.target == document)
-                thunderbirdTabbrowserFix(_('conversations'));
-        }, false);
 
 function init(event) {
     if(!event.target)
