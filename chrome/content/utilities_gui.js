@@ -173,3 +173,19 @@ function openLinkInternally(url, newTab) {
         getBrowser().loadURI(url);
 }
 
+// From mozapps/extensions/extensions.js
+if(hostAppIsMail())
+    function openURL(url) {
+        openLinkExternally(url);
+    }
+else
+    function openURL(aURL) {
+        var pref = Cc['@mozilla.org/preferences-service;1']
+            .getService(Ci.nsIPrefBranch);
+        if(window.opener && window.opener.openUILinkIn) {
+            var where = pref.getIntPref('browser.link.open_newwindow') == 3 ? 'tab' : 'window';
+            window.opener.openUILinkIn(aURL, where);
+        } else
+            window.openDialog('chrome://browser/content/browser.xul',
+                              '_blank', 'chrome,all,dialog=no', aURL, null, null);
+    }
