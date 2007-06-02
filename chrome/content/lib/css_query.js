@@ -58,6 +58,21 @@ function mapMatch(string, regexp, action) {
 }
 
 /**
+ * Takes a CSS selector and splits it in its parts.  Examples:
+ *
+ *   '#id'             // -> ['#id']
+ *   '#id.class'       // -> ['#id', '.class']
+ *   'tag[attr="val"]' // -> ['#id', '[attr="val"]']
+ *
+ */
+
+function splitSelector(selector) {
+    return mapMatch(
+        selector, /\s*(\[.+?\]|(#|\.||).+?(?=#|\.|$|\[))/,
+        function(m) { return m[1]; });
+}
+
+/**
  * Compiles a CSS sub-query to a function.
  *
  * First argument is a _selector_, e.g.
@@ -102,7 +117,7 @@ function subCompile(selector, axis) {
                 };
                 break;
             case '[':
-                var m = selector.match(/^\[([\w-_]+)="?([\w-_]+)"?\]$/);
+                var m = selector.match(/^\[([\w-_]+)="?(.+?)"?\]$/);
                 locator = function(context) {
                     return context.getElementsByAttribute(m[1], m[2]);
                 };
@@ -133,7 +148,7 @@ function subCompile(selector, axis) {
                 break;
             case '[':
                 locator = function(context) {
-                    var m = selector.match(/^\[([\w-_]+)="?([\w-_]+)"?\]$/);
+                    var m = selector.match(/^\[([\w-_]+)="?(.+?)"?\]$/);
                     return Array.filter(
                         context.childNodes, function(child) {
                             return child.getAttribute(m[1]) == m[2];
@@ -195,7 +210,7 @@ function subCompile(selector, axis) {
             };
             break;
         case '[':
-            var m = selector.match(/^\[([\w-_]+)="?([\w-_]+)"?\]$/);
+            var m = selector.match(/^\[([\w-_]+)="?(.+?)"?\]$/);
             test = function(element) {
                 return element.getAttribute(m[1]) == m[2];
             };
@@ -209,18 +224,10 @@ function subCompile(selector, axis) {
         return test;
     }
 
-    var locator, additionalTests = [], firstMatch = true;
-    scan(
-        selector, /\s*((#|\.||\[)[\w_\-=\"]+\]?)/g,
-        function(match) {
-            if(firstMatch) {
-                locator = locatorFor(match[1], axis);
-                firstMatch = false;
-            }
-            else
-                additionalTests.push(testFor(match[1]));
-        });
-
+    var parts = splitSelector(selector);
+    var locator = locatorFor(parts[0], axis);
+    var additionalTests = parts.slice(1).map(function(part) { return testFor(part); });
+    
     return function(context) {
         var results = locator(context);
         return additionalTests.length == 0 ?
@@ -245,6 +252,10 @@ function subCompile(selector, axis) {
  */
 
 function compile(query) {
+    var memo = arguments.callee.memo || (arguments.callee.memo = {});
+    if(memo[query])
+        return memo[query];
+
     function fold(fn, accumulator, sequence) {
         Array.forEach(
             sequence, function(item) {
@@ -267,7 +278,7 @@ function compile(query) {
             return subCompile(selector, axis);
         });
 
-    return function(context) {
+    memo[query] = function(context) {
         if(!('length' in context))
             context = [context];
         
@@ -281,6 +292,8 @@ function compile(query) {
             },
             context, finders);
     }
+
+    return memo[query];
 }
 
 /**
@@ -339,30 +352,12 @@ function $(query) {
 }
 
 
-
-
 function verify() {
     var assert = {
-        equals: function(array1, array2) {
-            if(typeof(array1) != typeof(array2)) {
-                throw new Error('FAIL: different object types - ' + Components.stack.caller.lineNumber);
-            }
-            else if(typeof(array1) == 'xml') {
-                if(array1 != array2)
-                    throw new Error('FAIL: ' + Components.stack.caller.lineNumber);
-            }
-            else if('length' in array1) {
-                if(array1.length != array2.length) {
-                    throw new Error('FAIL: different array lengths - ' + Components.stack.caller.lineNumber);
-                    return;
-                } else {
-                    for(var i=0; i<array1.length; i++)
-                        if(array1[i] != array2[i])
-                            throw new Error('FAIL: ' + Components.stack.caller.lineNumber +
-                                            ' (' + array1[i] + ' vs ' + array2[i] + ')');
-                    
-                }
-            }
+        equals: function(a, b) {
+            if(a != b)
+                throw new Error('FAIL: different values (' + a + ',' + b + ') - ' +
+                                Components.stack.caller.lineNumber);
         }
     }
     
@@ -380,4 +375,54 @@ function verify() {
         
         return report.join('\n');
     }
+
+    var tests = {
+        'split selector': function() {
+            var parts;
+
+            parts = splitSelector('#id');
+            assert.equals(1, parts.length);
+            assert.equals('#id', parts[0]);
+
+            parts = splitSelector('tag');
+            assert.equals(1, parts.length);
+            assert.equals('tag', parts[0]);
+
+            parts = splitSelector('.class');
+            assert.equals(1, parts.length);
+            assert.equals('.class', parts[0]);
+
+            parts = splitSelector('[attr="value"]');
+            assert.equals(1, parts.length);
+            assert.equals('[attr="value"]', parts[0]);
+
+            parts = splitSelector('#id.class');
+            assert.equals(2, parts.length);
+            assert.equals('#id', parts[0]);
+            assert.equals('.class', parts[1]);
+
+            parts = splitSelector('tag.class');
+            assert.equals(2, parts.length);
+            assert.equals('tag', parts[0]);
+            assert.equals('.class', parts[1]);
+
+            parts = splitSelector('.class.class');
+            assert.equals(2, parts.length);
+            assert.equals('.class', parts[0]);
+            assert.equals('.class', parts[1]);
+
+            parts = splitSelector('[attr="value"].class');
+            assert.equals(2, parts.length);
+            assert.equals('[attr="value"]', parts[0]);
+            assert.equals('.class', parts[1]);
+
+            parts = splitSelector('[attr="a@b.c"]');
+            assert.equals('[attr="a@b.c"]', parts[0]);
+            assert.equals(1, parts.length);
+
+            
+        }
+    };
+
+    return utest(tests);
 }
