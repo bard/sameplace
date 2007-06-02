@@ -19,19 +19,27 @@
 */
 
 /**
- * For each match of _regexp_ within _string_, execute _action_.
+ * For each match of _regexp_ within _string_, execute _action_, or if
+ * no action is provided, just return an array with the match objects.
  *
  */
 
 function scan(string, regexp, action) {
+    var matches = [];
+
     // Ensure regular expression is global otherwise an infinite loop
     // is just around the corner.
     var r = new RegExp(regexp.source, 'g');
     var m = r.exec(string);
     while(m) {
-        action(m);
+        if(action)
+            action(m);
+        else
+            matches.push(m);
         m = r.exec(string);
     }
+    if(!action)
+        return matches;
 }
 
 /**
