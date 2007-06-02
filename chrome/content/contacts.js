@@ -106,22 +106,9 @@ function finish() {
 // INTERFACE GLUE
 // ----------------------------------------------------------------------
 
-if(typeof(x) == 'function') {
-    function get(account, address) {
-        return x('//*[@id="contacts"]//*[' +
-                 '@address="' + address + '" and ' +
-                 '@account="' + account + '"]');
-    }
-} else {
-    function get(account, address) {
-        var addresses = $('#contacts .address')._a;
-        for(var i=0; i<addresses.length; i++)
-            if(addresses[i].getAttributeNode('account').value == account)
-                return addresses[i];
-        return undefined;
-    }
+function get(account, address) {
+    return $('#contacts [account="' + account + '"][address="' + address + '"]')._;
 }
-
 
 function add(account, address) {
     var contact;
