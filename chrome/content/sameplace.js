@@ -107,7 +107,6 @@ function init(event) {
             contacts.startedConversationWith(panel.getAttribute('account'),
                                              panel.getAttribute('address'));
             _('contact-toolbox', {role: 'attach'}).hidden = false;
-            _('splitter-main').hidden = false;
         }, false);
 
     _('conversations').addEventListener(
@@ -136,7 +135,6 @@ function init(event) {
 
             if(conversations.count == 1) {
                 _('conversations').collapsed = true;
-                _('splitter-main').hidden = true;
                 _('contact-toolbox', {role: 'attach'}).hidden = true;
                 _('contact').value = '';
             }
