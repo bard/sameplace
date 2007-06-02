@@ -83,7 +83,7 @@ function init() {
                     s.ns_private::query.ns_bookmarks::storage != undefined;
             }}, function(iq) { receivedBookmarks(iq); });
 
-	XMPP.cache.fetch({
+    XMPP.cache.fetch({
         event: 'iq',
         direction: 'in',
         stanza: function(s) {
@@ -206,8 +206,7 @@ function resourceChangedPresence(account, address) {
 
     _reposition(contact);
 
-    if(summary.stanza.status == undefined ||
-       summary.stanza.status == '')
+    if(summary.stanza.status.toString() == '')
         $(contact).$('[role="status"]')._.removeAttribute('value');
     else
         $(contact).$('[role="status"]')._.value = summary.stanza.status;
@@ -392,13 +391,8 @@ function receivedSubscriptionApproval(presence) {
 }
 
 function receivedMUCPresence(presence) {
-    var from = XMPP.JID(presence.stanza.@from);
-
-    resourceChangedPresence(
-        presence.session.name,
-        from.address,
-        from.resource,
-        presence.stanza.@type);
+    resourceChangedPresence(presence.account,
+                            XMPP.JID(presence.stanza.@from).address);
 }
 
 
