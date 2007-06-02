@@ -133,8 +133,8 @@ function receivedMessage(message) {
 
     if(contact.getAttribute('current') != 'true' &&
        message.stanza.body.length() > 0) {
-        var pending = parseInt(_(contact, {role: 'pending'}).value);
-        $(contact).$('[role="pending"]')._.value = pending + 1;
+        var pending = $(contact).$('[role="pending"]')._;
+        pending.value = parseInt(pending.value) + 1;
     }
 
     if(message.stanza.ns_event::x.length() > 0)
@@ -150,8 +150,7 @@ function receivedMessage(message) {
 
 function messagesSeen(account, address) {
     var contact = get(account, address) || add(account, address);
-
-    _(contact, {role: 'pending'}).value = 0;
+    $(contact).$('[role="pending"]')._.value = 0;
 }
 
 function nowTalkingWith(account, address) {
