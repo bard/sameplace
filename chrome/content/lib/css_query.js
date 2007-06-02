@@ -73,6 +73,20 @@ function splitSelector(selector) {
 }
 
 /**
+ * Takes a CSS query and splits it into its part.  Each part is
+ * an object with a "selector" attribute and an "axis" attribute.
+ *
+ */
+
+function splitQuery(query) {
+    return mapMatch(
+        query, /\s*([><^]?)\s*(([a-zA-Z]|\.|#|\[).+?)(?=>|<|^| |$)/,
+        function(match) {
+            return { selector: match[2], axis: match[1] }
+        });
+}
+
+/**
  * Compiles a CSS sub-query to a function.
  *
  * First argument is a _selector_, e.g.
@@ -269,14 +283,8 @@ function compile(query) {
             return ('length' in context) ? context : [context];
         };
 
-    const SUBQUERY_REGEXP = /\s*([><^]?)\s*([\.#\[\]\w-_=\"]+)/;
-
-    var finders = mapMatch(
-        query, SUBQUERY_REGEXP,
-        function(match) {
-            var axis = match[1], selector = match[2];
-            return subCompile(selector, axis);
-        });
+    var finders = splitQuery(query).map(
+        function(part) { return subCompile(part.selector, part.axis); });
 
     memo[query] = function(context) {
         if(!('length' in context))
@@ -377,6 +385,38 @@ function verify() {
     }
 
     var tests = {
+        'split query': function() {
+            var parts;
+
+            parts = splitQuery('#id.class');
+            assert.equals(1, parts.length);
+            assert.equals('#id.class', parts[0].selector);
+            assert.equals('', parts[0].axis);
+
+            parts = splitQuery('#id > .class');
+            assert.equals(2, parts.length);
+            assert.equals('#id', parts[0].selector);
+            assert.equals('', parts[0].axis);
+            assert.equals('.class', parts[1].selector);
+            assert.equals('>', parts[1].axis);
+
+            parts = splitQuery('#id>.class');
+            assert.equals(2, parts.length);
+            assert.equals('#id', parts[0].selector);
+            assert.equals('', parts[0].axis);
+            assert.equals('.class', parts[1].selector);
+            assert.equals('>', parts[1].axis);
+
+            parts = splitQuery('tag[attr="a@b.c/d"]');
+            assert.equals(1, parts.length);
+            assert.equals('tag[attr="a@b.c/d"]', parts[0].selector);
+
+            parts = splitQuery('tag [attr="a@b.c/d"]');
+            assert.equals(2, parts.length);
+            assert.equals('tag', parts[0].selector);
+            assert.equals('[attr="a@b.c/d"]', parts[1].selector);
+        },
+        
         'split selector': function() {
             var parts;
 
@@ -416,11 +456,9 @@ function verify() {
             assert.equals('[attr="value"]', parts[0]);
             assert.equals('.class', parts[1]);
 
-            parts = splitSelector('[attr="a@b.c"]');
-            assert.equals('[attr="a@b.c"]', parts[0]);
+            parts = splitSelector('[attr="a@b.c/d"]');
+            assert.equals('[attr="a@b.c/d"]', parts[0]);
             assert.equals(1, parts.length);
-
-            
         }
     };
 
