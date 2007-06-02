@@ -20,13 +20,14 @@
 
 
 function isMUC(account, address) {
-    for each(var presence in XMPP.cache.presenceOut)
-        if(presence.stanza.@to != undefined &&
-           XMPP.JID(presence.stanza.@to).address == address &&
-           presence.stanza.ns_muc::x.length() > 0)
-            return true;
-
-    return false;
+    return XMPP.cache.fetch({
+        event     : 'presence',
+        direction : 'out',
+        stanza    : function(s) {
+                return (s.@to != undefined &&
+                        XMPP.JID(s.@to).address == address &&
+                        s.ns_muc::x != undefined);
+            }}).length > 0;
 }
 
 function displayNameFor(presence) {
