@@ -587,8 +587,10 @@ function requestedShowScriptletList(xulPopup) {
     while(xulPopup.firstChild && xulPopup.firstChild != xulSeparator)
         xulPopup.removeChild(xulPopup.firstChild);
     
+    var count = 0;
     scriptlets.forEach(
         function(scriptlet) {
+            count++;
             var xulScriptlet = document.createElement('menuitem');
             try {
                 xulScriptlet.setAttribute('label', scriptlet.info.name);
@@ -612,6 +614,8 @@ function requestedShowScriptletList(xulPopup) {
             xulScriptlet.setAttribute('checked', scriptlet.enabled ? 'true' : 'false');
             xulPopup.insertBefore(xulScriptlet, xulSeparator);
         });
+
+    xulPopup.getElementsByTagName('menuseparator')[0].hidden = (count == 0)
 }
 
 
