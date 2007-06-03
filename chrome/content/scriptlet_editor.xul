@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+
+<!--
+  Copyright (C) 2007 by Massimiliano Mirra
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+  Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
+-->
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+<dialog id="main"
+        title="SamePlace Scriptlet Editor"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        windowtype="SamePlace:ScriptletEditor"
+        width="560"
+        height="380"
+        buttons="extra1,extra2,cancel"
+
+        buttonlabelcancel="Close"
+        buttonaccesskeycancel="C"
+        ondialogcancel="return requestedClose();"
+
+        buttonlabelextra1="Reload"
+        buttonaccesskeyextra1="R"
+        ondialogextra1="return requestedReload();"
+
+        buttonlabelextra2="Save"
+        buttonaccesskeyextra2="S"
+        ondialogextra2="return requestedSave();"
+
+        onload="init();">
+
+  <script type="application/x-javascript" src="chrome://global/content/nsDragAndDrop.js"/>
+  <script type="application/x-javascript" src="chrome://global/content/nsTransferable.js"/>
+
+  <script type="application/x-javascript" src="chrome://xmpp4moz/content/xmpp.js"/>
+  <script type="application/x-javascript" src="namespaces.js"/>
+  <script type="application/x-javascript" src="utilities.js"/>
+  <script type="application/x-javascript" src="utilities_gui.js"/>
+  <script type="application/x-javascript" src="lib/css_query.js"/>
+
+  <script type="application/x-javascript" src="scriptlet_editor.js"/>
+
+  <textbox id="source" multiline="true" flex="1" rows="10"
+           oninput="modifiedSource(event);"/>
+</dialog>

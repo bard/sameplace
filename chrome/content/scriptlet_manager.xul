@@ -72,6 +72,7 @@
       <description class="description"/>
       <hbox class="actions">
         <button class="reload" label="Reload" accesskey="R" oncommand="reload(this);"/>
+        <button class="edit" label="Edit" accesskey="E" oncommand="edit(this);"/>
         <spacer flex="1"/>
         <button class="uninstall" label="Uninstall" accesskey="U" oncommand="uninstall(this);"/>
       </hbox>          

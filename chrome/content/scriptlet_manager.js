@@ -163,6 +163,13 @@ function reload(xulReload) {
     scriptlets.get(fileName).reload();
 }
 
+function edit(xulEdit) {
+    var fileName = $(xulEdit).$('^ .scriptlet .filename')._.value;
+    window.openDialog('chrome://sameplace/content/scriptlet_editor.xul',
+                      'SamePlace:ScriptletEditor', '',
+                      scriptlets.get(fileName));
+}
+
 function doOk() {
 
 }

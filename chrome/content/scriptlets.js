@@ -176,6 +176,35 @@ function get(fileThing) {
             return this._code;
         },
 
+        get source() {
+            var data = [];
+            var fstream = Cc['@mozilla.org/network/file-input-stream;1']
+            .createInstance(Ci.nsIFileInputStream);
+            var sstream = Cc['@mozilla.org/scriptableinputstream;1']
+            .createInstance(Ci.nsIScriptableInputStream);
+            fstream.init(file, -1, 0, 0);
+            sstream.init(fstream);
+
+            var str = sstream.read(4096);
+            while(str.length > 0) {
+                data.push(str);
+                str = sstream.read(4096);
+            }
+
+            sstream.close();
+            fstream.close();
+            return data.join();
+        },
+
+        save: function(source) {
+            var outStream = Cc['@mozilla.org/network/file-output-stream;1']
+            .createInstance(Ci.nsIFileOutputStream);
+            outStream.init(file, 0x02 | 0x08 | 0x20, 0, 0);
+            outStream.write(source, source.length);
+            outStream.close();
+            this.unload();
+        },
+
         get info() {
             try {
                 return this.code.info;
