@@ -36,7 +36,7 @@ function isMUC(account, address) {
         XMPP.cache.fetch({
             event     : 'iq',
             direction : 'in',
-            account   : 'account',
+            account   : account,
             stanza    : function(s) {
                     return (s.ns_private::query
                             .ns_bookmarks::storage
