@@ -303,7 +303,7 @@ function requestBookmarks(account, action) {
               <storage xmlns={ns_bookmarks}/>
               </query>
               </iq>,
-              function(reply) { if(action) action(reply); });
+              function(reply) { if(typeof(action) == 'function') action(reply); });
 }
 
 function addContact(account, address, subscribe) {
