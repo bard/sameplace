@@ -683,10 +683,7 @@ function seenOutgoingChatActivation(message) {
             getDefaultAppUrl(), 'main',
             function(contentPanel) {
                 conversations.focus(message.session.name, contact.address);
-                conversations.opened(message.session.name,
-                                     contact.address,
-                                     message.stanza.@type);
-                
+                conversations.opened(message.session.name, contact.address);
                 contentPanel.xmppChannel.receive(message);
             });
     else if(!conversation.contentDocument ||
@@ -723,9 +720,7 @@ function seenChatMessage(message) {
             message.session.name, contact.address,
             getDefaultAppUrl(), 'main',
             function(contentPanel) {
-                conversations.opened(message.session.name,
-                                     contact.address,
-                                     message.stanza.@type);
+                conversations.opened(message.session.name, contact.address);
 
                 contentPanel.xmppChannel.receive(message);
                 maybeSetUnread(contentPanel);
