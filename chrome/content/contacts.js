@@ -230,12 +230,12 @@ function _reposition(contact) {
     else if(availability == 'available' && show == 'dnd')
         sibling = $('#contacts [role="dnd"]')._.nextSibling;
     else
-        sibling = $('#contacts [role="offline"]').nextSibling;
+        sibling = $('#contacts [role="offline"]')._.nextSibling;
 
+    var contactName = $(contact).$('[role="name"]')._.getAttribute('value').toLowerCase();
     while(sibling &&
           sibling.getAttribute('role') == 'contact' &&
-          $(sibling).$('[role="name"]')._.getAttribute('value').toLowerCase() <
-          $(contact).$('[role="name"]')._.getAttribute('value').toLowerCase())
+          $(sibling).$('[role="name"]')._.getAttribute('value').toLowerCase() < contactName)
         sibling = sibling.nextSibling;
     
     if(!sibling)
