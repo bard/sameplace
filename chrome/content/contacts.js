@@ -489,12 +489,6 @@ function requestedUpdateContactTooltip(element) {
         $('#contact-tooltip [role="subscription"]')._.parentNode.hidden = false;
     } else
         $('#contact-tooltip [role="subscription"]')._.parentNode.hidden = true;
-
-    var image = userImages[attr(element, 'address')];
-    if(image && image.binval)
-        $('#contact-tooltip [role="userimage"]').src = 'data:'+image.type+';base64,'+image.binval;
-    else
-        $('#contact-tooltip [role="userimage"]').src = '';
 }
 
 function requestedSetContactAlias(element) {
