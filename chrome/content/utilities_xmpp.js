@@ -20,14 +20,29 @@
 
 
 function isMUC(account, address) {
+    var ns_muc = 'http://jabber.org/protocol/muc';
+    var ns_private = 'jabber:iq:private';
+    var ns_bookmarks = 'storage:bookmarks';
+
     return XMPP.cache.fetch({
         event     : 'presence',
         direction : 'out',
+        account   : account,
         stanza    : function(s) {
                 return (s.@to != undefined &&
                         XMPP.JID(s.@to).address == address &&
                         s.ns_muc::x != undefined);
-            }}).length > 0;
+            }}).length > 0 ||
+        XMPP.cache.fetch({
+            event     : 'iq',
+            direction : 'in',
+            account   : 'account',
+            stanza    : function(s) {
+                    return (s.ns_private::query
+                            .ns_bookmarks::storage
+                            .ns_bookmarks::conference
+                            .(@jid == address) != undefined);
+                }}).length > 0;
 }
 
 function displayNameFor(presence) {
@@ -105,3 +120,44 @@ function contactCompletionsFor(substring) {
 
     return completions;
 }
+
+function isMUCJoined(account, address) {
+    var presence = XMPP.cache.fetch({
+        account   : account,
+        event     :'presence',
+        direction : 'out',
+        stanza    : function(s) {
+                return s.@to != undefined &&
+                    XMPP.JID(s.@to).address == address;
+            }})[0];
+
+    if(presence)
+        if(presence.stanza.@type == undefined)
+            return true;
+        else if(presence.stanza.@type == 'unavailable')
+            return false;
+        else
+            throw new Error('Unexpected. (' + presence.stanza.toXMLString() + ')');
+    else
+        return false;
+}
+
+function getMUCBookmarks(account) {
+    var iq = XMPP.cache.fetch({
+        event     : 'iq',
+        direction : 'in',
+        account   : account,
+        stanza    : function(s) {
+                return s.ns_private::query.ns_bookmarks::storage != undefined;
+            }})[0];
+
+    if(iq)
+        return iq.stanza.ns_private::query.copy();
+}
+
+function isMUCBookmarked(account, address) {
+    var query = getMUCBookmarks(account);
+    var bookmark = query.ns_bookmarks::storage.ns_bookmarks::conference.(@jid == address);
+    return bookmark != undefined;
+}
+

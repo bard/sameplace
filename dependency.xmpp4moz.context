@@ -1,5 +1,17 @@
 
 Context:
 
+[Console: template to get room configuration.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070603020600] 
+
+[JS API: guarding against trying to shut down already down session.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070603020538] 
+
+[JS API: it's a stateless wrapper, "this" is not needed (and will even cause problems when XMPP.xyz functions are called in things like forEach() and map(), where "this" depends on the context).
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070603020336] 
+
+[Cache: now caching incoming (as effected by client_service) <iq>'s with private storage query payload with in turn storage:bookmarks content.
+Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070603020323] 
+
 [TAG 0.5a1
 Massimiliano Mirra <bard [at] hyperstruct [dot] net>**20070531224939] 

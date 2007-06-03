@@ -78,10 +78,16 @@ function init() {
                 return s.ns_muc_user::x.length() > 0;
             }}, function(presence) { receivedMUCPresence(presence) });
     channel.on(
+        {event: 'iq', direction: 'out', stanza: function(s) {
+                return s.@type == 'set' &&
+                    s.ns_private::query.ns_bookmarks::storage != undefined;
+            }}, function(iq) { requestBookmarks(iq.account); });
+    channel.on(
         {event: 'iq', direction: 'in', stanza: function(s) {
                 return s.@type == 'result' &&
                     s.ns_private::query.ns_bookmarks::storage != undefined;
-            }}, function(iq) { receivedBookmarks(iq); });
+            }}, function(iq) { receivedMUCBookmarks(iq); });
+
 
     XMPP.cache.fetch({
         event: 'iq',
@@ -96,6 +102,8 @@ function init() {
         direction: 'in',
         })
         .forEach(receivedPresence);
+
+    XMPP.accounts.filter(XMPP.isUp).forEach(requestBookmarks);
 }
 
 function finish() {
@@ -263,6 +271,41 @@ function stoppedConversationWith(account, address) {
 // NETWORK ACTIONS
 // ----------------------------------------------------------------------
 
+function removeContact(account, address) {
+    XMPP.send(account,
+              <iq type="set"><query xmlns={ns_roster}>
+              <item jid={address} subscription="remove"/>
+              </query></iq>);
+}
+
+function removeMUCBookmark(account, address) {
+    var query = getMUCBookmarks(account, address);
+    var bookmark = query.ns_bookmarks::storage.ns_bookmarks::conference.(@jid == address);
+    if(bookmark == undefined)
+        return;
+
+    delete query
+        .ns_bookmarks::storage
+        .ns_bookmarks::conference[bookmark.childIndex()];
+        
+    XMPP.send(account,
+              <iq type="set">{query}</iq>,
+              function(reply) {
+                  if(reply.stanza.@type == 'result')
+                      requestBookmarks(account);
+              });
+}
+
+function requestBookmarks(account, action) {
+    XMPP.send(account.jid || account,
+              <iq type="get">
+              <query xmlns={ns_private}>
+              <storage xmlns={ns_bookmarks}/>
+              </query>
+              </iq>,
+              function(reply) { if(action) action(reply); });
+}
+
 function addContact(account, address, subscribe) {
     XMPP.send(
         account,
@@ -286,14 +329,23 @@ function denySubscriptionRequest(account, address) {
 // NETWORK REACTIONS
 // ----------------------------------------------------------------------
 
-function receivedBookmarks(iq) {
+function receivedMUCBookmarks(iq) {
+    $('#contacts [role="contact"][bookmark="true"]')._all.forEach(
+        function(xulMUCContact) {
+            if(xulMUCContact.getAttribute('availability') != 'available')
+                xulMUCContact.parentNode.removeChild(xulMUCContact);
+        });
+
     for each(var room in iq
              .stanza.ns_private::query
              .ns_bookmarks::storage
              .ns_bookmarks::conference) {
-        var account = iq.session.name;
+        var account = iq.account;
         var address = XMPP.JID(room.@jid).address;
-        var xulRoom = get(account, address) || add(account, address);
+        if(!get(account, address)) {
+            xulMUC = add(account, address);
+            xulMUC.setAttribute('bookmark', 'true');
+        }
     }
 }
 
@@ -407,6 +459,24 @@ function getContactPosition(contact) {
 // GUI REACTIONS
 // ----------------------------------------------------------------------
 
+function showingContactContextMenu(xulPopup) {
+    var account = attr(document.popupNode, 'account');
+    var address = attr(document.popupNode, 'address');
+
+    var enableRemove;
+    if(isMUC(account, address))
+        if(isMUCJoined(account, address))
+            enableRemove = false;
+        else if(isMUCBookmarked(account, address))
+            enableRemove = true;
+        else
+            enableRemove = false;
+    else
+        enableRemove = true;
+    
+    $(xulPopup).$('[role="remove"]')._.setAttribute('disabled', !enableRemove);
+}
+
 function requestedUpdateContactTooltip(element) {
     $('#contact-tooltip [role="name"]')._.value =
         XMPP.nickFor(attr(element, 'account'), attr(element, 'address'));
@@ -445,11 +515,11 @@ function requestedSetContactAlias(element) {
 function requestedRemoveContact(element) {
     var account = attr(element, 'account');
     var address = attr(element, 'address');
-
-    XMPP.send(account,
-              <iq type="set"><query xmlns="jabber:iq:roster">
-              <item jid={address} subscription="remove"/>
-              </query></iq>);
+    
+    if(isMUC(account, address))
+        removeMUCBookmark(account, address);
+    else
+        removeContact(account, address);
 }
 
 function clickedContact(contact) {
