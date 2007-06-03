@@ -36,31 +36,45 @@
 const Cc = Components.classes;
 const Ci = Components.interfaces;
 
-const pref = Cc["@mozilla.org/preferences-service;1"]
-    .getService(Ci.nsIPrefService)
-    .getBranch('extensions.sameplace.');
-
 
 // STATE
 // ----------------------------------------------------------------------
 
 var wrappers = {};
 var dir;
+var pref;
 
 
 // INITIALIZATION
 // ----------------------------------------------------------------------
 
-function init() {
+/**
+ * Provide an interface to a scriptlet directory.
+ *
+ * Directory is specified by the array _pathParts_; metadata about
+ * enabled/disabled scriptlets is kept in a preference branch and is
+ * specified by the string _branchName_.
+ *
+ * To get <profiledir>/myext/scriptlets and manage it through the
+ * "extension.myext." branch, use:
+ *
+ *   scriptlets.init(['myext', 'scriptlets'], 'extensions.myext.');
+ *
+ */
+
+function init(pathParts, prefBranch) {
     dir = Cc['@mozilla.org/file/directory_service;1']
         .getService(Ci.nsIProperties)
         .get('ProfD', Ci.nsIFile);
-    dir.append('sameplace');
-    if(!dir.exists())
-        dir.create(Ci.nsIFile.DIRECTORY_TYPE, 0755);
-    dir.append('scriptlets');
-    if(!dir.exists())
-        dir.create(Ci.nsIFile.DIRECTORY_TYPE, 0755);
+    for each(var part in pathParts) {
+        dir.append(part);
+        if(!dir.exists())
+            dir.create(Ci.nsIFile.DIRECTORY_TYPE, 0755);
+    }
+
+    pref = Cc["@mozilla.org/preferences-service;1"]
+        .getService(Ci.nsIPrefService)
+        .getBranch(prefBranch);
 }
 
 
@@ -89,6 +103,11 @@ function setDisabled(fileName) {
     }
 }
 
+/**
+ * Mass-start all scriptlets that are configured as "enabled".
+ *
+ */
+
 function start() {
     forEach(
         function(scriptlet) {
@@ -96,6 +115,11 @@ function start() {
                 scriptlet.start();
         });
 }
+
+/**
+ * Mass-stop all scriptlets that are configured as "enabled".
+ *
+ */
 
 function stop() {
     forEach(

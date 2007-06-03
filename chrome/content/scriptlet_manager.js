@@ -18,6 +18,15 @@
   Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
 */
 
+/**
+ * An interface for managing scriptlets.
+ *
+ * At the moment, it does not load scriptlets by itself, instead it
+ * expects a scriptlets object to be passed to from the opener (via
+ * window.openDialog or windowWatcher.openWindow).
+ *
+ */
+
 // DEFINITIONS
 // ----------------------------------------------------------------------
 
@@ -28,15 +37,14 @@ const Ci = Components.interfaces;
 // STATE
 // ----------------------------------------------------------------------
 
-var scriptlets = {};
-load('chrome://sameplace/contact/scriptlets.js', scriptlets);
+var scriptlets;
 
 
 // INITIALIZATION/FINALIZATION
 // ----------------------------------------------------------------------
 
 function init(event) {
-    scriptlets.init();
+    scriptlets = window.arguments[0];
     refreshScriptlets();
 }
 
@@ -153,8 +161,6 @@ function uninstall(xulUninstall) {
 function reload(xulReload) {
     var fileName = $(xulReload).$('^ .scriptlet .filename')._.value;
     scriptlets.get(fileName).reload();
-    if(window.opener.scriptlets)
-        window.opener.scriptlets.get(fileName).reload();
 }
 
 function doOk() {

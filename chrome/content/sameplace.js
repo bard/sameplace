@@ -170,7 +170,7 @@ function init(event) {
 
     // Loading and starting scriptlets
 
-    scriptlets.init();
+    scriptlets.init(['sameplace', 'scriptlets'], 'extensions.sameplace.');
     scriptlets.start();
 }
 
@@ -578,7 +578,8 @@ function requestedOpenConversation(type) {
 }
 
 function requestedManageScriptlets() {
-    window.open('chrome://sameplace/content/scriptlet_manager.xul', 'SamePlace:ScriptletManager', 'chrome');
+    window.openDialog('chrome://sameplace/content/scriptlet_manager.xul',
+                      'SamePlace:ScriptletManager', 'chrome', scriptlets);
 }
 
 function requestedShowScriptletList(xulPopup) {
