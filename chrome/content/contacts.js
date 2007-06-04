@@ -284,6 +284,13 @@ function removeContact(account, address) {
               </query></iq>);
 }
 
+function removeMUCBookmark(account, address) {
+    XMPP.send(account,
+              <iq type="set">
+              {delBookmark(address, getMUCBookmarks(account))}
+              </iq>);
+}
+
 function requestMUCBookmarks(account, action) {
     XMPP.send(account,
               <iq type="get">
@@ -498,7 +505,7 @@ function requestedRemoveContact(element) {
     var account = attr(element, 'account');
     var address = attr(element, 'address');
     
-    if(isMUC(account, address))
+    if(getMUCBookmark(account, address))
         removeMUCBookmark(account, address);
     else
         removeContact(account, address);

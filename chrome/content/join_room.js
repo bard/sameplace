@@ -76,25 +76,6 @@ function doOk() {
             window.close();
     }
 
-    // A few ad-hoc functions to manipulate <query
-    // xmlns="jabber:iq:private"/> elements containing <storage
-    // xmlns="storage:bookmarks"/>.  They don't modify the arguments,
-    // they return fresh <query/> elements instead.
-
-    function delBookmark(address, query) {
-        query = query.copy();
-        var bookmark = query.ns_bookmarks::storage.ns_bookmarks::conference.(@jid == address);
-        if(bookmark != undefined)
-            delete query.ns_bookmarks::storage.ns_bookmarks::conference[bookmark.childIndex()];
-        return query;
-    }
-
-    function putBookmark(bookmark, query) {
-        query = delBookmark(bookmark.@jid, query);
-        query.ns_bookmarks::storage.appendChild(bookmark);
-        return query;
-    }
-
     // If user said that bookmark should be saved, it could actually
     // mean two things:
     //
@@ -119,13 +100,13 @@ function doOk() {
         if(!existingBookmark ||                             // 1)
            (v('autojoin') != existingBookmark.@autojoin) || // 2)
            (v('nick') != existingBookmark.@nick))           // 2)
-            bookmarkQuery = putBookmark(
+            bookmarkQuery = putMUCBookmark(
                 <conference jid={v('address')} autojoin={v('autojoin')} nick={v('nick')}/>,
                 getMUCBookmarks(v('account')));
     } else
         if(existingBookmark)                                // 3)
-            bookmarkQuery = delBookmark(v('address'),
-                                        getMUCBookmarks(v('account')));
+            bookmarkQuery = delMUCBookmark(v('address'),
+                                           getMUCBookmarks(v('account')));
 
     if(bookmarkQuery)
         steps.push('saving');
