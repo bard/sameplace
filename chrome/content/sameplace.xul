@@ -50,15 +50,15 @@
   
   <commandset>
     <command id="add-contact" oncommand="requestedAddContact();"
-             label="Add a contact..."
+             label="Add contact..."
              accesskey="A"
              tooltiptext="Add a contact to your contact list"/>
     <command id="open-conversation" oncommand="requestedOpenConversation('chat');"
-             label="Open a conversation..."
+             label="Open conversation..."
              accesskey="O"
              tooltiptext="Open a conversation"/>
     <command id="join-room" oncommand="requestedOpenConversation('groupchat');"
-             label="Join a chat room..."
+             label="Join chat room..."
              accesskey="J"
              tooltiptext="Join a chat room"/>
     <command id="switch-to-unread" oncommand="conversations.switchToUnread();"
