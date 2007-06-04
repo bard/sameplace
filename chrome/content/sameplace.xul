@@ -83,6 +83,10 @@
              label="Report bug/Request features"
              accesskey="R"
              tooltiptext="Report bug/Request features"/>
+    <command id="visit-users-room" oncommand="visitUsersRoom();"
+             label="Visit SamePlace users' chatroom"
+             accesskey="r"
+             tooltiptext="Visit SamePlace users' chatroom"/>
     <command id="hide" oncommand="hide();"
              label="Hide"
              accesskey="H"
@@ -161,6 +165,7 @@
             <menuitem class="menuitem-iconic" command="view-help"/>
             <menuitem class="menuitem-iconic" command="visit-forum"/>
             <menuitem class="menuitem-iconic" command="report-bug"/>
+            <menuitem class="menuitem-iconic" command="visit-users-room"/>
           </menupopup>
         </toolbarbutton>
         <toolbarbutton command="hide"/>

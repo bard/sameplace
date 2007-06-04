@@ -286,6 +286,12 @@ function reportBug() {
     openLink('http://bugs.sameplace.cc', true);
 }
 
+function visitUsersRoom() {
+    window.openDialog('chrome://sameplace/content/join_room.xul',
+                      'sameplace-open-conversation', 'centerscreen',
+                      null, 'users@places.sameplace.cc');
+}
+
 function initApplicationMenu(menuPopup) {
     fetchFeed(
         'http://apps.sameplace.cc/feed.xml',
