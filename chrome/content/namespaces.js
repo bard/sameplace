@@ -22,6 +22,7 @@
 // GLOBAL DEFINITIONS
 // ----------------------------------------------------------------------
 
+const ns_auth       = 'jabber:iq:auth';
 const ns_xhtml      = 'http://www.w3.org/1999/xhtml';
 const ns_xhtml_im   = 'http://jabber.org/protocol/xhtml-im';
 const ns_muc_user   = 'http://jabber.org/protocol/muc#user';

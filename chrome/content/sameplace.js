@@ -84,6 +84,18 @@ function init(event) {
         {event: 'presence', direction: 'out', stanza: function(s) {
                 return s.ns_muc::x.length() > 0 && s.@type != 'unavailable';
             }}, function(presence) { sentMUCPresence(presence) });
+    channel.on(
+        {event: 'iq', direction: 'out', stanza: function(s) {
+                return s.ns_auth::query != undefined;
+            }}, function(iq) {
+            var replyListener = channel.on(
+                {event: 'iq', direction: 'in', stanza: function(s) {
+                        return s.@id == iq.stanza.@id;
+                    }}, function(reply) {
+                    channel.forget(replyListener);
+                    connectedAccount(iq.account);
+                });
+        });
 
     contacts = _('contacts').contentWindow;
     contacts.onRequestedCommunicate = function() {
@@ -633,6 +645,47 @@ function requestedShowScriptletList(xulPopup) {
 // function should instead be created that calls these ones and passes
 // the gathered data via function parameters.
 
+function requestBookmarks(account, action) {
+    XMPP.send(account,
+              <iq type="get">
+              <query xmlns={ns_private}>
+              <storage xmlns={ns_bookmarks}/>
+              </query>
+              </iq>,
+              function(reply) { if(typeof(action) == 'function') action(reply); });
+}
+
+function autojoinRooms(account) {
+    function delayedJoinRoom(account, roomAddress, roomNick, delay) {
+        window.setTimeout(
+            function() {
+                joinRoom(account, roomAddress, roomNick);
+            }, delay);
+    }
+
+    XMPP.send(
+        account,
+        <iq type="get">
+        <query xmlns={ns_private}>
+        <storage xmlns={ns_bookmarks}/>
+        </query>
+        </iq>,
+        function(reply) {
+            if(reply.stanza.@type != 'result')
+                return;
+            var delay = 500;
+            for each(var conf in reply
+                     .stanza.ns_private::query
+                     .ns_bookmarks::storage
+                     .ns_bookmarks::conference) {
+                if(conf.@autojoin == 'true') {
+                    delayedJoinRoom(account, conf.@jid, XMPP.JID(account).username, delay)
+                    delay += 1000;
+                }
+            }
+        });
+}
+
 function exitRoom(account, roomAddress, roomNick) {
     XMPP.send(account,
               <presence to={roomAddress + '/' + roomNick} type="unavailable">
@@ -662,6 +715,14 @@ function getJoinPresence(account, address) {
 
 // NETWORK REACTIONS
 // ----------------------------------------------------------------------
+
+function connectedAccount(account) {
+    requestBookmarks(
+        account, function() {
+            if(top == getMostRecentWindow())
+                autojoinRooms(account);
+        });
+}
 
 function seenCachableMessage(message) {
     var account = message.session.name;
@@ -812,3 +873,8 @@ function hoveredMousePointer(event) {
         'Subscription: <' + get('subscription') + '>'
 }
 
+function getMostRecentWindow() {
+    return Cc['@mozilla.org/appshell/window-mediator;1']
+        .getService(Ci.nsIWindowMediator)
+        .getMostRecentWindow('navigator:browser');
+}
