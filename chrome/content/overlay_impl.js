@@ -83,19 +83,21 @@ function initOverlay(event) {
                 window.getAttention();
         });
 
-    var button = document.getElementById('xmpp-button');
-    button.addEventListener(
-        'command', function(event) {
-            if(event.target == button)
-                toggleSidebar();
-        }, false);
+    // If XMPP button is visible, attach to it.
 
-    var version = getExtensionVersion('sameplace@hyperstruct.net');
+    var button = document.getElementById('xmpp-button');
+    if(button)
+        button.addEventListener(
+            'command', function(event) {
+                if(event.target == button)
+                    toggleSidebar();
+            }, false);
 
     // No first run/upgrade action should be made if this is not the
     // stable branch but instead the testing
     // (sameplace-testing@hyperstruct.net) or other branches
     
+    var version = getExtensionVersion('sameplace@hyperstruct.net');
     if(version) {
         if(prefBranch.getCharPref('version') == '' &&
            XMPP.accounts.length == 0) 
