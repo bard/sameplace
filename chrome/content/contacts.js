@@ -81,13 +81,12 @@ function init() {
         {event: 'iq', direction: 'out', stanza: function(s) {
                 return s.@type == 'set' &&
                     s.ns_private::query.ns_bookmarks::storage != undefined;
-            }}, function(iq) { requestBookmarks(iq.account); });
+            }}, function(iq) { requestMUCBookmarks(iq.account); });
     channel.on(
         {event: 'iq', direction: 'in', stanza: function(s) {
                 return s.@type == 'result' &&
                     s.ns_private::query.ns_bookmarks::storage != undefined;
             }}, function(iq) { receivedMUCBookmarks(iq); });
-
 
     XMPP.cache.fetch({
         event: 'iq',
@@ -103,7 +102,14 @@ function init() {
         })
         .forEach(receivedPresence);
 
-    XMPP.accounts.filter(XMPP.isUp).forEach(requestBookmarks);
+    XMPP.cache.fetch({
+        event: 'iq',
+        direction: 'in',
+        stanza: function(s) {
+                return s.ns_private::query.ns_bookmarks::storage != undefined;
+            }
+        })
+        .forEach(receivedMUCBookmarks);
 }
 
 function finish() {
@@ -278,26 +284,8 @@ function removeContact(account, address) {
               </query></iq>);
 }
 
-function removeMUCBookmark(account, address) {
-    var query = getMUCBookmarks(account, address);
-    var bookmark = query.ns_bookmarks::storage.ns_bookmarks::conference.(@jid == address);
-    if(bookmark == undefined)
-        return;
-
-    delete query
-        .ns_bookmarks::storage
-        .ns_bookmarks::conference[bookmark.childIndex()];
-        
+function requestMUCBookmarks(account, action) {
     XMPP.send(account,
-              <iq type="set">{query}</iq>,
-              function(reply) {
-                  if(reply.stanza.@type == 'result')
-                      requestBookmarks(account);
-              });
-}
-
-function requestBookmarks(account, action) {
-    XMPP.send(account.jid || account,
               <iq type="get">
               <query xmlns={ns_private}>
               <storage xmlns={ns_bookmarks}/>
