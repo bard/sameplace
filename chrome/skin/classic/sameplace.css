@@ -99,7 +99,7 @@ toolbarbutton[command="add-contact"]:hover {
     background: transparent url("add_hover_18x18.png") top left no-repeat;
 }
 
-toolbarbutton[command="open-conversation"]:hover {      
+toolbarbutton[command="join-room"]:hover {
     background: transparent url("open_conv_hover_18x18.png") top left no-repeat;
 }
 
