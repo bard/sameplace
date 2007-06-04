@@ -59,7 +59,6 @@
              tooltiptext="Open a conversation"/>
     <command id="join-room" oncommand="requestedOpenConversation('groupchat');"
              label="Join chat room..."
-             accesskey="J"
              tooltiptext="Join a chat room"/>
     <command id="switch-to-unread" oncommand="conversations.switchToUnread();"
              label="Next unread conversation"
@@ -134,7 +133,7 @@
         </toolbaritem>
         <toolbarspring/>
         <toolbarbutton command="add-contact"/>
-        <toolbarbutton command="open-conversation"/>
+        <toolbarbutton command="join-room"/>
         <toolbarbutton command="switch-to-next"/>
         <toolbarbutton command="switch-to-unread"/>   
         <toolbarspring/>

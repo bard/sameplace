@@ -63,7 +63,7 @@ toolbarbutton[command="add-contact"] {
     background: transparent url("add_button_18x18.png") top left no-repeat;
 }
 
-toolbarbutton[command="open-conversation"] {        
+toolbarbutton[command="join-room"] {
     -moz-appearance: none;
     border: none;
     width: 18px;
