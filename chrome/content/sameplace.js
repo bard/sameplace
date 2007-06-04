@@ -232,7 +232,7 @@ function fetchFeed(feedUrl, continuation) {
     try {
         req.send(null);
     } catch(e) {
-        continuation(null, e)
+        continuation(null, e);
     }
 }
 
@@ -271,7 +271,7 @@ function focusStatus() {
 function runWizard() {
     window.openDialog(
         'chrome://sameplace/content/wizard.xul',
-        'sameplace-wizard', 'chrome')
+        'sameplace-wizard', 'chrome');
 }
 
 function viewHelp() {
@@ -356,7 +356,7 @@ function changeStatusMessage(message) {
                 direction : 'out',
                 account   : account.jid,
                 stanza    : function(s) {
-                        return s.ns_muc::x == undefined
+                        return s.ns_muc::x == undefined;
                     }
                 }).stanza.copy();
             
@@ -633,7 +633,7 @@ function requestedShowScriptletList(xulPopup) {
             xulPopup.insertBefore(xulScriptlet, xulSeparator);
         });
 
-    xulPopup.getElementsByTagName('menuseparator')[0].hidden = (count == 0)
+    xulPopup.getElementsByTagName('menuseparator')[0].hidden = (count == 0);
 }
 
 
