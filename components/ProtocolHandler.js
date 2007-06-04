@@ -42,12 +42,13 @@ function onNewChannel(URI) {
     case '?join':
     case '?message':
     default:
-        var request = Cc['@mozilla.org/properties;1'].createInstance(Ci.nsIProperties);
-        request.set('address', xpcomize(jid));
-        request.set('type', xpcomize(m[2] == '?join' ? 'groupchat' : 'chat'));
-        ww.openWindow(
-            null, 'chrome://sameplace/content/open_conversation.xul',
-            'SamePlace:OpenConversation', '', request);
+        var array = Cc['@mozilla.org/supports-array;1'].createInstance(Ci.nsISupportsArray);
+        array.AppendElement(null);
+        array.AppendElement(xpcomize(jid));
+
+        ww.openWindow(null, 'chrome://sameplace/content/' +
+                      (m[2] == '?join' ? 'join_room.xul' : 'open_conversation.xul'),
+                      null, '', array);
     }    
 
     return new Channel(URI);

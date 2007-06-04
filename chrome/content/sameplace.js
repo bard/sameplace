@@ -502,10 +502,9 @@ function requestedAdditionalInteraction(event) {
 function requestedCommunicate(account, address, url) {
     if(url == getDefaultAppUrl())
         if(isMUC(account, address) && !conversations.isOpen(account, address))
-            window.openDialog(
-                'chrome://sameplace/content/open_conversation.xul',
-                'sameplace-open-conversation', 'centerscreen',
-                { type: 'groupchat', account: account, address: address });
+            window.openDialog('chrome://sameplace/content/join_room.xul',
+                              'sameplace-open-conversation', 'centerscreen',
+                              account, address);
         else
             interactWith(
                 account, address,
@@ -568,13 +567,20 @@ function requestedAddContact() {
 }
 
 function requestedOpenConversation(type) {
-    var defaults = {
-        type: type,
-        address: type == 'groupchat' ? 'newusers@places.sameplace.cc' : ''
-    };
-    window.openDialog(
-        'chrome://sameplace/content/open_conversation.xul',
-        'sameplace-open-conversation', 'centerscreen', defaults);
+    switch(type) {
+    case 'chat':
+        window.openDialog(
+            'chrome://sameplace/content/open_conversation.xul',
+            'sameplace-open-conversation', 'centerscreen', null, 'contact@server.org');
+        break;
+    case 'groupchat':
+        window.openDialog(
+            'chrome://sameplace/content/join_room.xul',
+            'sameplace-join-room', 'centerscreen', null, 'users@places.sameplace.cc');
+        break;
+    default:
+        throw new Error('Unexpected. (' + type + ')');
+    }
 }
 
 function requestedManageScriptlets() {

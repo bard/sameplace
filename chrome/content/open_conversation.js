@@ -29,69 +29,31 @@ var xmpp = xmpp || {};
 xmpp.ui = xmpp.ui || {};
 
 
-// GLOBAL STATE
-// ----------------------------------------------------------------------
-
-var request;
-
-
 // INITIALIZATION
 // ----------------------------------------------------------------------
 
 function init() {
-    var arg = window.arguments[0];
-    if(arg instanceof Ci.nsIProperties) {
-        request = {};
-        for each(var property in ['account', 'address', 'nick', 'type']) 
-            request[property] = (arg.has(property) ?
-                                 arg.get(property, Ci.nsISupportsString).toString() : '');
-    } else
-        request = arg;
-
-    for each(var fieldName in ['account', 'address', 'nick', 'type'])
-        if(request[fieldName])
-            _(fieldName).value = request[fieldName];
-
+    var account = window.arguments[0];
+    var address = window.arguments[1];
+    
     xmpp.ui.refreshAccounts(_('xmpp-popup-accounts'));
 
-    _('account').value = (request.account ||
-                          (XMPP.accounts.filter(XMPP.isUp)[0] || XMPP.accounts[0]).jid);
-    selectedAccount(_('account'));
-
+    _('account').value = (account || (XMPP.accounts.filter(XMPP.isUp)[0] || XMPP.accounts[0]).jid);
+    _('address').value = address;
     _('address').select();
 
     refresh();
 }
 
 
-// GUI REACTIONS
-// ----------------------------------------------------------------------
-
-function selectedAccount(xulAccount) {
-    _('nick').value = XMPP.JID(xulAccount.value).username;
-}
-
 // GUI ACTIONS
 // ----------------------------------------------------------------------
 
 function doOk() {
-    function v(id) { return _(id).value; }
-    
-    switch(v('type')) {
-    case 'chat':
-        XMPP.send(v('account'),
-                  <message to={v('address')}>
-                  <active xmlns={ns_chatstates}/>
-                  </message>);
-        break;
-    case 'groupchat':
-        XMPP.send(v('account'),
-                  <presence to={v('address') + '/' + v('nick')}>
-                  <x xmlns='http://jabber.org/protocol/muc'/>
-                  </presence>);
-        break;
-    }
-    return true;
+    XMPP.send(v('account'),
+              <message to={v('address')}>
+              <active xmlns={ns_chatstates}/>
+              </message>);
 }
 
 function doCancel() {
@@ -99,17 +61,7 @@ function doCancel() {
 }
 
 function refresh() {
-    _('nick').parentNode.hidden = (_('type').value != 'groupchat');
-
-    if(_('account').value && _('address').value)
-        if(_('type').value == 'groupchat' && _('nick').value)
-            _('main').getButton('accept').disabled = false;
-        else if(_('type').value == 'chat')
-            _('main').getButton('accept').disabled = false;
-        else
-            _('main').getButton('accept').disabled = true;
-    else
-        _('main').getButton('accept').disabled = true;
+    _('main').getButton('accept').disabled = !(v('account') && v('address'));
 }
 
 
@@ -119,3 +71,8 @@ function refresh() {
 function _(id) {
     return document.getElementById(id);
 }
+
+function v(id) {
+    return typeof(_(id).checked) == 'undefined' ? _(id).value : _(id).checked;
+}
+    

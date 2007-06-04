@@ -161,3 +161,9 @@ function isMUCBookmarked(account, address) {
     return bookmark != undefined;
 }
 
+function getMUCBookmark(account, address) {
+    var query = getMUCBookmarks(account);
+    if(query)
+        return query.ns_bookmarks::storage.ns_bookmarks::conference.(@jid == address);
+}
+

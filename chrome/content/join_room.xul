@@ -23,18 +23,19 @@
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xul-overlay href="chrome://xmpp4moz/content/ui/accounts.xul"?>
 
-<dialog id="main" title="Open Conversation"
+<dialog id="main" title="Join Chat Room"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
         ondialogaccept="return doOk();"
         ondialogcancel="return doCancel();"
-        onload="init();">
+        onload="init();"
+        flex="1">
 
   <script type="application/x-javascript" src="chrome://xmpp4moz/content/xmpp.js"/>
   <script type="application/x-javascript" src="namespaces.js"/>
   <script type="application/x-javascript" src="utilities_xmpp.js"/>
-  <script type="application/x-javascript" src="open_conversation.js"/>
+  <script type="application/x-javascript" src="join_room.js"/>
 
-  <dialogheader id="header" title="Open Conversation"/>
+  <dialogheader id="header" title="Join Chat Room"/>
 
   <grid flex="1">
     <columns>
@@ -49,11 +50,32 @@
       </row>
 
       <row align="center">
+        <label value="Nickname:" control="nick" accesskey="N"/>
+        <textbox id="nick"/>
+      </row>
+
+      <row align="center">
         <label value="Account:" control="accounts" accesskey="c"/>
-        <menulist id="account" flex="1" label="" sizetopopup="none">
+        <menulist id="account" oncommand="selectedAccount(this);"
+                  flex="1" label="" sizetopopup="none">
           <menupopup id="xmpp-popup-accounts"/>
         </menulist>
       </row>
     </rows>
   </grid>
+
+  <hbox pack="end">
+    <vbox>
+      <checkbox id="save" label="Saved to contact list"
+                accesskey="S" oninput="refresh();"/>
+      <checkbox id="autojoin" label="Join automatically"
+                accesskey="J" oninput="refresh();"/>      
+    </vbox>
+  </hbox>
+
+  <deck id="output" style="height: 2em;">
+    <spacer flex="1"/>
+    <description id="error" style="color: red;"/>
+    <progressmeter id="progress" mode="undetermined"/>
+  </deck>
 </dialog>
