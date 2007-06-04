@@ -83,6 +83,12 @@ function initOverlay(event) {
                 window.getAttention();
         });
 
+    // Only preload SamePlace if there's no other window around with
+    // an active SamePlace instance, and if this isn't a popup.'
+
+    if(!isActiveSomewhere() && window.toolbar.visible)
+        loadSidebar();
+
     // If XMPP button is visible, attach to it.
 
     var button = document.getElementById('xmpp-button');
@@ -184,5 +190,22 @@ function getExtensionVersion(id) {
 function getMostRecentWindow() {
     return Cc['@mozilla.org/appshell/window-mediator;1']
         .getService(Ci.nsIWindowMediator)
-        .getMostRecentWindow('navigator:browser');
+        .getMostRecentWindow('');
+}
+
+function isActive() {
+    return getSidebarContent().document.location.href == 'chrome://sameplace/content/sameplace.xul';
+}
+
+function isActiveSomewhere() {
+    var windows = Cc['@mozilla.org/appshell/window-mediator;1']
+        .getService(Ci.nsIWindowMediator)
+        .getEnumerator('');
+
+    while(windows.hasMoreElements()) {
+        var window = windows.getNext();
+        if(window.sameplace.isActive())
+            return true;
+    }
+    return false;
 }
