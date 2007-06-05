@@ -181,8 +181,8 @@ function isReceivingInput() {
             getSidebarContent()._('conversations').contentWindow ||
             document.commandDispatcher.focusedWindow.parent ==
             getSidebarContent()._('conversations').contentWindow ||
-            document.commandDispatcher.focusedElement.ownerDocument ==
-            getSidebarContent().document)
+            (document.commandDispatcher.focusedElement &&
+             document.commandDispatcher.focusedElement == getSidebarContent().document))
 }
 
 function getSidebarContent() {
