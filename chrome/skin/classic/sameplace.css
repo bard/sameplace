@@ -3,7 +3,7 @@
 }
 
 #contact > popup > menuitem {
-    list-style-image: url("chrome://xmpp4moz/skin/status/all-small.png"); 
+    list-style-image: url("all-small.png"); 
 }
 
 #contact > popup > menuitem[availability="unavailable"] {
