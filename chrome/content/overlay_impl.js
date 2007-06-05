@@ -164,7 +164,25 @@ function showSidebar() {
 }
 
 function hideSidebar() {
+    if(isReceivingInput()) {
+        var contentArea = (document.getElementById('content') ||
+                           document.getElementById('messagepane'));
+        if(contentArea)
+            contentArea.focus();
+    }
     _('sidebar').collapsed = true;
+}
+
+function isReceivingInput() {
+    // XXX this needs to be adjusted.  It shouldn't peek into the
+    // sidebar context.
+
+    return (document.commandDispatcher.focusedWindow ==
+            getSidebarContent()._('conversations').contentWindow ||
+            document.commandDispatcher.focusedWindow.parent ==
+            getSidebarContent()._('conversations').contentWindow ||
+            document.commandDispatcher.focusedElement.ownerDocument ==
+            getSidebarContent().document)
 }
 
 function getSidebarContent() {
