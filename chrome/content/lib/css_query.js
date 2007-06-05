@@ -18,6 +18,83 @@
   Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
 */
 
+
+function Scanner(string) {
+    this._string = string;
+    this._cursor = 0;
+}
+
+Scanner.prototype = {
+    end: function() {
+        return this._cursor >= this._string.length - 1;
+    },
+
+    peek: function() {
+        return this._string[this._cursor];
+    },
+
+    rest: function() {
+        return this._string.substr(this._cursor);
+    },
+
+    get: function(rx) {
+        function globalizeRegexp(rx) {
+            return new RegExp(rx.source, ('g' +
+                                          (rx.ignoreCase ? 'i' : '') +
+                                          (rx.multiline ? 'm' : '')));
+        }
+
+        var rx = globalizeRegexp(rx);
+        var match = rx.exec(this.rest());
+        if(match) {
+            this._cursor += rx.lastIndex;
+            return match[0];
+        } else
+            throw new Error('boom!');
+    },
+
+    skip: function(rx) {
+        this.get(rx);
+    },
+
+    rewind: function() {
+        this._cursor = 0;
+    }
+};
+
+function parse(queryString) {
+    const RX_AXIS      = /^(\s*[ >^<]\s*|)/;
+    const RX_ID_SEL    = /^#[^ \.\[]+/;
+    const RX_CLASS_SEL = /^\.[^ \.\[]+/;
+    const RX_ATTR_SEL  = /^[^\]]+\]/;
+    const RX_TAG_SEL   = /^[a-zA-Z][^ \.\[\#]+/;
+
+    var scanner = new Scanner(queryString);
+    var selector, query = [];
+
+    while(!scanner.end()) {
+        selector = { axis: undefined, tests: [] };
+        selector.axis = scanner.get(RX_AXIS).replace(/ /g, '');
+    
+        do {
+            var part;
+            switch(scanner.peek()) {
+            case '#': part = scanner.get(RX_ID_SEL);    break;
+            case '.': part = scanner.get(RX_CLASS_SEL); break;
+            case '[': part = scanner.get(RX_ATTR_SEL);  break;
+            default:
+                part = scanner.get(RX_TAG_SEL); break
+            }
+            selector.tests.push(part);
+        } while(!scanner.end() &&
+                [' ', '>', '<', '^'].indexOf(scanner.peek()) == -1);
+
+        query.push(selector);
+    }
+    return query;
+}
+
+
 /**
  * For each match of _regexp_ within _string_, execute _action_, or if
  * no action is provided, just return an array with the match objects.
@@ -89,12 +166,12 @@ function splitQuery(query) {
 /**
  * Compiles a CSS sub-query to a function.
  *
- * First argument is a _selector_, e.g.
+ * First argument is a _selector_ already split in its tests, e.g.
  *
- *   '#urlbar'
- *   'label'
- *   'vbox.user'
- *   '[role="something"][hidden="true"]'
+ *   ['#urlbar']
+ *   ['label']
+ *   ['vbox', '.user']
+ *   ['[role="something"]', '[hidden="true"]']
  *
  * Second argument is an _axis_.  Accepted values:
  *
@@ -107,53 +184,53 @@ function splitQuery(query) {
  * having class 'header':
  *
  *   var context = document.getElementById('page');
- *   var finder  = compileSubQuery('label.header', '');
+ *   var finder  = subCompile(['label'], ['.header'], '');
  *   var labels  = finder(context);
  *
  */
 
-function subCompile(selector, axis) {
-    function locatorFor(selector, axis) {
+function subCompile(tests, axis) {
+    function locatorFor(test, axis) {
         var locator;
 
         switch(axis) {
         case '':
             // Descendant
-            switch(selector[0]) {
+            switch(test[0]) {
             case '.':
                 locator = function(context) {
-                    return context.getElementsByAttribute('class', selector.substr(1));
+                    return context.getElementsByAttribute('class', test.substr(1));
                 };
                 break;
             case '#':
                 locator = function(context) {
-                    return [context.ownerDocument.getElementById(selector.substr(1))];
+                    return [context.ownerDocument.getElementById(test.substr(1))];
                 };
                 break;
             case '[':
-                var m = selector.match(/^\[([\w-_]+)="?(.+?)"?\]$/);
+                var m = test.match(/^\[([\w-_]+)="?(.+?)"?\]$/);
                 locator = function(context) {
                     return context.getElementsByAttribute(m[1], m[2]);
                 };
                 break;
             default:
                 locator = function(context) {
-                    return context.getElementsByTagName(selector);
+                    return context.getElementsByTagName(test);
                 };
             }
             break;
 
         case '>':
             // Child
-            switch(selector[0]) {
+            switch(test[0]) {
             case '#':
                 locator = function(context) {
-                    return context.ownerDocument.getElementById(selector.substr(1));
+                    return context.ownerDocument.getElementById(test.substr(1));
                 };
                 break;
             case '.':
                 locator = function(context) {
-                    var classMatch = new RegExp('\\b' + selector.substr(1) + '\\b');
+                    var classMatch = new RegExp('\\b' + test.substr(1) + '\\b');
                     return Array.filter(
                         context.childNodes, function(child) {
                             return classMatch.test(child.getAttribute('class'));
@@ -162,7 +239,7 @@ function subCompile(selector, axis) {
                 break;
             case '[':
                 locator = function(context) {
-                    var m = selector.match(/^\[([\w-_]+)="?(.+?)"?\]$/);
+                    var m = test.match(/^\[([\w-_]+)="?(.+?)"?\]$/);
                     return Array.filter(
                         context.childNodes, function(child) {
                             return child.getAttribute(m[1]) == m[2];
@@ -174,7 +251,7 @@ function subCompile(selector, axis) {
                     return Array.filter(
                         context.childNodes,
                         function(child) {
-                            return child.tagName == selector;
+                            return child.tagName == test;
                         });
                 }
             }
@@ -183,7 +260,7 @@ function subCompile(selector, axis) {
         case '<':
             // Parent
             locator = function(context) {
-                return (testFor(selector)(context.parentNode) ?
+                return (testFor(test)(context.parentNode) ?
                         [context.parentNode] : []);
             };
             break;
@@ -193,7 +270,7 @@ function subCompile(selector, axis) {
 
             locator = function(context) {
                 while(context.parentNode) {
-                    if(testFor(selector)(context.parentNode))
+                    if(testFor(test)(context.parentNode))
                         return [context.parentNode];
                     context = context.parentNode;
                 }
@@ -209,38 +286,37 @@ function subCompile(selector, axis) {
         return locator;
     }
 
-    function testFor(selector) {
+    function testFor(test) {
         var test;
-        switch(selector[0]) {
+        switch(test[0]) {
         case '.':
-            var classMatch = new RegExp('\\b' + selector.substr(1) + '\\b');
+            var classMatch = new RegExp('\\b' + test.substr(1) + '\\b');
             test = function(element) {
                 return classMatch.test(element.getAttribute('class'));
             };
             break;
         case '#':
             test = function(element) {
-                return element.getAttribute('id') == selector.substr(1);
+                return element.getAttribute('id') == test.substr(1);
             };
             break;
         case '[':
-            var m = selector.match(/^\[([\w-_]+)="?(.+?)"?\]$/);
+            var m = test.match(/^\[([\w-_]+)="?(.+?)"?\]$/);
             test = function(element) {
                 return element.getAttribute(m[1]) == m[2];
             };
             break;
         default:
             test = function(element) {
-                return element.tagName == selector;
+                return element.tagName == test;
             };
             break;
         }
         return test;
     }
 
-    var parts = splitSelector(selector);
-    var locator = locatorFor(parts[0], axis);
-    var additionalTests = parts.slice(1).map(function(part) { return testFor(part); });
+    var locator = locatorFor(tests[0], axis);
+    var additionalTests = tests.slice(1).map(function(test) { return testFor(test); });
     
     return function(context) {
         var results = locator(context);
@@ -260,8 +336,6 @@ function subCompile(selector, axis) {
  * Returned function will accept a starting context (an array,
  * NodeList or array-like of DOM elements) and will return an array of
  * elements matching the query.
- *
- * TODO memoize compiled queries
  *
  */
 
@@ -283,8 +357,8 @@ function compile(query) {
             return ('length' in context) ? context : [context];
         };
 
-    var finders = splitQuery(query).map(
-        function(part) { return subCompile(part.selector, part.axis); });
+    var finders = parse(query).map(
+        function(selector) { return subCompile(selector.tests, selector.axis); });
 
     memo[query] = function(context) {
         if(!('length' in context))
@@ -459,8 +533,26 @@ function verify() {
             parts = splitSelector('[attr="a@b.c/d"]');
             assert.equals('[attr="a@b.c/d"]', parts[0]);
             assert.equals(1, parts.length);
+        },
+
+        'parse query': function() {
+            var query = parse('#foo.bar  [attr="user@server.org/very strange resource"][attr2="val2"]>tag.class');
+            assert.equals(3, query.length);
+            assert.equals('', query[0].axis);
+            assert.equals(2, query[0].tests.length);
+            assert.equals('#foo', query[0].tests[0]);
+            assert.equals('.bar', query[0].tests[1]);
+            assert.equals('', query[1].axis);
+            assert.equals(2, query[1].tests.length);
+            assert.equals('[attr="user@server.org/very strange resource"]', query[1].tests[0]);
+            assert.equals('[attr2="val2"]', query[1].tests[1]);
+            assert.equals('>', query[2].axis);
+            assert.equals(2, query[2].tests.length);
+            assert.equals('tag', query[2].tests[0]);
+            assert.equals('.class', query[2].tests[1]);
         }
     };
 
     return utest(tests);
 }
+
