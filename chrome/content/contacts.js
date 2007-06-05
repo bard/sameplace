@@ -287,7 +287,7 @@ function removeContact(account, address) {
 function removeMUCBookmark(account, address) {
     XMPP.send(account,
               <iq type="set">
-              {delBookmark(address, getMUCBookmarks(account))}
+              {delMUCBookmark(address, getMUCBookmarks(account))}
               </iq>);
 }
 
