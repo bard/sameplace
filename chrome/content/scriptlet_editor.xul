@@ -28,6 +28,7 @@
         windowtype="SamePlace:ScriptletEditor"
         width="560"
         height="380"
+        persist="screenX screenY width height"
         buttons="extra1,extra2,cancel"
 
         buttonlabelcancel="Close"
