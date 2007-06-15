@@ -186,10 +186,11 @@
       <textbox id="status-message"
                onkeypress="requestedChangeStatusMessage(event);"
                oninput="this.setAttribute('draft', 'true');"
-               onfocus="if(this.getAttribute('draft') == 'true')
-                        this.value = '';
+               onfocus="var textbox = this.parentNode.parentNode; /* 'this' is anonymous html:input */
+                        if(textbox.getAttribute('draft') == 'true')
+                        textbox.value = '';
                         else
-                        this.select();"
+                        textbox.select();"
                draft="true"
                tooltiptext="Change your status message"
                flex="1"/>
