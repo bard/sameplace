@@ -43,6 +43,7 @@ const Ci = Components.interfaces;
 var wrappers = {};
 var dir;
 var pref;
+var sampleURL;
 
 
 // INITIALIZATION
@@ -62,7 +63,7 @@ var pref;
  *
  */
 
-function init(pathParts, prefBranch) {
+function init(pathParts, prefBranch, url) {
     dir = Cc['@mozilla.org/file/directory_service;1']
         .getService(Ci.nsIProperties)
         .get('ProfD', Ci.nsIFile);
@@ -75,6 +76,8 @@ function init(pathParts, prefBranch) {
     pref = Cc["@mozilla.org/preferences-service;1"]
         .getService(Ci.nsIPrefService)
         .getBranch(prefBranch);
+
+    sampleURL = url;
 }
 
 
@@ -135,6 +138,26 @@ function forEach(action) {
 
     while(entries.hasMoreElements())
         action(this.get(entries.getNext().QueryInterface(Ci.nsIFile)));
+}
+
+function create(name) {
+    var file;
+    file = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
+    file.initWithFile(dir);
+    file.append(name);
+
+    if(file.exists())
+        throw new Error('File already exists.');
+
+    var sampleSource = readURL(sampleURL);
+
+    var outStream = Cc['@mozilla.org/network/file-output-stream;1']
+        .createInstance(Ci.nsIFileOutputStream);
+    outStream.init(file, 0x02 | 0x08 | 0x20, 0, 0);
+    outStream.write(sampleSource, sampleSource.length);
+    outStream.close();
+
+    return get(file);
 }
 
 function get(fileThing) {
@@ -276,4 +299,23 @@ function get(fileThing) {
     wrappers[file.leafName] = wrapper;
 
     return wrapper;
+}
+
+
+// UTILITIES
+// ----------------------------------------------------------------------
+
+function readURL(url){
+    var srvIO = Cc['@mozilla.org/network/io-service;1']
+        .getService(Ci.nsIIOService);
+    var scriptableStream = Cc['@mozilla.org/scriptableinputstream;1']
+        .getService(Ci.nsIScriptableInputStream);
+
+    var channel = srvIO.newChannel(url, null, null);
+    var input = channel.open();
+    scriptableStream.init(input);
+    var str = scriptableStream.read(input.available());
+    scriptableStream.close();
+    input.close();
+    return str;
 }

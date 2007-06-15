@@ -182,7 +182,8 @@ function init(event) {
 
     // Loading and starting scriptlets
 
-    scriptlets.init(['sameplace', 'scriptlets'], 'extensions.sameplace.');
+    scriptlets.init(['sameplace', 'scriptlets'], 'extensions.sameplace.',
+                    'chrome://sameplace/content/scriptlet_sample.js');
     scriptlets.start();
 }
 

@@ -51,14 +51,19 @@
   <description style="padding: 0.5em;">
     To install scriptlets, drag their links from web pages into the
     above list.  An initial selection of scriptlets can be found at
-    <label class="text-link"
-           style="margin: 0;"
-           onclick="openURL('http://sameplace.cc/scriptlets')"
-           value="http://sameplace.cc/scriptlets"/>
+    <label class="text-link" style="margin: 0;"
+    onclick="openURL('http://sameplace.cc/addons/scriptlets')"
+    value="http://sameplace.cc/addons/scriptlets"/>.
+
+    <label style="font-weight: bold; margin: 0;">Warning:</label> Like
+    for extensions, you should only install from from sources you
+    trust!
   </description>
 
 
-  <hbox pack="end">
+  <hbox>
+    <button label="Create..." accesskey="C" oncommand="requestedCreateScriptlet();"/>
+    <spacer flex="1"/>
     <button label="Close" oncommand="window.close();"/>
   </hbox>
 
@@ -72,7 +77,7 @@
       <description class="description"/>
       <hbox class="actions">
         <button class="reload" label="Reload" accesskey="R" oncommand="reload(this);"/>
-        <button class="edit" label="Edit" accesskey="E" oncommand="edit(this);"/>
+        <button class="edit" label="Edit" accesskey="E" oncommand="requestedEditScriptlet(this);"/>
         <spacer flex="1"/>
         <button class="uninstall" label="Uninstall" accesskey="U" oncommand="uninstall(this);"/>
       </hbox>          

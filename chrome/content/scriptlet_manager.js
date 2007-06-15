@@ -33,6 +33,9 @@
 const Cc = Components.classes;
 const Ci = Components.interfaces;
 
+var srvPrompt = Cc["@mozilla.org/embedcomp/prompt-service;1"]
+    .getService(Ci.nsIPromptService);
+
 
 // STATE
 // ----------------------------------------------------------------------
@@ -67,6 +70,17 @@ function refreshScriptlets() {
         });
 }
 
+function createScriptlet(name) {
+    try {
+        var scriptlet = scriptlets.create(name);
+        scriptlet.enable();
+        edit(scriptlet.fileName);
+        refreshScriptlets();
+    } catch(e) {
+        window.alert(e);
+    }
+}
+
 
 // GUI REACTIONS
 // ----------------------------------------------------------------------
@@ -93,6 +107,20 @@ var dndObserver = {
         return this._flavourSet;
     }
 };
+
+function requestedEditScriptlet(xulEdit) {
+    edit($(xulEdit).$('^ .scriptlet .filename')._.value);
+}
+
+function requestedCreateScriptlet() {
+    var name = { value: 'unnamed' };
+
+    var confirm = srvPrompt.prompt(
+        null, 'Creating scriptlet', 'Choose a name for the scriptlet.  Filename will be <name>.js ', name, null, {});
+
+    if(confirm)
+        createScriptlet(name.value + '.js');
+}
 
 function requestedInstallRemoteScriptlet(url, name) {
     if(window.confirm(
@@ -163,8 +191,7 @@ function reload(xulReload) {
     scriptlets.get(fileName).reload();
 }
 
-function edit(xulEdit) {
-    var fileName = $(xulEdit).$('^ .scriptlet .filename')._.value;
+function edit(fileName) {
     window.openDialog('chrome://sameplace/content/scriptlet_editor.xul',
                       'SamePlace:ScriptletEditor', '',
                       scriptlets.get(fileName));
