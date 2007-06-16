@@ -504,8 +504,8 @@ function requestedSetContactAlias(element) {
 function requestedRemoveContact(element) {
     var account = attr(element, 'account');
     var address = attr(element, 'address');
-    
-    if(getMUCBookmark(account, address))
+
+    if(getMUCBookmark(account, address) != undefined)
         removeMUCBookmark(account, address);
     else
         removeContact(account, address);
