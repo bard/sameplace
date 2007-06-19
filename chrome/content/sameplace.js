@@ -90,7 +90,7 @@ function init(event) {
             }}, function(iq) {
             var replyListener = channel.on(
                 {event: 'iq', direction: 'in', stanza: function(s) {
-                        return s.@id == iq.stanza.@id;
+                        return s.@id == iq.stanza.@id && s.@type == 'result';
                     }}, function(reply) {
                     channel.forget(replyListener);
                     connectedAccount(iq.account);
