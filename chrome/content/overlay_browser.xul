@@ -98,7 +98,7 @@
           collapsed="true"
           persist="width"
           width="300"
-          minwidth="65">
+          minwidth="80">
       <iframe src="about:blank"
               flex="1"/>
     </vbox>
@@ -106,7 +106,6 @@
     <splitter id="sameplace-sidebar-splitter"
               insertbefore="appcontent"
               state="open"
-              collapse="before"
               resizebefore="closest"
               resizeafter="closest"
               class="chromeclass-extracontent"
