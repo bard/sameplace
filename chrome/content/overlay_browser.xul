@@ -97,7 +97,8 @@
           class="chromeclass-extracontent"
           collapsed="true"
           persist="width"
-          width="300">
+          width="300"
+          minwidth="65">
       <iframe src="about:blank"
               flex="1"/>
     </vbox>
