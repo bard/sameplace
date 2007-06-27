@@ -628,8 +628,9 @@ function requestedShowScriptletList(xulPopup) {
                     }, false);
             } catch(e) {
                 xulScriptlet.setAttribute(
-                    'label', 'Error while reading "' +
-                    scriptlet.fileName + '" (click for trace)');
+                    'label', 'Error reading "' +
+                    scriptlet.fileName + '" (click for debug info)');
+                xulScriptlet.setAttribute('style', 'color:red;')
                 xulScriptlet.addEventListener(
                     'command', function(event) {
                         window.alert(e.name + '\n' + e.stack);

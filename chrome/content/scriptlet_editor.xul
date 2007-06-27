@@ -35,9 +35,9 @@
         buttonaccesskeycancel="C"
         ondialogcancel="return requestedClose();"
 
-        buttonlabelextra1="Reload"
+        buttonlabelextra1="(Re)start"
         buttonaccesskeyextra1="R"
-        ondialogextra1="return requestedReload();"
+        ondialogextra1="return requestedRestart();"
 
         buttonlabelextra2="Save"
         buttonaccesskeyextra2="S"
@@ -59,4 +59,13 @@
   <textbox id="source" multiline="true" flex="1" rows="10"
            style="font-family: monospace;"
            oninput="modifiedSource(event);"/>
+
+  <hbox align="center">
+    <checkbox id="auto-restart" label="Restart automatically after saving"
+              accesskey="a" checked="true" oncommand="toggledAutoRestart();"
+              persist="checked"/>
+    <spacer flex="1"/>
+    <label value="State:" class="small-margin"/>
+    <label id="state" value="Enabled" class="small-margin"/>
+  </hbox>
 </dialog>

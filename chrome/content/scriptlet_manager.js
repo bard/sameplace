@@ -62,10 +62,7 @@ function refreshScriptlets() {
     scriptlets.forEach(
         function(scriptlet) {
             var xulScriptlet = $('#blueprints > .scriptlet')._.cloneNode(true);
-            $(xulScriptlet).$('.name')._.value = scriptlet.info.name;
-            $(xulScriptlet).$('.version')._.value = scriptlet.info.version;
-            $(xulScriptlet).$('.description')._.value = scriptlet.info.description;
-            $(xulScriptlet).$('.filename')._.value = scriptlet.fileName;
+            updateScriptlet(xulScriptlet, scriptlet);
             $('#scriptlets')._.appendChild(xulScriptlet);
         });
 }
@@ -78,6 +75,18 @@ function createScriptlet(name) {
         refreshScriptlets();
     } catch(e) {
         window.alert(e);
+    }
+}
+
+function updateScriptlet(xulScriptlet, scriptlet) {
+    $(xulScriptlet).$('.filename')._.value = scriptlet.fileName;
+    try {
+        $(xulScriptlet).$('.name')._.value = scriptlet.info.name;
+        $(xulScriptlet).$('.version')._.value = scriptlet.info.version;
+        $(xulScriptlet).$('.description')._.value = scriptlet.info.description;
+    } catch(e) {
+        $(xulScriptlet).$('.name')._.value = scriptlet.fileName;
+        $(xulScriptlet).$('.description')._.value = 'Error while reading.';
     }
 }
 
@@ -187,22 +196,21 @@ function uninstall(xulUninstall) {
 }
 
 function reload(xulReload) {
-    var fileName = $(xulReload).$('^ .scriptlet .filename')._.value;
-    scriptlets.get(fileName).reload();
+    var xulScriptlet = $(xulReload).$('^ .scriptlet')._;
+    var fileName = $(xulScriptlet).$('.filename')._.value;
+    var scriptlet = scriptlets.get(fileName);
+    try {
+        scriptlet.reload();
+    } catch(e) {
+        window.alert(e + '\n' + e.stack);
+    }
+    updateScriptlet(xulScriptlet, scriptlet);
 }
 
 function edit(fileName) {
     window.openDialog('chrome://sameplace/content/scriptlet_editor.xul',
                       'SamePlace:ScriptletEditor', '',
                       scriptlets.get(fileName));
-}
-
-function doOk() {
-
-}
-
-function doCancel() {
-
 }
 
 

@@ -32,6 +32,8 @@ function init(event) {
     scriptlet = window.arguments[0];
     $('#source')._.value = scriptlet.source;
     $('#main')._.getButton('extra2').disabled = true;
+    updateState();
+    updateAutoRestart();
 }
 
 
@@ -49,12 +51,40 @@ function requestedClose() {
 function requestedSave() {
     scriptlet.save($('#source')._.value);
     $('#main')._.getButton('extra2').disabled = true;
+    if($('#auto-restart')._.checked)
+        restart();
+
     $('#source')._.focus();
     return false;
 }
 
-function requestedReload() {
-    scriptlet.reload();
+function requestedRestart() {
+    restart();
     $('#source')._.focus();
     return false;
+}
+
+function toggledAutoRestart() {
+    updateAutoRestart();
+}
+
+
+// GUI ACTIONS
+// ----------------------------------------------------------------------
+
+function restart() {
+    try {
+        scriptlet.reload();
+        scriptlet.enable();
+    } catch(e) {
+        alert(e + '\n' + e.stack);
+    }
+}
+
+function updateAutoRestart() {
+    $('#main')._.getButton('extra1').disabled = $('#auto-restart')._.checked;
+}
+
+function updateState() {
+    $('#state')._.value = scriptlet.enabled ? 'Enabled' : 'Disabled';
 }

@@ -184,18 +184,15 @@ function get(fileThing) {
             return file.leafName;
         },
 
+        load: function() {
+            var code = {};
+            load(file, code);
+            this._code = code;
+        },
+
         get code() {
-            if(!this._code) {
-                try {
-                    var code = {};
-                    load(file, code);
-                    this._code = code;
-                } catch(e) {
-                    Components.utils.reportError(
-                        'Error while loading scriptlet: ' + e.name + '\n' +
-                        e.stack.replace(/^/mg, '    ') + '\n');
-                }
-            }
+            if(!this._code)
+                this.load();
             return this._code;
         },
 
@@ -225,19 +222,10 @@ function get(fileThing) {
             outStream.init(file, 0x02 | 0x08 | 0x20, 0, 0);
             outStream.write(source, source.length);
             outStream.close();
-            this.unload();
         },
 
         get info() {
-            try {
-                return this.code.info;
-            } catch(e) {
-                return {
-                    name: file.path,
-                    version: 'unknown',
-                    description: 'Error while loading (check system console).'
-                }
-            }
+            return this.code.info;
         },
 
         uninstall: function() {
@@ -246,10 +234,11 @@ function get(fileThing) {
 
         reload: function() {
             var wasEnabled = this.enabled;
-            if(this.enabled)
+            if(wasEnabled)
                 this.disable();
 
             this.unload();
+            this.load();
 
             if(wasEnabled)
                 this.enable();
@@ -275,9 +264,8 @@ function get(fileThing) {
                 this.start();
                 setEnabled(this.fileName);
             } catch(e) {
-                dump('Error while initializing scriptlet: ' + e.name + '\n' +
-                     e.stack.replace(/^/mg, '    ') + '\n');
                 this.disable();
+                throw e;
             }
         },
 
@@ -286,13 +274,12 @@ function get(fileThing) {
                 return;
 
             try {
-                this.stop();
-            } catch(e) {
-                dump('Error while initializing scriptlet: ' + e.name + '\n' +
-                     e.stack.replace(/^/mg, '    ') + '\n');
-            } finally {
-                this.unload();
                 setDisabled(this.fileName);
+                this.stop();
+                this.unload();
+            } catch(e) {
+                this.unload();
+                throw e;
             }
         }
     };
