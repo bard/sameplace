@@ -41,6 +41,10 @@
   <script type="application/x-javascript" src="lib/process.js"/>
   <script type="application/x-javascript" src="scriptlet_manager.js"/>
 
+  <keyset>
+    <key keycode="VK_ESCAPE" oncommand="window.close();"/>
+  </keyset>
+
   <hbox flex="1" style="padding: 0.5em;">
     <richlistbox id="scriptlets" flex="1" class="box-inset"
                  ondragenter="nsDragAndDrop.dragEnter(event, dndObserver);"
