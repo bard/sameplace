@@ -93,7 +93,7 @@
     <command id="import-contacts"
              label="Import Contacts..."
              accesskey="I"
-             oncommand="window.open('https://jabber.sameplace.cc/transport/registration',
+             oncommand="window.open('https://sameplace.cc/transport/registration',
                         'sameplace-import', 'width=510,height=640,scrollbars=yes,menubar=no,status=yes');"/>
     <command id="open-standalone"
              label="Open Standalone (EXPERIMENTAL)"
