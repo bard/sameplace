@@ -108,7 +108,6 @@
               state="open"
               resizebefore="closest"
               resizeafter="closest"
-              class="chromeclass-extracontent"
               hidden="true"/>
   </hbox>
 </overlay>

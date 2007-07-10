@@ -127,7 +127,7 @@
 
   <notificationbox id="notify" flex="1" style="overflow: hidden;" orient="vertical">
     <toolbox>
-      <toolbar id="header" align="center">
+      <toolbar id="head" align="center">
         <toolbaritem>
           <label id="logo"/>        
         </toolbaritem>
