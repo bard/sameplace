@@ -1,0 +1,3 @@
+sptabbrowser {
+  -moz-binding: url("chrome://sameplace/content/sptabbrowser.xml#tabbrowser");
+}

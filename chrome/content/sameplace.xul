@@ -24,6 +24,8 @@
 <?xml-stylesheet href="chrome://sameplace/skin/sameplace.css" type="text/css"?>
 <?xml-stylesheet href="chrome://sameplace/skin/firefox1_5.css" type="text/css"?>
 
+<?xml-stylesheet href="sptabbrowser.css" type="text/css"?>
+
 <!DOCTYPE page>
 <page id="sameplace" title="SamePlace"
       xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
@@ -225,7 +227,8 @@
         </toolbarbutton>
       </toolbar>
     </toolbox>
-    <tabbrowser id="conversations" collapsed="true" flex="10" persist="height"/>
+
+    <sptabbrowser id="conversations" collapsed="true" flex="10" persist="height"/>
 
     <!-- HACK FOR TABBROWSER -->
     
