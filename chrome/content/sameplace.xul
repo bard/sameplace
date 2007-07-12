@@ -230,13 +230,6 @@
 
     <sptabbrowser id="conversations" collapsed="true" flex="10" persist="height"/>
 
-    <!-- HACK FOR TABBROWSER -->
-    
-    <box hidden="true">
-      <menuitem id="menu_closeWindow"/>
-      <menuitem id="menu_close"/>
-    </box>
-
     <!-- BLUEPRINTS -->
 
     <box hidden="true" id="blueprints">
