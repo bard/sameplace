@@ -115,7 +115,7 @@
         </xul:hbox>
         <xul:tabpanels flex="1" class="plain" selectedIndex="0" anonid="panelcontainer">
           <xul:notificationbox flex="1">
-            <xul:browser flex="1" type="content-primary" message="true" disablehistory="true"
+            <xul:browser flex="1" type="content" message="true" disablehistory="true"
                          xbl:inherits="tooltip=contenttooltip,contextmenu=contentcontextmenu,autocompletepopup"/>
           </xul:notificationbox>
         </xul:tabpanels>
