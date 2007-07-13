@@ -31,7 +31,7 @@ const RDFCU = Cc["@mozilla.org/rdf/container-utils;1"]
 if(Cc['@mozilla.org/browser/bookmarks-service;1'])
     const BMSVC = Cc['@mozilla.org/browser/bookmarks-service;1']
         .getService(Ci.nsIBookmarksService);
-const prefBranch = Cc["@mozilla.org/preferences-service;1"]
+const pref = Cc["@mozilla.org/preferences-service;1"]
     .getService(Ci.nsIPrefService)
     .getBranch('extensions.sameplace.');
 
@@ -42,6 +42,7 @@ var ns_auth = 'jabber:iq:auth';
 // ----------------------------------------------------------------------
 
 var channel;
+var gToggleSidebarKey;
 
 
 // GUI UTILITIES (SPECIFIC)
@@ -79,7 +80,7 @@ function initOverlay(event) {
                 return s.@type == 'chat' && s.body.length() > 0;
             }},
         function(message) {
-            if(prefBranch.getBoolPref('getAttentionOnMessage'))
+            if(pref.getBoolPref('getAttentionOnMessage'))
                 window.getAttention();
         });
 
@@ -105,11 +106,11 @@ function initOverlay(event) {
     
     var version = getExtensionVersion('sameplace@hyperstruct.net');
     if(version) {
-        if(prefBranch.getCharPref('version') == '' &&
+        if(pref.getCharPref('version') == '' &&
            XMPP.accounts.length == 0) 
             runWizard();
         
-        prefBranch.setCharPref('version', version);
+        pref.setCharPref('version', version);
     }
 
     // Hide splitter whenever sidebar is collapsed
@@ -119,12 +120,63 @@ function initOverlay(event) {
             if(event.attrName == 'collapsed')
                 _('sidebar-splitter').hidden = (event.newValue.toString() == 'true');
         }, false);
+
+
+    // Listen to preference changes for sidebar toggle hotkey
+
+    window.addEventListener(
+        'keypress', function(event) { pressedKey(event); }, true)
+
+    updateToggleSidebarKey(eval(pref.getCharPref('toggleSidebarKey')));
+    pref.QueryInterface(Ci.nsIPrefBranch2)
+    pref.addObserver('', {
+        observe: function(subject, topic, data) {
+            if(topic == 'nsPref:changed' && data == 'toggleSidebarKey')
+                updateToggleSidebarKey(eval(pref.getCharPref('toggleSidebarKey')))
+        }
+    }, false)
+}
+
+
+// GUI REACTIONS
+// ----------------------------------------------------------------------
+
+function pressedKey(event) {
+    if(event.ctrlKey  == gToggleSidebarKey.ctrlKey &&
+       event.shiftKey == gToggleSidebarKey.shiftKey &&
+       event.altKey   == gToggleSidebarKey.altKey &&
+       event.metaKey  == gToggleSidebarKey.metaKey &&
+       event.charCode == gToggleSidebarKey.charCode &&
+       event.keyCode  == KeyEvent[gToggleSidebarKey.keyCodeName])
+        toggleSidebar();
 }
 
 
 // GUI ACTIONS
 // ----------------------------------------------------------------------
 
+function updateToggleSidebarKey(keyDesc) {
+    gToggleSidebarKey = keyDesc;
+
+    _('key-toggle-sidebar').removeAttribute('keycode');
+    _('key-toggle-sidebar').removeAttribute('key');
+    _('key-toggle-sidebar').removeAttribute('modifiers');
+    if(keyDesc.keyCodeName)
+        _('key-toggle-sidebar').setAttribute('keycode', keyDesc.keyCodeName.replace(/^DOM_/, ''));
+    if(keyDesc.charCode)
+        _('key-toggle-sidebar').setAttribute('key', String.fromCharCode(keyDesc.charCode));
+    var modifiers = [];
+    if(keyDesc.ctrlKey)
+        modifiers.push('control');
+    if(keyDesc.altKey)
+        modifiers.push('alt');
+    if(keyDesc.metaKey)
+        modifiers.push('meta');
+    if(keyDesc.shiftKey)
+        modifiers.push('shift');
+    _('key-toggle-sidebar').setAttribute('modifiers', modifiers.join(' '));
+}
+    
 function runWizard() {
     window.openDialog(
         'chrome://sameplace/content/wizard.xul',

@@ -22,6 +22,9 @@
 
 <overlay id="xmpp-overlay-preferences"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+  <script type="application/x-javascript" src="preferences.js"/>
+
   <prefpane id="xmpp-pane">
     <preferences>
       <preference id="sameplace-get-attention-on-message"
@@ -40,12 +43,39 @@
   <tabpanels id="xmpp-tabpanels">
     <tabpanel flex="1" orient="vertical">
       <groupbox>
-        <checkbox label="Flash taskbar on incoming messages" accesskey="F"
-                  preference="sameplace-get-attention-on-message"/>
-        <hbox align="center">
-          <label value="Default application URL" accesskey="U" for="sameplace-textbox-default-app-url"/>
-          <textbox preference="sameplace-default-app-url" flex="1"/>
-        </hbox>
+        <grid>
+          <columns>
+            <column/>
+            <column flex="1"/>
+          </columns>
+          <rows>
+            <row align="center">
+              <label value="Default application URL:" accesskey="U"
+                     for="sameplace-textbox-default-app-url"/>
+              <textbox preference="sameplace-default-app-url" flex="1"/>
+            </row>
+
+            <row align="center">
+              <label value="Toggle sidebar hotkey:"/>
+              <vbox flex="1">
+                <hbox align="center" flex="1">
+                  <textbox flex="1" id="sameplace-toggle-sidebar-key"
+                           readonly="true" style="text-align: center"/>
+                  <button label="Capture" oncommand="sameplacePrefs.captureKey();"/>
+                </hbox>
+                <description style="font-size: smaller;">
+                  (Key combination must not collide with existing ones.)
+                </description>
+              </vbox>
+            </row>
+
+            <row>
+              <spacer/>
+              <checkbox label="Flash taskbar on incoming messages" accesskey="F"
+                        preference="sameplace-get-attention-on-message"/>
+            </row>
+          </rows>
+        </grid>
       </groupbox>
     </tabpanel>
   </tabpanels>
