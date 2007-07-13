@@ -242,4 +242,6 @@ CodePress = {
 }
 
 Language={};
-window.addEventListener('load', function() { CodePress.initialize('new'); }, true);
+// XXX bard: this is now done in codepress.js, to avoid race
+// conditions where the codepress main initializer runs before the engine initializer.
+// window.addEventListener('load', function() { CodePress.initialize('new'); }, true);

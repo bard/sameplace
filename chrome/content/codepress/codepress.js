@@ -10,10 +10,17 @@
  */
 
 CodePress = function(obj) {
-	var self = document.createElement('iframe');
+	// XXX bard: XUL documents can contain HTML elements, but we need to provide correct namespace.
+	var self = document.createElementNS('http://www.w3.org/1999/xhtml', 'iframe');
 	self.textarea = obj;
 	self.textarea.disabled = true;
 	self.textarea.style.overflow = 'hidden';
+	// XXX bard: For XUL files loaded in content and containing
+	// iframes, accessing contentWindow of iframes directly does not
+	// work (https://bugzilla.mozilla.org/show_bug.cgi?id=379395), so
+	// we use the window.frames[] trick instead.  But for it to work,
+	// the iframe must have an id.	We provide it here.
+	self.setAttribute('id', 'codepress-' + obj.id);
 	self.style.height = self.textarea.clientHeight +'px';
 	self.style.width = self.textarea.clientWidth +'px';
 	self.textarea.style.overflow = 'auto';
@@ -24,7 +31,15 @@ CodePress = function(obj) {
 	self.options = self.textarea.className;
 	
 	self.initialize = function() {
-		self.editor = self.contentWindow.CodePress;
+		// XXX bard: trick for accessing iframes when document is
+		// a XUL page loaded in content area (see above).  Previously
+		// was "self.contentWindow.CodePress"
+		self.editor = window.frames['codepress-' + obj.id].CodePress;
+		// XXX bard: moved editor initalization from load event
+		// handler in codepress.html to here, as otherwise it
+		// would be executed *after* this initalization, which is
+		// called from a load event handler as well.
+		self.editor.initialize('new');
 		self.editor.body = self.contentWindow.document.getElementsByTagName('body')[0];
 		self.editor.setCode(self.textarea.value);
 		self.setOptions();
@@ -42,7 +57,11 @@ CodePress = function(obj) {
 		self.language = language ? language : self.getLanguage();
 		self.src = CodePress.path+'codepress.html?language='+self.language+'&ts='+(new Date).getTime();
 		if(self.attachEvent) self.attachEvent('onload',self.initialize);
-		else self.addEventListener('load',self.initialize,false);
+		// XXX bard: in XUL, load events don't bubble to the
+		// containing iframe, but they can be captured.	 Replaced
+		// "false" below with "true" to listen to event during
+		// capture phase.
+		else self.addEventListener('load',self.initialize, true);
 	}
 
 	self.getLanguage = function() {
@@ -119,8 +138,10 @@ CodePress.languages = {
 CodePress.run = function() {
 	s = document.getElementsByTagName('script');
 	for(var i=0,n=s.length;i<n;i++) {
-		if(s[i].src.match('codepress.js')) {
-			CodePress.path = s[i].src.replace('codepress.js','');
+		// XXX bard: <script> elements in XUL don't have a "src"
+		// property, so we get the value using the DOM attribute.
+		if(s[i].getAttribute('src').match('codepress.js')) {
+			CodePress.path = s[i].getAttribute('src').replace('codepress.js','');
 		}
 	}
 	t = document.getElementsByTagName('textarea');
@@ -134,5 +155,7 @@ CodePress.run = function() {
 	}
 }
 
-if(window.attachEvent) window.attachEvent('onload',CodePress.run);
-else window.addEventListener('DOMContentLoaded',CodePress.run,false);
+// XXX bard: we leave to user the choice as to when create the editor,
+// to avoid timing problems.
+// if(window.attachEvent) window.attachEvent('onload',CodePress.run);
+// else window.addEventListener('DOMContentLoaded',CodePress.run,false);
