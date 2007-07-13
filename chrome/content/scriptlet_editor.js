@@ -30,18 +30,42 @@ var scriptlet;
 
 function init(event) {
     scriptlet = window.arguments[0];
-    $('#source')._.value = scriptlet.source;
     $('#main')._.getButton('extra2').disabled = true;
     updateState();
     updateAutoRestart();
+
+    // XXX horrible kludge!
+    setTimeout(
+        function() {
+            CodePress.run();
+            stretchEditor();
+            setTimeout(
+                function() {
+                    editor.setCode(scriptlet.source);
+                    window.addEventListener(
+                        'resize', function(event) { stretchEditor(); }, false);
+                    editor.addEventListener(
+                        'modified', function(event) { modifiedSource(); }, false);
+
+                    // XXX bard: turns designMode off and back on.
+                    // Without this, just after editor has appeared,
+                    // it seems like it's possible to add text but not
+                    // to remove (backspace, delete, etc.).
+                    editor.reset();
+                }, 500);
+        }, 0);
+}
+
+function stretchEditor() {
+    editor.style.height = _('editor-container').boxObject.height + 'px'
 }
 
 
 // GUI REACTIONS
 // ----------------------------------------------------------------------
 
-function modifiedSource(event) {
-    $('#main')._.getButton('extra2').disabled = false;    
+function modifiedSource() {
+    $('#main')._.getButton('extra2').disabled = false;
 }
 
 function requestedClose() {
@@ -49,18 +73,18 @@ function requestedClose() {
 }
 
 function requestedSave() {
-    scriptlet.save($('#source')._.value);
+    scriptlet.save(editor.getCode());
     $('#main')._.getButton('extra2').disabled = true;
     if($('#auto-restart')._.checked)
         restart();
 
-    $('#source')._.focus();
+    editor.contentWindow.focus();
     return false;
 }
 
 function requestedRestart() {
     restart();
-    $('#source')._.focus();
+    editor.contentWindow.focus();
     return false;
 }
 

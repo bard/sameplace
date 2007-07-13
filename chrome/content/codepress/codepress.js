@@ -82,6 +82,8 @@ CodePress = function(obj) {
 
 	self.setCode = function(code) {
 		self.textarea.disabled ? self.editor.setCode(code) : self.textarea.value = code;
+		// XXX bard: forcing syntax refresh after changing code content
+		self.editor.syntaxHighlight('init');
 	}
 
 	self.toggleAutoComplete = function() {
@@ -115,6 +117,11 @@ CodePress = function(obj) {
 		}
 	}
 
+	self.reset = function() {
+		self.contentDocument.designMode = 'off';
+		self.contentDocument.designMode = 'on';
+	}
+    
 	self.edit();
 	return self;
 }

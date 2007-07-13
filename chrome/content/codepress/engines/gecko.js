@@ -62,6 +62,11 @@ CodePress = {
 		 	//alert(window.getSelection().getRangeAt(0).toString().replace(/\t/g,'FFF'));
 		}
 
+		if(doesModify(evt)) {
+			var modifiedEvent = document.createEvent('Event');
+			modifiedEvent.initEvent('modified', true, false);
+			document.dispatchEvent(modifiedEvent);
+		}
 	},
 
 	// put cursor back to its original position after every parsing
@@ -245,3 +250,24 @@ Language={};
 // XXX bard: this is now done in codepress.js, to avoid race
 // conditions where the codepress main initializer runs before the engine initializer.
 // window.addEventListener('load', function() { CodePress.initialize('new'); }, true);
+
+
+// XXX bard: kludge. Should check what really happens once key is
+// pressed, rather than presuming that certain keys lead to certain
+// effects.
+
+function doesModify(evt) {
+    function doesAdd() {
+	return ((!evt.ctrlKey && !evt.altKey && evt.charCode) ||
+		evt.keyCode == KeyEvent.DOM_VK_RETURN)
+    }
+
+    function doesRemove() {
+	var c = String.fromCharCode(evt.charCode);
+	return (evt.keyCode == KeyEvent.DOM_KV_DELETE ||
+		evt.keyCode == KeyEvent.DOM_VK_BACK_SPACE ||
+		(evt.ctrlKey && (c == 'h' || c == 'u')))
+    }
+    
+    return doesAdd() || doesRemove();
+}

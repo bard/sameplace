@@ -25,6 +25,7 @@
 <dialog id="main"
         title="SamePlace Scriptlet Editor"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        xmlns:html="http://www.w3.org/1999/xhtml"
         windowtype="SamePlace:ScriptletEditor"
         width="560"
         height="380"
@@ -56,9 +57,13 @@
 
   <script type="application/x-javascript" src="scriptlet_editor.js"/>
 
-  <textbox id="source" multiline="true" flex="1" rows="10"
-           style="font-family: monospace;"
-           oninput="modifiedSource(event);"/>
+  <script type="application/x-javascript" src="codepress/codepress.js"/>
+
+  <vbox id="editor-container" flex="1" style="overflow: auto;">
+    <html:textarea id="editor"
+                   class="codepress javascript"
+                   rows="4"/>
+  </vbox>
 
   <hbox align="center">
     <checkbox id="auto-restart" label="Restart automatically after saving"
