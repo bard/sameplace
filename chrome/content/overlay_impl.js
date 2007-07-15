@@ -100,19 +100,17 @@ function initOverlay(event) {
                     toggleSidebar();
             }, false);
 
-    // No first run/upgrade action should be made if this is not the
-    // stable branch but instead the testing
-    // (sameplace-testing@hyperstruct.net) or other branches
-    
-    var version = getExtensionVersion('sameplace@hyperstruct.net');
-    if(version) {
-        if(pref.getCharPref('version') == '' &&
-           XMPP.accounts.length == 0) 
-            runWizard();
-        
-        pref.setCharPref('version', version);
-    }
+    // Depending on entity of update, run wizard and/or show
+    // changelog.
 
+    upgradeCheck(
+        'sameplace@hyperstruct.net',
+        'extensions.sameplace.version', {
+            onFirstInstall: function() {
+                runWizard();
+            }
+        });
+    
     // Hide splitter whenever sidebar is collapsed
 
     _('sidebar').addEventListener(
@@ -278,4 +276,36 @@ function isActiveSomewhere() {
             return true;
     }
     return false;
+}
+
+function upgradeCheck(id, versionPref, actions) {
+    const pref = Cc['@mozilla.org/preferences-service;1']
+    .getService(Ci.nsIPrefService);
+
+    function getExtensionVersion(id) {
+        return Cc['@mozilla.org/extensions/manager;1']
+        .getService(Ci.nsIExtensionManager)
+        .getItemForID(id).version;
+    }
+
+    function compareVersions(a, b) {
+        return Cc['@mozilla.org/xpcom/version-comparator;1']
+        .getService(Ci.nsIVersionComparator)
+        .compare(curVersion, prevVersion);
+    }
+
+    var curVersion = getExtensionVersion(id);
+    if(curVersion) {
+        var prevVersion = pref.getCharPref(versionPref);
+        if(prevVersion == '') {
+            if(typeof(actions.onFirstInstall) == 'function')
+                actions.onFirstInstall();
+        } else {
+            if(compareVersions(curVersion, prevVersion) > 0)
+                if(typeof(actions.onUpgrade) == 'function')
+                    actions.onUpgrade();
+        }
+
+        pref.setCharPref(versionPref, curVersion);
+    }
 }
