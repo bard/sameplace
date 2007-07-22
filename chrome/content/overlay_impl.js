@@ -278,7 +278,7 @@ function isActiveSomewhere() {
     return false;
 }
 
-function upgradeCheck(id, versionPref, actions) {
+function upgradeCheck(id, versionPref, actions, ignoreTrailingParts) {
     const pref = Cc['@mozilla.org/preferences-service;1']
     .getService(Ci.nsIPrefService);
 
@@ -291,7 +291,7 @@ function upgradeCheck(id, versionPref, actions) {
     function compareVersions(a, b) {
         return Cc['@mozilla.org/xpcom/version-comparator;1']
         .getService(Ci.nsIVersionComparator)
-        .compare(curVersion, prevVersion);
+        .compare(a, b);
     }
 
     var curVersion = getExtensionVersion(id);
@@ -301,7 +301,11 @@ function upgradeCheck(id, versionPref, actions) {
             if(typeof(actions.onFirstInstall) == 'function')
                 actions.onFirstInstall();
         } else {
-            if(compareVersions(curVersion, prevVersion) > 0)
+            if(compareVersions(
+                (ignoreTrailingParts ?
+                 curVersion.split('.').slice(0, -ignoreTrailingParts).join('.') :
+                 curVersion),
+                prevVersion) > 0)
                 if(typeof(actions.onUpgrade) == 'function')
                     actions.onUpgrade();
         }
