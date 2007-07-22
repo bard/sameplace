@@ -90,8 +90,15 @@
 
     <!-- SIDEBAR -->
 
+    <splitter id="sameplace-sidebar-splitter"
+              insertafter="sidebar-splitter"
+              state="open"
+              resizebefore="closest"
+              resizeafter="closest"
+              hidden="true"/>
+    
     <vbox id="sameplace-sidebar"
-          insertbefore="appcontent"
+          insertafter="sidebar-splitter"
           class="chromeclass-extracontent"
           collapsed="true"
           persist="width"
@@ -100,12 +107,5 @@
       <iframe src="about:blank"
               flex="1"/>
     </vbox>
-
-    <splitter id="sameplace-sidebar-splitter"
-              insertbefore="appcontent"
-              state="open"
-              resizebefore="closest"
-              resizeafter="closest"
-              hidden="true"/>
   </hbox>
 </overlay>
