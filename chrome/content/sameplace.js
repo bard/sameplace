@@ -111,9 +111,19 @@ function init(event) {
     // Wiring events from conversation subsystem to contact subsystem
     // and elsewhere
 
-    conversations.init(_('conversations'));
-
-    _('conversations').addEventListener(
+    var conversationContainer;
+    switch(prefBranch.getCharPref('conversationContainer')) {
+    case 'sidebar':
+        conversationContainer = _('conversations');
+        conversations.init(conversationContainer, true);
+        break;
+    case 'browser':
+        conversationContainer = getBrowser();
+        conversations.init(conversationContainer, false)
+        break;
+    }
+    
+    conversationContainer.addEventListener(
         'conversation/open', function(event) {
             var panel = event.originalTarget;
             contacts.startedConversationWith(panel.getAttribute('account'),
@@ -121,7 +131,7 @@ function init(event) {
             _('contact-toolbox', {role: 'attach'}).hidden = false;
         }, false);
 
-    _('conversations').addEventListener(
+    conversationContainer.addEventListener(
         'conversation/focus', function(event) {
             var panel = event.originalTarget;
             contacts.nowTalkingWith(panel.getAttribute('account'),
@@ -131,7 +141,7 @@ function init(event) {
                                               panel.getAttribute('address'));
         }, false);
 
-    _('conversations').addEventListener(
+    conversationContainer.addEventListener(
         'conversation/close', function(event) {
             var panel = event.originalTarget;
             var account = attr(panel, 'account');
@@ -146,7 +156,6 @@ function init(event) {
                 panel.getAttribute('address'));
 
             if(conversations.count == 1) {
-                _('conversations').collapsed = true;
                 _('contact-toolbox', {role: 'attach'}).hidden = true;
                 _('contact').value = '';
             }
@@ -169,7 +178,7 @@ function init(event) {
             // focus on contact textbox.  XXX This must be handled by
             // the conversation subsystem.
 
-            _('conversations').contentWindow.focus();
+            conversationContainer.contentWindow.focus();
             requestedCommunicate(
                 event.target.getAttribute('account'),
                 event.target.getAttribute('address'),

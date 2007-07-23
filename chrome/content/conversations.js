@@ -34,45 +34,53 @@ var dom;
 // INITIALIZATION
 // ----------------------------------------------------------------------
 
-function init(_dom) {
+function init(_dom, onlyHostsConversations) {
     dom = _dom;
-
-    var customHandlers = {
-        getBoolPref: function(originalTarget, prefName) {
-            if(prefName == 'browser.tabs.autoHide')
-                return false;
-            else
-                return originalTarget(prefName);
-        }
-    };
-    dom.mPrefs = proxy.create(dom.mPrefs, customHandlers);
-    dom.setStripVisibilityTo(true);
-
-    dom.setAttribute('handleCtrlPageUpDown', 'false');
-    var tabbox = document.getAnonymousElementByAttribute(dom, 'anonid', 'tabbox') ||
-        // firefox 1.5...
-        document.getAnonymousNodes(dom)[1];
-        
-    tabbox.setAttribute('handleCtrlTab', false);
-
-    dom.addEventListener(
-        'load', function(event) {
-            if(event.originalTarget != dom)
-                return;
-
-            dom.collapsed = false;
-        }, true);
 
     dom.mPanelContainer.addEventListener(
         'select', function(event) {
             var panel = dom.getBrowserAtIndex(
                 dom.mTabContainer.selectedIndex);
-
             if(panel.contentDocument.location.href == 'about:blank')
                 return;
-            focused(panel.getAttribute('account'),
-                    panel.getAttribute('address'));
+            if(isConversation(panel))
+                focused(panel.getAttribute('account'),
+                        panel.getAttribute('address'));
         }, false);
+
+    if(onlyHostsConversations) {
+        dom.mPrefs = proxy.create(dom.mPrefs, {
+            getBoolPref: function(originalTarget, prefName) {
+                if(prefName == 'browser.tabs.autoHide')
+                    return false;
+                else
+                    return originalTarget(prefName);
+            }
+        });
+        
+        dom.setStripVisibilityTo(true);
+
+        dom.setAttribute('handleCtrlPageUpDown', 'false');
+
+        var tabbox = dom.ownerDocument.getAnonymousElementByAttribute(dom, 'anonid', 'tabbox') ||
+            // firefox 1.5...
+            dom.ownerDocument.getAnonymousNodes(dom)[1];
+        tabbox.setAttribute('handleCtrlTab', false);
+
+        dom.addEventListener(
+            'load', function(event) {
+                if(event.originalTarget != dom)
+                    return;
+
+                dom.collapsed = false;
+            }, true);
+
+        dom.addEventListener(
+            'conversation/close', function(event) {
+                if(count == 1)
+                    dom.collapsed = true;
+            }, false);
+    }
 }
 
 
@@ -80,14 +88,14 @@ function init(_dom) {
 // ----------------------------------------------------------------------
 
 function focused(account, address) {
-    var focusEvent = document.createEvent('Event');
+    var focusEvent = dom.ownerDocument.createEvent('Event');
     focusEvent.initEvent('conversation/focus', true, false);
     get(account, address).removeAttribute('unread');
     get(account, address).dispatchEvent(focusEvent);
 }
 
 function opened(account, address) {
-    var openEvent = document.createEvent('Event');
+    var openEvent = dom.ownerDocument.createEvent('Event');
     openEvent.initEvent('conversation/open', true, false);
     get(account, address).dispatchEvent(openEvent);
 
@@ -96,7 +104,7 @@ function opened(account, address) {
 }
 
 function closed(account, address) {
-    var closeEvent = document.createEvent('Event');
+    var closeEvent = dom.ownerDocument.createEvent('Event');
     closeEvent.initEvent('conversation/close', true, false);
     var conversation = get(account, address);
     conversation.dispatchEvent(closeEvent);
@@ -164,7 +172,7 @@ function focusCurrent() {
     var conversation = current;
     if(conversation) {
         conversation.contentWindow.focus();
-        document.commandDispatcher.advanceFocus();
+        dom.ownerDocument.commandDispatcher.advanceFocus();
     }
 }
 
@@ -178,9 +186,9 @@ function focus(account, address) {
         // Force a separate thread, otherwise input area gets focus
         // but cursor does not appear.
         setTimeout(function() {
-                       conversation.contentWindow.focus();
-                       document.commandDispatcher.advanceFocus();
-                   }, 0);
+            conversation.contentWindow.focus();
+            dom.ownerDocument.commandDispatcher.advanceFocus();
+        }, 0);
     }
 }
 
@@ -201,6 +209,10 @@ __defineGetter__(
         else
             return dom.browsers.length;
     });
+
+function isConversation(panel) {
+    return panel.hasAttribute('account') && panel.hasAttribute('address');
+}
 
 function isOpen(account, address) {
     return get(account, address) != undefined;
