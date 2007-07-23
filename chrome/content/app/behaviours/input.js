@@ -123,6 +123,12 @@ behaviour.input = function(container) {
                     container.reset();
                 }
             }
+            // Using a bug to fix another:
+            // https://bugzilla.mozilla.org/show_bug.cgi?id=309903
+            // Swallowing "printable" keypresses so that they don't
+            // trigger find-as-you-type.
+            if(!event.altKey && !event.ctrlKey)
+                event.stopPropagation();
         }, false);
 
     iframe.contentWindow.addEventListener(
