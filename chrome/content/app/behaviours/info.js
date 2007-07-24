@@ -106,10 +106,10 @@ behaviour.info = function(info) {
 
     info.setMode = function(mode) {
         switch(mode) {
-            case 'groupchat':
-            _('heading-resources').textContent = 'Participants';
+        case 'groupchat':
+            _('header').textContent = 'Users';
             break;
-            case 'chat':
+        case 'chat':
         
             break;
         }
