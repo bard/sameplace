@@ -30,3 +30,4 @@ const ns_roster     = 'jabber:iq:roster';
 const ns_delay      = 'jabber:x:delay';
 const ns_chatstates = 'http://jabber.org/protocol/chatstates';
 const ns_event      = 'jabber:x:event';
+const ns_stanzas    = 'urn:ietf:params:xml:ns:xmpp-stanzas';

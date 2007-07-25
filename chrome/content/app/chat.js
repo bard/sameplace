@@ -446,7 +446,10 @@ function sendEvent(event) {
 // ----------------------------------------------------------------------
 
 function seenMessage(stanza) {
-    if(stanza.body == undefined)
+    // If message is an error, we can at least display an error code.
+    // If message isn't an error and it hasn't a body, there's nothing
+    // meaningful to display.
+    if(stanza.@type != 'error' && stanza.body == undefined) 
         return;
 
     if(!userAddress)
@@ -461,7 +464,8 @@ function seenMessage(stanza) {
             userAddress = JID(stanza.@to.toString()).address;
         
     if(stanza.@type == 'error')
-        displayEvent('error', 'Error: code ' + stanza.error.@code);
+        displayEvent('error', 'Error (' + stanza.error.@code + '): ' +
+                     stanza.error.ns_stanzas::text.text());
     else {
         displayMessage(stanza);
         if(stanza.@from != undefined && !isGroupchat)
