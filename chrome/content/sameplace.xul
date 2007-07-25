@@ -95,8 +95,7 @@
     <command id="import-contacts"
              label="Import Contacts..."
              accesskey="I"
-             oncommand="window.open('https://sameplace.cc/transport/registration',
-                        'sameplace-import', 'width=510,height=640,scrollbars=yes,menubar=no,status=yes');"/>
+             oncommand="importContacts();"/>
     <command id="open-standalone"
              label="Open Standalone (EXPERIMENTAL)"
              accesskey="S"

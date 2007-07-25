@@ -285,6 +285,11 @@ function runWizard() {
         'sameplace-wizard', 'chrome');
 }
 
+function importContacts() {
+    window.open('https://sameplace.cc/transport/registration',
+                'sameplace-import', 'width=510,height=640,scrollbars=yes,menubar=no,status=yes');
+}
+
 function viewHelp() {
     openLink('http://help.sameplace.cc', true);
 }
