@@ -34,3 +34,4 @@ const ns_private    = 'jabber:iq:private';
 const ns_bookmarks  = 'storage:bookmarks';
 const ns_chatstates = 'http://jabber.org/protocol/chatstates';
 const ns_event      = 'jabber:x:event';
+const ns_stanzas    = 'urn:ietf:params:xml:ns:xmpp-stanzas';

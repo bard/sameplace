@@ -66,7 +66,8 @@ function init(event) {
         function(presence) { sentAvailablePresence(presence) });
     channel.on(
         {event: 'message', direction: 'in', stanza: function(s) {
-                return s.body.length() > 0 && s.@type != 'error';
+            return ((s.@type != 'error' && s.body != undefined) ||
+                    (s.@type == 'error'))
             }}, function(message) { seenChatMessage(message); });
     channel.on(
         {event: 'message', direction: 'out', stanza: function(s) {
