@@ -134,14 +134,14 @@ toolbarbutton[command="switch-to-unread"]:active {
 toolbarbutton#actions {  
     -moz-appearance: none;
     border: none;
-    width: 48px;
+    width: 64px;
     height: 16px;
-    background: transparent url("actions_button_48x16.png") top left no-repeat;
+    background: transparent url("actions_button_64x16.png") top left no-repeat;
     margin: 0 0 0 0;
 }
 
 toolbarbutton#actions:hover {  
-    background: transparent url("actions_hover_48x16.png") top left no-repeat;
+    background: transparent url("actions_hover_64x16.png") top left no-repeat;
 }
 
 vbox#profile {
