@@ -142,6 +142,8 @@ function hasAncestor(element, parentName, parentNamespace) {
     return false;
 }
 
+// XXX merge with openURL below
+
 function openLink(url, newTab) {
     const srvPrompt = Cc['@mozilla.org/embedcomp/prompt-service;1']
         .getService(Ci.nsIPromptService);
@@ -150,9 +152,8 @@ function openLink(url, newTab) {
         srvPrompt.alert(
             window, 'SamePlace: Security Notification',
             'This link contains javascript code and has been disabled as a security measure.');
-    else if(hostAppIsBrowser() &&
-            url.match(/^((https?|ftp|file):\/\/|xmpp:)/))
-        // XXX handle mailto as well
+    else if(typeof(getBrowser().addTab) == 'function' &&
+            url.match(/^((https?|ftp|file|mailto):\/\/|xmpp:)/))
         openLinkInternally(url, newTab);
     else
         openLinkExternally(url);
@@ -174,6 +175,10 @@ function openLinkInternally(url, newTab) {
 }
 
 // From mozapps/extensions/extensions.js
+
+// XXX remove dependency on specific application, instead check for
+// presence of windows of type navigator:browser.
+
 if(hostAppIsMail())
     function openURL(url) {
         openLinkExternally(url);
