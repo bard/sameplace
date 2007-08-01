@@ -713,7 +713,8 @@
               }
             }
 
-            this._fastFind.setDocShell(this.mCurrentBrowser.docShell);
+            // XXX bard: Not needed for SamePlace and problematic with FF1.5.
+            //this._fastFind.setDocShell(this.mCurrentBrowser.docShell);
 
             // Update the window title.
             this.updateTitlebar();
@@ -2167,6 +2168,7 @@
                 onget="return this.mCurrentBrowser.currentURI;"
                 readonly="true"/>
 
+      <!-- XXX bard: Not needed in SamePlace and problematic with FF1.5
       <field name="_fastFind">null</field>
       <property name="fastFind"
                 readonly="true">
@@ -2181,7 +2183,7 @@
         ]]>
         </getter>
       </property>
-
+      -->
       <property name="findString"
                 onget="return this.mCurrentBrowser.findString;"
                 readonly="true"/>
