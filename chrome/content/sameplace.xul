@@ -61,36 +61,36 @@
              tooltiptext="Open a conversation"/>
     <command id="join-room" oncommand="requestedOpenConversation('groupchat');"
              label="Join chat room..."
+             accesskey="r"
              tooltiptext="Join a chat room"/>
     <command id="switch-to-unread" oncommand="conversations.switchToUnread();"
-             label="Next unread conversation"
+             label="Go to next unread conversation"
              tooltiptext="Switch to next conversation in line with unread messages"/>
     <command id="switch-to-next" oncommand="conversations.switchToNext();"
-             label="Next conversation"
+             label="Go to next conversation"
              tooltiptext="Switch to next conversation"/>
     <command id="run-wizard"
              label="Run Account Wizard..."
              oncommand="runWizard();"
              accesskey="W"/>
     <command id="view-help" oncommand="viewHelp();"
-             label="Help"
-             accesskey="H"
+             label="View help pages"
+             accesskey="h"
              tooltiptext="Load help page"/>
     <command id="visit-forum" oncommand="visitForum();"
              label="Visit forum"
-             accesskey="V"
-             tooltiptext="Visit forum"/>
+             accesskey="f"
+             tooltiptext="Visit support forum"/>
     <command id="report-bug" oncommand="reportBug();"
-             label="Report bug/Request features"
+             label="Report bugs/request features"
              accesskey="R"
              tooltiptext="Report bug/Request features"/>
     <command id="visit-users-room" oncommand="visitUsersRoom();"
-             label="Visit SamePlace users' chatroom"
-             accesskey="r"
+             label="Visit SamePlace chatroom"
+             accesskey="V"
              tooltiptext="Visit SamePlace users' chatroom"/>
     <command id="hide" oncommand="hide();"
              label="Hide"
-             accesskey="H"
              tooltiptext="Hide sidebar (F12)"/>
     <command id="import-contacts"
              label="Import Contacts..."
@@ -140,9 +140,18 @@
         <toolbarspring/>
         <toolbarbutton id="actions" label="" type="menu">
           <menupopup id="actions-popup">
+            <menu label="Participate" accesskey="P">
+              <menupopup>
+                <menuitem class="menuitem-iconic" command="visit-users-room"/>
+                <menuitem class="menuitem-iconic" command="visit-forum"/>
+                <menuitem class="menuitem-iconic" command="view-help"/>
+                <menuitem class="menuitem-iconic" command="report-bug"/>
+              </menupopup>
+            </menu>
+            <menuseparator/>
             <menuitem class="menuitem-iconic" command="add-contact"/>
-            <menuitem class="menuitem-iconic" command="open-conversation"/>
             <menuitem class="menuitem-iconic" command="join-room"/>
+            <menuitem class="menuitem-iconic" command="open-conversation"/>
             <menuitem class="menuitem-iconic" command="switch-to-unread"
                       key="key-switch-to-unread"/>
             <menuitem class="menuitem-iconic" command="switch-to-next"
@@ -161,11 +170,7 @@
             <menuitem class="menuitem-iconic" command="open-standalone"/>
             <menuitem class="menuitem-iconic" command="run-wizard"/>
                       
-            <menuseparator id="actions-separator"/>
-            <menuitem class="menuitem-iconic" command="view-help"/>
-            <menuitem class="menuitem-iconic" command="visit-forum"/>
-            <menuitem class="menuitem-iconic" command="report-bug"/>
-            <menuitem class="menuitem-iconic" command="visit-users-room"/>
+            <menuseparator id="actions-separator" hidden="true"/>
           </menupopup>
         </toolbarbutton>
         <toolbarbutton command="hide"/>
