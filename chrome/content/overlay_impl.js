@@ -272,7 +272,7 @@ function isActiveSomewhere() {
 
     while(windows.hasMoreElements()) {
         var window = windows.getNext();
-        if(window.sameplace.isActive())
+        if(window.sameplace && window.sameplace.isActive())
             return true;
     }
     return false;
