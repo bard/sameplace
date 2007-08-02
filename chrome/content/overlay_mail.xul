@@ -59,9 +59,7 @@
          modifiers="control alt"
          phase="capture"
          oncommand="sameplace.getSidebarContent().focusStatus();"/>
-    <key id="sameplace-key-toggle-sidebar"
-         keycode="VK_F12" 
-         command="sameplace-command-toggle-sidebar"/>
+    <key id="sameplace-key-toggle-sidebar"/>
     <key keycode="VK_F12" modifiers="control" command="sameplace-command-load-sidebar-force"/>
   </keyset>
 
@@ -93,7 +91,6 @@
     <!-- SIDEBAR -->
     
     <vbox id="folderPaneBox"> 	
-      <tree id="folderTree" persist="height"/>
       <splitter id="sameplace-sidebar-splitter"
                 persist="state"
                 state="open"
