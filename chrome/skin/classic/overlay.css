@@ -3,3 +3,26 @@
     border-left: 1px solid rgb(190, 190, 190);
     background-color: rgb(236, 236, 236);
 }
+
+#expandedPresence .emailDisplayImage {
+    max-width: 16px;
+    max-height: 16px;
+    list-style-image: url("chrome://xmpp4moz/skin/status/all-small.png");
+}
+
+#expandedPresence[availability="unavailable"] [anonid="emailImage"] {
+    -moz-image-region: rect(48px 16px 64px 0px);
+}
+
+#expandedPresence[availability="available"] [anonid="emailImage"] {
+    -moz-image-region: rect(16px 16px 32px 0px);
+}
+
+#expandedPresence[availability="available"][show="dnd"] [anonid="emailImage"] {
+    -moz-image-region: rect(0px 16px 16px 0px);
+}
+
+#expandedPresence[availability="available"][show="away"] [anonid="emailImage"],
+#expandedPresence[availability="available"][show="xa"] [anonid="emailImage"] {
+    -moz-image-region: rect(32px 16px 48px 0px);
+}

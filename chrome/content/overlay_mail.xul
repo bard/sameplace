@@ -29,6 +29,7 @@
 
   <script type="application/x-javascript" src="chrome://xmpp4moz/content/xmpp.js"/>
   <script type="application/x-javascript" src="overlay.js"/>
+  <script type="application/x-javascript" src="overlay_mail.js"/>
 
   <!-- COMMANDS -->
 
@@ -109,4 +110,11 @@
       </vbox>
     </vbox>
   </hbox>
+
+  <vbox id="expandedHeaders">
+    <mail-emailheaderfield id="expandedPresence"
+                           label="Presence:"
+                           collapsed="true"
+                           availability="unavailable"/>
+  </vbox>
 </overlay>
