@@ -55,17 +55,17 @@ function onJabberEndHeaders() {
         xulPresenceField.emailAddressNode.setAttribute('label', card.aimScreenName);
         xulPresenceField.collapsed = false;
 
-        var presenceStanza =
+        var presence =
             XMPP.cache.fetch({
                 event     :'presence',
                 direction : 'in',
-                from      : { address: jabberAddress }})[0].stanza ||
-            <presence from={jabberAddress} type="unavailable"/>
+                from      : { address: jabberAddress }})[0] ||
+            { stanza: <presence from={jabberAddress} type="unavailable"/> };
 
         xulPresenceField.setAttribute('availability',
-                                      presenceStanza.@type.toString() || 'available');
+                                      presence.stanza.@type.toString() || 'available');
         xulPresenceField.setAttribute('show',
-                                      presenceStanza.show.toString());
+                                      presence.stanza.show.toString());
     }
 }
 
@@ -91,10 +91,10 @@ window.addEventListener(
         xulPresenceField.emailAddressNode.addEventListener(
             'click', function(event) {
                 setTimeout(function() {
-                    if(event.target.value == 'xul:label')
+                    if(event.target.tagName == 'xul:label')
                         window.openDialog(
                             'chrome://sameplace/content/open_conversation.xul',
-                            'sameplace-open-conversation', 'centerscreen', null, jid);
+                            'sameplace-open-conversation', 'centerscreen', null, event.target.value);
                 }, 0);
             }, false);
     }, false);
