@@ -24,13 +24,6 @@
 
 const Cc = Components.classes;
 const Ci = Components.interfaces;
-const RDF = Cc["@mozilla.org/rdf/rdf-service;1"]
-    .getService(Ci.nsIRDFService);    
-const RDFCU = Cc["@mozilla.org/rdf/container-utils;1"]
-    .getService(Ci.nsIRDFContainerUtils);
-if(Cc['@mozilla.org/browser/bookmarks-service;1'])
-    const BMSVC = Cc['@mozilla.org/browser/bookmarks-service;1']
-        .getService(Ci.nsIBookmarksService);
 const pref = Cc["@mozilla.org/preferences-service;1"]
     .getService(Ci.nsIPrefService)
     .getBranch('extensions.sameplace.');
@@ -179,21 +172,6 @@ function runWizard() {
     window.openDialog(
         'chrome://sameplace/content/wizard.xul',
         'sameplace-wizard', 'chrome')
-}
-
-function addBookmark() {
-    var folderName = 'SamePlace';
-
-    var dsBookmarks = Cc["@mozilla.org/rdf/datasource;1?name=bookmarks"]
-        .getService(Ci.nsIRDFDataSource);
-
-    var bookmark = dsBookmarks.GetSource(
-        RDF.GetResource('http://home.netscape.com/NC-rdf#Name'),
-        RDF.GetLiteral(folderName), true);
-
-    if(!(bookmark && RDFCU.IsContainer(dsBookmarks, bookmark)))
-        BMSVC.createFolderInContainer(
-            folderName, RDF.GetResource('NC:BookmarksRoot'), null);
 }
 
 function loadSidebar(force) {
