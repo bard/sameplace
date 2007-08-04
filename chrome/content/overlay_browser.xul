@@ -90,16 +90,17 @@
 
     <!-- SIDEBAR -->
 
-    <splitter id="sameplace-sidebar-splitter"
+    <splitter id="sameplace-splitter-primary"
+              class="sameplace-splitter"
               insertafter="sidebar-splitter"
               state="open"
               resizebefore="closest"
               resizeafter="closest"
               hidden="true"/>
     
-    <vbox id="sameplace-sidebar"
+    <vbox id="sameplace-sidebar-primary"
+          class="sameplace-sidebar"
           insertafter="sidebar-splitter"
-          class="chromeclass-extracontent"
           collapsed="true"
           persist="width"
           width="300"

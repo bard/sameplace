@@ -93,22 +93,41 @@
     <!-- SIDEBAR -->
     
     <vbox id="folderPaneBox"> 	
-      <splitter id="sameplace-sidebar-splitter"
+      <splitter id="sameplace-splitter-primary"
+                class="sameplace-splitter"
                 persist="state"
                 state="open"
                 collapse="after"
                 resizebefore="closest"
                 resizeafter="closest"
-                class="chromeclass-extracontent"
                 hidden="true"/>
-      <vbox flex="1" id="sameplace-sidebar"
-            class="chromeclass-extracontent"
+      <vbox flex="1" id="sameplace-sidebar-primary"
+            class="sameplace-sidebar"
             collapsed="true"
             persist="height"
             height="400">
         <iframe src="about:blank"
                 flex="1"/>
       </vbox>
+    </vbox>
+
+    <splitter id="sameplace-splitter-secondary"
+              class="sameplace-splitter"
+              insertafter="folderpane_splitter"
+              state="open"
+              resizebefore="closest"
+              resizeafter="closest"
+              hidden="true"/>
+    
+    <vbox id="sameplace-sidebar-secondary"
+          class="sameplace-sidebar"
+          insertafter="folderpane_splitter"
+          collapsed="true"
+          persist="width"
+          width="300"
+          minwidth="80">
+      <iframe src="about:blank"
+              flex="1"/>
     </vbox>
   </hbox>
 

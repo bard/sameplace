@@ -106,11 +106,16 @@ function initOverlay(event) {
     
     // Hide splitter whenever sidebar is collapsed
 
-    _('sidebar').addEventListener(
-        'DOMAttrModified', function(event) {
-            if(event.attrName == 'collapsed')
-                _('sidebar-splitter').hidden = (event.newValue.toString() == 'true');
-        }, false);
+    var xulSidebars = document.getElementsByAttribute('class', 'sameplace-sidebar');
+    for(var i=0; i<xulSidebars.length; i++)
+        xulSidebars[i].addEventListener(
+            'DOMAttrModified', function(event) {
+                if(event.attrName != 'collapsed')
+                    return;
+                var xulSplitter = document.getElementById(
+                    event.target.id.replace(/^sameplace-sidebar/, 'sameplace-splitter'));
+                xulSplitter.hidden = (event.newValue.toString() == 'true');
+            }, false);
 
 
     // Listen to preference changes for sidebar toggle hotkey
@@ -175,12 +180,12 @@ function runWizard() {
 }
 
 function loadSidebar(force) {
-    if(force || getSidebarContent().location.href != 'chrome://sameplace/content/sameplace.xul') 
-        getSidebarContent().location.href = 'chrome://sameplace/content/sameplace.xul';
+    if(force || getView().location.href != 'chrome://sameplace/content/sameplace.xul') 
+        getView().location.href = 'chrome://sameplace/content/sameplace.xul';
 }
 
 function toggleSidebar() {
-    if(_('sidebar').collapsed)
+    if(getSidebar().collapsed)
         showSidebar();
     else 
         hideSidebar();
@@ -188,7 +193,7 @@ function toggleSidebar() {
 
 function showSidebar() {
     loadSidebar();
-    _('sidebar').collapsed = false;
+    getSidebar().collapsed = false;
 }
 
 function hideSidebar() {
@@ -198,7 +203,7 @@ function hideSidebar() {
         if(contentArea)
             contentArea.focus();
     }
-    _('sidebar').collapsed = true;
+    getSidebar().collapsed = true;
 }
 
 function isReceivingInput() {
@@ -206,15 +211,23 @@ function isReceivingInput() {
     // sidebar context.
 
     return (document.commandDispatcher.focusedWindow ==
-            getSidebarContent()._('conversations').contentWindow ||
+            getView()._('conversations').contentWindow ||
             document.commandDispatcher.focusedWindow.parent ==
-            getSidebarContent()._('conversations').contentWindow ||
+            getView()._('conversations').contentWindow ||
             (document.commandDispatcher.focusedElement &&
-             document.commandDispatcher.focusedElement == getSidebarContent().document))
+             document.commandDispatcher.focusedElement == getView().document))
 }
 
-function getSidebarContent() {
-    return _('sidebar').firstChild.contentWindow;
+function getSidebar() {
+    return _('sidebar-' + pref.getCharPref('whichSidebar'));
+}
+
+function getSplitter() {
+    return _('splitter-' + pref.getCharPref('whichSidebar'));
+}
+
+function getView() {
+    return getSidebar().firstChild.contentWindow;
 }
 
 function log(msg) {
@@ -240,7 +253,7 @@ function getMostRecentWindow() {
 }
 
 function isActive() {
-    return getSidebarContent().document.location.href == 'chrome://sameplace/content/sameplace.xul';
+    return getView().document.location.href == 'chrome://sameplace/content/sameplace.xul';
 }
 
 function isActiveSomewhere() {
