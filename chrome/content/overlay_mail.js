@@ -22,18 +22,18 @@
 window.addEventListener(
     'load', function(event) {
         gMessageListeners.push({
-            onStartHeaders: function() {onJabberStartHeaders();},
-            onEndHeaders:   function() {onJabberEndHeaders();}
+            onStartHeaders: function() { sameplace.onStartHeaders(); },
+            onEndHeaders:   function() { sameplace.onEndHeaders(); }
         });
     }, false);
 
-function onJabberStartHeaders() {
+sameplace.onStartHeaders = function() {
     var xulPresenceField = document.getElementById('expandedPresence');
     xulPresenceField.headerValue = null;
     xulPresenceField.collapsed = true;
 }
 
-function onJabberEndHeaders() {
+sameplace.onEndHeaders = function() {
     const Cc = Components.classes;
     const Ci = Components.interfaces;
 
