@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://sameplace/skin/overlay.css" type="text/css"?>
+<?xml-stylesheet href="chrome://sameplace/skin/overlay_mail.css" type="text/css"?>
 
 <!--
   Copyright (C) 2005-2006 by Massimiliano Mirra
