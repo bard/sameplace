@@ -66,20 +66,6 @@ function init(_dom, onlyHostsConversations) {
             // firefox 1.5...
             dom.ownerDocument.getAnonymousNodes(dom)[1];
         tabbox.setAttribute('handleCtrlTab', false);
-
-        dom.addEventListener(
-            'load', function(event) {
-                if(event.originalTarget != dom)
-                    return;
-
-                dom.collapsed = false;
-            }, true);
-
-        dom.addEventListener(
-            'conversation/close', function(event) {
-                if(count == 1)
-                    dom.collapsed = true;
-            }, false);
     }
 }
 

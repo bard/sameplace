@@ -33,13 +33,13 @@
   <!-- COMMANDS -->
 
   <commandset id="mainCommandSet">
-    <command id="sameplace-command-toggle-sidebar"
+    <command id="sameplace-command-toggle"
              label="Toggle"
-             oncommand="sameplace.toggleSidebar();"
+             oncommand="sameplace.toggle();"
              accesskey="T"/>
-    <command id="sameplace-command-load-sidebar"
+    <command id="sameplace-command-load"
              label="SamePlace"
-             oncommand="sameplace.loadSidebar();"
+             oncommand="sameplace.load();"
              accesskey="S"/>
     <command id="sameplace-command-open-standalone"
              label="Open Standalone (EXPERIMENTAL)"
@@ -48,7 +48,7 @@
                         'chrome://sameplace/content/standalone/contacts.xul',
                         'SamePlace:Contacts', 'chrome,titlebar=no,toolbar=no');"/>
     <command id="sameplace-command-load-sidebar-force"
-             oncommand="sameplace.loadSidebar(true);"/>
+             oncommand="sameplace.load(true);"/>
   </commandset>
 
   <!-- KEYS -->
@@ -58,8 +58,8 @@
          key="t"
          modifiers="control alt"
          phase="capture"
-         oncommand="sameplace.getSidebarContent().focusStatus();"/>
-    <key id="sameplace-key-toggle-sidebar"/>
+         oncommand="sameplace.get('toolbar').focusStatus();"/>
+    <key id="sameplace-key-toggle"/>
     <key keycode="VK_F12" modifiers="control" command="sameplace-command-load-sidebar-force"/>
   </keyset>
 
@@ -68,8 +68,8 @@
   <menupopup id="xmpp-menu-main">
     <menu label="SamePlace" accesskey="S" insertbefore="xmpp-menu-applications-separator">
       <menupopup>
-        <menuitem command="sameplace-command-toggle-sidebar"
-                  key="sameplace-key-toggle-sidebar"
+        <menuitem command="sameplace-command-toggle"
+                  key="sameplace-key-toggle"
                   class="menuitem-iconic"/>
         <menuitem command="sameplace-command-open-standalone"
                   class="menuitem-iconic"/>
@@ -79,7 +79,7 @@
 
   <menupopup id="xmpp-popup-accounts-secondary">
     <menuitem label="Toggle SamePlace"
-              key="sameplace-key-toggle-sidebar"
+              key="sameplace-key-toggle"
               class="menuitem-iconic"
               insertafter="xmpp-menu-set-status"
               oncommand="sameplace.toggleSidebar();
@@ -88,24 +88,69 @@
 
   <hbox id="browser">
 
-    <!-- SIDEBAR -->
+    <!-- AREAS -->
 
-    <splitter id="sameplace-splitter-primary"
+    <splitter id="sameplace-splitter-left"
               class="sameplace-splitter"
               insertafter="sidebar-splitter"
               state="open"
               resizebefore="closest"
               resizeafter="closest"
               hidden="true"/>
-    
-    <vbox id="sameplace-sidebar-primary"
-          class="sameplace-sidebar"
+
+    <vbox id="sameplace-area-left"
+          class="sameplace-area"
           insertafter="sidebar-splitter"
           collapsed="true"
           persist="width"
           width="300"
           minwidth="80">
-      <iframe src="about:blank"
+      <iframe id="sameplace-toolbox-left"
+              class="sameplace-toolbox"
+              src="toolbox.xul"
+              collapsed="true"/>
+      <iframe id="sameplace-contacts-left"
+              class="sameplace-contacts"
+              src="about:blank"
+              collapsed="true"
+              flex="1"/>
+      <splitter hidden="true" orient="vertical" resizeafter="farthest"/>
+      <iframe id="sameplace-conversations-left"
+              class="sameplace-conversations"
+              src="about:blank"
+              collapsed="true"
+              persist="height"
+              flex="1"/>
+    </vbox>
+
+    <splitter id="sameplace-splitter-right"
+              class="sameplace-splitter"
+              state="open"
+              resizebefore="closest"
+              resizeafter="closest"
+              hidden="true"/>
+    
+    <vbox id="sameplace-area-right"
+          class="sameplace-area"
+          collapsed="true"
+          persist="width"
+          width="300"
+          minwidth="80">
+      <iframe id="sameplace-toolbox-right"
+              class="sameplace-toolbox"
+              src="toolbox.xul"
+              collapsed="true"/>
+      <iframe id="sameplace-contacts-right"
+              class="sameplace-contacts"
+              src="about:blank"
+              collapsed="true"
+              flex="1"/>
+      <splitter hidden="true" orient="vertical" resizeafter="farthest"/>
+      <iframe id="sameplace-conversations-left"
+              class="sameplace-conversations"
+              src="about:blank"
+              collapsed="true"
+              persist="height"
               flex="1"/>
     </vbox>
   </hbox>

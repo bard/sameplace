@@ -39,8 +39,6 @@ var channel;
 var messageCache = {};
 var conversations = {};
 load('chrome://sameplace/content/conversations.js', conversations);
-var scriptlets = {};
-load('chrome://sameplace/contact/scriptlets.js', scriptlets);
 
 
 // GUI INITIALIZATION AND FINALIZATION
@@ -58,12 +56,6 @@ function init(event) {
         <feature var="http://jabber.org/protocol/chatstates"/>
         </query>);
 
-    channel.on(
-        {event: 'presence', direction: 'out', stanza: function(s) {
-                return (s.@type == undefined || s.@type == 'unavailable') &&
-                    s.ns_muc::x == undefined && s.@to == undefined;
-            }},
-        function(presence) { sentAvailablePresence(presence) });
     channel.on(
         {event: 'message', direction: 'in', stanza: function(s) {
             return ((s.@type != 'error' && s.body != undefined) ||
@@ -98,32 +90,33 @@ function init(event) {
                 });
         });
 
-    contacts = _('contacts').contentWindow;
-    contacts.onRequestedCommunicate = function() {
-        requestedCommunicate.apply(null, arguments);
-    };
-
-    XMPP.cache.fetch({
-        event: 'presence',
-        direction: 'out',
-        }).forEach(sentAvailablePresence);
-
+    contacts = top.sameplace.viewFor('contacts');
+    contacts.addEventListener(
+        'contact/select', function(event) {
+            requestedCommunicate(attr(event.target, 'account'),
+                                 attr(event.target, 'address'),
+                                 getDefaultAppUrl())
+        }, false);
+    
 
     // Wiring events from conversation subsystem to contact subsystem
     // and elsewhere
 
     var conversationContainer;
-    switch(prefBranch.getCharPref('conversationContainer')) {
-    case 'sidebar':
+    switch(prefBranch.getCharPref('conversationsArea')) {
+    case 'appcontent':
+        conversationContainer = getBrowser();
+        conversations.init(conversationContainer, false);
+        break;
+    case 'left':
+    case 'right':
         conversationContainer = _('conversations');
         conversations.init(conversationContainer, true);
         break;
-    case 'browser':
-        conversationContainer = getBrowser();
-        conversations.init(conversationContainer, false)
+    default:
         break;
     }
-    
+
     conversationContainer.addEventListener(
         'conversation/open', function(event) {
             var panel = event.originalTarget;
@@ -135,11 +128,15 @@ function init(event) {
     conversationContainer.addEventListener(
         'conversation/focus', function(event) {
             var panel = event.originalTarget;
-            contacts.nowTalkingWith(panel.getAttribute('account'),
-                                    panel.getAttribute('address'));
-
             _('contact').value = XMPP.nickFor(panel.getAttribute('account'),
                                               panel.getAttribute('address'));
+
+            // XXX This (well, the whole conversation handling
+            // probably) should go into the overlay, as a mediator,
+            // with a bunch of other stuff.
+            if(!top.sameplace.frameFor('conversations').collapsed)
+                contacts.nowTalkingWith(panel.getAttribute('account'),
+                                        panel.getAttribute('address'));
         }, false);
 
     conversationContainer.addEventListener(
@@ -189,17 +186,9 @@ function init(event) {
     // Filling shared application menu
 
     initApplicationMenu(_('menu-applications'));
-
-    // Loading and starting scriptlets
-
-    scriptlets.init(['sameplace', 'scriptlets'], 'extensions.sameplace.',
-                    'chrome://sameplace/content/scriptlet_sample.js');
-    scriptlets.start();
 }
 
 function finish() {
-    scriptlets.stop();
-
     channel.release();
 }
 
@@ -271,44 +260,13 @@ function getBrowser() {
 // Application-dependent functions dealing with user interface.  They
 // affect the domain.
 
+function isReceivingInput() {
+    return (document.commandDispatcher.focusedWindow == _('conversations').contentWindow ||
+            document.commandDispatcher.focusedWindow.parent == _('conversations').contentWindow);
+}
+
 function hide() {
-    window.frameElement.parentNode.collapsed = true;
-}
-
-function focusStatus() {
-    _('status-message').focus();
-}
-
-function runWizard() {
-    window.openDialog(
-        'chrome://sameplace/content/wizard.xul',
-        'sameplace-wizard', 'chrome');
-}
-
-function importContacts() {
-    openLink('https://sameplace.cc/transport/registration');
-}
-
-function readLatestNews() {
-    openLink('http://sameplace.cc/blog');
-}
-
-function viewHelp() {
-    openLink('http://help.sameplace.cc', true);
-}
-
-function visitForum() {
-    openLink('http://forum.sameplace.cc', true);
-}
-
-function reportBug() {
-    openLink('http://bugs.sameplace.cc', true);
-}
-
-function visitUsersRoom() {
-    window.openDialog('chrome://sameplace/content/join_room.xul',
-                      'sameplace-open-conversation', 'centerscreen',
-                      null, 'users@places.sameplace.cc');
+    top.sameplace.frameFor('conversations').collapsed = true;
 }
 
 function initApplicationMenu(menuPopup) {
@@ -371,27 +329,6 @@ function updateAttachTooltip() {
     _('attach-tooltip', {role: 'message'}).value =
         'Make this conversation channel available to ' +
         getBrowser().currentURI.spec;
-}
-
-function changeStatusMessage(message) {
-    for each(var account in XMPP.accounts)
-        if(XMPP.isUp(account)) {
-            var stanza = XMPP.cache.find({
-                event     : 'presence',
-                direction : 'out',
-                account   : account.jid,
-                stanza    : function(s) {
-                        return s.ns_muc::x == undefined;
-                    }
-                }).stanza.copy();
-            
-            if(message)
-                stanza.status = message;
-            else
-                delete stanza.status;
-            
-            XMPP.send(account, stanza);
-        }
 }
 
 /**
@@ -524,6 +461,13 @@ var chatDropObserver = {
     }
 };
 
+function focused() {
+    // XXX hack to force generation of conversation/focus event.
+    if(conversations.current)
+        conversations.focused(conversations.current.getAttribute('account'),
+                              conversations.current.getAttribute('address'));
+}
+
 function requestedAdditionalInteraction(event) {
     var conversation = conversations.current;
     var account = attr(conversation, 'account');
@@ -574,35 +518,6 @@ function clickedElementInConversation(event) {
     }
 }
 
-function requestedChangeStatusMessage(event) {
-    if(event.keyCode != KeyEvent.DOM_VK_RETURN)
-        return;
-
-    var message = event.target.value;
-    if(message != '[no status message]')
-        changeStatusMessage(event.target.value);
-    
-    document.commandDispatcher.advanceFocus();
-    conversations.focusCurrent();
-}
-
-function requestedAddContact() {
-    var request = {
-        contactAddress: undefined,
-        subscribeToPresence: undefined,
-        confirm: false,
-        account: undefined
-    };
-
-    window.openDialog(
-        'chrome://sameplace/content/add_contact.xul',
-        'sameplace-add-contact', 'modal,centerscreen',
-        request);
-
-    if(request.confirm)
-        contacts.addContact(request.account, request.contactAddress, request.subscribeToPresence);
-}
-
 function requestedOpenConversation(type) {
     switch(type) {
     case 'chat':
@@ -618,48 +533,6 @@ function requestedOpenConversation(type) {
     default:
         throw new Error('Unexpected. (' + type + ')');
     }
-}
-
-function requestedManageScriptlets() {
-    window.openDialog('chrome://sameplace/content/scriptlet_manager.xul',
-                      'SamePlace:ScriptletManager', 'chrome', scriptlets);
-}
-
-function requestedShowScriptletList(xulPopup) {
-    var xulSeparator = xulPopup.getElementsByTagName('menuseparator')[0];
-    while(xulPopup.firstChild && xulPopup.firstChild != xulSeparator)
-        xulPopup.removeChild(xulPopup.firstChild);
-    
-    var count = 0;
-    scriptlets.forEach(
-        function(scriptlet) {
-            count++;
-            var xulScriptlet = document.createElement('menuitem');
-            try {
-                xulScriptlet.setAttribute('label', scriptlet.info.name);
-                xulScriptlet.addEventListener(
-                    'command', function(event) {
-                        if(scriptlet.enabled)
-                            scriptlet.disable();
-                        else
-                            scriptlet.enable();
-                    }, false);
-            } catch(e) {
-                xulScriptlet.setAttribute(
-                    'label', 'Error reading "' +
-                    scriptlet.fileName + '" (click for debug info)');
-                xulScriptlet.setAttribute('style', 'color:red;')
-                xulScriptlet.addEventListener(
-                    'command', function(event) {
-                        window.alert(e.name + '\n' + e.stack);
-                    }, false);
-            }
-            xulScriptlet.setAttribute('type', 'checkbox');
-            xulScriptlet.setAttribute('checked', scriptlet.enabled ? 'true' : 'false');
-            xulPopup.insertBefore(xulScriptlet, xulSeparator);
-        });
-
-    xulPopup.getElementsByTagName('menuseparator')[0].hidden = (count == 0);
 }
 
 
@@ -795,6 +668,10 @@ function seenOutgoingChatActivation(message) {
     }
 }
 
+// XXX this is also triggered by messages with type="error" and a
+// human-readable <text/> element, so "seenChatMessage" is not
+// accurate.
+
 function seenChatMessage(message) {
     function maybeSetUnread(conversation) {
         if(message.direction == 'in' &&
@@ -834,18 +711,6 @@ function seenChatMessage(message) {
             });
     } else
         maybeSetUnread(conversation);
-}
-
-function sentAvailablePresence(presence) {
-    var status = presence.stanza.status.toString();
-    if(status) {
-        _('status-message').value = status;
-        _('status-message').setAttribute('draft', 'false');
-    } else {
-        _('status-message').value = '[Click or Ctrl+Alt+T to change status]';
-        _('status-message').setAttribute('draft', 'true');
-    }
-    _('profile-username').value = XMPP.JID(presence.account).username;
 }
 
 function sentMUCPresence(presence) {

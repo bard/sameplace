@@ -35,7 +35,6 @@ var ns_auth = 'jabber:iq:auth';
 // ----------------------------------------------------------------------
 
 var channel;
-var gToggleSidebarKey;
 
 
 // GUI UTILITIES (SPECIFIC)
@@ -50,13 +49,15 @@ function _(id) {
 // ----------------------------------------------------------------------
 
 function initOverlay(event) {
+    // Setup network reactions
+
     channel = XMPP.createChannel();
 
     channel.on(
         {event: 'transport', direction: 'out', state: 'start'},
         function() {
             if(window == getMostRecentWindow() && window.toolbar.visible)
-               loadSidebar();
+               load();
         });
 
     channel.on(
@@ -64,8 +65,10 @@ function initOverlay(event) {
                 return s.ns_auth::query.length() > 0;
             }},
         function() {
-            if(window == getMostRecentWindow() && window.toolbar.visible)
-               showSidebar();
+            if(window == getMostRecentWindow() && window.toolbar.visible) {
+                viewFor('contacts').frameElement.collapsed = false;
+                viewFor('toolbox').frameElement.collapsed = false;
+            }
         });
 
     channel.on(
@@ -81,17 +84,7 @@ function initOverlay(event) {
     // an active SamePlace instance, and if this isn't a popup.'
 
     if(!isActiveSomewhere() && window.toolbar.visible)
-        loadSidebar();
-
-    // If XMPP button is visible, attach to it.
-
-    var button = document.getElementById('xmpp-button');
-    if(button)
-        button.addEventListener(
-            'command', function(event) {
-                if(event.target == button)
-                    toggleSidebar();
-            }, false);
+        load();
 
     // Depending on entity of update, run wizard and/or show
     // changelog.
@@ -104,54 +97,149 @@ function initOverlay(event) {
             }
         });
     
-    // Hide splitter whenever sidebar is collapsed
 
-    var xulSidebars = document.getElementsByAttribute('class', 'sameplace-sidebar');
-    for(var i=0; i<xulSidebars.length; i++)
-        xulSidebars[i].addEventListener(
-            'DOMAttrModified', function(event) {
-                if(event.attrName != 'collapsed')
-                    return;
-                var xulSplitter = document.getElementById(
-                    event.target.id.replace(/^sameplace-sidebar/, 'sameplace-splitter'));
-                xulSplitter.hidden = (event.newValue.toString() == 'true');
-            }, false);
+    initDisplayRules();
 
+    // Handle hotkeys and hotkey preference updates
 
-    // Listen to preference changes for sidebar toggle hotkey
+    var toggleContactsKey = eval(pref.getCharPref('toggleContactsKey'))
+    var toggleConversationsKey = eval(pref.getCharPref('toggleConversationsKey'))
 
     window.addEventListener(
-        'keypress', function(event) { pressedKey(event); }, true)
+        'keypress', function(event) {
+            if(matchKeyEvent(event, toggleContactsKey))
+                toggle();
 
-    updateToggleSidebarKey(eval(pref.getCharPref('toggleSidebarKey')));
+            
+            if(matchKeyEvent(event, toggleConversationsKey))
+                frameFor('conversations').collapsed = !frameFor('conversations').collapsed;
+        }, true)
+
     pref.QueryInterface(Ci.nsIPrefBranch2)
     pref.addObserver('', {
         observe: function(subject, topic, data) {
-            if(topic == 'nsPref:changed' && data == 'toggleSidebarKey')
-                updateToggleSidebarKey(eval(pref.getCharPref('toggleSidebarKey')))
+            if(topic == 'nsPref:changed') {
+                switch(data) {
+                case 'toggleContactsKey':
+                    toggleContactsKey = eval(pref.getCharPref('toggleContactsKey'));
+                    break;
+                case 'toggleConversationsKey':
+                    toggleConversationsKey = eval(pref.getCharPref('toggleConversationsKey'));
+                    break;
+                }
+            }
         }
     }, false)
+}
+
+
+function initDisplayRules() {
+
+    // Adapt toolbox frame to toolbox content.  This is done once here
+    // and once in toolbox.xul onload handler.  Doing it only here
+    // doesn't work for default theme; doing it only there doesn't
+    // work for iFox smooth theme (assuming the theme has anything to
+    // do with this).  Go figure.
+    
+    frameFor('toolbox').addEventListener(
+        'DOMAttrModified', function(event) {
+            if(event.currentTarget == event.target &&
+               event.attrName == 'collapsed')
+                setTimeout(function(){viewFor('toolbox').sizeToContent();}, 0)
+        }, false);
+
+    // When user selects a contact, display conversation view (NOT
+    // containing area).
+
+    frameFor('contacts').addEventListener(
+        'contact/select', function(event) {
+            frameFor('conversations').collapsed = false;
+            viewFor('conversations').focused();
+        }, false);
+
+    // When last conversation closes, hide conversation view (NOT
+    // containing area).
+
+    frameFor('conversations').addEventListener(
+        'conversation/close', function(event) {
+            if(viewFor('conversations').conversations.count == 1)
+                frameFor('conversations').collapsed = true;
+        }, false);
+
+    // If XMPP button is visible, attach to it and use to toggle
+    // whatever area contacts are displayed in.
+
+    var button = document.getElementById('xmpp-button');
+    if(button)
+        button.addEventListener(
+            'command', function(event) {
+                if(event.target == button)
+                    toggle();
+            }, false);
+
+    // When conversations are collapsed, hide corresponding splitter.
+    // Also, if conversations are collapsed, user is no longer keeping
+    // an eye on "current" conversation.  Inform the contacts
+    // subsystem about this.
+
+    frameFor('conversations').addEventListener(
+        'DOMAttrModified', function(event) {
+            if(event.attrName == 'collapsed' &&
+               event.target == frameFor('conversations')) {
+                var xulSplitter = event.target.previousSibling;
+                xulSplitter.hidden = event.target.collapsed;
+
+                viewFor('contacts').nowTalkingWith(null, null);
+            }
+        }, false);
+
+    // Apply rules to areas
+    
+    var xulAreas = document.getElementsByAttribute('class', 'sameplace-area');
+    
+    for(var i=0; i<xulAreas.length; i++)
+        xulAreas[i].addEventListener(
+            'DOMAttrModified', function(event) {
+                if(event.attrName == 'collapsed') {
+                    if(event.target.getAttribute('class') == 'sameplace-area') {
+                        // When area is collapsed, hide corresponding splitter.
+                        var xulArea =
+                            event.target;
+                        var xulSplitter = document.getElementById(
+                            xulArea.id.replace(/^sameplace-area/, 'sameplace-splitter'));
+                        xulSplitter.hidden = (event.newValue.toString() == 'true');
+                    } else if(event.target.nodeName == 'iframe') {
+                        // When view is collapsed, possibly hide containing area too.
+                        var xulArea =
+                            event.currentTarget;
+                        var xulContactsView =
+                            xulArea.getElementsByAttribute('class', 'sameplace-contacts')[0];
+                        var xulConversationsView =
+                            xulArea.getElementsByAttribute('class', 'sameplace-conversations')[0];
+                        xulArea.collapsed = 
+                            (xulContactsView.collapsed && xulConversationsView.collapsed);
+                    }
+                }
+            }, false);
 }
 
 
 // GUI REACTIONS
 // ----------------------------------------------------------------------
 
-function pressedKey(event) {
-    if(event.ctrlKey  == gToggleSidebarKey.ctrlKey &&
-       event.shiftKey == gToggleSidebarKey.shiftKey &&
-       event.altKey   == gToggleSidebarKey.altKey &&
-       event.metaKey  == gToggleSidebarKey.metaKey &&
-       event.charCode == gToggleSidebarKey.charCode &&
-       event.keyCode  == KeyEvent[gToggleSidebarKey.keyCodeName])
-        toggleSidebar();
-}
-
 
 // GUI ACTIONS
 // ----------------------------------------------------------------------
 
-function updateToggleSidebarKey(keyDesc) {
+function toggle(event) {
+    areaFor('contacts').collapsed = !areaFor('contacts').collapsed;
+    if(!areaFor('contacts').collapsed) {
+        frameFor('contacts').collapsed = false;
+        frameFor('toolbox').collapsed = false;
+    }
+}
+
+function updateToggleAreaKey(keyDesc) {
     gToggleSidebarKey = keyDesc;
 
     _('key-toggle-sidebar').removeAttribute('keycode');
@@ -179,55 +267,70 @@ function runWizard() {
         'sameplace-wizard', 'chrome')
 }
 
-function loadSidebar(force) {
-    if(force || getView().location.href != 'chrome://sameplace/content/sameplace.xul') 
-        getView().location.href = 'chrome://sameplace/content/sameplace.xul';
+function load(force) {
+    if(areaFor('conversations').id == 'appcontent') {
+        var leftView = _('area-left').getElementsByAttribute(
+            'class', 'sameplace-conversations')[0].contentWindow;
+        if(force || leftView.location.href != 'chrome://sameplace/content/sameplace.xul')
+            leftView.location.href = 'chrome://sameplace/content/sameplace.xul';
+    } else
+        if(force || viewFor('conversations').location.href != 'chrome://sameplace/content/sameplace.xul')
+            viewFor('conversations').location.href = 'chrome://sameplace/content/sameplace.xul';
+    if(force || viewFor('contacts').location.href != 'chrome://sameplace/content/contacts.xul') 
+        viewFor('contacts').location.href = 'chrome://sameplace/content/contacts.xul';
+    if(force || viewFor('toolbox').location.href != 'chrome://sameplace/content/toolbox.xul') 
+        viewFor('toolbox').location.href = 'chrome://sameplace/content/toolbox.xul';
 }
 
-function toggleSidebar() {
-    if(getSidebar().collapsed)
-        showSidebar();
-    else 
-        hideSidebar();
-}
 
-function showSidebar() {
-    loadSidebar();
-    getSidebar().collapsed = false;
-}
-
-function hideSidebar() {
-    if(isReceivingInput()) {
-        var contentArea = (document.getElementById('content') ||
-                           document.getElementById('messagepane'));
-        if(contentArea)
-            contentArea.focus();
-    }
-    getSidebar().collapsed = true;
-}
+// GUI UTILITIES
+// ----------------------------------------------------------------------
 
 function isReceivingInput() {
-    // XXX this needs to be adjusted.  It shouldn't peek into the
-    // sidebar context.
-
-    return (document.commandDispatcher.focusedWindow ==
-            getView()._('conversations').contentWindow ||
-            document.commandDispatcher.focusedWindow.parent ==
-            getView()._('conversations').contentWindow ||
+    return (viewFor('conversations').isReceivingInput() ||
             (document.commandDispatcher.focusedElement &&
-             document.commandDispatcher.focusedElement == getView().document))
+             document.commandDispatcher.focusedElement == viewFor('toolbox').document))
 }
 
-function getSidebar() {
-    return _('sidebar-' + pref.getCharPref('whichSidebar'));
+function areaFor(aspect) {
+    switch(aspect) {
+    case 'contacts':
+    case 'toolbox':
+        return _('area-' + pref.getCharPref('contactsArea'));
+        break;
+    case 'conversations':
+        switch(pref.getCharPref('conversationsArea')) {
+        case 'left':
+        case 'right':
+        case 'sidebar':
+            return _('area-' + pref.getCharPref('conversationsArea'));
+            break;
+        case 'appcontent':
+            return document.getElementById('appcontent');
+            break;
+        default:
+            throw new Error('Invalid argument. (' + pref.getCharPref('conversationsArea') + ')');
+        }
+        break;
+    default:
+        throw new Error('Invalid argument. (' + aspect + ')');
+    }
 }
 
-function getSplitter() {
-    return _('splitter-' + pref.getCharPref('whichSidebar'));
+function frameFor(aspect) {
+    if(['toolbox', 'contacts', 'conversations'].indexOf(aspect) == -1)
+        throw new Error('Invalid argument. (' + aspect + ')');
+
+    var xulArea = areaFor(aspect);
+    if(xulArea.id == 'appcontent')
+        return getBrowser().contentWindow;
+    else
+        return xulArea.getElementsByAttribute(
+            'class', 'sameplace-' + aspect)[0];
 }
 
-function getView() {
-    return getSidebar().firstChild.contentWindow;
+function viewFor(aspect) {
+    return frameFor(aspect).contentWindow;
 }
 
 function log(msg) {
@@ -239,6 +342,15 @@ function log(msg) {
 
 // UTILITIES
 // ----------------------------------------------------------------------
+
+function matchKeyEvent(e1, e2) {
+    return (e1.ctrlKey  == e2.ctrlKey &&
+            e1.shiftKey == e2.shiftKey &&
+            e1.altKey   == e2.altKey &&
+            e1.metaKey  == e2.metaKey &&
+            e1.charCode == e2.charCode &&
+            e1.keyCode  == KeyEvent[e2.keyCodeName]);
+}
 
 function getExtensionVersion(id) {
     return Cc["@mozilla.org/extensions/manager;1"]
@@ -253,7 +365,7 @@ function getMostRecentWindow() {
 }
 
 function isActive() {
-    return getView().document.location.href == 'chrome://sameplace/content/sameplace.xul';
+    return viewFor('conversations').document.location.href == 'chrome://sameplace/content/sameplace.xul';
 }
 
 function isActiveSomewhere() {

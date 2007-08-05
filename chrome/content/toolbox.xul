@@ -1,0 +1,190 @@
+<?xml version="1.0"?>
+
+<!--
+  Copyright (C) 2005-2006 by Massimiliano Mirra
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+  Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
+-->
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://sameplace/skin/sameplace.css" type="text/css"?>
+
+<!DOCTYPE page>
+<page xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+      onload="init(event);"
+      onunload="finish(event);"
+      orient="vertical">
+
+  <!-- SCRIPTS -->
+  
+  <script type="application/x-javascript" src="chrome://xmpp4moz/content/xmpp.js"/>
+  <script type="application/x-javascript" src="namespaces.js"/>
+  <script type="application/x-javascript" src="utilities.js"/>
+  <script type="application/x-javascript" src="utilities_gui.js"/>
+  <script type="application/x-javascript" src="utilities_xmpp.js"/>
+  <script type="application/x-javascript" src="toolbox.js"/>
+
+
+  <!-- COMMANDS -->
+  
+  <commandset>
+    <command id="add-contact" oncommand="requestedAddContact();"
+             label="Add contact..."
+             tooltiptext="Add a contact to your contact list"/>
+    <command id="open-conversation" oncommand="requestedOpenConversation('chat');"
+             label="Open conversation..."
+             accesskey="O"
+             tooltiptext="Open a conversation"/>
+    <command id="join-room" oncommand="requestedOpenConversation('groupchat');"
+             label="Join chat room..."
+             accesskey="r"
+             tooltiptext="Join a chat room"/>
+    <command id="switch-to-unread" oncommand="conversations.switchToUnread();"
+             label="Go to next unread conversation"
+             tooltiptext="Switch to next conversation in line with unread messages"/>
+    <command id="switch-to-next" oncommand="conversations.switchToNext();"
+             label="Go to next conversation"
+             tooltiptext="Switch to next conversation"/>
+    <command id="run-wizard"
+             label="Run Account Wizard..."
+             oncommand="runWizard();"
+             accesskey="W"/>
+    <command id="view-help" oncommand="viewHelp();"
+             label="View help pages"
+             accesskey="h"
+             tooltiptext="Load help page"/>
+    <command id="visit-forum" oncommand="visitForum();"
+             label="Visit forum"
+             accesskey="f"
+             tooltiptext="Visit support forum"/>
+    <command id="report-bug" oncommand="reportBug();"
+             label="Report bugs/request features"
+             accesskey="R"
+             tooltiptext="Report bug/Request features"/>
+    <command id="visit-users-room" oncommand="visitUsersRoom();"
+             label="Visit SamePlace chatroom"
+             accesskey="V"
+             tooltiptext="Visit SamePlace users' chatroom"/>
+    <command id="read-latest-news" oncommand="readLatestNews();"
+             label="Read latest news"
+             accesskey="n"/>
+    <command id="hide" oncommand="hide();"
+             label="Hide"
+             tooltiptext="Hide"/>
+    <command id="import-contacts"
+             label="Import Contacts..."
+             accesskey="I"
+             oncommand="importContacts();"/>
+    <command id="open-standalone"
+             label="Open Standalone (EXPERIMENTAL)"
+             accesskey="S"
+             oncommand="window.open(
+                        'chrome://sameplace/content/standalone/contacts.xul',
+                        'SamePlace:Contacts', 'chrome,titlebar=no,toolbar=no');"/>
+  </commandset>
+
+  
+  <!-- KEYS -->
+
+  <keyset>
+    <key id="key-switch-to-unread" key="n" modifiers="alt" command="switch-to-unread"/>
+    <key id="key-switch-to-next" key="n" modifiers="control alt" command="switch-to-next"/>
+  </keyset>
+
+
+  <!-- MAIN -->
+
+  <notificationbox id="notify" orient="vertical" style="overflow: hidden;">
+    <toolbox>
+      <toolbar id="head" align="center">
+        <toolbaritem>
+          <label id="logo"/>        
+        </toolbaritem>
+        <toolbarspring/>
+        <toolbarbutton command="add-contact"/>
+        <toolbarbutton command="join-room"/>
+        <toolbarbutton command="switch-to-next"/>
+        <toolbarbutton command="switch-to-unread"/>   
+        <toolbarspring/>
+        <toolbarbutton id="actions" label="" type="menu">
+          <menupopup id="actions-popup">
+            <menu label="Participate" accesskey="P">
+              <menupopup>
+                <menuitem class="menuitem-iconic" command="visit-users-room"/>
+                <menuitem class="menuitem-iconic" command="visit-forum"/>
+                <menuitem class="menuitem-iconic" command="view-help"/>
+                <menuitem class="menuitem-iconic" command="report-bug"/>
+                <menuitem class="menuitem-iconic" command="read-latest-news"/>
+              </menupopup>
+            </menu>
+            <menuseparator/>
+            <menuitem class="menuitem-iconic" command="add-contact"/>
+            <menuitem class="menuitem-iconic" command="join-room"/>
+            <menuitem class="menuitem-iconic" command="open-conversation"/>
+            <menuitem class="menuitem-iconic" command="switch-to-unread"
+                      key="key-switch-to-unread"/>
+            <menuitem class="menuitem-iconic" command="switch-to-next"
+                      key="key-switch-to-next"/>
+            <menuitem class="menuitem-iconic" command="toggle-contacts"/>
+            <menuitem class="menuitem-iconic" command="toggle-conversations"/>
+            <menuseparator/>
+
+            <menuitem class="menuitem-iconic" command="import-contacts"/>
+
+            <menu class="menuitem-iconic" label="Scriptlets">
+              <menupopup id="scriptlets-popup" onpopupshowing="requestedShowScriptletList(this);">
+                <menuseparator/>
+                <menuitem label="Manage..." accesskey="M" oncommand="requestedManageScriptlets();"/>
+              </menupopup>
+            </menu>
+
+            <menuitem class="menuitem-iconic" command="open-standalone"/>
+            <menuitem class="menuitem-iconic" command="run-wizard"/>
+                      
+            <menuseparator id="actions-separator" hidden="true"/>
+          </menupopup>
+        </toolbarbutton>
+        <toolbarbutton command="hide"/>
+      </toolbar>
+    </toolbox>
+
+    <!-- PROFILE -->
+
+    <vbox id="profile">
+      <hbox>
+        <textbox readonly="true" value="" id="profile-username"/>
+        <toolbarbutton type="menu" label="online" id="status-menu" hidden="true">
+          <menupopup>
+            <menuitem class="menuitem-iconic" label="online"/>
+            <menuitem class="menuitem-iconic" label="offline"/>
+          </menupopup>
+        </toolbarbutton>
+      </hbox>
+      <textbox id="status-message"
+               onkeypress="requestedChangeStatusMessage(event);"
+               oninput="this.setAttribute('draft', 'true');"
+               onfocus="var textbox = this.parentNode.parentNode; /* 'this' is anonymous html:input */
+                        if(textbox.getAttribute('draft') == 'true')
+                        textbox.value = '';
+                        else
+                        textbox.select();"
+               draft="true"
+               tooltiptext="Change your status message"
+               flex="1"/>
+    </vbox>
+  </notificationbox>
+</page>

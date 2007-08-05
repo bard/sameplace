@@ -49,22 +49,27 @@
             <column flex="1"/>
           </columns>
           <rows>
-            <row align="center">
+            <row>
               <label value="Default application URL:" accesskey="U"
                      for="sameplace-textbox-default-app-url"/>
               <textbox preference="sameplace-default-app-url" flex="1"/>
             </row>
 
-            <row align="center">
+            <row>
               <label value="Toggle sidebar hotkey:"/>
               <vbox flex="1">
                 <hbox align="center" flex="1">
-                  <textbox flex="1" id="sameplace-toggle-sidebar-key"
+                  <textbox flex="1" id="sameplace-toggle-contacts-key"
                            readonly="true" style="text-align: center"/>
-                  <button label="Capture" oncommand="sameplacePrefs.captureKey();"/>
+                  <button label="Capture" oncommand="sameplacePrefs.captureKey('contacts');"/>
+                </hbox>
+                <hbox align="center" flex="1">
+                  <textbox flex="1" id="sameplace-toggle-conversations-key"
+                           readonly="true" style="text-align: center"/>
+                  <button label="Capture" oncommand="sameplacePrefs.captureKey('conversations');"/>
                 </hbox>
                 <description style="font-size: smaller;">
-                  (Key combination must not collide with existing ones.)
+                  (Hotkeys must be distinct and not collide with existing ones.)
                 </description>
               </vbox>
             </row>

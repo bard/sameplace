@@ -34,11 +34,11 @@ var pref = Cc['@mozilla.org/preferences-service;1']
 // ACTIONS
 // ----------------------------------------------------------------------
 
-function captureKey() {
+function captureKey(which) {
     document.addEventListener(
         'keypress', function(event) {
             try {
-                capturedKey(keyEventToKeyDesc(event));
+                capturedKey(which, keyEventToKeyDesc(event));
             } finally {
                 document.removeEventListener(
                     'keypress', arguments.callee, false);
@@ -46,12 +46,15 @@ function captureKey() {
         }, false);
 }
 
-function displayKey(desc) {
-    _('toggle-sidebar-key').value = keyDescToKeyRepresentation(desc);
+function displayKey(which, desc) {
+    _('toggle-' + which + '-key').value = keyDescToKeyRepresentation(desc);
 }
 
-function saveKey(desc) {
-    pref.setCharPref('toggleSidebarKey', desc.toSource());
+function saveKey(which, desc) {
+    function capitalize(s) {
+        return s.substr(0, 1).toUpperCase() + s.substr(1);
+    }
+    pref.setCharPref('toggle' + capitalize(which) + 'Key', desc.toSource());
 }
 
 
@@ -60,12 +63,13 @@ function saveKey(desc) {
 
 window.addEventListener(
     'load', function(event) {
-        displayKey(eval(pref.getCharPref('toggleSidebarKey')));
+        displayKey('contacts', eval(pref.getCharPref('toggleContactsKey')));
+        displayKey('conversations', eval(pref.getCharPref('toggleConversationsKey')));
     }, false);
 
-function capturedKey(desc) {
-    displayKey(desc);
-    saveKey(desc);
+function capturedKey(which, desc) {
+    displayKey(which, desc);
+    saveKey(which, desc);
 }
 
 

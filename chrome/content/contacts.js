@@ -172,9 +172,11 @@ function nowTalkingWith(account, address) {
     if(previouslyTalking)
         previouslyTalking.setAttribute('current', 'false');
 
-    var contact = get(account, address) || add(account, address);
-    contact.setAttribute('current', 'true');
-    $(contact).$('[role="pending"]')._.value = 0;
+    if(account && address) {
+        var contact = get(account, address) || add(account, address);
+        contact.setAttribute('current', 'true');
+        $(contact).$('[role="pending"]')._.value = 0;        
+    }
 }
 
 function contactChangedRelationship(account, address, subscription, name) {
@@ -512,25 +514,14 @@ function requestedRemoveContact(element) {
 }
 
 function clickedContact(contact) {
-    requestedCommunicate(contact, getDefaultAppUrl())
-}
-
-function requestedCommunicate(contact, url) {
-    if(onRequestedCommunicate)
-        onRequestedCommunicate(
-            attr(contact, 'account'),
-            attr(contact, 'address'),
-            url);
+    var selectEvent = document.createEvent('Event');
+    selectEvent.initEvent('contact/select', true, false);
+    contact.dispatchEvent(selectEvent);
 }
 
 
 // GUI UTILITIES (SPECIFIC)
 // ----------------------------------------------------------------------
-
-function getDefaultAppUrl() {
-    var url = prefBranch.getCharPref('defaultAppUrl');
-    return isChromeUrl(url) ? chromeToFileUrl(url) : url;
-}
 
 var notify;
 window.addEventListener(

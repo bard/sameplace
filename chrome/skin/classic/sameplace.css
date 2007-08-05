@@ -51,7 +51,7 @@ toolbarbutton[command="hide"] {
     width: 10px;
     height: 12px;
     margin: 0 5px 0 10px;
-    background: url("hide_10x12.png") top left no-repeat;
+    background: url("hide_10x12.png") center left no-repeat;
 }
 
 toolbarbutton[command="add-contact"] {      
@@ -92,7 +92,7 @@ toolbarbutton[command="switch-to-unread"] {
 
 
 toolbarbutton[command="hide"]:hover {  
-    background: transparent url("hide_hover_10x12.png") top left no-repeat;
+    background: transparent url("hide_hover_10x12.png") center left no-repeat;
 }
 
 toolbarbutton[command="add-contact"]:hover {  
