@@ -93,7 +93,7 @@
     <!-- SIDEBAR -->
     
     <vbox id="folderPaneBox"> 	
-      <splitter id="sameplace-splitter-sidebar"
+      <splitter id="sameplace-splitter-left"
                 class="sameplace-splitter"
                 persist="state"
                 state="open"
@@ -101,22 +101,22 @@
                 resizebefore="closest"
                 resizeafter="closest"
                 hidden="true"/>
-      <vbox flex="1" id="sameplace-area-sidebar"
+      <vbox flex="1" id="sameplace-area-left"
             class="sameplace-area"
             collapsed="true"
             persist="height"
             height="400">
-        <iframe id="sameplace-toolbox-sidebar"
+        <iframe id="sameplace-toolbox-left"
                 class="sameplace-toolbox"
                 src="toolbox.xul"
                 collapsed="true"/>
-        <iframe id="sameplace-contacts-sidebar"
+        <iframe id="sameplace-contacts-left"
                 class="sameplace-contacts"
                 src="about:blank"
                 collapsed="true"
                 flex="1"/>
         <splitter hidden="true" orient="vertical" resizeafter="farthest"/>
-        <iframe id="sameplace-conversations-sidebar"
+        <iframe id="sameplace-conversations-left"
                 class="sameplace-conversations"
                 src="about:blank"
                 collapsed="true"
@@ -127,7 +127,7 @@
 
     <!-- AREAS -->
 
-    <splitter id="sameplace-splitter-left"
+    <splitter id="sameplace-splitter-middle"
               class="sameplace-splitter"
               insertafter="folderpane_splitter"
               state="open"
@@ -135,24 +135,24 @@
               resizeafter="closest"
               hidden="true"/>
     
-    <vbox id="sameplace-area-left"
+    <vbox id="sameplace-area-middle"
           class="sameplace-area"
           insertafter="folderpane_splitter"
           collapsed="true"
           persist="width"
           width="300"
           minwidth="80">
-      <iframe id="sameplace-toolbox-left"
+      <iframe id="sameplace-toolbox-middle"
               class="sameplace-toolbox"
               src="toolbox.xul"
               collapsed="true"/>
-      <iframe id="sameplace-contacts-left"
+      <iframe id="sameplace-contacts-middle"
               class="sameplace-contacts"
               src="about:blank"
               collapsed="true"
               flex="1"/>
       <splitter hidden="true" orient="vertical" resizeafter="farthest"/>
-      <iframe id="sameplace-conversations-left"
+      <iframe id="sameplace-conversations-middle"
               class="sameplace-conversations"
               src="about:blank"
               collapsed="true"
@@ -183,7 +183,7 @@
               collapsed="true"
               flex="1"/>
       <splitter hidden="true" orient="vertical" resizeafter="farthest"/>
-      <iframe id="sameplace-conversations-left"
+      <iframe id="sameplace-conversations-middle"
               class="sameplace-conversations"
               src="about:blank"
               collapsed="true"
