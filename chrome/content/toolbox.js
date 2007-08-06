@@ -122,7 +122,7 @@ function importContacts() {
 }
 
 function readLatestNews() {
-    openLink('http://sameplace.cc/blog');
+    openLink('http://sameplace.cc/blog', true);
 }
 
 function viewHelp() {
