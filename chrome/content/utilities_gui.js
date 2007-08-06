@@ -142,6 +142,13 @@ function hasAncestor(element, parentName, parentNamespace) {
     return false;
 }
 
+function getBrowser() {
+    if(top.getBrowser)
+        return top.getBrowser();
+
+    return undefined;
+}
+
 // XXX merge with openURL below
 
 function openLink(url, newTab) {
