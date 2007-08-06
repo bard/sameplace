@@ -58,7 +58,7 @@
 
       <!-- DRAGGABLE AREA -->
 
-      <spacer flex="1" dragwindow="true"/>
+      <titlebar flex="1"/>
 
       <!-- CLOSE/MAXIMIZE/ETC. WIDGETS -->
 

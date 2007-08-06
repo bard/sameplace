@@ -4,6 +4,8 @@
 
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
+  <script type="application/x-javascript" src="../utilities.js"/>
+  <script type="application/x-javascript" src="../utilities_gui.js"/>
   <script type="application/x-javascript" src="chrome://xmpp4moz/content/xmpp.js"/>
   <script type="application/x-javascript" src="contacts.js"/>
 
@@ -56,7 +58,7 @@
 
       <!-- DRAGGABLE AREA -->
 
-      <spacer flex="1" dragwindow="true"/>
+      <titlebar flex="1"/>
 
       <!-- CLOSE/MAXIMIZE/ETC. WIDGETS -->
 

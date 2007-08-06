@@ -11,15 +11,9 @@
         class="sb_faceplate, mainwin"
         title="SamePlace - Contacts"
         windowtype="SamePlace:Contacts"
-        ondraggesture="tracker.onBkgDown(event, false);"
-        onmouseup="tracker.onBkgUp();"
         onclose="return requestedClose();"
         persist="screenX screenY width height"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-
-  <script type="application/x-javascript" src="tracker.js"/>
-  <script type="application/x-javascript" src="../utilities.js"/>
-  <script type="application/x-javascript" src="../utilities_gui.js"/>
 
   <stack flex="1" id="window_parent"/>
 </window>

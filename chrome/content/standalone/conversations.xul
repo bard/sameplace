@@ -9,11 +9,6 @@
         class="sb_faceplate, mainwin"
         title="SamePlace - Interactions"
         windowtype="SamePlace:Interactions"
-        ondraggesture="tracker.onBkgDown(event, false);"
-        onmouseup="tracker.onBkgUp();"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-
-  <script type="application/x-javascript" src="tracker.js"/>
-
   <stack flex="1" id="window_parent"/>
 </window>
