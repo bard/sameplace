@@ -31,8 +31,8 @@
         flex="1">
 
   <script type="application/x-javascript" src="chrome://xmpp4moz/content/xmpp.js"/>
-  <script type="application/x-javascript" src="namespaces.js"/>
-  <script type="application/x-javascript" src="utilities_xmpp.js"/>
+  <script type="application/x-javascript" src="lib/namespaces.js"/>
+  <script type="application/x-javascript" src="lib/utilities_xmpp.js"/>
   <script type="application/x-javascript" src="join_room.js"/>
 
   <dialogheader id="header" title="Join Chat Room"/>

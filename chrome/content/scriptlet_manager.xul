@@ -34,9 +34,9 @@
   <script type="application/x-javascript" src="chrome://global/content/nsTransferable.js"/>
 
   <script type="application/x-javascript" src="chrome://xmpp4moz/content/xmpp.js"/>
-  <script type="application/x-javascript" src="namespaces.js"/>
-  <script type="application/x-javascript" src="utilities.js"/>
-  <script type="application/x-javascript" src="utilities_gui.js"/>
+  <script type="application/x-javascript" src="lib/namespaces.js"/>
+  <script type="application/x-javascript" src="lib/utilities.js"/>
+  <script type="application/x-javascript" src="lib/utilities_gui.js"/>
   <script type="application/x-javascript" src="lib/css_query.js"/>
   <script type="application/x-javascript" src="lib/process.js"/>
   <script type="application/x-javascript" src="scriptlet_manager.js"/>
