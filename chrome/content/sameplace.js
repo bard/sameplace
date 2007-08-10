@@ -161,7 +161,7 @@ function init(event) {
 
     // Setting up contact autocompletion
 
-    behaviour.autoComplete(_('contact'));
+    autoComplete(_('contact'));
 
     _('contact').addEventListener(
         'complete', function(event) {

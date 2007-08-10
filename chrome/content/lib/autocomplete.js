@@ -1,6 +1,4 @@
-var behaviour = behaviour || {};
-
-behaviour.autoComplete = function(textbox) {
+function autoComplete(textbox) {
     var popup = document.createElement('popup');
     textbox.appendChild(popup);
 
