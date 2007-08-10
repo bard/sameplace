@@ -139,8 +139,6 @@
                       key="key-switch-to-unread"/>
             <menuitem class="menuitem-iconic" command="switch-to-next"
                       key="key-switch-to-next"/>
-            <menuitem class="menuitem-iconic" command="toggle-contacts"/>
-            <menuitem class="menuitem-iconic" command="toggle-conversations"/>
             <menuseparator/>
 
             <menuitem class="menuitem-iconic" command="import-contacts"/>
