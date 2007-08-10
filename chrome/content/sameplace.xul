@@ -45,7 +45,6 @@
   <script type="application/x-javascript" src="lib/utilities_xmpp.js"/>
   <script type="application/x-javascript" src="lib/autocomplete.js"/>
   <script type="application/x-javascript" src="sameplace.js"/>
-  <script type="application/x-javascript" src="sameplace_workarounds.js"/>
 
 
   <!-- COMMANDS -->

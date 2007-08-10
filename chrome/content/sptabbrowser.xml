@@ -991,6 +991,20 @@
               this.setIcon(this.mCurrentTab, this.mCurrentBrowser.mIconURL);
             }
 
+
+            // XXX bard: there is no browser-status-filter;1 in
+            // Thunderbird, we're using this (and hoping for the best)
+            // instead of the commented block below
+            if(!('@mozilla.org/appshell/component/browser-status-filter;1' in Components.classes)) {
+                this.mCurrentBrowser.webProgress.addProgressListener(
+                    this.mTabProgressListener(this.mCurrentTab,
+                                              this.mCurrentBrowser,
+                                              false),
+                    Components.interfaces.nsIWebProgress.NOTIFY_ALL);
+                return;
+            }
+
+
             var filter;
             if (this.mTabFilters.length > 0) {
               // Use the filter hooked up in our addProgressListener
@@ -1191,12 +1205,17 @@
             // wire up a progress listener for the new browser object.
             var position = this.mTabContainer.childNodes.length-1;
             var tabListener = this.mTabProgressListener(t, b, blank);
-            const filter = Components.classes["@mozilla.org/appshell/component/browser-status-filter;1"]
-                                     .createInstance(Components.interfaces.nsIWebProgress);
-            filter.addProgressListener(tabListener, Components.interfaces.nsIWebProgress.NOTIFY_ALL);
-            b.webProgress.addProgressListener(filter, Components.interfaces.nsIWebProgress.NOTIFY_ALL);
+
+            // XXX bard: executing code below only if there is
+            // browser-status-filter (not the case for Thunderbird)
+            if('@mozilla.org/appshell/component/browser-status-filter;1' in Components.classes) {
+                const filter = Components.classes["@mozilla.org/appshell/component/browser-status-filter;1"]
+                                         .createInstance(Components.interfaces.nsIWebProgress);
+                filter.addProgressListener(tabListener, Components.interfaces.nsIWebProgress.NOTIFY_ALL);
+                b.webProgress.addProgressListener(filter, Components.interfaces.nsIWebProgress.NOTIFY_ALL);
+                this.mTabFilters[position] = filter;
+            }
             this.mTabListeners[position] = tabListener;
-            this.mTabFilters[position] = filter;
 
             b._fastFind = this.fastFind;
 
@@ -1404,10 +1423,15 @@
 
             // Remove the tab's filter and progress listener.
             const filter = this.mTabFilters[index];
-            var oldBrowser = this.getBrowserAtIndex(index);
-            oldBrowser.webProgress.removeProgressListener(filter);
-            filter.removeProgressListener(this.mTabListeners[index]);
-            this.mTabFilters.splice(index, 1);
+
+            // XXX bard: executing code below only if there is
+            // browser-status-filter (not the case for Thunderbird)
+            if('@mozilla.org/appshell/component/browser-status-filter;1' in Components.classes) {
+                var oldBrowser = this.getBrowserAtIndex(index);
+                oldBrowser.webProgress.removeProgressListener(filter);
+                filter.removeProgressListener(this.mTabListeners[index]);
+                this.mTabFilters.splice(index, 1);
+            }
             this.mTabListeners.splice(index, 1);
 
             // Remove our title change and blocking listeners
