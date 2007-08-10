@@ -9,7 +9,7 @@
     <script type="application/x-javascript" src="../lib/utilities_gui.js"/>
     <script type="application/x-javascript" src="../lib/utilities_xmpp.js"/>
     <script type="application/x-javascript" src="../lib/autocomplete.js"/>
-    <script type="application/x-javascript" src="conversations.js"/>
+    <script type="application/x-javascript" src="../facades/conversations.js"/>
 
     <commandset>
       <command id="command-close-current"

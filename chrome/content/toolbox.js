@@ -37,7 +37,7 @@ const srvPrompt = Cc["@mozilla.org/embedcomp/prompt-service;1"]
 
 var channel;
 var scriptlets = {};
-load('chrome://sameplace/contact/scriptlets.js', scriptlets);
+load('chrome://sameplace/contact/facades/scriptlets.js', scriptlets);
 
 
 // GUI INITIALIZATION AND FINALIZATION
