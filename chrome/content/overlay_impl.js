@@ -24,7 +24,7 @@
 
 const Cc = Components.classes;
 const Ci = Components.interfaces;
-const pref = Cc["@mozilla.org/preferences-service;1"]
+const pref = Cc['@mozilla.org/preferences-service;1']
     .getService(Ci.nsIPrefService)
     .getBranch('extensions.sameplace.');
 
@@ -49,36 +49,11 @@ function _(id) {
 // ----------------------------------------------------------------------
 
 function initOverlay(event) {
-    // Setup network reactions
-
     channel = XMPP.createChannel();
 
-    channel.on(
-        {event: 'transport', direction: 'out', state: 'start'},
-        function() {
-            if(window == getMostRecentWindow() && window.toolbar.visible)
-               load();
-        });
-
-    channel.on(
-        {event: 'iq', direction: 'out', stanza: function(s) {
-                return s.ns_auth::query.length() > 0;
-            }},
-        function() {
-            if(window == getMostRecentWindow() && window.toolbar.visible) {
-                viewFor('contacts').frameElement.collapsed = false;
-                viewFor('toolbox').frameElement.collapsed = false;
-            }
-        });
-
-    channel.on(
-        {event: 'message', direction: 'in', stanza: function(s) {
-                return s.@type == 'chat' && s.body.length() > 0;
-            }},
-        function(message) {
-            if(pref.getBoolPref('getAttentionOnMessage'))
-                window.getAttention();
-        });
+    initNetworkReactions();
+    initDisplayRules();
+    initHotkeys();
 
     // Only preload SamePlace if there's no other window around with
     // an active SamePlace instance, and if this isn't a popup.'
@@ -95,41 +70,38 @@ function initOverlay(event) {
             onFirstInstall: function() {
                 runWizard();
             }
-        });
-    
+        });    
+}
 
-    initDisplayRules();
+function initNetworkReactions() {
+    channel.on({
+        event     : 'transport',
+        direction : 'out',
+        state     : 'start'
+    }, function() {
+        if(window == getMostRecentWindow() && window.toolbar.visible)
+            load();
+    });
 
-    // Handle hotkeys and hotkey preference updates
-
-    var toggleContactsKey = eval(pref.getCharPref('toggleContactsKey'))
-    var toggleConversationsKey = eval(pref.getCharPref('toggleConversationsKey'))
-
-    window.addEventListener(
-        'keypress', function(event) {
-            if(matchKeyEvent(event, toggleContactsKey))
-                toggle();
-
-            
-            if(matchKeyEvent(event, toggleConversationsKey))
-                frameFor('conversations').collapsed = !frameFor('conversations').collapsed;
-        }, true)
-
-    pref.QueryInterface(Ci.nsIPrefBranch2)
-    pref.addObserver('', {
-        observe: function(subject, topic, data) {
-            if(topic == 'nsPref:changed') {
-                switch(data) {
-                case 'toggleContactsKey':
-                    toggleContactsKey = eval(pref.getCharPref('toggleContactsKey'));
-                    break;
-                case 'toggleConversationsKey':
-                    toggleConversationsKey = eval(pref.getCharPref('toggleConversationsKey'));
-                    break;
-                }
-            }
+    channel.on({
+        event     : 'iq',
+        direction : 'out',
+        stanza    : function(s) { return s.ns_auth::query != undefined; }
+    }, function() {
+        if(window == getMostRecentWindow() && window.toolbar.visible) {
+            viewFor('contacts').frameElement.collapsed = false;
+            viewFor('toolbox').frameElement.collapsed = false;
         }
-    }, false)
+    });
+
+    channel.on({
+        event     : 'message',
+        direction : 'in',
+        stanza    : function(s) { return s.@type == 'chat' && s.body.text() != undefined; }
+    }, function(message) {
+        if(pref.getBoolPref('getAttentionOnMessage'))
+            window.getAttention();
+    });
 }
 
 
@@ -145,7 +117,7 @@ function initDisplayRules() {
         'DOMAttrModified', function(event) {
             if(event.currentTarget == event.target &&
                event.attrName == 'collapsed')
-                setTimeout(function(){viewFor('toolbox').sizeToContent();}, 0)
+                setTimeout(function(){ viewFor('toolbox').sizeToContent(); }, 0)
         }, false);
 
     // When user selects a contact, display conversation view (NOT
@@ -223,9 +195,35 @@ function initDisplayRules() {
             }, false);
 }
 
+function initHotkeys() {
+    var toggleContactsKey = eval(pref.getCharPref('toggleContactsKey'))
+    var toggleConversationsKey = eval(pref.getCharPref('toggleConversationsKey'))
 
-// GUI REACTIONS
-// ----------------------------------------------------------------------
+    window.addEventListener(
+        'keypress', function(event) {
+            if(matchKeyEvent(event, toggleContactsKey))
+                toggle();
+            
+            if(matchKeyEvent(event, toggleConversationsKey))
+                frameFor('conversations').collapsed = !frameFor('conversations').collapsed;
+        }, true)
+
+    pref.QueryInterface(Ci.nsIPrefBranch2)
+    pref.addObserver('', {
+        observe: function(subject, topic, data) {
+            if(topic == 'nsPref:changed') {
+                switch(data) {
+                case 'toggleContactsKey':
+                    toggleContactsKey = eval(pref.getCharPref('toggleContactsKey'));
+                    break;
+                case 'toggleConversationsKey':
+                    toggleConversationsKey = eval(pref.getCharPref('toggleConversationsKey'));
+                    break;
+                }
+            }
+        }
+    }, false);
+}
 
 
 // GUI ACTIONS
@@ -239,28 +237,6 @@ function toggle(event) {
     }
 }
 
-function updateToggleAreaKey(keyDesc) {
-    gToggleSidebarKey = keyDesc;
-
-    _('key-toggle-sidebar').removeAttribute('keycode');
-    _('key-toggle-sidebar').removeAttribute('key');
-    _('key-toggle-sidebar').removeAttribute('modifiers');
-    if(keyDesc.keyCodeName)
-        _('key-toggle-sidebar').setAttribute('keycode', keyDesc.keyCodeName.replace(/^DOM_/, ''));
-    if(keyDesc.charCode)
-        _('key-toggle-sidebar').setAttribute('key', String.fromCharCode(keyDesc.charCode));
-    var modifiers = [];
-    if(keyDesc.ctrlKey)
-        modifiers.push('control');
-    if(keyDesc.altKey)
-        modifiers.push('alt');
-    if(keyDesc.metaKey)
-        modifiers.push('meta');
-    if(keyDesc.shiftKey)
-        modifiers.push('shift');
-    _('key-toggle-sidebar').setAttribute('modifiers', modifiers.join(' '));
-}
-    
 function runWizard() {
     window.openDialog(
         'chrome://sameplace/content/wizard.xul',
@@ -268,14 +244,10 @@ function runWizard() {
 }
 
 function load(force) {
-    if(areaFor('conversations').id == 'appcontent') {
-        var leftView = _('area-left').getElementsByAttribute(
-            'class', 'sameplace-conversations')[0].contentWindow;
-        if(force || leftView.location.href != 'chrome://sameplace/content/sameplace.xul')
-            leftView.location.href = 'chrome://sameplace/content/sameplace.xul';
-    } else
-        if(force || viewFor('conversations').location.href != 'chrome://sameplace/content/sameplace.xul')
-            viewFor('conversations').location.href = 'chrome://sameplace/content/sameplace.xul';
+    // XXX this does not handle "appcontent" setting as a conversation area
+
+    if(force || viewFor('conversations').location.href != 'chrome://sameplace/content/sameplace.xul')
+        viewFor('conversations').location.href = 'chrome://sameplace/content/sameplace.xul';
     if(force || viewFor('contacts').location.href != 'chrome://sameplace/content/contacts.xul') 
         viewFor('contacts').location.href = 'chrome://sameplace/content/contacts.xul';
     if(force || viewFor('toolbox').location.href != 'chrome://sameplace/content/toolbox.xul') 
@@ -333,12 +305,6 @@ function viewFor(aspect) {
     return frameFor(aspect).contentWindow;
 }
 
-function log(msg) {
-    Cc[ "@mozilla.org/consoleservice;1" ]
-        .getService(Ci.nsIConsoleService)
-        .logStringMessage(msg);
-}
-
 
 // UTILITIES
 // ----------------------------------------------------------------------
@@ -352,12 +318,6 @@ function matchKeyEvent(e1, e2) {
             e1.keyCode  == KeyEvent[e2.keyCodeName]);
 }
 
-function getExtensionVersion(id) {
-    return Cc["@mozilla.org/extensions/manager;1"]
-        .getService(Ci.nsIExtensionManager)
-        .getItemForID(id).version;
-}
-
 function getMostRecentWindow() {
     return Cc['@mozilla.org/appshell/window-mediator;1']
         .getService(Ci.nsIWindowMediator)
@@ -365,7 +325,7 @@ function getMostRecentWindow() {
 }
 
 function isActive() {
-    return viewFor('conversations').document.location.href == 'chrome://sameplace/content/sameplace.xul';
+    return viewFor('contacts').document.location.href == 'chrome://sameplace/content/contacts.xul';
 }
 
 function isActiveSomewhere() {
