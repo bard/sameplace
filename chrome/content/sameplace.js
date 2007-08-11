@@ -60,11 +60,11 @@ function init(event) {
         {event: 'message', direction: 'in', stanza: function(s) {
             return ((s.@type != 'error' && s.body != undefined) ||
                     (s.@type == 'error'))
-            }}, function(message) { seenChatMessage(message); });
+            }}, function(message) { seenDisplayableMessage(message); });
     channel.on(
         {event: 'message', direction: 'out', stanza: function(s) {
                 return s.body.length() > 0 && s.@type != 'groupchat';
-            }}, function(message) { seenChatMessage(message) });
+            }}, function(message) { seenDisplayableMessage(message) });
     channel.on(
         {event: 'message', direction: 'out', stanza: function(s) {
                 return s.ns_chatstates::active.length() > 0;
@@ -331,103 +331,73 @@ function updateAttachTooltip() {
         getBrowser().currentURI.spec;
 }
 
-/**
- * Interact with a contact in a new or existing interaction space.
- *
- * If "where" is a string, it is assumed to be an URL.  A new
- * interaction space is created and afterLoadAction is executed
- * immediately thereafter.  Target can be "main" (tipically for
- * conversation, opened in sidebar) or "additional".
- *
- */
+/**********************************************************************
 
-function interactWith(account, address,
-                      where, target, afterLoadAction) {
-    if(typeof(where) == 'string') {
-        // "where" is a url
-        if(target == 'main') {
-            if(conversations.isOpen(account, address))
-                afterLoadAction(conversations.get(account, address));
-            else
-                createInteractionPanel(account, address,
-                                       where, target, afterLoadAction);
-        } else {
-            createInteractionPanel(account, address,
-                                   where, target, afterLoadAction);
-        }
-    } else
-        // "where" is a content panel
-        enableInteraction(account, address, where);
-}
+Begins an interaction.
 
-function enableInteraction(account, address, panel, createSocket) {
-    XMPP.enableContentDocument(
-        panel, account, address,
-        isMUC(account, address) ? 'groupchat' : 'chat', createSocket);
+At the very least, an interaction is described by the contact we're
+interacting with (which in turn described by {account, address})
+and by the content panel the interaction is taking place in.  Most
+of the time (but optionally) it will also entail an URL to load in
+the content panel, either to replace the current one, or to augment
+it (e.g. javascript: URLs).
 
-//     var url = panel.getAttribute('src');
-//     if(/^https?:\/\//.test(url))
-//         XMPP.send(account,
-//                   <presence to={address}>
-//                   <interact xmlns="http://dev.hyperstruct.net/xmpp4moz/protocol" url={url}/>
-//                   </presence>);
-}
+Optionally, execute some code once the panel is ready.
 
-function createInteractionPanel(account, address,
-                                url, container,
-                                afterLoadAction) {
-    var panel;
-    if(container == 'additional') {
-        if(!(url.match(/^javascript:/) ||
-             getBrowser().contentDocument.location.href == 'about:blank'))
-            getBrowser().selectedTab = getBrowser().addTab();
-        
-        panel = getBrowser().selectedBrowser;
-    } else {
-        panel = conversations.create(account, address);
+interact() does not create panels by itself, it's the caller's
+responsibility to provide one.
 
-        panel.addEventListener(
-            'click', function(event) {
-                clickedElementInConversation(event);
-            }, true);
+Usage samples:
 
-        panel.addEventListener(
-            'dragdrop', function(event) {
-                nsDragAndDrop.drop(event, chatDropObserver);
-                event.stopPropagation();
-            }, true);
+- Creating a panel, loading an application (given the url), and
+  interacting with a contact (given by {contact, address}) within the
+  application:
+
+  var panel = conversations.create(account, address);
+  interact(account, address, url, panel);
+
+- Open an interaction in an arbitrary (i.e. not wrapped by a
+  conversations object) tabbed browser, using the currently loaded
+  application:
+
+  var panel = getBrowser().selectedBrowser;
+  interact(account, address, null, panel);
+
+- Use an existing panel to interact, after having enriched its
+  content with a remote script (probably enabling collaborative
+  capabilities on an otherwise static page):
+
+  var panel = getBrowser().selectedBrowser;
+  interact(account, address, 'javascript:...', panel);
+
+**********************************************************************/
+
+function interact(account, address, url, panel, nextAction) {
+    function activate() {
+        XMPP.enableContentDocument(panel, account, address,
+                                   isMUC(account, address) ? 'groupchat' : 'chat');
     }
 
-    // XMPP.enableContentDocument will set account and address as
-    // well, but if several messages arrive in a flurry (as when
-    // we come online and the server sends in those messages that
-    // were addressed to us while we were offline) we will need to
-    // identify the newly created panel *before*
-    // XMPP.enableContentDocument has a chance to do its work.
-    
+    nextAction = nextAction || function() {};
     panel.setAttribute('account', account);
     panel.setAttribute('address', address);
-    
-    if(url.match(/^javascript:/)) {
-        enableInteraction(account, address, panel, true);
-        panel.loadURI(url);
-    } else {
-        queuePostLoadAction(
-            panel, function(p) {
-                if(container == 'main')
-                    panel.contentWindow.addEventListener(
-                        'beforeunload', function(event) {
-                            conversations.closed(account, address);
-                        }, true);
 
-                enableInteraction(account, address, panel);
-                if(afterLoadAction)
-                    afterLoadAction(panel);
-            });
+    if(!url) {
+        activate();
+        nextAction();
+    }
+    else if(url.match(/^javascript:/)) {
+        panel.loadURI(url);
+        activate();
+        nextAction();
+    }
+    else {
+        afterLoad(panel, function(panel) {
+            activate();
+            nextAction();
+        });
         panel.setAttribute('src', url);
     }
-
-    return panel;
 }
 
 
@@ -475,25 +445,42 @@ function requestedAdditionalInteraction(event) {
     var url = event.target.value;
 
     if(url == 'current')
-        enableInteraction(account, address, getBrowser().selectedBrowser);
+        interact(account, address, null, getBrowser().selectedBrowser);
     else
         requestedCommunicate(account, address, url);
 }
 
 function requestedCommunicate(account, address, url) {
-    if(url == getDefaultAppUrl())
-        if(isMUC(account, address) && !conversations.isOpen(account, address))
+    if(url == getDefaultAppUrl()) {
+        if(isMUC(account, address) && !conversations.isOpen(account, address)) {
             window.openDialog('chrome://sameplace/content/join_room.xul',
                               'sameplace-open-conversation', 'centerscreen',
                               account, address);
-        else
-            interactWith(
-                account, address,
-                url, 'main', function(conversation) {
+        } else {
+            if(conversations.isOpen(account, address))
+                conversations.focus(account, address);
+            else {
+                var panel = conversations.create(account, address);
+                initPanel(panel); // XXX initPanel-after-create: repeated pattern, factor?
+                interact(account, address, url, panel, function() {
+                    if(messageCache[account] && messageCache[account][address]) {
+                        messageCache[account][address].forEach(function(message) {
+                            panel.xmppChannel.receive(message);
+                        });
+                    }
+                    
                     conversations.focus(account, address);
                 });
-    else
-        interactWith(account, address, url, 'additional');
+            }
+        }
+    }
+    else {
+        if(!(url.match(/^javascript:/) || getBrowser().currentURI.spec == 'about:blank'))
+            getBrowser().selectedTab = getBrowser().addTab();
+
+        var panel = getBrowser().selectedBrowser;
+        interact(account, address, url, panel)
+    }
 }
 
 function pressedKeyInContactField(event) {
@@ -642,37 +629,32 @@ function seenCachableMessage(message) {
 function seenOutgoingChatActivation(message) {
     var contact = XMPP.JID(message.stanza.@to);
 
-    var conversation = conversations.get(message.session.name, contact.address);
-    if(!conversation) 
-        conversation = interactWith(
-            message.session.name, contact.address,
-            getDefaultAppUrl(), 'main',
-            function(contentPanel) {
-                conversations.focus(message.session.name, contact.address);
-                conversations.opened(message.session.name, contact.address);
-                contentPanel.xmppChannel.receive(message);
-            });
-    else if(!conversation.contentDocument ||
-            (conversation.contentDocument &&
-             !conversation.contentDocument.getElementById('xmpp-incoming'))) {
-
+    var panel = conversations.get(message.account, contact.address);
+    if(!panel) {
+        panel = conversations.create(message.account, contact.address);
+        initPanel(panel);
+        interact(message.account, contact.address, getDefaultAppUrl(), panel, function() {
+            conversations.focus(message.account, contact.address);
+            conversations.opened(message.account, contact.address);// XXX really needed?
+            panel.xmppChannel.receive(message);
+        });
+    }
+    else if(!panel.contentDocument ||
+            (panel.contentDocument &&
+             !panel.contentDocument.getElementById('xmpp-incoming'))) {
+        
         // If conversation widget exists but it has no contentDocument
         // yet, or its contentDocument does not have the xmpp-incoming
         // element yet, it means that it has not been loaded, so
         // queing for when it is.
         
-        queuePostLoadAction(
-            conversation, function(contentPanel) {
-                contentPanel.xmppChannel.receive(message);
-            });
+        afterLoad(panel, function(panel) {
+            panel.xmppChannel.receive(message);
+        });
     }
 }
 
-// XXX this is also triggered by messages with type="error" and a
-// human-readable <text/> element, so "seenChatMessage" is not
-// accurate.
-
-function seenChatMessage(message) {
+function seenDisplayableMessage(message) {
     function maybeSetUnread(conversation) {
         if(message.direction == 'in' &&
            !conversations.isCurrent(message.session.name,
@@ -684,33 +666,42 @@ function seenChatMessage(message) {
         (message.stanza.@from != undefined ?
          message.stanza.@from : message.stanza.@to));
 
-    var conversation = conversations.get(message.session.name, contact.address);
-    if(!conversation) 
-        conversation = interactWith(
-            message.session.name, contact.address,
-            getDefaultAppUrl(), 'main',
-            function(contentPanel) {
-                conversations.opened(message.session.name, contact.address);
+    var panel = conversations.get(message.account, contact.address);
+    if(!panel) {
+        panel = conversations.create(message.account, contact.address);
+        initPanel(panel);
+        interact(message.account, contact.address, getDefaultAppUrl(), panel, function() {
+            conversations.opened(message.account, contact.address);// XXX really needed?
+            if(messageCache[message.account] && messageCache[message.account][contact.address]) {
+                messageCache[message.account][contact.address].forEach(function(message) {
+                    panel.xmppChannel.receive(message);
+                });
+            }
 
-                contentPanel.xmppChannel.receive(message);
-                maybeSetUnread(contentPanel);
-            });
-    else if(!conversation.contentDocument ||
-            (conversation.contentDocument &&
-             !conversation.contentDocument.getElementById('xmpp-incoming'))) {
+            // XXX was missing before -- might solve problems with
+            // lost messages -- using messageCache as above should
+            // work, too, but re-enable this line if message cache is
+            // removed
+            // panel.xmppChannel.receive(message);
+            
+            maybeSetUnread(panel);
+        });
+    }
+    else if(!panel.contentDocument ||
+            (panel.contentDocument &&
+             !panel.contentDocument.getElementById('xmpp-incoming'))) {
 
         // If conversation widget exists but it has no contentDocument
         // yet, or its contentDocument does not have the xmpp-incoming
         // element yet, it means that it has not been loaded, so
         // queing for when it is.
         
-        queuePostLoadAction(
-            conversation, function(contentPanel) {
-                contentPanel.xmppChannel.receive(message);
-                maybeSetUnread(conversation);
-            });
+        afterLoad(panel, function(panel) {
+            panel.xmppChannel.receive(message);
+            maybeSetUnread(panel);
+        });
     } else
-        maybeSetUnread(conversation);
+        maybeSetUnread(panel);
 }
 
 function sentMUCPresence(presence) {
@@ -718,15 +709,29 @@ function sentMUCPresence(presence) {
     var account = presence.session.name;
     var address = room.address;
 
-    interactWith(
-        account, address,
-        getDefaultAppUrl(), 'main',
-        function(interactionPanel) {
-            conversations.opened(account, address);
+    var panel = conversations.get(account, address);
+    if(!panel) {
+        panel = conversations.create(account, address);
+        initPanel(panel);
+        interact(account, address, getDefaultAppUrl(), panel, function() {
+            conversations.opened(account, address); // XXX check whether really necessary
             conversations.focus(account, address);
-        });
+        })
+    }
 }
 
+function initPanel(panel) {
+    panel.addEventListener(
+        'click', function(event) {
+            clickedElementInConversation(event);
+        }, true);
+
+    panel.addEventListener(
+        'dragdrop', function(event) {
+            nsDragAndDrop.drop(event, chatDropObserver);
+            event.stopPropagation();
+        }, true);
+}
 
 // DEVELOPER UTILITIES
 // ----------------------------------------------------------------------
