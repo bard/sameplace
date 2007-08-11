@@ -56,48 +56,61 @@ function init(event) {
         <feature var="http://jabber.org/protocol/chatstates"/>
         </query>);
 
-    channel.on(
-        {event: 'message', direction: 'in', stanza: function(s) {
+    channel.on({
+        event     : 'message',
+        direction : 'in',
+        stanza    : function(s) {
             return ((s.@type != 'error' && s.body != undefined) ||
                     (s.@type == 'error'))
-            }}, function(message) { seenDisplayableMessage(message); });
-    channel.on(
-        {event: 'message', direction: 'out', stanza: function(s) {
-                return s.body.length() > 0 && s.@type != 'groupchat';
-            }}, function(message) { seenDisplayableMessage(message) });
-    channel.on(
-        {event: 'message', direction: 'out', stanza: function(s) {
-                return s.ns_chatstates::active.length() > 0;
-            }}, function(message) { seenOutgoingChatActivation(message); });
-    channel.on(
-        {event: 'message', stanza: function(s) {
-                return s.@type != 'error' && s.body.length() > 0;
-            }}, function(message) { seenCachableMessage(message); });
-    channel.on(
-        {event: 'presence', direction: 'out', stanza: function(s) {
-                return s.ns_muc::x.length() > 0 && s.@type != 'unavailable';
-            }}, function(presence) { sentMUCPresence(presence) });
-    channel.on(
-        {event: 'iq', direction: 'out', stanza: function(s) {
-                return s.ns_auth::query != undefined;
-            }}, function(iq) {
-            var replyListener = channel.on(
-                {event: 'iq', direction: 'in', stanza: function(s) {
-                        return s.@id == iq.stanza.@id && s.@type == 'result';
-                    }}, function(reply) {
-                    channel.forget(replyListener);
-                    connectedAccount(iq.account);
-                });
-        });
+        }
+    }, function(message) { seenDisplayableMessage(message); });
 
-    contacts = top.sameplace.viewFor('contacts');
-    contacts.addEventListener(
-        'contact/select', function(event) {
-            requestedCommunicate(attr(event.target, 'account'),
-                                 attr(event.target, 'address'),
-                                 getDefaultAppUrl())
-        }, false);
+    channel.on({
+        event     : 'message',
+        direction : 'out',
+        stanza    : function(s) {
+            return s.body.text() != undefined && s.@type != 'groupchat';
+        }
+    }, function(message) { seenDisplayableMessage(message) });
     
+    channel.on({
+        event     : 'message',
+        direction : 'out',
+        stanza    : function(s) {
+            return s.ns_chatstates::active != undefined;
+        }
+    }, function(message) { seenOutgoingChatActivation(message); });
+    
+    channel.on({
+        event  : 'message',
+        stanza : function(s) {
+            return s.@type != 'error' && s.body.text() != undefined;
+        }
+    }, function(message) { seenCachableMessage(message); });
+    
+    channel.on({
+        event     : 'presence',
+        direction : 'out',
+        stanza    : function(s) {
+            return s.ns_muc::x.length() > 0 && s.@type != 'unavailable';
+        }
+    }, function(presence) { sentMUCPresence(presence) });
+    
+    channel.on({
+        event     : 'iq',
+        direction : 'out',
+        stanza    : function(s) {
+            return s.ns_auth::query != undefined;
+        }
+    }, function(iq) {
+        var replyListener = channel.on(
+            {event: 'iq', direction: 'in', stanza: function(s) {
+                return s.@id == iq.stanza.@id && s.@type == 'result';
+            }}, function(reply) {
+                channel.forget(replyListener);
+                connectedAccount(iq.account);
+            });
+    });
 
     // Wiring events from conversation subsystem to contact subsystem
     // and elsewhere
@@ -119,24 +132,14 @@ function init(event) {
 
     conversationContainer.addEventListener(
         'conversation/open', function(event) {
-            var panel = event.originalTarget;
-            contacts.startedConversationWith(panel.getAttribute('account'),
-                                             panel.getAttribute('address'));
             _('contact-toolbox', {role: 'attach'}).hidden = false;
         }, false);
 
     conversationContainer.addEventListener(
         'conversation/focus', function(event) {
-            var panel = event.originalTarget;
-            _('contact').value = XMPP.nickFor(panel.getAttribute('account'),
-                                              panel.getAttribute('address'));
-
-            // XXX This (well, the whole conversation handling
-            // probably) should go into the overlay, as a mediator,
-            // with a bunch of other stuff.
-            if(!top.sameplace.frameFor('conversations').collapsed)
-                contacts.nowTalkingWith(panel.getAttribute('account'),
-                                        panel.getAttribute('address'));
+            _('contact').value = XMPP.nickFor(
+                event.originalTarget.getAttribute('account'),
+                event.originalTarget.getAttribute('address'));
         }, false);
 
     conversationContainer.addEventListener(
@@ -148,10 +151,6 @@ function init(event) {
             if(isMUC(account, address))
                 exitRoom(account, address,
                          XMPP.JID(getJoinPresence(account, address).stanza.@to).resource);
-
-            contacts.stoppedConversationWith(
-                panel.getAttribute('account'),
-                panel.getAttribute('address'));
 
             if(conversations.count == 1) {
                 _('contact-toolbox', {role: 'attach'}).hidden = true;
