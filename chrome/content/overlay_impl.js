@@ -149,10 +149,16 @@ function initDisplayRules() {
                     toggle();
             }, false);
 
-    // When conversations are collapsed, hide corresponding splitter.
-    // Also, if conversations are collapsed, user is no longer keeping
-    // an eye on "current" conversation.  Inform the contacts
-    // subsystem about this.
+    // When conversations are collapsed:
+    //
+    // - hide corresponding splitter
+    //
+    // - if conversations are collapsed, user is no longer keeping an
+    //   eye on "current" conversation, so inform the contacts subsystem
+    //   about this.
+    //
+    // - if conversation frame was receiving input, take input away
+    //   from it, back to the content area
 
     frameFor('conversations').addEventListener(
         'DOMAttrModified', function(event) {
@@ -162,6 +168,14 @@ function initDisplayRules() {
                 xulSplitter.hidden = event.target.collapsed;
 
                 viewFor('contacts').nowTalkingWith(null, null);
+
+                if(viewFor('conversations').isReceivingInput()) {
+                    var contentArea = (document.getElementById('content') ||
+                                       document.getElementById('messagepane'));
+                    if(contentArea)
+                        contentArea.focus();
+                    // XXX need a fallback in case no content area is recognized
+                }
             }
         }, false);
 
