@@ -120,6 +120,11 @@ function create(account, address) {
             
             browser.removeEventListener(
                 'load', arguments.callee, true);
+
+            browser.contentWindow.addEventListener(
+                'beforeunload', function(event) {
+                    conversations.closed(account, address);
+                }, false);
         }, true);
 
     return browser;
