@@ -25,7 +25,7 @@
 const Cc = Components.classes;
 const Ci = Components.interfaces;
 
-const prefBranch = Cc["@mozilla.org/preferences-service;1"]
+const pref = Cc["@mozilla.org/preferences-service;1"]
     .getService(Ci.nsIPrefService)
     .getBranch('extensions.sameplace.');
 const srvPrompt = Cc["@mozilla.org/embedcomp/prompt-service;1"]
@@ -116,7 +116,7 @@ function init(event) {
     // and elsewhere
 
     var conversationContainer;
-    switch(prefBranch.getCharPref('conversationsArea')) {
+    switch(pref.getCharPref('conversationsArea')) {
     case 'appcontent':
         conversationContainer = getBrowser();
         conversations.init(conversationContainer, false);
