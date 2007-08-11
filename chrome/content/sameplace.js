@@ -243,8 +243,14 @@ function fetchFeed(feedUrl, continuation) {
 // not affect the domain directly.
 
 function getDefaultAppUrl() {
-    var url = prefBranch.getCharPref('defaultAppUrl');
-    return isChromeUrl(url) ? chromeToFileUrl(url) : url;
+    var url = pref.getCharPref('defaultAppUrl');
+    if(/^chrome:\/\//.test(url) && !hostAppIsMail())
+        // Thunderbird's content policy won't allow applications
+        // served from file://.  For all others, we turn security up a
+        // notch and convert chrome:// URLs to file://.
+        return chromeToFileUrl(url);
+    else
+        return url;
 }
 
 function getBrowser() {

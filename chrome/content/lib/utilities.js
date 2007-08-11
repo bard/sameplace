@@ -23,20 +23,13 @@
 // ----------------------------------------------------------------------
 // Application-independent functions not dealing with user interface.
 
-function isChromeUrl(string) {
-    return /^chrome:\/\//.test(string);
-}
-
 function chromeToFileUrl(url) {
-    if(hostAppIsMail())
-        return url;
-    else
-        return Cc["@mozilla.org/chrome/chrome-registry;1"]
-            .getService(Ci.nsIChromeRegistry)
-            .convertChromeURL(
-                Cc["@mozilla.org/network/io-service;1"]
-                .getService(Ci.nsIIOService)
-                .newURI(url, null, null)).spec;
+    return Cc['@mozilla.org/chrome/chrome-registry;1']
+    .getService(Ci.nsIChromeRegistry)
+    .convertChromeURL(
+        Cc['@mozilla.org/network/io-service;1']
+        .getService(Ci.nsIIOService)
+        .newURI(url, null, null)).spec;
 }
 
 function hostAppIsMail() {
