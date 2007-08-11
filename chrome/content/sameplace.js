@@ -641,7 +641,6 @@ function seenOutgoingChatActivation(message) {
         initPanel(panel);
         interact(message.account, contact.address, getDefaultAppUrl(), panel, function() {
             conversations.focus(message.account, contact.address);
-            conversations.opened(message.account, contact.address);// XXX really needed?
             panel.xmppChannel.receive(message);
         });
     }
@@ -677,7 +676,7 @@ function seenDisplayableMessage(message) {
         panel = conversations.create(message.account, contact.address);
         initPanel(panel);
         interact(message.account, contact.address, getDefaultAppUrl(), panel, function() {
-            conversations.opened(message.account, contact.address);// XXX really needed?
+
             if(messageCache[message.account] && messageCache[message.account][contact.address]) {
                 messageCache[message.account][contact.address].forEach(function(message) {
                     panel.xmppChannel.receive(message);
@@ -720,7 +719,6 @@ function sentMUCPresence(presence) {
         panel = conversations.create(account, address);
         initPanel(panel);
         interact(account, address, getDefaultAppUrl(), panel, function() {
-            conversations.opened(account, address); // XXX check whether really necessary
             conversations.focus(account, address);
         })
     }
