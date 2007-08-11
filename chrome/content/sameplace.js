@@ -132,7 +132,8 @@ function init(event) {
 
     conversationContainer.addEventListener(
         'conversation/open', function(event) {
-            _('contact-toolbox', {role: 'attach'}).hidden = false;
+            if(getBrowser() && typeof(getBrowser().addTab) == 'function')
+                _('contact-toolbox', {role: 'attach'}).hidden = false;
         }, false);
 
     conversationContainer.addEventListener(
