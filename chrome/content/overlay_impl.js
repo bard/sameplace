@@ -125,10 +125,9 @@ function initDisplayRules() {
     
     frameFor('contacts').addEventListener(
         'contact/select', function(event) {
-            viewFor('conversations').requestedCommunicate(
+            viewFor('conversations').startInteraction(
                 attr(event.target, 'account'),
-                attr(event.target, 'address'),
-                getDefaultAppUrl())
+                attr(event.target, 'address'));
         }, false);
 
     // Notify contact list when a conversation is focused.
@@ -449,30 +448,4 @@ function upgradeCheck(id, versionPref, actions, ignoreTrailingParts) {
 
         pref.setCharPref(versionPref, curVersion);
     }
-}
-
-function getDefaultAppUrl() {
-    var url = pref.getCharPref('defaultAppUrl');
-    if(/^chrome:\/\//.test(url) && !hostAppIsMail())
-        // Thunderbird's content policy won't allow applications
-        // served from file://.  For all others, we turn security up a
-        // notch and convert chrome:// URLs to file://.
-        return chromeToFileUrl(url);
-    else
-        return url;
-}
-
-function chromeToFileUrl(url) {
-    return Cc['@mozilla.org/chrome/chrome-registry;1']
-    .getService(Ci.nsIChromeRegistry)
-    .convertChromeURL(
-        Cc['@mozilla.org/network/io-service;1']
-        .getService(Ci.nsIIOService)
-        .newURI(url, null, null)).spec;
-}
-
-function hostAppIsMail() {
-    return (Components.classes['@mozilla.org/xre/app-info;1']
-            .getService(Components.interfaces.nsIXULAppInfo)
-            .ID == '{3550f703-e582-4d05-9a08-453d09bdfdc6}');
 }

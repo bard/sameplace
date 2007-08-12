@@ -450,42 +450,54 @@ function requestedAdditionalInteraction(event) {
     var address = attr(conversation, 'address');
     var url = event.target.value;
 
-    if(url == 'current')
-        interact(account, address, null, getBrowser().selectedBrowser);
-    else
-        requestedCommunicate(account, address, url);
+    if(!(url.match(/^javascript:/) || getBrowser().currentURI.spec == 'about:blank'))
+        getBrowser().selectedTab = getBrowser().addTab();
+    
+    interact(account, address, url, getBrowser().selectedBrowser);
 }
 
-function requestedCommunicate(account, address, url) {
-    if(url == getDefaultAppUrl()) {
-        if(isMUC(account, address) && !conversations.isOpen(account, address)) {
-            window.openDialog('chrome://sameplace/content/join_room.xul',
-                              'sameplace-open-conversation', 'centerscreen',
-                              account, address);
-        } else {
-            if(conversations.isOpen(account, address))
-                conversations.focus(account, address);
-            else {
-                var panel = conversations.create(account, address);
-                initPanel(panel); // XXX initPanel-after-create: repeated pattern, factor?
-                interact(account, address, url, panel, function() {
-                    if(messageCache[account] && messageCache[account][address]) {
-                        messageCache[account][address].forEach(function(message) {
-                            panel.xmppChannel.receive(message);
-                        });
-                    }
-                    
-                    conversations.focus(account, address);
+// Front-end to interact().  Start an interaction with a contact.
+//
+// interact() needs the panel where interaction will happen,
+// startInteraction() does not -- it will open interaction in the
+// local area.
+//
+// The url parameter is optional; if not given, will use the result of
+// getDefaultAppUrl().
+//
+// Limitations: effectively assumes only one interaction per contact,
+// since it checks for existing interactions based on {account,
+// address} instead of {account, address, url}.
+
+function startInteraction(account, address, url) {
+    url = url || getDefaultAppUrl();
+
+    // Short-circuit in case conversation is already open.
+    if(conversations.isOpen(account, address)) {
+        conversations.focus(account, address);
+        return;
+    }
+    
+    // If user joins a room then leaves it, entry is kept in contact
+    // list.  If later he clicks on it, we will only receive {account,
+    // address} coordinates, and no clue that it's a room, not a
+    // person.  Since the course of action for opening a multi-user
+    // conversation is different, we need the following check.
+    if(isMUC(account, address) && !conversations.isOpen(account, address)) {
+        window.openDialog('chrome://sameplace/content/join_room.xul',
+                          'sameplace-open-conversation', 'centerscreen',
+                          account, address);
+    } else {
+        var panel = conversations.create(account, address);
+        initPanel(panel); // XXX initPanel-after-create: repeated pattern, factor?
+        interact(account, address, url, panel, function() {
+            if(messageCache[account] && messageCache[account][address]) {
+                messageCache[account][address].forEach(function(message) {
+                    panel.xmppChannel.receive(message);
                 });
             }
-        }
-    }
-    else {
-        if(!(url.match(/^javascript:/) || getBrowser().currentURI.spec == 'about:blank'))
-            getBrowser().selectedTab = getBrowser().addTab();
-
-        var panel = getBrowser().selectedBrowser;
-        interact(account, address, url, panel)
+            conversations.focus(account, address);
+        });
     }
 }
 
