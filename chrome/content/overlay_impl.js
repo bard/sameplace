@@ -140,16 +140,27 @@ function initDisplayRules() {
     // around that by just listening on conversation events at the
     // top window level.
     
-    // Notify contact list when a conversation is focused.
+    // Notify contact list when a conversation is focused.  If
+    // conversations are hosted in a frame, only do so if the frame
+    // itself is visible.  XXX needs better form.
     
-    top.addEventListener(
-        'conversation/focus', function(event) {
-            if(!frameFor('conversations').collapsed)
+
+    if(pref.getCharPref('conversationsArea') != 'appcontent')
+        top.addEventListener(
+            'conversation/focus', function(event) {
+                if(!frameFor('conversations').collapsed)
+                    viewFor('contacts').nowTalkingWith(
+                        event.originalTarget.getAttribute('account'),
+                        event.originalTarget.getAttribute('address'));
+            }, false);
+    else
+        top.addEventListener(
+            'conversation/focus', function(event) {
                 viewFor('contacts').nowTalkingWith(
                     event.originalTarget.getAttribute('account'),
                     event.originalTarget.getAttribute('address'));    
-        }, false);
-
+            }, false);
+        
     // Notify contact list when a new conversation is opened.
 
     top.addEventListener(
