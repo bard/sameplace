@@ -198,4 +198,15 @@
                            collapsed="true"
                            availability="unavailable"/>
   </vbox>
+
+  <box id="messagesBox">
+    <tabs id="sameplace-tabs" insertafter="messagepanebox" collapsed="true"
+          closebutton="true" mode="fake">
+      <tab label="Mail" class="mail"/>
+    </tabs>
+
+    <deck id="sameplace-deck" insertafter="messagepanebox" collapsed="true">
+      <spacer/>
+    </deck>
+  </box>
 </overlay>

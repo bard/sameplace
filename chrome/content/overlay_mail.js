@@ -98,3 +98,154 @@ window.addEventListener(
                 }, 0);
             }, false);
     }, false);
+
+
+
+
+var fakeTabBrowser = {
+    _init: function(tabs, deck) {
+        var _this = this;
+
+        tabs.addEventListener('DOMNodeInserted', function(event) {
+            if(event.relatedNode == tabs && event.target.tagName == 'tab')
+                tabs.collapsed = false;
+        }, false);
+
+        tabs.addEventListener('DOMNodeRemoved', function(event) {
+            if(event.relatedNode == tabs && event.target.tagName == 'tab')
+                tabs.collapsed = (tabs.childNodes.length == 2);
+        }, false);
+
+        tabs.addEventListener('click', function(event) {
+            if(event.target.nodeName == 'tab' && event.button == 1)
+                _this.removeTab(event.target);
+        }, false);
+
+        tabs.addEventListener('select', function(event) {
+            if(tabs.selectedIndex == 0 && !deck.collapsed) {
+                var savedHeight = deck.height;
+                deck.collapsed = true;
+                document.getElementById('messagepanebox').collapsed = false;
+                document.getElementById('messagepanebox').height = savedHeight;
+            }
+            else if(tabs.selectedIndex > 0 && deck.collapsed){
+                var savedHeight = document.getElementById('messagepanebox').boxObject.height;
+                deck.collapsed = false;
+                document.getElementById('messagepanebox').collapsed = true;
+                deck.height = savedHeight;
+            }
+
+            if(tabs.selectedIndex == 0)
+                tabs.setAttribute('mode', 'fake');
+            else
+                tabs.removeAttribute('mode');
+            
+            deck.selectedIndex = tabs.selectedIndex;
+        }, false);
+
+        var closeButton = document.getAnonymousElementByAttribute(
+            tabs, 'class', 'tabs-closebutton-box').firstChild;
+        closeButton.addEventListener('command', function(event) {
+            _this.removeTab(tabs.selectedItem);
+        }, false);
+        
+
+        this._tabs = tabs;
+        this._deck = deck;
+    },
+    
+    addTab: function(url) {
+        var browser = document.createElement('browser');
+        browser.setAttribute('type', 'content');
+        this._deck.appendChild(browser);
+        
+        var tab = document.createElement('tab');
+        tab.setAttribute('label', url);
+        tab.setAttribute('class', 'im');
+        this._tabs.appendChild(tab);
+
+        browser.addEventListener('DOMTitleChanged', function(event) {
+            if(event.target != browser.contentDocument)
+                return;
+            tab.setAttribute('label', event.target.title);
+        }, true);
+        
+        browser.loadURI(url);
+        tab.browser = browser;
+        return tab;
+    },
+
+    get selectedBrowser() {
+        return this._deck.selectedPanel;
+    },
+    
+    get currentURI() {
+        if(this._deck.selectedPanel.nodeName == 'browser')
+            return { spec: this._deck.selectedPanel.contentDocument.location.href };
+        else
+            return { spec: null };
+    },
+    
+    getBrowserAtIndex: function(i) {
+        return this._deck.childNodes[i];
+    },
+    
+    get browsers() {
+        return this._deck.childNodes;
+    },
+    
+    get tabContainer() {
+        return this._tabs;
+    },
+    
+    getBrowserForTab: function(tab) {
+        if(tab == this._tabs.firstChild)
+            return this._deck.firstChild;
+        else
+            return tab.browser;
+    },
+    
+    get selectedTab() {
+        return this._tabs.selectedItem;
+    },
+    
+    set selectedTab(tab) {
+        this._tabs.selectedItem = tab;
+    },
+
+    removeTab: function(tab) {
+        // First tab is really just a placeholder for separate message
+        // pane.
+        if(tab == this._tabs.firstChild)
+            return;
+        if(tab == this._tabs.selectedItem)
+            this._tabs.selectedItem = tab.previousSibling;
+
+        // Force unload event.
+        tab.browser.loadURI('about:blank');
+        this._deck.removeChild(tab.browser);
+        this._tabs.removeChild(tab);
+    },
+
+    addEventListener: function() {
+        this._deck.addEventListener.apply(null, arguments);
+    },
+
+    get mPanelContainer() {
+        return this._deck;
+    },
+
+    get mTabContainer() {
+        return this._tabs;  
+    },
+    
+    get ownerDocument() {
+        return this._deck.ownerDocument;
+    }
+};
+
+window.addEventListener('load', function(event) {
+    fakeTabBrowser._init(
+        document.getElementById('sameplace-tabs'),
+        document.getElementById('sameplace-deck'));
+}, false);

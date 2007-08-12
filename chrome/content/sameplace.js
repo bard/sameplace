@@ -118,7 +118,14 @@ function init(event) {
     var conversationContainer;
     switch(pref.getCharPref('conversationsArea')) {
     case 'appcontent':
-        conversationContainer = getBrowser();
+        // This is the main browser/mail area.  We act as an off-site
+        // manager for it.
+        if(top.fakeTabBrowser)
+            // Fake <tabbrowser/> for Thunderbird
+            conversationContainer = top.fakeTabBrowser;
+        else
+            conversationContainer = top.getBrowser();
+
         conversations.init(conversationContainer, false);
         break;
     case 'left':
