@@ -200,8 +200,7 @@ function initDisplayRules() {
         frameFor('contacts').addEventListener(
             'contact/select', function(event) {
                 frameFor('conversations').collapsed = false;
-                //XXX why was this called?
-                // viewFor('conversations').focused();
+                //viewFor('conversations').focused();
             }, false);
         
         // When last conversation closes, hide conversation view (NOT
@@ -238,11 +237,13 @@ function initDisplayRules() {
 
     frameFor('conversations').addEventListener(
         'DOMAttrModified', function(event) {
-            if(event.attrName == 'collapsed' &&
-               event.target == frameFor('conversations')) {
+            if(!(event.attrName == 'collapsed' && event.target == frameFor('conversations')))
+                return;
+
+            if(event.newValue == 'true') {
                 var xulSplitter = event.target.previousSibling;
                 xulSplitter.hidden = event.target.collapsed;
-
+                
                 viewFor('contacts').nowTalkingWith(null, null);
 
                 if(viewFor('conversations').isReceivingInput()) {
@@ -252,6 +253,8 @@ function initDisplayRules() {
                         contentArea.focus();
                     // XXX need a fallback in case no content area is recognized
                 }
+            } else {
+                viewFor('conversations').shown();
             }
         }, false);
 

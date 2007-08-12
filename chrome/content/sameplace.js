@@ -435,8 +435,14 @@ var chatDropObserver = {
     }
 };
 
-function focused() {
-    // XXX hack to force generation of conversation/focus event.
+// There seems to be no way for a window to know when it comes into
+// view because its containing frame is un-collapsed, thus, we expose
+// this so that the un-collapser may call it and let us know we are
+// visible.  As a consequence of coming into view, we check whethere
+// there is any current conversation, and if so, we in turn force a
+// focused event on it.
+
+function shown() {
     if(conversations.current)
         conversations.focused(conversations.current.getAttribute('account'),
                               conversations.current.getAttribute('address'));
