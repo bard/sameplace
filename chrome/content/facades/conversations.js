@@ -39,8 +39,12 @@ function init(_dom, onlyHostsConversations) {
 
     dom.mPanelContainer.addEventListener(
         'select', function(event) {
-            var panel = dom.getBrowserAtIndex(
-                dom.mTabContainer.selectedIndex);
+            // dom.selectedBrowser won't do: it still points to the
+            // one that was current before this selection.
+            // event.target.selectedPanel won't do, either: it points
+            // to a <notificationbox/>, whereas we use the <browser/>
+            // as panel.
+            var panel = dom.getBrowserForTab(dom.mTabContainer.selectedItem);
             if(panel.contentDocument.location.href == 'about:blank')
                 return;
             if(isConversation(panel))
@@ -171,8 +175,8 @@ function focus(account, address) {
     var i = getIndexForConversation(account, address);
     if(i > -1) {
         var conversation = dom.browsers[i];
-        focused(account, address);
         dom.selectedTab = dom.tabContainer.childNodes[i];
+        focused(account, address);
 
         // Force a separate thread, otherwise input area gets focus
         // but cursor does not appear.
