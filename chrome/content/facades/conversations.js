@@ -83,6 +83,13 @@ function focused(account, address) {
     focusEvent.initEvent('conversation/focus', true, false);
     get(account, address).removeAttribute('unread');
     get(account, address).dispatchEvent(focusEvent);
+
+    // Force a separate thread, otherwise input area gets focus
+    // but cursor does not appear.
+    setTimeout(function() {
+        get(account, address).contentWindow.focus();
+        dom.ownerDocument.commandDispatcher.advanceFocus();
+    }, 0);
 }
 
 function opened(account, address) {
@@ -177,14 +184,6 @@ function focus(account, address) {
     if(i > -1) {
         var conversation = dom.browsers[i];
         dom.selectedTab = dom.tabContainer.childNodes[i];
-        focused(account, address);
-
-        // Force a separate thread, otherwise input area gets focus
-        // but cursor does not appear.
-        setTimeout(function() {
-            conversation.contentWindow.focus();
-            dom.ownerDocument.commandDispatcher.advanceFocus();
-        }, 0);
     }
 }
 
