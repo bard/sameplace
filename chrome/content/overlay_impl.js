@@ -130,9 +130,19 @@ function initDisplayRules() {
                 attr(event.target, 'address'));
         }, false);
 
+    // In some cases, conversations are not located inside the frame
+    // which hosts conversation handling code.  This is the case, for
+    // example, with conversations in appcontent -- they are in the
+    // main window, but the code is in a frame, so listening for a
+    // conversation event on the frame is useless.  Since the contact
+    // list is meant to reflect conversation state regardless of where
+    // in the browser/mail window conversations are located, we work
+    // around that by just listening on conversation events at the
+    // top window level.
+    
     // Notify contact list when a conversation is focused.
     
-    frameFor('conversations').addEventListener(
+    top.addEventListener(
         'conversation/focus', function(event) {
             if(!frameFor('conversations').collapsed)
                 viewFor('contacts').nowTalkingWith(
@@ -142,7 +152,7 @@ function initDisplayRules() {
 
     // Notify contact list when a new conversation is opened.
 
-    frameFor('conversations').addEventListener(
+    top.addEventListener(
         'conversation/open', function(event) {
             viewFor('contacts').startedConversationWith(
                 event.originalTarget.getAttribute('account'),
@@ -151,7 +161,7 @@ function initDisplayRules() {
 
     // Notify contact list when a conversation is closed
     
-    frameFor('conversations').addEventListener(
+    top.addEventListener(
         'conversation/close', function(event) {
             viewFor('contacts').stoppedConversationWith(
                 event.originalTarget.getAttribute('account'),
