@@ -45,7 +45,8 @@ function init(_dom, onlyHostsConversations) {
             // to a <notificationbox/>, whereas we use the <browser/>
             // as panel.
             var panel = dom.getBrowserForTab(dom.mTabContainer.selectedItem);
-            if(panel.contentDocument.location.href == 'about:blank')
+            if(panel.contentDocument &&
+               panel.contentDocument.location.href == 'about:blank')
                 return;
             if(isConversation(panel))
                 focused(panel.getAttribute('account'),
