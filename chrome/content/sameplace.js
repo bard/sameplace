@@ -177,10 +177,8 @@ function init(event) {
             // the conversation subsystem.
 
             conversationContainer.contentWindow.focus();
-            requestedCommunicate(
-                event.target.getAttribute('account'),
-                event.target.getAttribute('address'),
-                getDefaultAppUrl());
+            startInteraction(event.target.getAttribute('account'),
+                             event.target.getAttribute('address'));
         }, false);
 
     // Filling shared application menu
