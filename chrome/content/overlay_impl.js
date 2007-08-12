@@ -168,24 +168,40 @@ function initDisplayRules() {
                 event.originalTarget.getAttribute('address'));
         }, false);
 
-    // When user selects a contact, display conversation view (NOT
-    // containing area -- another event handler will take care of
-    // that).
 
-    frameFor('contacts').addEventListener(
-        'contact/select', function(event) {
-            frameFor('conversations').collapsed = false;
-            viewFor('conversations').focused();
-        }, false);
+    // We only setup rules for collapse of conversation area if the
+    // conversation area truly contains conversations.  This is not
+    // the case when conversationArea is appcontent--then the
+    // conversation area does contain conversation code but it handles
+    // conversations "off-site", in the appcontent area.
+    //
+    // It should probably be inferred from something closer than the
+    // preference value.
+    
+    if(pref.getCharPref('conversationsArea') != 'appcontent') {
 
-    // When last conversation closes, hide conversation view (NOT
-    // containing area).
+        // When user selects a contact, display conversation view (NOT
+        // containing area -- another event handler will take care of
+        // that).  We're not using conversation/focus as a trigger
+        // because that also happens as a consequence of incoming
+        // messages, not only of user intention.
 
-    frameFor('conversations').addEventListener(
-        'conversation/close', function(event) {
-            if(viewFor('conversations').conversations.count == 1)
-                frameFor('conversations').collapsed = true;
-        }, false);
+        frameFor('contacts').addEventListener(
+            'contact/select', function(event) {
+                frameFor('conversations').collapsed = false;
+                //XXX why was this called?
+                // viewFor('conversations').focused();
+            }, false);
+        
+        // When last conversation closes, hide conversation view (NOT
+        // containing area).
+        
+        frameFor('conversations').addEventListener(
+            'conversation/close', function(event) {
+                if(viewFor('conversations').conversations.count == 1)
+                    frameFor('conversations').collapsed = true;
+            }, false);
+    }
 
     // If XMPP button is visible, attach to it and use to toggle
     // whatever area contacts are displayed in.
@@ -341,7 +357,11 @@ function areaFor(aspect) {
             return _('area-' + pref.getCharPref('conversationsArea'));
             break;
         case 'appcontent':
-            return document.getElementById('appcontent');
+            // Returning 'area-left' as a proxy.  Conversations will
+            // be in the appcontent area, but conversation handling
+            // code will be hosted in a window loaded in the
+            // 'area-left'.
+            return _('area-left');
             break;
         default:
             throw new Error('Invalid argument. (' + pref.getCharPref('conversationsArea') + ')');
