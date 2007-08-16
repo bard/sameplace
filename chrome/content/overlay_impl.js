@@ -258,6 +258,23 @@ function initDisplayRules() {
             }
         }, false);
 
+    // Conversations are no longer visible even when they're *area* is
+    // collapsed, so take focus away in this case, too.
+    
+    areaFor('conversations').addEventListener(
+        'DOMAttrModified', function(event) {
+            if(!(event.attrName == 'collapsed' && event.target == areaFor('conversations')))
+                return;
+
+            if(event.newValue == 'true' && viewFor('conversations').isReceivingInput()) {
+                var contentArea = (document.getElementById('content') ||
+                                   document.getElementById('messagepane'));
+                if(contentArea)
+                    contentArea.focus();
+                // XXX need a fallback in case no content area is recognized
+            }
+        }, false);
+
     // Apply rules to areas
     
     var xulAreas = document.getElementsByAttribute('class', 'sameplace-area');
