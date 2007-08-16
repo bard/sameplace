@@ -240,10 +240,10 @@ function initDisplayRules() {
             if(!(event.attrName == 'collapsed' && event.target == frameFor('conversations')))
                 return;
 
+            // Hiding the splitter if frame is collapsed.
+            event.target.previousSibling.hidden = event.target.collapsed;
+            
             if(event.newValue == 'true') {
-                var xulSplitter = event.target.previousSibling;
-                xulSplitter.hidden = event.target.collapsed;
-                
                 viewFor('contacts').nowTalkingWith(null, null);
 
                 if(viewFor('conversations').isReceivingInput()) {
