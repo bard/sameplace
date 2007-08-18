@@ -1,0 +1,7 @@
+<!ENTITY sameplace.prefs.default_application_url.label "Default application URL:">
+<!ENTITY sameplace.prefs.default_application_url.accesskey "U">
+<!ENTITY sameplace.prefs.toggle_sidebar_hotkey "Toggle sidebar hotkey:">
+<!ENTITY sameplace.prefs.capture.label "Capture">
+<!ENTITY sameplace.prefs.hotkey_help_text.label "(Hotkeys must be distinct and not collide with existing ones.)">
+<!ENTITY sameplace.prefs.flash_taskbar.label "Flash taskbar on incoming messages">
+<!ENTITY sameplace.prefs.flash_taskbar.accesskey "F">

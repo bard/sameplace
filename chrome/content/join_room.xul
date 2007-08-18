@@ -20,11 +20,14 @@
   Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
 -->
 
+<!DOCTYPE dialog SYSTEM "chrome://sameplace/locale/join_room.dtd">
+
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xul-overlay href="chrome://xmpp4moz/content/ui/accounts.xul"?>
 
-<dialog id="main" title="Join Chat Room"
+<dialog id="main"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        title="&dialog.title;"
         ondialogaccept="return doOk();"
         ondialogcancel="return doCancel();"
         onload="init();"
@@ -35,7 +38,7 @@
   <script type="application/x-javascript" src="lib/utilities_xmpp.js"/>
   <script type="application/x-javascript" src="join_room.js"/>
 
-  <dialogheader id="header" title="Join Chat Room"/>
+  <dialogheader id="header" title="&dialog.title;"/>
 
   <grid flex="1">
     <columns>
@@ -45,17 +48,23 @@
 
     <rows>
       <row align="center">
-        <label value="Address:" control="address" accesskey="A"/>
+        <label value="&room_address.label;"
+               accesskey="&room_address.accesskey;"
+               control="address"/>
         <textbox id="address" oninput="refresh();"/>
       </row>
 
       <row align="center">
-        <label value="Nickname:" control="nick" accesskey="N"/>
+        <label value="&user_nick.label;"
+               accesskey="&user_nick.label;"
+               control="nick"/>
         <textbox id="nick"/>
       </row>
 
       <row align="center">
-        <label value="Account:" control="accounts" accesskey="c"/>
+        <label value="&user_account.label;"
+               accesskey="&user_account.accesskey;"
+               control="accounts"/>
         <menulist id="account" oncommand="selectedAccount(this);"
                   flex="1" label="" sizetopopup="none">
           <menupopup id="xmpp-popup-accounts"/>
@@ -66,10 +75,14 @@
 
   <hbox pack="end">
     <vbox>
-      <checkbox id="save" label="Saved to contact list"
-                accesskey="S" oninput="refresh();"/>
-      <checkbox id="autojoin" label="Join automatically"
-                accesskey="J" oninput="refresh();"/>      
+      <checkbox id="save"
+                label="&save.label;"
+                accesskey="&save.accesskey;"
+                oninput="refresh();"/>
+      <checkbox id="autojoin"
+                label="&autojoin.label;"
+                accesskey="&autojoin.accesskey;"
+                oninput="refresh();"/>      
     </vbox>
   </hbox>
 

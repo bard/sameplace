@@ -20,12 +20,12 @@
   Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
 -->
 
+<!DOCTYPE page SYSTEM "chrome://sameplace/locale/sameplace.dtd">
+
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://sameplace/skin/sameplace.css" type="text/css"?>
-
 <?xml-stylesheet href="sptabbrowser.css" type="text/css"?>
 
-<!DOCTYPE page>
 <page id="sameplace" title="SamePlace"
       xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
       onload="init(event);"
@@ -56,8 +56,8 @@
              label="Go to next conversation"
              tooltiptext="Switch to next conversation"/>
     <command id="hide" oncommand="hide();"
-             label="Hide"
-             tooltiptext="Hide"/>
+             label="&command.hide.label;"
+             tooltiptext="&command.hide.tooltip;"/>
   </commandset>
 
   
@@ -86,7 +86,8 @@
     <toolbox id="contact-toolbox">
       <toolbar fullscreentoolbar="true" align="center">
         <toolbaritem align="center" flex="1">
-          <label value="Contact:" accesskey="a"
+          <label value="&contact.label;"
+                 accesskey="&contact.accesskey;"
                  control="contact"
                  style="font-size: smaller; margin-right: 0;"/>
           <textbox id="contact" flex="1" onfocus="this.select();"
@@ -94,14 +95,14 @@
         </toolbaritem>
         <toolbarbutton role="attach"
                        hidden="true"
-                       tooltiptext="Use an additional application to interact with contact"
+                       tooltiptext="&attach.tooltip;"
                        type="menu"
                        class="small-margin">
           <menupopup id="menu-applications"
                      oncommand="requestedAdditionalInteraction(event);">
             <menuseparator/>
-            <menuitem label="Current Page" value="current"
-                      tooltiptext="Interact with contact on current page (current page must be a shared application)"/>
+            <menuitem label="&attach.menu.current_page.label;" value="current"
+                      tooltiptext="&attach.menu.current_page.tooltip;"/>
           </menupopup>
         </toolbarbutton>
         <toolbarbutton command="hide"/>

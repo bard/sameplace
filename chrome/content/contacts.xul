@@ -20,16 +20,16 @@
   Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
 -->
 
+<!DOCTYPE page SYSTEM "chrome://sameplace/locale/contacts.dtd">
+
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://sameplace/skin/contacts.css" type="text/css"?>
 
-<!DOCTYPE page>
-<page id="sameplace-contacts" title="SamePlace - Contacts"
+<page id="sameplace-contacts"
       xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
       orient="vertical"
       onload="init();"
       onunload="finish();">
-  
 
   <!-- SCRIPTS -->
 
@@ -42,13 +42,20 @@
   <script type="application/x-javascript" src="contacts.js"/>
 
 
+  <!-- STRINGS -->
+
+  <stringbundleset>
+    <stringbundle id="strings" src="chrome://sameplace/locale/contacts.properties"/>
+  </stringbundleset>
+  
+
   <!-- MENUS -->
 
   <popupset>
     <popup id="contact-menu" flex="1" onpopupshowing="showingContactContextMenu(this);">
-      <menuitem role="set-alias" label="Set Alias..."
+      <menuitem role="set-alias" label="&popup.set_alias.label;"
                 oncommand="requestedSetContactAlias(document.popupNode);"/>
-      <menuitem role="remove" label="Remove"
+      <menuitem role="remove" label="&popup.remove.label;"
                 oncommand="requestedRemoveContact(document.popupNode);"/>
       <menuseparator/>
     </popup>
@@ -73,12 +80,12 @@
 
         <rows>
           <row>
-            <label value="Contact of:"/>
+            <label value="&tooltip.contact_of.label;"/>
             <label role="account"/>
           </row>
 
           <row>
-            <label value="Presence notification:"/>
+            <label value="&tooltip.presence_notification.label;"/>
             <label role="subscription"/>
           </row>
         </rows>

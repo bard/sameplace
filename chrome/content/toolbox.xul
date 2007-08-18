@@ -20,10 +20,11 @@
   Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
 -->
 
+<!DOCTYPE page SYSTEM "chrome://sameplace/locale/toolbox.dtd">
+
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://sameplace/skin/sameplace.css" type="text/css"?>
 
-<!DOCTYPE page>
 <page xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
       onload="init(event);"
       onunload="finish(event);"
@@ -39,59 +40,65 @@
   <script type="application/x-javascript" src="toolbox.js"/>
 
 
+  <!-- STRINGS -->
+
+  <stringbundleset>
+    <stringbundle id="strings" src="chrome://sameplace/locale/toolbox.properties"/>
+  </stringbundleset>
+
+
   <!-- COMMANDS -->
   
   <commandset>
     <command id="add-contact" oncommand="requestedAddContact();"
-             label="Add contact..."
-             tooltiptext="Add a contact to your contact list"/>
+             label="&command.add_contact.label;"
+             tooltiptext="&command.add_contact.tooltip;"/>
     <command id="open-conversation" oncommand="requestedOpenConversation('chat');"
-             label="Open conversation..."
-             accesskey="O"
-             tooltiptext="Open a conversation"/>
+             label="&command.open_conversation.label;"
+             accesskey="&command.open_conversation.accesskey;"
+             tooltiptext="&command.open_conversation.tooltip;"/>
     <command id="join-room" oncommand="requestedOpenConversation('groupchat');"
-             label="Join chat room..."
-             accesskey="r"
-             tooltiptext="Join a chat room"/>
+             label="&command.join_room.label;"
+             accesskey="&command.join_room.accesskey;"
+             tooltiptext="&command.join_room.tooltip;"/>
     <command id="switch-to-unread" oncommand="conversations.switchToUnread();"
-             label="Go to next unread conversation"
-             tooltiptext="Switch to next conversation in line with unread messages"/>
+             label="&command.switch_to_unread.label;"
+             tooltiptext="&command.switch_to_unread.tooltip;"/>
     <command id="switch-to-next" oncommand="conversations.switchToNext();"
-             label="Go to next conversation"
-             tooltiptext="Switch to next conversation"/>
-    <command id="run-wizard"
-             label="Run Account Wizard..."
-             oncommand="runWizard();"
-             accesskey="W"/>
+             label="&command.switch_to_next.label;"
+             tooltiptext="&command.switch_to_next.tooltip;"/>
+    <command id="run-wizard" oncommand="runWizard();"
+             label="&command.run_wizard.label;"
+             accesskey="&command.run_wizard.accesskey;"/>
     <command id="view-help" oncommand="viewHelp();"
              label="View help pages"
              accesskey="h"
              tooltiptext="Load help page"/>
     <command id="visit-forum" oncommand="visitForum();"
-             label="Visit forum"
-             accesskey="f"
-             tooltiptext="Visit support forum"/>
+             label="&command.visit_forum.label;"
+             accesskey="&command.visit_forum.accesskey;"
+             tooltiptext="&command.visit_forum.tooltip;"/>
     <command id="report-bug" oncommand="reportBug();"
-             label="Report bugs/request features"
-             accesskey="R"
-             tooltiptext="Report bug/Request features"/>
+             label="&command.report_bug.label;"
+             accesskey="&command.report_bug.accesskey;"
+             tooltiptext="&command.report_bug.tooltip;"/>
     <command id="visit-users-room" oncommand="visitUsersRoom();"
-             label="Visit SamePlace chatroom"
-             accesskey="V"
-             tooltiptext="Visit SamePlace users' chatroom"/>
+             label="&command.join_users_room.label;"
+             accesskey="&command.join_users_room.accesskey;"
+             tooltiptext="&command.join_users_room.tooltip;"/>
     <command id="read-latest-news" oncommand="readLatestNews();"
-             label="Read latest news"
-             accesskey="n"/>
+             label="&command.read_latest_news.label;"
+             accesskey="&command.read_latest_news.accesskey;"/>
     <command id="hide" oncommand="hide();"
-             label="Hide"
-             tooltiptext="Hide"/>
+             label="&command.hide.label;"
+             tooltiptext="&command.hide.tooltip;"/>
     <command id="import-contacts"
-             label="Import Contacts..."
-             accesskey="I"
+             label="&command.import_contacts.label;"
+             accesskey="&command.import_contacts.accesskey;"
              oncommand="importContacts();"/>
     <command id="open-standalone"
-             label="Open Standalone (EXPERIMENTAL)"
-             accesskey="S"
+             label="&command.open_standalon.label;"
+             accesskey="&command.open_standalon.accesskey;"
              oncommand="window.open(
                         'chrome://sameplace/content/standalone/contacts.xul',
                         'SamePlace:Contacts', 'chrome,titlebar=no,toolbar=no');"/>
@@ -120,9 +127,10 @@
         <toolbarbutton command="switch-to-next"/>
         <toolbarbutton command="switch-to-unread"/>   
         <toolbarspring/>
-        <toolbarbutton id="actions" label="" type="menu">
+        <toolbarbutton id="actions" label="actions" type="menu">
           <menupopup id="actions-popup">
-            <menu label="Participate" accesskey="P">
+            <menu label="&menu.participate.label;"
+                  accesskey="&menu.participate.accesskey;">
               <menupopup>
                 <menuitem class="menuitem-iconic" command="visit-users-room"/>
                 <menuitem class="menuitem-iconic" command="visit-forum"/>
@@ -143,10 +151,12 @@
 
             <menuitem class="menuitem-iconic" command="import-contacts"/>
 
-            <menu class="menuitem-iconic" label="Scriptlets">
+            <menu class="menuitem-iconic" label="&menu.scriptlets.label;">
               <menupopup id="scriptlets-popup" onpopupshowing="requestedShowScriptletList(this);">
                 <menuseparator/>
-                <menuitem label="Manage..." accesskey="M" oncommand="requestedManageScriptlets();"/>
+                <menuitem label="&menu.scriptlets.manage.label;"
+                          accesskey="&menu.scriptlets.manage.accesskey;"
+                          oncommand="requestedManageScriptlets();"/>
               </menupopup>
             </menu>
 
@@ -181,7 +191,7 @@
                         else
                         textbox.select();"
                draft="true"
-               tooltiptext="Change your status message"
+               tooltiptext="&status_message.tooltip.label;"
                flex="1"/>
     </vbox>
   </notificationbox>

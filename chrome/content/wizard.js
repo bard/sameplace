@@ -192,14 +192,14 @@ function advancedPageCurrentStatus() {
     case 'gmail':
         _('page-current-status').next = 'account-existing';
         _('page-account-existing').setAttribute(
-            'description', 'Configuring an existing GTalk/GMail.com account.');
+            'description', _('strings').getString('existingAccount.gmail'));
         _('account-existing.address').value = 'username@gmail.com';
         _('account-existing.server-hostname').value = 'talk.google.com';
         break;
     case 'other':
         _('page-current-status').next = 'account-existing';
         _('page-account-existing').setAttribute(
-            'description', 'Configuring an existing Jabber account.');
+            'description', _('strings').getString('existingAccount.jabber'));
         _('account-existing.address').value = 'username@server.org';
         _('account-existing.server-hostname').value = 'server.org';
         break;
@@ -247,7 +247,7 @@ function createAccount(account) {
     
     for each(var field in fields)
         if(!account[field]) {
-            srvPrompt.alert('Internal error: account not created.');
+            srvPrompt.alert(_('strings').getString('internalError.accountNotCreated'));
             return;
         }
 

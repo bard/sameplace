@@ -1,0 +1,37 @@
+<!ENTITY command.add_contact.label "Add contact...">
+<!ENTITY command.add_contact.tooltip "Add a contact to your contact list">
+<!ENTITY command.open_conversation.label "Open conversation...">
+<!ENTITY command.open_conversation.accesskey "O">
+<!ENTITY command.open_conversation.tooltip "Open a conversation">
+<!ENTITY command.join_room.label "Join chat room...">
+<!ENTITY command.join_room.accesskey "r">
+<!ENTITY command.join_room.tooltip "Join a chat room">
+<!ENTITY command.switch_to_unread.label "Go to next unread conversation">
+<!ENTITY command.switch_to_unread.tooltip "Switch to next conversation in line with unread messages">
+<!ENTITY command.switch_to_next.label "Go to next conversation">
+<!ENTITY command.switch_to_next.tooltip "Switch to next conversation">
+<!ENTITY command.run_wizard.label "Run Account Wizard...">
+<!ENTITY command.run_wizard.accesskey "W">
+<!ENTITY command.visit_forum.label "Visit forum">
+<!ENTITY command.visit_forum.tooltip "Visit support forum">
+<!ENTITY command.visit_forum.accesskey "f">
+<!ENTITY command.report_bug.label "Report bugs/request features">
+<!ENTITY command.report_bug.tooltip "Report bugs/request features">
+<!ENTITY command.report_bug.accesskey "R">
+<!ENTITY command.join_users_room.label "Visit SamePlace chatroom">
+<!ENTITY command.join_users_room.tooltip "Visit SamePlace users' chatroom">
+<!ENTITY command.join_users_room.accesskey "V">
+<!ENTITY command.read_latest_news.label "Read latest news">
+<!ENTITY command.read_latest_news.accesskey "n">
+<!ENTITY command.hide.label "Hide">
+<!ENTITY command.hide.tooltip "Hide">
+<!ENTITY command.import_contacts.label "Import Contacts...">
+<!ENTITY command.import_contacts.accesskey "I">
+<!ENTITY command.open_standalon.label "Open Standalone (EXPERIMENTAL)">
+<!ENTITY command.open_standalon.accesskey "S">
+<!ENTITY menu.participate.label "Participate">
+<!ENTITY menu.participate.accesskey "P">
+<!ENTITY menu.scriptlets.label "Scriptlets">
+<!ENTITY menu.scriptlets.manage.label "Manage...">
+<!ENTITY menu.scriptlets.manage.accesskey "M">
+<!ENTITY status_message.tooltip.label "Change your status message">

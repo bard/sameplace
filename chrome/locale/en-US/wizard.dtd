@@ -1,0 +1,62 @@
+<!ENTITY title "SamePlace Configuration Wizard">
+
+<!ENTITY page.current_status.description "This wizard will guide you through the configuration of an account.">
+<!ENTITY page.current_status.text1 "You can use any account valid on the Jabber network, including GTalk/GMail.com, LiveJournal.com, and so on.  If you don't have one yet, you'll be able to create it.">
+<!ENTITY page.current_status.text2 "Do you have an account already?">
+<!ENTITY page.current_status.choices.have_gmail_account.label "I have a GTalk/GMail.com account">
+<!ENTITY page.current_status.choices.have_gmail_account.accesskey "G">
+<!ENTITY page.current_status.choices.have_other_account.label "I have an account with another Jabber server">
+<!ENTITY page.current_status.choices.have_other_account.accesskey "I">
+<!ENTITY page.current_status.choices.have_no_account.label "I don't have a Jabber account yet">
+<!ENTITY page.current_status.choices.have_no_account.accesskey "d">
+
+<!ENTITY page.account_existing.address.label "Address:">
+<!ENTITY page.account_existing.address.accesskey "A">
+<!ENTITY page.account_existing.password.label "Password:">
+<!ENTITY page.account_existing.password.accesskey "P">
+<!ENTITY page.account_existing.autologin.label "Login automatically at startup">
+<!ENTITY page.account_existing.autologin.accesskey "o">
+<!ENTITY page.account_existing.remember_password.label "Remember password">
+<!ENTITY page.account_existing.remember_password.accesskey "e">
+<!ENTITY page.account_existing.advanced.label "Advanced...">
+<!ENTITY page.account_existing.advanced.accesskey "d">
+<!ENTITY page.account_existing.resource.label "Resource:">
+<!ENTITY page.account_existing.resource.accesskey "e">
+<!ENTITY page.account_existing.server_for_connection.label "Server for Connection:">
+<!ENTITY page.account_existing.server_for_connection.accesskey "S">
+<!ENTITY page.account_existing.server_port.label "Server Port:">
+<!ENTITY page.account_existing.server_port.accesskey "P">
+<!ENTITY page.account_existing.encryption.label "Encryption:">
+<!ENTITY page.account_existing.encryption.accesskey "E">
+<!ENTITY page.account_existing.encryption.none "None">
+
+<!ENTITY page.account_new.description.label "New Jabber account">
+<!ENTITY page.account_new.text1 "Choose a server to register your account with.">
+<!ENTITY page.account_new.choices.select_from_list.label "Select from list">
+<!ENTITY page.account_new.choices.enter_custom_server.label "Enter custom server">
+<!ENTITY page.account_new.login_automatically.label "Login automatically at startup">
+<!ENTITY page.account_new.login_automatically.accesskey "L">
+<!ENTITY page.account_new.remember_password.label "Remember password">
+<!ENTITY page.account_new.remember_password.accesskey "R">
+<!ENTITY page.account_new.advanced.label "Advanced...">
+<!ENTITY page.account_new.advanced.accesskey "v">
+<!ENTITY page.account_new.advanced.server_for_connection.label "Server for Connection:">
+<!ENTITY page.account_new.advanced.server_for_connection.accesskey "C">
+<!ENTITY page.account_new.advanced.resource.label "Resource:">
+<!ENTITY page.account_new.advanced.resource.accesskey "R">
+<!ENTITY page.account_new.advanced.server_port.label "Server Port:">
+<!ENTITY page.account_new.advanced.server_port.accesskey "P">
+<!ENTITY page.account_new.advanced.encryption.label "Encryption:">
+<!ENTITY page.account_new.advanced.encryption.accesskey "E">
+<!ENTITY page.account_new.advanced.encryption.ssl "SSL">
+<!ENTITY page.account_new.advanced.encryption.none "None">
+
+<!ENTITY page.account_registration.text1 "Connecting... (if this takes too long, consider going back and choosing a different server)">
+<!ENTITY page.account_registration.connect_success "Connected. Requesting registration information...">
+<!ENTITY page.account_registration.registration_success "Account created successfully!  To finish configuration, click Next.">
+<!ENTITY page.account_registration.registration_failure "Error while creating new account:">
+
+<!ENTITY page.finish.text1 "Account configured">
+<!ENTITY page.finish.text2 "To connect, select your account from the Jabber menu:">
+<!ENTITY page.finish.connect_now.label "Connect now">
+    

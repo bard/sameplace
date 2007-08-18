@@ -1,0 +1,11 @@
+<!ENTITY dialog.title "Join Chat Room">
+<!ENTITY room_address.label "Address:">
+<!ENTITY room_address.accesskey "A">
+<!ENTITY user_nick.label "Nickname:">
+<!ENTITY user_nick.accesskey "N">
+<!ENTITY user_account.label "Account:">
+<!ENTITY user_account.accesskey "c">
+<!ENTITY save.label "Save to contact list">
+<!ENTITY save.accesskey "S">
+<!ENTITY autojoin.label "Join automatically">
+<!ENTITY autojoin.accesskey "J">

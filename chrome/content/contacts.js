@@ -31,13 +31,6 @@ var prefBranch = Cc["@mozilla.org/preferences-service;1"]
     .getService(Ci.nsIPrefService)
     .getBranch('extensions.sameplace.');
 
-var subscriptionDesc = {
-    'both': 'Both see when other is online',
-    'from': 'Contact sees when you are online',
-    'to': 'You see when contact is online',
-    'none': 'Neither sees when other is online'
-}
-
 
 // GLOBAL STATE
 // ----------------------------------------------------------------------
@@ -398,15 +391,16 @@ function receivedSubscriptionRequest(presence) {
            get(account, address).getAttribute('subscription') == 'none') {
             var check = {value: true};
             accept = srvPrompt.confirmCheck(
-                null, 'Contact notification',
-                address + ' wants to add ' + presence.stanza.@to + ' to his/her contact list.\nDo you accept?',
-                'Also add ' + address + ' to my contact list', check);
+                null, _('strings').getString('contactRequestTitle'),
+                _('strings').getFormattedString('contactRequestMessage', [address, presence.stanza.@to]),
+                _('strings').getFormattedString('contactRequestReciprocate', [address]),
+                check);
             reciprocate = check.value;
         }
         else
             accept = srvPrompt.confirm(
-                null, 'Contact notification',
-                address + ' wants to add ' + presence.stanza.@to + ' to his/her contact list.\nDo you accept?');
+                null, _('strings').getString('contactRequestTitle'),
+                _('strings').getFormattedString('contactRequestMessage', [address, presence.stanza.@to]));
 
         if(accept) {
             acceptSubscriptionRequest(account, address);
@@ -420,7 +414,7 @@ function receivedSubscriptionRequest(presence) {
 function receivedSubscriptionApproval(presence) {
     // Skip notification if appendNotification() not available (as in Firefox 1.5)
     if(typeof(notify) == 'function')
-        notify(presence.stanza.@from + ' has accepted to be in your contact list.',
+        notify(_('strings').getFormattedString('contactAccepted', [presence.stanza.@from]),
                'sameplace-presence-subscription',
                null, notify.PRIORITY_INFO_HIGH, []);
 }
@@ -480,9 +474,9 @@ function requestedUpdateContactTooltip(element) {
     $('#contact-tooltip [role="address"]')._.value = attr(element, 'address');
     $('#contact-tooltip [role="account"]')._.value = attr(element, 'account');
 
-    var subscriptionState = attr(element, 'subscription');
-    if(subscriptionState) {
-        $('#contact-tooltip [role="subscription"]')._.value = subscriptionDesc[subscriptionState];
+    var state = attr(element, 'subscription');
+    if(state) {
+        $('#contact-tooltip [role="subscription"]')._.value = _('strings').getString('subscription.' + state);
         $('#contact-tooltip [role="subscription"]')._.parentNode.hidden = false;
     } else
         $('#contact-tooltip [role="subscription"]')._.parentNode.hidden = true;

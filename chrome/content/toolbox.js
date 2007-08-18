@@ -173,7 +173,7 @@ function requestedChangeStatusMessage(event) {
         return;
 
     var message = event.target.value;
-    if(message != '[no status message]')
+    if(message != _('strings').getString('statusPlaceholder'))
         changeStatusMessage(event.target.value);
     
     document.commandDispatcher.advanceFocus();
@@ -240,8 +240,7 @@ function requestedShowScriptletList(xulPopup) {
                     }, false);
             } catch(e) {
                 xulScriptlet.setAttribute(
-                    'label', 'Error reading "' +
-                    scriptlet.fileName + '" (click for debug info)');
+                    'label', _('strings').getFormattedString('scriptletLoadingError', [scriptlet.fileName]));
                 xulScriptlet.setAttribute('style', 'color:red;')
                 xulScriptlet.addEventListener(
                     'command', function(event) {
@@ -266,7 +265,7 @@ function sentAvailablePresence(presence) {
         _('status-message').value = status;
         _('status-message').setAttribute('draft', 'false');
     } else {
-        _('status-message').value = '[Click or Ctrl+Alt+T to change status]';
+        _('status-message').value = _('strings').getString('statusPlaceholder');
         _('status-message').setAttribute('draft', 'true');
     }
     _('profile-username').value = XMPP.JID(presence.account).username;

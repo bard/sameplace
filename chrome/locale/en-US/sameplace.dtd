@@ -1,0 +1,7 @@
+<!ENTITY command.hide.label "Hide">
+<!ENTITY command.hide.tooltip "Hide">
+<!ENTITY contact.label "Contact:">
+<!ENTITY contact.accesskey "a">
+<!ENTITY attach.tooltip "Use an additional application to interact with contact">
+<!ENTITY attach.menu.current_page.label "Current Page">
+<!ENTITY attach.menu.current_page.tooltip "Interact with contact on current page (current page must be a shared application)">

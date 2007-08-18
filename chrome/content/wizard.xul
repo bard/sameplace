@@ -20,44 +20,50 @@
   Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
 -->
 
+<!DOCTYPE wizard SYSTEM "chrome://sameplace/locale/wizard.dtd">
+
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 
 <wizard xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-        id="wizard" title="SamePlace Configuration Wizard"
+        id="wizard" title="&title;"
         onload="init();"
         onwizardfinish="finished();">
+
+  <!-- SCRIPTS -->
 
   <script type="application/x-javascript" src="chrome://xmpp4moz/content/xmpp.js"/>
   <script type="application/x-javascript" src="wizard.js"/>
 
+
+  <!-- STRINGS -->
+
+  <stringbundleset>
+    <stringbundle id="strings" src="chrome://sameplace/locale/wizard.properties"/>
+  </stringbundleset>
+
+  
   <wizardpage id="page-current-status"
               pageid="current-status"
               onpageadvanced="return advancedPageCurrentStatus();"
               next="page-account-existing"
-              description="This wizard will guide you through the configuration of an account.">
-    <description>
-      You can use any account valid on the Jabber network, including
-      GTalk/GMail.com, LiveJournal.com, and so on.  If you don't have
-      one yet, you'll be able to create it.
-    </description>
+              description="&page.current_status.description;">
+    <description>&page.current_status.text1;</description>
 
     <spacer height="10"/>
 
-    <description>
-      Do you have an account already?
-    </description>
+    <description>&page.current_status.text2;</description>
 
     <radiogroup id="current-status"
                 value="gmail" oncommand="updatePageCurrentStatus();">
-      <radio label="I have a GTalk/GMail.com account"
+      <radio label="&page.current_status.choices.have_gmail_account.label;"
              value="gmail"
-             accesskey="G"
+             accesskey="&page.current_status.choices.have_gmail_account.accesskey;"
              selected="true"/>
-      <radio label="I have an account with another Jabber server"
-             accesskey="I"
+      <radio label="&page.current_status.choices.have_other_account.label;"
+             accesskey="&page.current_status.choices.have_other_account.accesskey;"
              value="other"/>
-      <radio label="I don't have a Jabber account yet"
-             accesskey="d"
+      <radio label="&page.current_status.choices.have_no_account.label;"
+             accesskey="&page.current_status.choices.have_no_account.accesskey;"
              value="none"/>
     </radiogroup>
   </wizardpage>
@@ -75,25 +81,35 @@
 
       <rows>
         <row align="center" id="account-existing.field-address">
-          <label control="account-existing.address" value="Address:" accesskey="A"/>
-          <textbox id="account-existing.address" value="" onkeyup="updatePageAccountExisting(event);"/>
+          <label control="account-existing.address"
+                 value="&page.account_existing.address.label;"
+                 accesskey="&page.account_existing.address.accesskey;"/>
+          <textbox id="account-existing.address" value=""
+                   onkeyup="updatePageAccountExisting(event);"/>
         </row>
 
         <row align="center" id="account-existing.field-password">
-          <label control="account-existing.password" value="Password:" accesskey="P"/>
-          <textbox id="account-existing.password" type="password" onkeyup="updatePageAccountExisting(event);"/>
+          <label control="account-existing.password"
+                 value="&page.account_existing.password.label;"
+                 accesskey="&page.account_existing.password.accesskey;"/>
+          <textbox id="account-existing.password" type="password"
+                   onkeyup="updatePageAccountExisting(event);"/>
         </row>
 
         <row>
           <spacer/>
           <checkbox id="account-existing.auto-login"
-                    label="Login automatically at startup" checked="true" accesskey="o"/>
+                    label="&page.account_existing.autologin.label;"
+                    accesskey="&page.account_existing.autologin.accesskey;"
+                    checked="true"/>
         </row>
 
         <row>
           <spacer/>
           <checkbox id="account-existing.password-remember"
-                    label="Remember password" checked="false" accesskey="e"/>
+                    label="&page.account_existing.remember_password.label;"
+                    accesskey="&page.account_existing.remember_password.accesskey;"
+                    checked="false"/>
         </row>
       </rows>
     </grid>
@@ -101,7 +117,8 @@
     <separator class="groove"/>
 
     <hbox pack="end">
-      <button label="Advanced..." accesskey="d"
+      <button label="&page.account_existing.advanced.label;"
+              accesskey="&page.account_existing.advanced.accesskey;"
               oncommand="_('account-existing.advanced').hidden =
                          !_('account-existing.advanced').hidden;"/>          
     </hbox>
@@ -115,29 +132,33 @@
       <rows>
         <row align="center">
           <label control="account-existing.resource"
-                 value="Resource:" accesskey="e"/>
+                 value="&page.account_existing.resource.label;"
+                 accesskey="&page.account_existing.resource.accesskey;"/>
           <textbox id="account-existing.resource" value="SamePlace"/>
         </row>
 
         <row align="center">
           <label control="account-existing.server-hostname"
-                 value="Server for Connection:" accesskey="S"/>
+                 value="&page.account_existing.server_for_connection.label;"
+                 accesskey="&page.account_existing.server_for_connection.accesskey;"/>
           <textbox id="account-existing.server-hostname"/>
         </row>
 
         <row align="center">
-          <label value="Server Port:" control="account-existing.server-port" 
-                 accesskey="P"/>
+          <label value="&page.account_existing.server_port.label;" 
+                 accesskey="&page.account_existing.server_port.accesskey;"
+                 control="account-existing.server-port"/>
           <textbox id="account-existing.server-port" value="5223"/>
         </row>
         
         <row align="center">
-          <label value="Encryption:" control="account-existing.server-security" 
-                 accesskey="E"/>
+          <label value="&page.account_existing.encryption.label;"
+                 accesskey="&page.account_existing.encryption.accesskey;"
+                 control="account-existing.server-security"/>
           <radiogroup id="account-existing.server-security"
                       value="1" orient="horizontal">
             <radio value="1" label="SSL" selected="true" flex="1"/>
-            <radio value="0" label="None" flex="1"/>
+            <radio value="0" label="&page.account_existing.encryption.none;" flex="1"/>
           </radiogroup>
         </row>
       </rows>
@@ -149,10 +170,8 @@
               next="account-registration"
               onpageadvanced="return advancedPageAccountNew();"
               onpageshow="shownPageAccountNew();"
-              description="New Jabber account">
-    <description>
-      Choose a server to register your account with.
-    </description>
+              description="&page.account_new.description.label;">
+    <description>&page.account_new.text1;</description>
 
     <spacer height="10"/>
 
@@ -175,23 +194,30 @@
                   value="list"
                   pack="center"
                   style="font-size: smaller;">
-        <radio label="Select from list" value="list" selected="true"/>
-        <radio label="Enter custom server" value="custom"/>
+        <radio label="&page.account_new.choices.select_from_list.label;"
+               value="list" selected="true"/>
+        <radio label="&page.account_new.choices.enter_custom_server.label;"
+               value="custom"/>
       </radiogroup>
     </hbox>
 
     <spacer height="10"/>
     
     <checkbox id="account-new.auto-login"
-              label="Login automatically at startup" accesskey="L" checked="true"/>
+              label="&page.account_new.login_automatically.label;"
+              accesskey="&page.account_new.login_automatically.accesskey;"
+              checked="true"/>
 
     <checkbox id="account-new.password-remember"
-              label="Remember password" accesskey="R" checked="false"/>
+              label="&page.account_new.remember_password.label;"
+              accesskey="&page.account_new.remember_password.accesskey;"
+              checked="false"/>
 
     <separator class="groove"/>
 
     <hbox pack="end">
-      <button label="Advanced..." accesskey="v"
+      <button label="&page.account_new.advanced.label;"
+              accesskey="&page.account_new.advanced.accesskey;"
               oncommand="_('account-new.advanced').hidden =
                          !_('account-new.advanced').hidden;"/>
     </hbox>    
@@ -204,28 +230,35 @@
 
       <rows>
         <row align="center">
-          <label value="Server for Connection:" accesskey="C"/>
-          <textbox id="account-new.server-hostname" onkeyup="updatePageAccountNew();"/>            
+          <label value="&page.account_new.advanced.server_for_connection.label;"
+                 accesskey="&page.account_new.advanced.server_for_connection.accesskey;"/>
+          <textbox id="account-new.server-hostname" onkeyup="updatePageAccountNew();"/>
         </row>
 
         <row align="center">
-          <label control="account-new.resource" value="Resource:" accesskey="R"/>
+          <label control="account-new.resource"
+                 value="&page.account_new.advanced.resource.label;"
+                 accesskey="&page.account_new.advanced.resource.accesskey;"/>
           <textbox id="account-new.resource" value="SamePlace"/>
         </row>
 
         <row align="center">
-          <label value="Server Port:" control="account-new.server-port" 
-                 accesskey="P"/>
+          <label value="&page.account_new.advanced.server_port.label;"
+                 accesskey="&page.account_new.advanced.server_port.accesskey;"
+                 control="account-new.server-port"/>
           <textbox id="account-new.server-port" value="5223"/>
         </row>
         
         <row align="center">
-          <label value="Encryption:" control="account-new.server-security" 
-                 accesskey="E"/>
+          <label value="&page.account_new.advanced.encryption.label;"
+                 accesskey="&page.account_new.advanced.encryption.accesskey;"
+                 control="account-new.server-security"/>
           <radiogroup id="account-new.server-security"
                       value="1" orient="horizontal">
-            <radio value="1" label="SSL" selected="true" flex="1"/>
-            <radio value="0" label="None" flex="1"/>
+            <radio value="1" label="&page.account_new.advanced.encryption.ssl;"
+                   selected="true" flex="1"/>
+            <radio value="0" label="&page.account_new.advanced.encryption.none;"
+                   flex="1"/>
           </radiogroup>
         </row>
       </rows>
@@ -238,25 +271,22 @@
               onpageadvanced="return advancedPageAccountRegistration();"
               onpageshow="shownPageAccountRegistration();">
 
-    <description>
-      Connecting... (if this takes too long, consider going back and
-      choosing a different server)
-    </description>
+    <description>&page.account_registration.text1;</description>
 
     <progressmeter id="account-registration.connect-progress"
                    mode="undetermined"
                    hidden="true"/>
 
     <description id="account-registration.connect-success">
-      Connected. Requesting registration information...
+      &page.account_registration.connect_success;
     </description>
     
     <description id="account-registration.success">
-      Account created successfully!  To finish configuration, click Next.
+      &page.account_registration.registration_success;
     </description>
 
     <description id="account-registration.failure">
-      Error while creating new account:
+      &page.account_registration.registration_failure;
       <label style="margin: 0;" id="account-registration.failure-reason"/>
     </description>
   </wizardpage>
@@ -266,13 +296,11 @@
               onpageadvanced="return advancedPageFinish();"
               onpageshow="shownPageFinish();">
     <label style="font-size: larger; font-weight: bold;"
-           value="Account configured"/>
+           value="&page.finish.text1;"/>
 
     <spacer height="10"/>
 
-    <description style="font-weight: bold;">
-      To connect, select your account from the Jabber menu:
-    </description>
+    <description style="font-weight: bold;">&page.finish.text2;</description>
     
     <spacer height="10"/>
 
@@ -282,7 +310,8 @@
                                      border: 1px solid #666;"/>
     </hbox>
 
-    <checkbox label="Connect now" id="connect-now" checked="true"/>
+    <checkbox label="&page.finish.connect_now.label;"
+              id="connect-now" checked="true"/>
   </wizardpage>
 </wizard>
 

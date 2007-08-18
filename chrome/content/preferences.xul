@@ -20,6 +20,8 @@
   Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
 -->
 
+<!DOCTYPE overlay SYSTEM "chrome://sameplace/locale/preferences.dtd">
+
 <overlay id="xmpp-overlay-preferences"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
@@ -50,33 +52,37 @@
           </columns>
           <rows>
             <row>
-              <label value="Default application URL:" accesskey="U"
+              <label value="&sameplace.prefs.default_application_url.label;"
+                     accesskey="&sameplace.prefs.default_application_url.accesskey;"
                      for="sameplace-textbox-default-app-url"/>
               <textbox preference="sameplace-default-app-url" flex="1"/>
             </row>
 
             <row>
-              <label value="Toggle sidebar hotkey:"/>
+              <label value="&sameplace.prefs.toggle_sidebar_hotkey;"/>
               <vbox flex="1">
                 <hbox align="center" flex="1">
                   <textbox flex="1" id="sameplace-toggle-contacts-key"
                            readonly="true" style="text-align: center"/>
-                  <button label="Capture" oncommand="sameplacePrefs.captureKey('contacts');"/>
+                  <button label="&sameplace.prefs.capture.label;"
+                          oncommand="sameplacePrefs.captureKey('contacts');"/>
                 </hbox>
                 <hbox align="center" flex="1">
                   <textbox flex="1" id="sameplace-toggle-conversations-key"
                            readonly="true" style="text-align: center"/>
-                  <button label="Capture" oncommand="sameplacePrefs.captureKey('conversations');"/>
+                  <button label="&sameplace.prefs.capture.label;"
+                          oncommand="sameplacePrefs.captureKey('conversations');"/>
                 </hbox>
                 <description style="font-size: smaller;">
-                  (Hotkeys must be distinct and not collide with existing ones.)
+                  &sameplace.prefs.hotkey_help_text.label;
                 </description>
               </vbox>
             </row>
 
             <row>
               <spacer/>
-              <checkbox label="Flash taskbar on incoming messages" accesskey="F"
+              <checkbox label="&sameplace.prefs.flash_taskbar.label;"
+                        accesskey="&sameplace.prefs.flash_taskbar.accesskey;"
                         preference="sameplace-get-attention-on-message"/>
             </row>
           </rows>
