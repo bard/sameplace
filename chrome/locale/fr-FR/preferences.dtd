@@ -1,0 +1,7 @@
+<!ENTITY sameplace.prefs.default_application_url.label "Application par defaut URL:">
+<!ENTITY sameplace.prefs.default_application_url.accesskey "U">
+<!ENTITY sameplace.prefs.toggle_sidebar_hotkey "Touche Raccourci pour masquer le panneau latéral:">
+<!ENTITY sameplace.prefs.capture.label "Capture">
+<!ENTITY sameplace.prefs.hotkey_help_text.label "(Les touches raccourcis doivent être distinctes et ne pas entrer en conflit avec d'autre existantes.)">
+<!ENTITY sameplace.prefs.flash_taskbar.label "Faire clignoter la barre des taches en cas de nouveaux messages">
+<!ENTITY sameplace.prefs.flash_taskbar.accesskey "F">

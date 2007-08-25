@@ -1,0 +1,37 @@
+<!ENTITY command.add_contact.label "Ajouter un contact...">
+<!ENTITY command.add_contact.tooltip "Ajouter un contact à votre liste de contact">
+<!ENTITY command.open_conversation.label "Commencer une discussion...">
+<!ENTITY command.open_conversation.accesskey "O">
+<!ENTITY command.open_conversation.tooltip "Commencer une discussion">
+<!ENTITY command.join_room.label "Rejoindre un salon de discussion...">
+<!ENTITY command.join_room.accesskey "r">
+<!ENTITY command.join_room.tooltip "Rejoindre un salon de discussion">
+<!ENTITY command.switch_to_unread.label "Aller à la prochaine discussion non lue">
+<!ENTITY command.switch_to_unread.tooltip "Passer à la prochaine discussion avec des messages non lus">
+<!ENTITY command.switch_to_next.label "Aller à la discussion suivante">
+<!ENTITY command.switch_to_next.tooltip "Passser à la discussion suivante">
+<!ENTITY command.run_wizard.label "Lancer l'assistant...">
+<!ENTITY command.run_wizard.accesskey "W">
+<!ENTITY command.visit_forum.label "Visiter le forum">
+<!ENTITY command.visit_forum.tooltip "Visiter le forum de support">
+<!ENTITY command.visit_forum.accesskey "f">
+<!ENTITY command.report_bug.label "Signaler un bug/demande de fonctionnalités">
+<!ENTITY command.report_bug.tooltip "signaler un bug/demande de fonctionnalités">
+<!ENTITY command.report_bug.accesskey "R">
+<!ENTITY command.join_users_room.label "Visiter le salon SamePlace">
+<!ENTITY command.join_users_room.tooltip "Visiter le salon des utilisateurs de SamePlace">
+<!ENTITY command.join_users_room.accesskey "V">
+<!ENTITY command.read_latest_news.label "Lire les dernières infos">
+<!ENTITY command.read_latest_news.accesskey "n">
+<!ENTITY command.hide.label "Masquer">
+<!ENTITY command.hide.tooltip "Masquer">
+<!ENTITY command.import_contacts.label "Importer des Contacts...">
+<!ENTITY command.import_contacts.accesskey "I">
+<!ENTITY command.open_standalon.label "Ouvrir en fenêtre externe(EXPERIMENTAL)">
+<!ENTITY command.open_standalon.accesskey "S">
+<!ENTITY menu.participate.label "Participer">
+<!ENTITY menu.participate.accesskey "P">
+<!ENTITY menu.scriptlets.label "Scriptlets">
+<!ENTITY menu.scriptlets.manage.label "Gérer...">
+<!ENTITY menu.scriptlets.manage.accesskey "M">
+<!ENTITY status_message.tooltip.label "Changer votre message d'état">
