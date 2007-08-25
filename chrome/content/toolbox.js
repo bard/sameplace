@@ -83,17 +83,6 @@ function finish() {
 }
 
 
-// GUI UTILITIES (SPECIFIC)
-// ----------------------------------------------------------------------
-// Application-dependent functions dealing with interface.  They do
-// not affect the domain directly.
-
-__defineGetter__(
-    'conversations', function() {
-        return top.sameplace.getView('conversations').conversations;
-    });
-
-
 // GUI ACTIONS
 // ----------------------------------------------------------------------
 // Application-dependent functions dealing with user interface.  They
@@ -177,7 +166,7 @@ function requestedChangeStatusMessage(event) {
         changeStatusMessage(event.target.value);
     
     document.commandDispatcher.advanceFocus();
-    conversations.focusCurrent();
+    top.sameplace.viewFor('conversations').conversations.focusCurrent();
 }
 
 function requestedAddContact() {
