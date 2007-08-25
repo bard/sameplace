@@ -8,3 +8,4 @@ pref("extensions.sameplace.toggleConversationsKey",
      "({ctrlKey:false, metaKey:false, shiftKey:true, altKey:false, charCode:0, keyCodeName:\"DOM_VK_F12\"})");
 pref("extensions.sameplace.contactsArea", "left");
 pref("extensions.sameplace.conversationsArea", "left");
+pref("extensions.sameplace@hyperstruct.net.description", "chrome://sameplace/locale/sameplace.properties");

@@ -39,7 +39,7 @@
     </em:targetApplication>
    
     <em:name>SamePlace (unstable branch)</em:name>
-    <em:description>Extensible instant messaging client</em:description>
+    <em:description>Extensible, multi-network instant messenger</em:description>
     <em:creator>Massimiliano Mirra</em:creator>
     <em:updateURL>http://repo.hyperstruct.net/sameplace/unstable/update.rdf</em:updateURL>
     <em:homepageURL>http://sameplace.cc</em:homepageURL>
