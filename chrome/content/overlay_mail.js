@@ -143,6 +143,10 @@ var fakeTabBrowser = {
             deck.selectedIndex = tabs.selectedIndex;
         }, false);
 
+        document.getElementById('messagepane').addEventListener('load', function(event) {
+            tabs.selectedIndex = 0;
+        }, true);
+
         var closeButton = document.getAnonymousElementByAttribute(
             tabs, 'class', 'tabs-closebutton-box').firstChild;
         closeButton.addEventListener('command', function(event) {
