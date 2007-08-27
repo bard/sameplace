@@ -10,6 +10,9 @@
 <!ENTITY command.switch_to_unread.tooltip "Switch to next conversation in line with unread messages">
 <!ENTITY command.switch_to_next.label "Go to next conversation">
 <!ENTITY command.switch_to_next.tooltip "Switch to next conversation">
+<!ENTITY command.view_help_pages.label "View help pages...">
+<!ENTITY command.view_help_pages.accesskey "h">
+<!ENTITY command.view_help_pages.tooltip "View help pages">
 <!ENTITY command.run_wizard.label "Run Account Wizard...">
 <!ENTITY command.run_wizard.accesskey "W">
 <!ENTITY command.visit_forum.label "Visit forum">
