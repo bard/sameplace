@@ -71,9 +71,9 @@
              label="&command.run_wizard.label;"
              accesskey="&command.run_wizard.accesskey;"/>
     <command id="view-help" oncommand="viewHelp();"
-             label="View help pages"
-             accesskey="h"
-             tooltiptext="Load help page"/>
+             label="&command.view_help_pages.label;"
+             accesskey="&command.view_help_pages.accesskey;"
+             tooltiptext="&command.view_help_pages.tooltip;"/>
     <command id="visit-forum" oncommand="visitForum();"
              label="&command.visit_forum.label;"
              accesskey="&command.visit_forum.accesskey;"
