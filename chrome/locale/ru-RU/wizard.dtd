@@ -1,0 +1,62 @@
+﻿<!ENTITY title "Мастер Конфигурации SamePlace">
+
+<!ENTITY page.current_status.description "Этот мастер поможет вам настроить учетную запись.">
+<!ENTITY page.current_status.text1 "Вы можете использовать любую действующую учетную запись в Jabber сети, включая GTalk/GMail.com, LiveJournal.com, и прочие.  Если у вас ее еще нет, то Вы сможете ее создать.">
+<!ENTITY page.current_status.text2 "У вас уже есть учетная запись?">
+<!ENTITY page.current_status.choices.have_gmail_account.label "У меня есть учетная запись GTalk/GMail.com">
+<!ENTITY page.current_status.choices.have_gmail_account.accesskey "G">
+<!ENTITY page.current_status.choices.have_other_account.label "У меня есть учетная запись на другом Jabber сервере">
+<!ENTITY page.current_status.choices.have_other_account.accesskey "I">
+<!ENTITY page.current_status.choices.have_no_account.label "У меня еще нет учетной записи Jabber">
+<!ENTITY page.current_status.choices.have_no_account.accesskey "d">
+
+<!ENTITY page.account_existing.address.label "Адрес:">
+<!ENTITY page.account_existing.address.accesskey "A">
+<!ENTITY page.account_existing.password.label "Пароль:">
+<!ENTITY page.account_existing.password.accesskey "P">
+<!ENTITY page.account_existing.autologin.label "Соединяться автоматически при запуске">
+<!ENTITY page.account_existing.autologin.accesskey "o">
+<!ENTITY page.account_existing.remember_password.label "Запомнить пароль">
+<!ENTITY page.account_existing.remember_password.accesskey "e">
+<!ENTITY page.account_existing.advanced.label "Дополнительно...">
+<!ENTITY page.account_existing.advanced.accesskey "d">
+<!ENTITY page.account_existing.resource.label "Источник:">
+<!ENTITY page.account_existing.resource.accesskey "e">
+<!ENTITY page.account_existing.server_for_connection.label "Сервер для соединения:">
+<!ENTITY page.account_existing.server_for_connection.accesskey "S">
+<!ENTITY page.account_existing.server_port.label "Порт сервера:">
+<!ENTITY page.account_existing.server_port.accesskey "P">
+<!ENTITY page.account_existing.encryption.label "Шифрование:">
+<!ENTITY page.account_existing.encryption.accesskey "E">
+<!ENTITY page.account_existing.encryption.none "Нет">
+
+<!ENTITY page.account_new.description.label "Новая учетная запись Jabber">
+<!ENTITY page.account_new.text1 "Выберите сервер для регистрации учетной записи.">
+<!ENTITY page.account_new.choices.select_from_list.label "Выбрать из списка">
+<!ENTITY page.account_new.choices.enter_custom_server.label "Другой сервер">
+<!ENTITY page.account_new.login_automatically.label "Соединяться автоматически при запуске">
+<!ENTITY page.account_new.login_automatically.accesskey "L">
+<!ENTITY page.account_new.remember_password.label "Запомнить пароль">
+<!ENTITY page.account_new.remember_password.accesskey "R">
+<!ENTITY page.account_new.advanced.label "Дополнительно...">
+<!ENTITY page.account_new.advanced.accesskey "v">
+<!ENTITY page.account_new.advanced.server_for_connection.label "Сервер для соединения:">
+<!ENTITY page.account_new.advanced.server_for_connection.accesskey "C">
+<!ENTITY page.account_new.advanced.resource.label "Источник:">
+<!ENTITY page.account_new.advanced.resource.accesskey "R">
+<!ENTITY page.account_new.advanced.server_port.label "Порт сервера:">
+<!ENTITY page.account_new.advanced.server_port.accesskey "P">
+<!ENTITY page.account_new.advanced.encryption.label "Шифрование:">
+<!ENTITY page.account_new.advanced.encryption.accesskey "E">
+<!ENTITY page.account_new.advanced.encryption.ssl "SSL">
+<!ENTITY page.account_new.advanced.encryption.none "Нет">
+
+<!ENTITY page.account_registration.text1 "Идет подключение... (если это занимает слишком много времени, вернитесь назад и выберите другой сервер)">
+<!ENTITY page.account_registration.connect_success "Соединено. Запрашивается регистрационная информация...">
+<!ENTITY page.account_registration.registration_success "Учетная запись была успешно создана!  Чтобы закончить, кликните Далее.">
+<!ENTITY page.account_registration.registration_failure "Во время создания новой учетной записи произошла ошибка:">
+
+<!ENTITY page.finish.text1 "Учетная запись сконфигурирована">
+<!ENTITY page.finish.text2 "Чтобы соединиться, выберите вашу учетную запись из меню Jabber:">
+<!ENTITY page.finish.connect_now.label "Соединиться сейчас">
+    
