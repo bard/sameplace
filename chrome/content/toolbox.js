@@ -110,11 +110,10 @@ function importContacts() {
     var input = { value: 'msn.jabber.sameplace.cc' };
     
     var result = srvPrompt.prompt(
-        _('strings').getString('statusPlaceholder'),
         null,
         _('strings').getString('transportRegistrationTitle'),
         _('strings').getString('transportRegistrationMessage'),
-            input, null, {});
+        input, null, {});
     var transportAddress = input.value;
     
     if(!result)
