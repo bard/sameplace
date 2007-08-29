@@ -107,7 +107,27 @@ function runWizard() {
 }
 
 function importContacts() {
-    openLink('https://sameplace.cc/transport/registration');
+    var input = { value: 'msn.jabber.sameplace.cc' };
+    
+    var result = srvPrompt.prompt(
+        _('strings').getString('statusPlaceholder'),
+        null,
+        _('strings').getString('transportRegistrationTitle'),
+        _('strings').getString('transportRegistrationMessage'),
+            input, null, {});
+    var transportAddress = input.value;
+    
+    if(!result)
+        return;
+    
+    var onlineAccounts = XMPP.accounts.filter(XMPP.isUp);
+    var account = onlineAccounts.length > 1 ? {} : onlineAccounts[0];
+    
+    registerToTransport(account, transportAddress, {
+        onSuccess: function() { alert(_('strings').getString('transportRegistrationSuccess')); },
+        onError: function(info) { alert(_('strings').getFormattedString('transportRegistrationError', [info])); },
+        onCancel: function() {}
+    });
 }
 
 function readLatestNews() {
@@ -260,3 +280,85 @@ function sentAvailablePresence(presence) {
     _('profile-username').value = XMPP.JID(presence.account).username;
 }
 
+
+// NETWORK ACTIONS
+// ----------------------------------------------------------------------
+
+function registerToTransport(account, address, callbacks) {
+    function start() {
+        discoverSupport();
+    }
+    
+    function discoverSupport() {
+        XMPP.send(account,
+                  <iq type="get" to={address}>
+                  <query xmlns="http://jabber.org/protocol/disco#info"/>
+                  </iq>,
+                  function(reply) {
+                      if(reply.stanza.@type == 'result')
+                          queryRegistration();
+                      else
+                          error(reply.stanza.error.@code);
+                  });
+    }
+
+    function queryRegistration() {
+        XMPP.send(account,
+                  <iq type="get" to={address}>
+                  <query xmlns={ns_register}/>
+                  </iq>,
+                  function(reply) {
+                      if(reply.stanza.@type == 'result')
+                          displayForm(reply.stanza.ns_register::query)
+                      else
+                          error(reply.stanza.error.@code);
+                  });
+    }
+
+    function displayForm(serverQuery) {
+        var request = {
+            confirm: false,
+            query: serverQuery
+        };
+
+        window.openDialog(
+            'chrome://xmpp4moz/content/ui/registration.xul',
+            'xmpp4moz-registration', 'modal,centerscreen',
+            request);
+
+        if(request.confirm)
+            acceptForm(request.query)
+        else
+            cancel();
+    }
+
+    function acceptForm(form) {
+        XMPP.send(account,
+                  <iq to={address} type="set">
+                  {form}
+                  </iq>,
+                  function(reply) {
+                      if(reply.stanza.@type == 'result')
+                          success();
+                      else
+                          error(reply.stanza.error.@code);
+                  });
+    }
+
+    function cancel() {
+        if(callbacks.onCancel)
+            callbacks.onCancel();
+    }
+    
+    function success() {
+        if(callbacks.onSuccess)
+            callbacks.onSuccess();
+    }
+
+    function error(info) {
+        if(callbacks.onError)
+            callbacks.onError(info);
+    }
+
+    start();
+}
