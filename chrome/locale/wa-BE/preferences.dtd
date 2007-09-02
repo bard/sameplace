@@ -1,0 +1,7 @@
+<!ENTITY sameplace.prefs.default_application_url.label "URL do prémetou programe:">
+<!ENTITY sameplace.prefs.default_application_url.accesskey "U">
+<!ENTITY sameplace.prefs.toggle_sidebar_hotkey "Tape rascourti po catchî l' panea d' costé:">
+<!ENTITY sameplace.prefs.capture.label "Lére">
+<!ENTITY sameplace.prefs.hotkey_help_text.label "(Les tapes rascourti n' divèt nén fé des conflits avou les cenes d' ôtes programes.)">
+<!ENTITY sameplace.prefs.flash_taskbar.label "Fé clignter li scriftôr s' i gn a des noveas messaedjes">
+<!ENTITY sameplace.prefs.flash_taskbar.accesskey "F">
