@@ -34,12 +34,25 @@ var xml = {};
 // UTILITIES
 // ----------------------------------------------------------------------
 
-/**
- * For each text node in srcNode XML object, applies processFn.
- * Returns a copy of srcNode with text nodes replaced by results of
- * processFn.
- *
- */
+// For each text node in _xmlFragment_, applies _processFn_.
+// Returns a copy of _srcNode_ with text nodes replaced by results of
+// _processFn_.
+//
+// For example, in:
+//
+//     <span>hello <b>world</b></span>
+//
+// "hello " and "world" are text nodes.  The following:
+//
+//     xml.mapTextNodes(
+//         <span>hello <b>world</b></span>,
+//         function(textNode) {
+//             return textNode.toString().toUpperCase();
+//         });
+//
+// Returns:
+//
+//     <span>HELLO <b>WORLD</b></span>
 
 xml.mapTextNodes = function(srcNode, processFn) {
     var mapTextNodes = arguments.callee;

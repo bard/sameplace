@@ -34,11 +34,26 @@ var text = {};
 // UTILITIES
 // ----------------------------------------------------------------------
 
-/**
- * For each match of regexp in string, executes processFn.  Returns an
- * array of unprocessed string parts plus processed string parts.
- *
- */
+// For each match of _regexp_ in _string_, executes _processFn_ .
+// Returns an array of unprocessed string parts plus processed string
+// parts.
+//
+// Arguments
+// to _function_ are the whole matching substring followed by submatches.
+// For example:
+//
+//     text.mapMatch(
+//         'hello world',
+//         /(.)l/g,
+//         function(wholeMatch, firstSubMatch) {
+//             return { beforeL: firstSubMatch, whole: wholeMatch }
+//         });
+//
+// Returns:
+//
+//     ["h", {beforeL:"e", whole:"el"}, "lo wo", {beforeL:"r", whole:"rl"}, "d"]
+//
+// Note that regexp must have the 'g' flag!
     
 text.mapMatch = function(string, regexp, processFn) {
     if(!regexp.global)
@@ -53,7 +68,7 @@ text.mapMatch = function(string, regexp, processFn) {
 
         start = regexp.lastIndex;
 
-        parts.push(processFn(match));
+        parts.push(processFn.apply(null, match));
 
         match = regexp.exec(string);
     }

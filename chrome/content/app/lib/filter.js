@@ -382,14 +382,8 @@ filter.applyTextProcessors = function(xmlFragment, textProcessors) {
     
     return textProcessors.length == 0 ?
         xmlFragment :
-        applyTextProcessors(
-            xml.mapTextNodes(
-                xmlFragment, function(textNode) {
-                    return text.mapMatch(textNode.toString(),
-                                         textProcessors[0].regexp,
-                                         textProcessors[0].action);
-                }),
-            textProcessors.slice(1));
+        applyTextProcessors(textProcessors[0].call(null, xmlFragment),
+                            textProcessors.slice(1));
 };
 
 /**
