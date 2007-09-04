@@ -42,10 +42,10 @@ XML.ignoreWhitespace = false;
 // UTILITIES
 // ----------------------------------------------------------------------
 
-// The following is not really used, but shows how a text processor is
-// made and can be used as a base for more.  This one replaces all
-// occurrences of "<name>.<ext>" with "<type>:<name>.<ext>"; for
-// unknown tipes, also highlight.
+// This text processor is not really used, but shows how a text
+// processor works.  It replaces all occurrences of "<name>.<ext>"
+// with "<type>:<name>.<ext>".  For unrecognized extensions, it also
+// highlights the text.
 //
 //    foo.c => source:FOO.C
 //    bar.h => header:BAR.H
