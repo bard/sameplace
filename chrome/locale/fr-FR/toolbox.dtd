@@ -10,6 +10,9 @@
 <!ENTITY command.switch_to_unread.tooltip "Passer à la prochaine discussion avec des messages non lus">
 <!ENTITY command.switch_to_next.label "Aller à la discussion suivante">
 <!ENTITY command.switch_to_next.tooltip "Passser à la discussion suivante">
+<!ENTITY command.view_help_pages.label "Afficher les pages d'aide...">
+<!ENTITY command.view_help_pages.accesskey "A">
+<!ENTITY command.view_help_pages.tooltip "Afficher les pages d'aide">
 <!ENTITY command.run_wizard.label "Lancer l'assistant...">
 <!ENTITY command.run_wizard.accesskey "W">
 <!ENTITY command.visit_forum.label "Visiter le forum">
