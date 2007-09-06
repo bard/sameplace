@@ -24,7 +24,6 @@
 
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://sameplace/skin/sameplace.css" type="text/css"?>
-<?xml-stylesheet href="sptabbrowser.css" type="text/css"?>
 
 <page id="sameplace" title="SamePlace"
       xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
@@ -43,6 +42,7 @@
   <script type="application/x-javascript" src="lib/utilities_gui.js"/>
   <script type="application/x-javascript" src="lib/utilities_xmpp.js"/>
   <script type="application/x-javascript" src="lib/autocomplete.js"/>
+  <script type="application/x-javascript" src="lib/workarounds.js"/>
   <script type="application/x-javascript" src="sameplace.js"/>
 
 
@@ -82,7 +82,6 @@
 
   <!-- MAIN -->
 
-  <notificationbox id="notify" flex="1" style="overflow: hidden;" orient="vertical">
     <toolbox id="contact-toolbox">
       <toolbar fullscreentoolbar="true" align="center">
         <toolbaritem align="center" flex="1">
@@ -109,6 +108,11 @@
       </toolbar>
     </toolbox>
 
-    <sptabbrowser id="conversations" flex="1" persist="height"/>
-  </notificationbox>
+    <box hidden="true">
+      <!-- workaround for tabbrowser -->
+      <menuitem id="menu_closeWindow"/>
+      <menuitem id="menu_close"/>
+    </box>
+    
+    <tabbrowser id="conversations" flex="1" persist="height"/>
 </page>
