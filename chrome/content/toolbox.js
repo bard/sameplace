@@ -202,7 +202,8 @@ function requestedAddContact() {
         request);
 
     if(request.confirm)
-        contacts.addContact(request.account, request.contactAddress, request.subscribeToPresence);
+        top.sameplace.viewFor('contacts').addContact(
+            request.account, request.contactAddress, request.subscribeToPresence);
 }
 
 function requestedOpenConversation(type) {
