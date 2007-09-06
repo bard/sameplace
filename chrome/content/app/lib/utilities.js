@@ -120,10 +120,11 @@ function textToRGB(text) {
 // ----------------------------------------------------------------------
 
 function copyDomContents(srcElement, dstElement) {
-    for(var i=srcElement.childNodes.length-1; i>=0; i--) 
-        dstElement.insertBefore(
-            srcElement.childNodes[i],
-            dstElement.firstChild);
+    for(var i=srcElement.childNodes.length-1; i>=0; i--) {
+        var importedElement = dstElement.ownerDocument.importNode(
+            srcElement.childNodes[i], true);
+        dstElement.insertBefore(importedElement, dstElement.firstChild);
+    } 
 }
 
 function isNearBottom(domElement, threshold) {
