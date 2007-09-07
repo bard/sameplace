@@ -86,6 +86,13 @@
                          event.stopPropagation();"/>
   </menupopup>
 
+  <popup id="contentAreaContextMenu">
+    <menuitem id="sameplace-install-scriptlet"
+              label="Install SamePlace scriptlet..." accesskey="I"
+              oncommand="sameplace.requestedInstallScriptlet(document.popupNode);"/>
+  </popup>
+
+
   <hbox id="browser">
 
     <!-- AREAS -->

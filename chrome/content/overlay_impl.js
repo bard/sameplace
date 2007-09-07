@@ -303,6 +303,16 @@ function initDisplayRules() {
                     }
                 }
             }, false);
+
+    // In page context menu (if available), only display the "install
+    // scriptlet" option if user clicked on what could be a scriptlet.
+
+    var pageMenu = document.getElementById('contentAreaContextMenu');
+    if(pageMenu) {
+        pageMenu.addEventListener('popupshowing', function(event) {
+            _('install-scriptlet').hidden = !isPossibleScriptletLink(document.popupNode);
+        }, false);
+    }
 }
 
 function initHotkeys() {
@@ -332,6 +342,29 @@ function initHotkeys() {
                 }
             }
         }
+    }, false);
+}
+
+
+// GUI REACTIONS
+// ----------------------------------------------------------------------
+
+function requestedInstallScriptlet(domElement) {
+    if(!isPossibleScriptletLink(domElement))
+        return;
+
+    var scriptletManager = window.openDialog(
+        'chrome://sameplace/content/scriptlet_manager.xul',
+        'sameplace-scriptlet-manager', '',
+        // XXX bard: scriptlets should be in overlay context!)
+        sameplace.viewFor('toolbox').scriptlets);
+    
+    scriptletManager.addEventListener('load', function(event) {
+        scriptletManager.removeEventListener(
+            'load', arguments.callee, false);
+
+        if(!scriptletManager.requestedInstallRemoteScriptlet(domElement.href))
+            scriptletManager.close();
     }, false);
 }
 
@@ -367,6 +400,15 @@ function load(force) {
 
 // GUI UTILITIES
 // ----------------------------------------------------------------------
+
+function isPossibleScriptletLink(domElement) {
+    if(!('href' in domElement))
+        return false;
+    if(!domElement.href.match(/\.js$/))
+        return false;
+
+    return true;
+}
 
 function isReceivingInput() {
     return (viewFor('conversations').isReceivingInput() ||

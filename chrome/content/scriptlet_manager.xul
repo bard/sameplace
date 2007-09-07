@@ -74,7 +74,7 @@
   <box id="blueprints" hidden="true">
     <richlistitem class="scriptlet" orient="vertical" style="padding: 1em;">
       <hbox>
-        <label class="name"/>
+        <label class="title"/>
         <label class="version"/>
         <label class="filename" hidden="true"/>
       </hbox>

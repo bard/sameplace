@@ -81,7 +81,7 @@ function createScriptlet(name) {
 function updateScriptlet(xulScriptlet, scriptlet) {
     $(xulScriptlet).$('.filename')._.value = scriptlet.fileName;
     try {
-        $(xulScriptlet).$('.name')._.value = scriptlet.info.name;
+        $(xulScriptlet).$('.title')._.value = scriptlet.info.name;
         $(xulScriptlet).$('.version')._.value = scriptlet.info.version;
         $(xulScriptlet).$('.description')._.value = scriptlet.info.description;
     } catch(e) {
@@ -101,7 +101,7 @@ var dndObserver = {
             var url = parts[0];
             var name = parts[1];
             if(name.match(/\.js$/))
-                requestedInstallRemoteScriptlet(url, name);
+                requestedInstallRemoteScriptlet(url);
         }
     },
 
@@ -131,20 +131,28 @@ function requestedCreateScriptlet() {
         createScriptlet(name.value + '.js');
 }
 
-function requestedInstallRemoteScriptlet(url, name) {
-    if(window.confirm(
+function requestedInstallRemoteScriptlet(url) {
+    if(isFromTrustedDomain(url) ||
+       window.confirm(
            'Scriptlets are like extensions: malicious ones can harm your computer!\n' +
-           'Only proceed if you trust the source.'))
-        installRemoteScriptlet(url, name);
+               'Only proceed if you trust the source.'))
+        return installRemoteScriptlet(url);
+    else
+        return false;
 }
 
-function installRemoteScriptlet(url, name) {
+function installRemoteScriptlet(url) {
     var process = {
         start       : { ok: 'requestData' },
         requestData : { ok: 'saveData', error: 'alertUser' },
         saveData    : { ok: 'refreshScriptlets', error: 'alertUser' }
     };
-
+    // XXX use let() here
+    var parts = url.split('/');
+    var name = parts[parts.length-1];
+    
+    // XXX get rid of execute(process), use a bunch of functions
+    // instead.  less cool but more comprehensible.
     var steps = {
         requestData: function(next, url, name) {
             var req = new XMLHttpRequest();
@@ -184,10 +192,14 @@ function installRemoteScriptlet(url, name) {
 
         refreshScriptlets: function(next) {
             refreshScriptlets();
-        }
+            $('#scriptlets')._.selectedItem =
+                $('#scriptlets .filename[value="' + name + '"] ^ .scriptlet')._;
+       } 
     };
 
     execute(process, steps, url, name);
+    
+    return true;
 }
 
 function uninstall(xulUninstall) {
@@ -219,4 +231,17 @@ function edit(fileName) {
 
 function _(id) {
     return document.getElementById(id);
+}
+
+
+// UTILITIES
+// ----------------------------------------------------------------------
+
+function isFromTrustedDomain(uri) {
+    var xpcomURI = Cc['@mozilla.org/network/io-service;1']
+    .getService(Ci.nsIIOService)
+    .newURI(uri, null, null);
+
+    return (xpcomURI.host.match(/(^|\.)sameplace\.cc$/ ||
+            uri.host != 'repo.hyperstruct.net'))
 }
