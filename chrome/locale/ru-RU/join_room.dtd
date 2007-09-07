@@ -1,11 +1,11 @@
-﻿<!ENTITY dialog.title "Присоединиться к чат-комнате">
+<!ENTITY dialog.title "Присоединиться к чат-комнате">
 <!ENTITY room_address.label "Адрес:">
-<!ENTITY room_address.accesskey "A">
-<!ENTITY user_nick.label "Ник:">
-<!ENTITY user_nick.accesskey "N">
+<!ENTITY room_address.accesskey "А">
+<!ENTITY user_nick.label "Псевдоним:">
+<!ENTITY user_nick.accesskey "П">
 <!ENTITY user_account.label "Учетная запись:">
-<!ENTITY user_account.accesskey "c">
+<!ENTITY user_account.accesskey "">
 <!ENTITY save.label "Сохранить в контакт-лист">
-<!ENTITY save.accesskey "S">
+<!ENTITY save.accesskey "С">
 <!ENTITY autojoin.label "Присоединяться автоматически">
-<!ENTITY autojoin.accesskey "J">
+<!ENTITY autojoin.accesskey "в">

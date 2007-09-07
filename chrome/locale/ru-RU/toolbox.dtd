@@ -1,40 +1,41 @@
-﻿<!ENTITY command.add_contact.label "Добавить контакт...">
+<!ENTITY command.add_contact.label "Добавить контакт...">
 <!ENTITY command.add_contact.tooltip "Добавить контакт в свой контакт-лист">
+<!ENTITY command.add_contact.accesskey "к">
 <!ENTITY command.open_conversation.label "Начать беседу...">
-<!ENTITY command.open_conversation.accesskey "O">
+<!ENTITY command.open_conversation.accesskey "б">
 <!ENTITY command.open_conversation.tooltip "Начать беседу">
 <!ENTITY command.join_room.label "Присоединиться к чат-комнате...">
-<!ENTITY command.join_room.accesskey "r">
+<!ENTITY command.join_room.accesskey "ч">
 <!ENTITY command.join_room.tooltip "Присоединиться к чат-комнате">
 <!ENTITY command.switch_to_unread.label "Перейти к следующей непрочитанной беседе">
 <!ENTITY command.switch_to_unread.tooltip "Переключиться к следующей в очереди беседе с непрочитанными сообщениями">
 <!ENTITY command.switch_to_next.label "Перейти к следующей беседе">
 <!ENTITY command.switch_to_next.tooltip "Переключиться к следующей беседе">
 <!ENTITY command.run_wizard.label "Запустить мастер учетных записей...">
-<!ENTITY command.run_wizard.accesskey "W">
+<!ENTITY command.run_wizard.accesskey "м">
 <!ENTITY command.view_help_pages.label "Посмотреть справку">
 <!ENTITY command.view_help_pages.tooltip "Посмотреть справочные страницы">
-<!ENTITY command.view_help_pages.accesskey "h">
+<!ENTITY command.view_help_pages.accesskey "а">
 <!ENTITY command.visit_forum.label "Посетить форум">
 <!ENTITY command.visit_forum.tooltip "Посетить форум помощи">
-<!ENTITY command.visit_forum.accesskey "f">
+<!ENTITY command.visit_forum.accesskey "р">
 <!ENTITY command.report_bug.label "Сообщить об ошибке/пожелании">
 <!ENTITY command.report_bug.tooltip "Сообщить об ошибке/пожелании">
-<!ENTITY command.report_bug.accesskey "R">
+<!ENTITY command.report_bug.accesskey "ь">
 <!ENTITY command.join_users_room.label "Посетить чат-комнату SamePlace">
 <!ENTITY command.join_users_room.tooltip "Посетить чат-комнату пользователей SamePlace">
-<!ENTITY command.join_users_room.accesskey "V">
+<!ENTITY command.join_users_room.accesskey "т">
 <!ENTITY command.read_latest_news.label "Прочитать последние новости">
-<!ENTITY command.read_latest_news.accesskey "n">
+<!ENTITY command.read_latest_news.accesskey "н">
 <!ENTITY command.hide.label "Скрыть">
 <!ENTITY command.hide.tooltip "Скрыть">
 <!ENTITY command.import_contacts.label "Импортировать контакты...">
-<!ENTITY command.import_contacts.accesskey "I">
-<!ENTITY command.open_standalon.label "Открыть отдельно (ЭКСПЕРЕМЕНТАЛЬНО)">
-<!ENTITY command.open_standalon.accesskey "S">
+<!ENTITY command.import_contacts.accesskey "ы">
+<!ENTITY command.open_standalon.label "Открыть отдельно (ЭКСПЕРИМЕНТАЛЬНО)">
+<!ENTITY command.open_standalon.accesskey "о">
 <!ENTITY menu.participate.label "Принять участие">
-<!ENTITY menu.participate.accesskey "P">
+<!ENTITY menu.participate.accesskey "у">
 <!ENTITY menu.scriptlets.label "Скриптлеты">
 <!ENTITY menu.scriptlets.manage.label "Менеджер...">
-<!ENTITY menu.scriptlets.manage.accesskey "M">
+<!ENTITY menu.scriptlets.manage.accesskey "д">
 <!ENTITY status_message.tooltip.label "Изменить свое статусное сообщение">
