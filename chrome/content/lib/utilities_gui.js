@@ -78,8 +78,8 @@ function _(element, descendantQuery) {
 }
 
 function fadeIn(element, stepValue, stepInterval) {
-    stepValue = stepValue || 0.1;
-    stepInterval = stepInterval || 150;
+    stepValue = stepValue || 0.2;
+    stepInterval = stepInterval || 100;
 
     function fadeStep() {
         if(element.style.opacity == 1)
