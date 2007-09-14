@@ -164,47 +164,6 @@ function _(thing) {
 }
 
 
-
-// GUI UTILITIES (SPECIFIC)
-// ----------------------------------------------------------------------
-
-/**
- * Provides a convenient stateless wrapper over a document element
- * representing a message.
- *
- * Element descendants with "class" attribute set to "sender", "time"
- * and "content" will be accessible through members of the wrapper, as
- * in:
- *
- *   M(domMessage).sender
- *   M(domMessage).time
- *   M(domMessage).content
- *
- */
-
-function M(domElement) {
-    var wrapper = {
-        get sender() {
-            return $('.sender', domElement)[0];
-        },
-
-        get time() {
-            return $('.time', domElement)[0];
-        },
-
-        get content() {
-            return $('.content', domElement)[0];
-        }   
-    };
-
-    return wrapper;
-}
-
-function cloneBlueprint(name) {
-    return $('#blueprints > .' + name).clone(true)[0];
-}
-
-
 // GUI INITIALIZATION/FINALIZATION
 // ----------------------------------------------------------------------
 
@@ -299,29 +258,39 @@ function repositionOutput() {
 }
 
 function displayMessage(stanza) {
+    const DATE_RX = /^(\d{4})(\d{2})(\d{2})T(\d{2}):(\d{2}):(\d{2})/;
+
     scrollingOnlyIfAtBottom(
         _('chat-output'), function() {
-            var domMessage = cloneBlueprint('message');
-            if(stanza.@type == 'groupchat')
-                M(domMessage).sender.textContent = JID(stanza.@from).resource;
-            else
-                if(stanza.@from == undefined)
-                    M(domMessage).sender.textContent = JID(userAddress).username;
-                else
-                    M(domMessage).sender.textContent =
-                        contactName || JID(stanza.@from).username || stanza.@from;
+            var domMessage = $('#blueprints > .message').clone(true).get(0);
 
+            var txtTimeSent =
+                (stanza.ns_delay::x == undefined) ?
+                new Date() :
+                let([_full, year, month, day, hour, min, sec] =
+                    stanza.ns_delay::x.@stamp.toString().match(DATE_RX))
+                    new Date(Date.UTC(year, month, day, hour, min, sec));
             
-            if(stanza.@type == 'groupchat')
-                M(domMessage).sender.setAttribute(
-                    'style', 'color: rgb(' + textToRGB(JID(stanza.@from).nick).join(',') + ')');
+            var txtSender =
+                (stanza.@type == 'groupchat' ?
+                 JID(stanza.@from).nick : (stanza.@from == undefined ?
+                                           JID(userAddress).username : (contactName ||
+                                                                        JID(stanza.@from).username ||
+                                                                        stanza.@from).toString()))
 
-            if(stanza.@type != 'groupchat')
-                domMessage.setAttribute(
-                    'class',
-                    domMessage.getAttribute('class') + ' ' +
-                    (stanza.@from.toString() ? 'contact' : 'user'));
-
+            var senderStyle = (stanza.@type == 'groupchat' ?
+                               {color: 'rgb(' + textToRGB(JID(stanza.@from).nick).join(',') + ')'} : {});
+            
+            $(domMessage)
+            .addClass(stanza.@type != 'groupchat' ?
+                      (stanza.@from == undefined ? 'user' : 'contact') : '')
+            .find('.sender')
+            .css(senderStyle)
+            .text(txtSender)
+            .end()
+            .find('.time')
+            .text(formatTime(txtTimeSent));
+            
             // Without this, applyTextProcessors will add whitespace
             // and indentation.  Wo don't want that, especially with a
             // -moz-pre-wrap around the corner.
@@ -331,34 +300,25 @@ function displayMessage(stanza) {
             if(stanza.ns_xhtml_im::html == undefined) {
                 body = filter.applyTextProcessors(stanza.body, textProcessors);
                 body.setNamespace(ns_xhtml);
-                M(domMessage).content.setAttribute('style', 'white-space: -moz-pre-wrap;');
+                $(domMessage).find('.content').css('white-space', '-moz-pre-wrap');
             } else
                 body = filter.applyTextProcessors(
                     filter.xhtmlIM.keepRecommended(stanza.ns_xhtml_im::html.ns_xhtml::body),
                     textProcessors);
             
-            copyDomContents(conv.toDOM(body), M(domMessage).content);
+            copyDomContents(conv.toDOM(body), $(domMessage).find('.content').get(0));
 
-            var timeSent;
-            if(stanza.ns_delay::x != undefined) {
-                var m = stanza.ns_delay::x.@stamp.toString()
-                    .match(/^(\d{4})(\d{2})(\d{2})T(\d{2}):(\d{2}):(\d{2})/);
-                timeSent = new Date(Date.UTC(m[1], m[2], m[3], m[4], m[5], m[6]));
-            } else 
-                timeSent = new Date();
-
-            M(domMessage).time.textContent = formatTime(timeSent);
-                
             _('messages').appendChild(domMessage);
         });
 }
 
 function displayEvent(eventClass, text) {
     scrollingOnlyIfAtBottom(
-        _('chat-output'), function() {
-            var domChatEvent = cloneBlueprint(eventClass);
-            domChatEvent.textContent = text;
-            _('messages').appendChild(domChatEvent);
+        $('#chat-output').get(0), function() {
+            $('#blueprints > .' + eventClass)
+            .clone(true)
+            .text(text)
+            .appendTo('#messages');
         });
 }
 
@@ -446,7 +406,7 @@ function sendText(text) {
     message.ns_xhtml_im::html.body =
         <body xmlns={ns_xhtml}>{text}</body>
 
-    _('xmpp-outgoing').textContent = message.toXMLString();
+    $('#xmpp-outgoing').text(message.toXMLString());
 }
 
 function sendXHTML(xhtmlBody) {
