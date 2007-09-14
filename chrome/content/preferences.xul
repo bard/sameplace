@@ -25,7 +25,7 @@
 <overlay id="xmpp-overlay-preferences"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
-  <script type="application/x-javascript" src="preferences.js"/>
+  <script type="application/x-javascript;version=1.7" src="preferences.js"/>
 
   <prefpane id="xmpp-pane">
     <preferences>

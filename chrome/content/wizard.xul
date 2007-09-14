@@ -31,8 +31,8 @@
 
   <!-- SCRIPTS -->
 
-  <script type="application/x-javascript" src="chrome://xmpp4moz/content/xmpp.js"/>
-  <script type="application/x-javascript" src="wizard.js"/>
+  <script type="application/x-javascript;version=1.7" src="chrome://xmpp4moz/content/xmpp.js"/>
+  <script type="application/x-javascript;version=1.7" src="wizard.js"/>
 
 
   <!-- STRINGS -->

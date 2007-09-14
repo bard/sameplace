@@ -46,18 +46,18 @@
 
         onload="init();">
 
-  <script type="application/x-javascript" src="chrome://global/content/nsDragAndDrop.js"/>
-  <script type="application/x-javascript" src="chrome://global/content/nsTransferable.js"/>
+  <script type="application/x-javascript;version=1.7" src="chrome://global/content/nsDragAndDrop.js"/>
+  <script type="application/x-javascript;version=1.7" src="chrome://global/content/nsTransferable.js"/>
 
-  <script type="application/x-javascript" src="chrome://xmpp4moz/content/xmpp.js"/>
-  <script type="application/x-javascript" src="lib/namespaces.js"/>
-  <script type="application/x-javascript" src="lib/utilities.js"/>
-  <script type="application/x-javascript" src="lib/utilities_gui.js"/>
-  <script type="application/x-javascript" src="lib/css_query.js"/>
+  <script type="application/x-javascript;version=1.7" src="chrome://xmpp4moz/content/xmpp.js"/>
+  <script type="application/x-javascript;version=1.7" src="lib/namespaces.js"/>
+  <script type="application/x-javascript;version=1.7" src="lib/utilities.js"/>
+  <script type="application/x-javascript;version=1.7" src="lib/utilities_gui.js"/>
+  <script type="application/x-javascript;version=1.7" src="lib/css_query.js"/>
 
-  <script type="application/x-javascript" src="scriptlet_editor.js"/>
+  <script type="application/x-javascript;version=1.7" src="scriptlet_editor.js"/>
 
-  <script type="application/x-javascript" src="codepress/codepress.js"/>
+  <script type="application/x-javascript;version=1.7" src="codepress/codepress.js"/>
 
   <vbox id="editor-container" flex="1" style="overflow: auto;">
     <html:textarea id="editor"

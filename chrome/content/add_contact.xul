@@ -32,8 +32,8 @@
         ondialogcancel="return doCancel();"
         onload="init();">
 
-  <script type="application/x-javascript" src="chrome://xmpp4moz/content/xmpp.js"/>
-  <script type="application/x-javascript" src="add_contact.js"/> 
+  <script type="application/x-javascript;version=1.7" src="chrome://xmpp4moz/content/xmpp.js"/>
+  <script type="application/x-javascript;version=1.7" src="add_contact.js"/> 
 
   <dialogheader title="&dialog.add_contact.title;"/>
 
