@@ -56,7 +56,7 @@ function initOverlay(event) {
     // Only preload SamePlace if there's no other window around with
     // an active SamePlace instance, and if this isn't a popup.'
 
-    if(!isActiveSomewhere() && window.toolbar.visible)
+    if(!isActiveSomewhere() && !isPopupWindow())
         loadAreas();
 
     // Depending on entity of update, run wizard and/or show
@@ -515,6 +515,10 @@ function isActiveSomewhere() {
             return true;
     }
     return false;
+}
+
+function isPopupWindow() {
+    return window.toolbar.visible;
 }
 
 function upgradeCheck(id, versionPref, actions, ignoreTrailingParts) {
