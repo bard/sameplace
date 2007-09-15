@@ -59,7 +59,7 @@ function initOverlay(event) {
     // an active SamePlace instance, and if this isn't a popup.'
 
     if(!isActiveSomewhere() && window.toolbar.visible)
-        load();
+        loadAreas();
 
     // Depending on entity of update, run wizard and/or show
     // changelog.
@@ -80,7 +80,7 @@ function initNetworkReactions() {
         state     : 'start'
     }, function() {
         if(window == getMostRecentWindow() && window.toolbar.visible)
-            load();
+            loadAreas();
     });
 
     channel.on({
@@ -386,7 +386,7 @@ function runWizard() {
         'sameplace-wizard', 'chrome')
 }
 
-function load(force) {
+function loadAreas(force) {
     // XXX this does not handle "appcontent" setting as a conversation area
 
     if(force || viewFor('conversations').location.href != 'chrome://sameplace/content/sameplace.xul')

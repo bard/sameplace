@@ -35,13 +35,13 @@
   <!-- COMMANDS -->
 
   <commandset id="mailCommands">
-    <command id="sameplace-command-toggle-sidebar"
+    <command id="sameplace-command-toggle"
              label="Toggle"
-             oncommand="sameplace.toggleSidebar();"
+             oncommand="sameplace.toggle();"
              accesskey="T"/>
-    <command id="sameplace-command-load-sidebar"
+    <command id="sameplace-command-load"
              label="SamePlace"
-             oncommand="sameplace.loadSidebar();"
+             oncommand="sameplace.loadAreas();"
              accesskey="S"/>
     <command id="sameplace-command-open-standalone"
              label="Open Standalone (EXPERIMENTAL)"
@@ -50,7 +50,7 @@
                         'chrome://sameplace/content/standalone/contacts.xul',
                         'SamePlace:Contacts', 'chrome,titlebar=no,toolbar=no');"/>
     <command id="sameplace-command-load-sidebar-force"
-             oncommand="sameplace.loadSidebar(true);"/>
+             oncommand="sameplace.loadAreas(true);"/>
   </commandset>
 
   <!-- KEYS -->
@@ -60,8 +60,8 @@
          key="t"
          modifiers="control alt"
          phase="capture"
-         oncommand="sameplace.getSidebarContent().focusStatus();"/>
-    <key id="sameplace-key-toggle-sidebar"/>
+         oncommand="sameplace.get('toolbar').focusStatus();"/>
+    <key id="sameplace-key-toggle"/>
     <key keycode="VK_F12" modifiers="control" command="sameplace-command-load-sidebar-force"/>
   </keyset>
 
@@ -70,8 +70,8 @@
   <menupopup id="xmpp-menu-main">
     <menu label="SamePlace" accesskey="S" insertbefore="xmpp-menu-applications-separator">
       <menupopup>
-        <menuitem command="sameplace-command-toggle-sidebar"
-                  key="sameplace-key-toggle-sidebar"
+        <menuitem command="sameplace-command-toggle"
+                  key="sameplace-key-toggle"
                   class="menuitem-iconic"/>
         <menuitem command="sameplace-command-open-standalone"
                   class="menuitem-iconic"/>
@@ -81,7 +81,7 @@
 
   <menupopup id="xmpp-popup-accounts-secondary">
     <menuitem label="Toggle SamePlace"
-              key="sameplace-key-toggle-sidebar"
+              key="sameplace-key-toggle"
               class="menuitem-iconic"
               insertafter="xmpp-menu-set-status"
               oncommand="sameplace.toggleSidebar();
