@@ -25,10 +25,8 @@
 const Cc = Components.classes;
 const Ci = Components.interfaces;
 const pref = Cc['@mozilla.org/preferences-service;1']
-    .getService(Ci.nsIPrefService)
-    .getBranch('extensions.sameplace.');
-
-var ns_auth = 'jabber:iq:auth';
+.getService(Ci.nsIPrefService)
+.getBranch('extensions.sameplace.');
 
 
 // GLOBAL STATE
@@ -36,14 +34,6 @@ var ns_auth = 'jabber:iq:auth';
 
 var channel;
 var scriptlets = load('chrome://sameplace/contact/facades/scriptlets.js');
-
-
-// GUI UTILITIES (SPECIFIC)
-// ----------------------------------------------------------------------
-
-function _(id) {
-    return document.getElementById('sameplace-' + id);
-}
 
 
 // INITIALIZATION
@@ -74,6 +64,8 @@ function initOverlay(event) {
 }
 
 function initNetworkReactions() {
+    const ns_auth = 'jabber:iq:auth';
+
     channel = XMPP.createChannel();
     
     channel.on({
@@ -321,14 +313,13 @@ function initHotkeys() {
     var toggleContactsKey = eval(pref.getCharPref('toggleContactsKey'))
     var toggleConversationsKey = eval(pref.getCharPref('toggleConversationsKey'))
 
-    window.addEventListener(
-        'keypress', function(event) {
-            if(matchKeyEvent(event, toggleContactsKey))
-                toggle();
-            
-            if(matchKeyEvent(event, toggleConversationsKey))
-                frameFor('conversations').collapsed = !frameFor('conversations').collapsed;
-        }, true)
+    window.addEventListener('keypress', function(event) {
+        if(matchKeyEvent(event, toggleContactsKey))
+            toggle();
+        
+        if(matchKeyEvent(event, toggleConversationsKey))
+            frameFor('conversations').collapsed = !frameFor('conversations').collapsed;
+    }, true);
 
     pref.QueryInterface(Ci.nsIPrefBranch2)
     pref.addObserver('', {
@@ -408,6 +399,10 @@ function loadAreas(force) {
 
 // GUI UTILITIES
 // ----------------------------------------------------------------------
+
+function _(id) {
+    return document.getElementById('sameplace-' + id);
+}
 
 function isPossibleScriptletLink(domElement) {
     if(!('href' in domElement))
@@ -515,8 +510,8 @@ function matchKeyEvent(e1, e2) {
 
 function getMostRecentWindow() {
     return Cc['@mozilla.org/appshell/window-mediator;1']
-        .getService(Ci.nsIWindowMediator)
-        .getMostRecentWindow('');
+    .getService(Ci.nsIWindowMediator)
+    .getMostRecentWindow('');
 }
 
 function isActive() {
@@ -525,8 +520,8 @@ function isActive() {
 
 function isActiveSomewhere() {
     var windows = Cc['@mozilla.org/appshell/window-mediator;1']
-        .getService(Ci.nsIWindowMediator)
-        .getEnumerator('');
+    .getService(Ci.nsIWindowMediator)
+    .getEnumerator('');
 
     while(windows.hasMoreElements()) {
         var window = windows.getNext();
