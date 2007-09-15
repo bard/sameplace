@@ -120,8 +120,8 @@ function initDisplayRules() {
     frameFor('contacts').addEventListener(
         'contact/select', function(event) {
             viewFor('conversations').startInteraction(
-                attr(event.target, 'account'),
-                attr(event.target, 'address'));
+                event.target.getAttribute('account'),
+                event.target.getAttribute('address'));
         }, false);
 
     // In some cases, conversations are not located inside the frame
@@ -462,26 +462,6 @@ function frameFor(aspect) {
 
 function viewFor(aspect) {
     return frameFor(aspect).contentWindow;
-}
-
-
-// GUI UTILITIES (GENERIC)
-// ----------------------------------------------------------------------
-
-function attr(element, attributeName) {
-    if(element.hasAttribute(attributeName))
-        return element.getAttribute(attributeName);
-    else
-        return getAncestorAttribute(element, attributeName);
-}
-
-function getAncestorAttribute(element, attributeName) {
-    while(element.parentNode && element.parentNode.hasAttribute) {
-        if(element.parentNode.hasAttribute(attributeName))
-            return element.parentNode.getAttribute(attributeName);
-        element = element.parentNode;
-    }
-    return null;
 }
 
 
