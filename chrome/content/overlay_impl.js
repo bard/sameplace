@@ -35,6 +35,7 @@ var ns_auth = 'jabber:iq:auth';
 // ----------------------------------------------------------------------
 
 var channel;
+var scriptlets = load('chrome://sameplace/contact/facades/scriptlets.js');
 
 
 // GUI UTILITIES (SPECIFIC)
@@ -52,6 +53,7 @@ function initOverlay(event) {
     initNetworkReactions();
     initDisplayRules();
     initHotkeys();
+    initScriptlets();
 
     // Only preload SamePlace if there's no other window around with
     // an active SamePlace instance, and if this isn't a popup.'
@@ -345,6 +347,13 @@ function initHotkeys() {
     }, false);
 }
 
+function initScriptlets() {
+    scriptlets.init(['sameplace', 'scriptlets'],
+                    'extensions.sameplace.',
+                    'chrome://sameplace/content/scriptlet_sample.js');
+    scriptlets.start();
+}
+
 
 // GUI REACTIONS
 // ----------------------------------------------------------------------
@@ -356,8 +365,7 @@ function requestedInstallScriptlet(domElement) {
     var scriptletManager = window.openDialog(
         'chrome://sameplace/content/scriptlet_manager.xul',
         'sameplace-scriptlet-manager', '',
-        // XXX bard: scriptlets should be in overlay context!)
-        sameplace.viewFor('toolbox').scriptlets);
+        scriptlets);
     
     scriptletManager.addEventListener('load', function(event) {
         scriptletManager.removeEventListener(
@@ -484,6 +492,17 @@ function getAncestorAttribute(element, attributeName) {
 
 // UTILITIES
 // ----------------------------------------------------------------------
+
+function load(url) {
+    var context = {};
+    Cc['@mozilla.org/moz/jssubscript-loader;1']
+    .getService(Ci.mozIJSSubScriptLoader).loadSubScript(url, context);
+    
+    var names = Array.slice(arguments, 1);
+    return (names.length > 0 ?
+            names.map(function(name) { return context[name]; }) :
+            context);
+}
 
 function matchKeyEvent(e1, e2) {
     return (e1.ctrlKey  == e2.ctrlKey &&

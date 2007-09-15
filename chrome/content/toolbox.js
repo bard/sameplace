@@ -36,8 +36,7 @@ const srvPrompt = Cc["@mozilla.org/embedcomp/prompt-service;1"]
 // ----------------------------------------------------------------------
 
 var channel;
-var scriptlets = {};
-load('chrome://sameplace/contact/facades/scriptlets.js', scriptlets);
+var scriptlets;
 
 
 // GUI INITIALIZATION AND FINALIZATION
@@ -67,11 +66,7 @@ function init(event) {
         direction: 'out',
         }).forEach(sentAvailablePresence);
 
-    // Loading and starting scriptlets
-
-    scriptlets.init(['sameplace', 'scriptlets'], 'extensions.sameplace.',
-                    'chrome://sameplace/content/scriptlet_sample.js');
-    scriptlets.start();
+    scriptlets = top.sameplace.scriptlets;
 
     sizeToContent();
 }

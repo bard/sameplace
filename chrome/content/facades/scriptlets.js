@@ -306,3 +306,32 @@ function readURL(url){
     input.close();
     return str;
 }
+
+function load(fileIndicator, context) {
+    function fileToURL(file) {
+        return Cc['@mozilla.org/network/io-service;1']
+            .getService(Ci.nsIIOService)
+            .getProtocolHandler('file')
+            .QueryInterface(Ci.nsIFileProtocolHandler)
+            .getURLSpecFromFile(file);
+    }
+
+    var url;
+    if(fileIndicator instanceof Ci.nsIFile)
+        url = fileToURL(fileIndicator);
+    else if(typeof(fileIndicator) == 'string')
+        if(fileIndicator.match(/^(file|chrome):\/\//))
+            url = fileIndicator;
+        else {
+            var file = Cc['@mozilla.org/file/local;1']
+                .createInstance(Ci.nsILocalFile);
+            file.initWithPath(fileIndicator);
+            url = fileToURL(file);
+        }
+    else
+        throw new Error('Unexpected. (' + fileIndicator + ')');
+
+    Cc['@mozilla.org/moz/jssubscript-loader;1']
+        .getService(Ci.mozIJSSubScriptLoader)
+        .loadSubScript(url, context);
+}
