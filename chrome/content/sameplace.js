@@ -37,8 +37,7 @@ const srvPrompt = Cc["@mozilla.org/embedcomp/prompt-service;1"]
 
 var channel;
 var messageCache = {};
-var conversations = {};
-load('chrome://sameplace/content/facades/conversations.js', conversations);
+var conversations = load('chrome://sameplace/content/facades/conversations.js');
 
 
 // GUI INITIALIZATION AND FINALIZATION

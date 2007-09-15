@@ -44,7 +44,7 @@ function hostAppIsBrowser() {
             .ID == '{ec8030f7-c20a-464f-9b0e-13a3a9e97384}');
 }
 
-function load(fileIndicator, context) {
+function load(fileIndicator) {
     function fileToURL(file) {
         return Cc['@mozilla.org/network/io-service;1']
             .getService(Ci.nsIIOService)
@@ -68,7 +68,13 @@ function load(fileIndicator, context) {
     else
         throw new Error('Unexpected. (' + fileIndicator + ')');
 
+    var context = {};
     Cc['@mozilla.org/moz/jssubscript-loader;1']
         .getService(Ci.mozIJSSubScriptLoader)
         .loadSubScript(url, context);
+
+    var names = Array.slice(arguments, 1);
+    return (names.length > 0 ?
+            names.map(function(name) { return context[name]; }) :
+            context);
 }
