@@ -49,8 +49,6 @@ function _(id) {
 // ----------------------------------------------------------------------
 
 function initOverlay(event) {
-    channel = XMPP.createChannel();
-
     initNetworkReactions();
     initDisplayRules();
     initHotkeys();
@@ -74,6 +72,8 @@ function initOverlay(event) {
 }
 
 function initNetworkReactions() {
+    channel = XMPP.createChannel();
+    
     channel.on({
         event     : 'transport',
         direction : 'out',
