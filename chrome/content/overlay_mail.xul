@@ -60,7 +60,7 @@
          key="t"
          modifiers="control alt"
          phase="capture"
-         oncommand="sameplace.get('toolbar').focusStatus();"/>
+         oncommand="sameplace.viewFor('toolbox').focusStatus();"/>
     <key id="sameplace-key-toggle"/>
     <key keycode="VK_F12" modifiers="control" command="sameplace-command-load-sidebar-force"/>
   </keyset>
