@@ -80,6 +80,24 @@ function init() {
                 return s.@type == 'result' &&
                     s.ns_private::query.ns_bookmarks::storage != undefined;
             }}, function(iq) { receivedMUCBookmarks(iq); });
+    channel.on({
+        event     : 'presence',
+        direction : 'in',
+        stanza    : function(s) {
+            return s.@type == 'subscribe';
+        },
+    }, function(presence) {
+        var roster = XMPP.cache.find({
+            event     : 'iq',
+            direction : 'in',
+            account   : presence.account,
+            stanza    : function(s) {
+                return s.ns_roster::query != undefined
+            }
+        });
+        if(roster.stanza..ns_roster::item.(@jid == presence.stanza.@from))
+            receivedSubscriptionApproval(presence);
+    });
 
     XMPP.cache.fetch({
         event: 'iq',
@@ -346,24 +364,7 @@ function receivedPresence(presence) {
 }
 
 function receivedRoster(iq) {
-    function watchForSubscriptionApproval(item) {
-        var listener = channel.on({
-            event     : 'presence',
-            direction : 'in',
-            stanza    : function(s) {
-                    return (s.@type == 'subscribed' &&
-                            s.@from == item.@jid);
-                }},
-            function(presence) {
-                channel.forget(listener);
-                receivedSubscriptionApproval(presence);
-            });
-    }
-
     for each(var item in iq.stanza..ns_roster::item) {
-        if(item.@ask == 'subscribe')
-            watchForSubscriptionApproval(item);
-
         contactChangedRelationship(
             iq.session.name,
             item.@jid,
