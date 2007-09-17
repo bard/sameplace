@@ -129,8 +129,9 @@ function init(event) {
         break;
     case 'left':
     case 'right':
+        tabbedArea(_('conversations'), _('conversation-tabs'));
         conversationContainer = _('conversations');
-        conversations.init(conversationContainer, true);
+        conversations.init(conversationContainer, false);
         break;
     default:
         break;

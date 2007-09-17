@@ -109,11 +109,6 @@
       </toolbar>
     </toolbox>
 
-    <box hidden="true">
-      <!-- workaround for tabbrowser -->
-      <menuitem id="menu_closeWindow"/>
-      <menuitem id="menu_close"/>
-    </box>
-    
-    <tabbrowser id="conversations" flex="1" persist="height"/>
+    <tabs id="conversation-tabs" collapsed="true" closebutton="true"/>
+    <deck id="conversations" collapsed="true" flex="1"/>
 </page>
