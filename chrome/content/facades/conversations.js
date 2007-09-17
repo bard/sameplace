@@ -40,7 +40,7 @@ function init(_dom, onlyHostsConversations) {
     dom.tabContainer.addEventListener(
         'select', function(event) {
             var panel = event.target.selectedItem.linkedBrowser;
-            if(isConversation(panel))
+            if(panel && isConversation(panel))
                 focused(panel.getAttribute('account'),
                         panel.getAttribute('address'));
 
