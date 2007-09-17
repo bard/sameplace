@@ -184,6 +184,10 @@ textbox#status-message {
 
 /* CONVERSATIONS */
 
+#conversation-tabs tab {
+        font-size: smaller;
+}
+
 #conversation-tabs .tabs-closebutton > .toolbarbutton-icon {
     -moz-margin-end: 0px !important;
     -moz-padding-end: 2px !important;
