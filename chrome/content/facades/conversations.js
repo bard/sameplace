@@ -60,9 +60,7 @@ function init(_dom, onlyHostsConversations) {
 
         dom.setAttribute('handleCtrlPageUpDown', 'false');
 
-        var tabbox = dom.ownerDocument.getAnonymousElementByAttribute(dom, 'anonid', 'tabbox') ||
-            // firefox 1.5...
-            dom.ownerDocument.getAnonymousNodes(dom)[1];
+        var tabbox = dom.ownerDocument.getAnonymousElementByAttribute(dom, 'anonid', 'tabbox');
         tabbox.setAttribute('handleCtrlTab', false);
     }
 }
