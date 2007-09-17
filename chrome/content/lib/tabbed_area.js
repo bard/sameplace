@@ -73,7 +73,7 @@ function tabbedArea(deck, tabs) {
         }, true);
         
         browser.loadURI(url);
-        tab._browser = browser;
+        tab.linkedBrowser = browser;
         return tab;
     };
     
@@ -97,7 +97,7 @@ function tabbedArea(deck, tabs) {
     };
     
     deck.getBrowserForTab = function(tab) {
-        return tab._browser;
+        return tab.linkedBrowser;
     };
     
     deck.__defineGetter__('selectedTab', function() {
@@ -113,8 +113,8 @@ function tabbedArea(deck, tabs) {
             tabs.selectedItem = tab.previousSibling;
     
         // Force unload event.
-        tab._browser.loadURI('about:blank');
-        this.removeChild(tab._browser);
+        tab.linkedBrowser.loadURI('about:blank');
+        this.removeChild(tab.linkedBrowser);
         tabs.removeChild(tab);
     };
     
@@ -125,14 +125,6 @@ function tabbedArea(deck, tabs) {
     deck.__defineGetter__('tabContainer', function() {
         return tabs;
     });
-    
-    // XXX only used by conversations.js for detecting tab selection;
-    // use TabSelect event there instead, and modify here accordingly.
-    deck.mPanelContainer = deck;
-
-    // XXX not necessary if mTabContainer in conversations.js is
-    // replaced with tabContainer
-    deck.mTabContainer = tabs;
 };
 
 

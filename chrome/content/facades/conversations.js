@@ -37,20 +37,13 @@ var dom;
 function init(_dom, onlyHostsConversations) {
     dom = _dom;
 
-    dom.mPanelContainer.addEventListener(
+    dom.tabContainer.addEventListener(
         'select', function(event) {
-            // dom.selectedBrowser won't do: it still points to the
-            // one that was current before this selection.
-            // event.target.selectedPanel won't do, either: it points
-            // to a <notificationbox/>, whereas we use the <browser/>
-            // as panel.
-            var panel = dom.getBrowserForTab(dom.mTabContainer.selectedItem);
-            if(panel.contentDocument &&
-               panel.contentDocument.location.href == 'about:blank')
-                return;
+            var panel = event.target.selectedItem.linkedBrowser;
             if(isConversation(panel))
                 focused(panel.getAttribute('account'),
                         panel.getAttribute('address'));
+
         }, false);
 
     if(onlyHostsConversations) {
@@ -206,7 +199,10 @@ __defineGetter__(
     });
 
 function isConversation(panel) {
-    return panel.hasAttribute('account') && panel.hasAttribute('address');
+    return (panel.contentDocument &&
+            panel.contentDocument.location.href != 'about:blank' &&
+            panel.hasAttribute('account') &&
+            panel.hasAttribute('address'));
 }
 
 function isOpen(account, address) {
