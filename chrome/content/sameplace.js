@@ -119,12 +119,9 @@ function init(event) {
     case 'appcontent':
         // This is the main browser/mail area.  We act as an off-site
         // manager for it.
-        if(top.fakeTabBrowser)
-            // Fake <tabbrowser/> for Thunderbird
-            conversationContainer = top.fakeTabBrowser;
-        else
-            conversationContainer = top.getBrowser();
-
+        conversationContainer =
+            top.document.getElementById('sameplace-conversations') ||
+            top.getBrowser();
         conversations.init(conversationContainer, false);
         break;
     case 'left':

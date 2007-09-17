@@ -110,5 +110,5 @@
     </toolbox>
 
     <tabs id="conversation-tabs" collapsed="true" closebutton="true"/>
-    <deck id="conversations" collapsed="true" flex="1"/>
+    <deck id="conversations" flex="1"/>
 </page>

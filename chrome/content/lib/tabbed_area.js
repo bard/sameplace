@@ -77,14 +77,14 @@ function tabbedArea(deck, tabs) {
         else
             return { spec: null };
     });
-    
-    deck.__defineGetter__('browsers', function() {
-        return this.childNodes;
-    });
-    
+
     deck.getBrowserAtIndex = function(i) {
         return this.childNodes[i];
     };
+
+    deck.__defineGetter__('browsers', function() {
+        return this.childNodes;
+    });
     
     deck.getBrowserForTab = function(tab) {
         return tab.linkedBrowser;
@@ -116,6 +116,4 @@ function tabbedArea(deck, tabs) {
         return tabs;
     });
 };
-
-
 
