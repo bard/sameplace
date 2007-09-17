@@ -15,16 +15,6 @@ function tabbedArea(deck, tabs) {
         }
     }, false);
 
-    deck.addEventListener('DOMNodeInserted', function(event) {
-        if(event.relatedNode == deck && event.target.tagName == 'browser')
-            deck.collapsed = false;
-    }, false);
-
-    tabs.addEventListener('DOMNodeRemoved', function(event) {
-        if(event.relatedNode == tabs && event.target.tagName == 'tab')
-            tabs.collapsed = (tabs.childNodes.length == 1);
-    }, false);
-    
     tabs.addEventListener('click', function(event) {
         if(event.target.nodeName == 'tab' && event.button == 1)
             deck.removeTab(event.target);
