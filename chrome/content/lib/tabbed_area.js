@@ -99,13 +99,19 @@ function tabbedArea(deck, tabs) {
     });
     
     deck.removeTab = function(tab) {
-        if(tab == tabs.selectedItem && tab.previousSibling)
-            tabs.selectedItem = tab.previousSibling;
-    
-        // Force unload event.
+        if(tab == tabs.selectedItem)
+            if(tab.previousSibling) {
+                tabs.selectedItem = tab.previousSibling;
+            } else if(tab.nextSibling) {
+                tabs.selectedItem = tab.nextSibling;
+            }
+
         tab.linkedBrowser.loadURI('about:blank');
         this.removeChild(tab.linkedBrowser);
         tabs.removeChild(tab);
+
+        if(tabs.childNodes.length > 0)
+            this.selectedIndex = tabs.selectedIndex;
     };
     
     deck.removeCurrentTab = function() {
