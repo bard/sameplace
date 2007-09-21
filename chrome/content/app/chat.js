@@ -22,7 +22,7 @@
 // GLOBAL DEFINITIONS
 // ----------------------------------------------------------------------
 
-var textProcessors = [processURLs, processEmoticons];
+var displayFilters = [processURLs, processEmoticons];
 
 
 // GLOBAL STATE
@@ -39,10 +39,17 @@ XML.prettyPrinting = false;
 XML.ignoreWhitespace = false;
 
 
-// UTILITIES
+// DISPLAY FILTERS
 // ----------------------------------------------------------------------
 
-// This text processor is not really used, but shows how a text
+// Display filters receive the body of incoming and outgoing messages
+// just before it would be displayed, and get a chance to modify it to
+// change its appearance.  This allows, for example, making URLs
+// clickable even if the user entered as plain text.  Note, however,
+// that the incoming or outgoing messages is NOT modified.  If you
+// want to do that on outgoing messages, use out filters.
+
+// This display filter is not really used, but shows how a text
 // processor works.  It replaces all occurrences of "<name>.<ext>"
 // with "<type>:<name>.<ext>".  For unrecognized extensions, it also
 // highlights the text.
@@ -221,7 +228,7 @@ function init(event) {
 
     _('chat-input').addEventListener(
         'accept', function(event) {
-            sendXHTML(event.target.xhtml);
+            send(wrapAs(event.target.xhtml, 'application/xhtml+xml'));
         }, false);
     
     _('chat-input').addEventListener(
@@ -240,10 +247,10 @@ function init(event) {
             
             if(composing && event.target.isEmpty()) {
                 composing = false;
-                sendEvent('active');
+                send(chatEvent('active'));
             } else if(!composing && !event.target.isEmpty()) {
                 composing = true;
-                sendEvent('composing');
+                send(chatEvent('composing'));
             }
         }, false);
 }
@@ -298,13 +305,13 @@ function displayMessage(stanza) {
             XML.ignoreWhitespace = false;
             var body;
             if(stanza.ns_xhtml_im::html == undefined) {
-                body = filter.applyTextProcessors(stanza.body, textProcessors);
+                body = filter.applyTextProcessors(stanza.body, displayFilters);
                 body.setNamespace(ns_xhtml);
                 $(domMessage).find('.content').css('white-space', '-moz-pre-wrap');
             } else
                 body = filter.applyTextProcessors(
                     filter.xhtmlIM.keepRecommended(stanza.ns_xhtml_im::html.ns_xhtml::body),
-                    textProcessors);
+                    displayFilters);
             
             copyDomContents(conv.toDOM(body), $(domMessage).find('.content').get(0));
 
@@ -347,22 +354,19 @@ function droppedDataInInput(event) {
 }
 
 function droppedDataInConversation(event) {
-    var data = new XML(_('dnd-sink').textContent);
-    var contentType = data['@content-type'].toString();
+    // dataPacket looks like:
+    // <data content-type="text/html">&lt;img src="http://www.site.com/hello.png"&gt;</data>
+    
+    var dataPacket  = new XML(_('dnd-sink').textContent);
+    var dataPayload = dataPacket.text().toString();
+    var contentType = dataPacket['@content-type'].toString();
 
     switch(contentType) {
     case 'text/unicode':
-        sendText(data.toString());
+        send(wrapAs(dataPayload, 'text/unicode'));
         break;
     case 'text/html':
-        _('html-conversion-area').contentDocument.body.innerHTML = data.toString();
-
-        // Should not be needed, but apparently is.
-        XML.ignoreWhitespace = false;
-        XML.prettyPrinting = false;
-
-        sendXHTML(conv.htmlDOMToXHTML(
-                      _('html-conversion-area').contentDocument.body));
+        send(wrapAs(html2xhtml(dataPayload), 'application/xhtml+xml'));
         break;
     default:
         throw new Error('Unexpected. (' + contentType + ')');
@@ -390,59 +394,8 @@ function requestedFormatCommand(event) {
 // NETWORK ACTIONS
 // ----------------------------------------------------------------------
 
-/**
- * Builds a message having the given text as body and sends it out.
- *
- */
-
-function sendText(text) {
-    var message =
-        <message><x xmlns={ns_event}><composing/></x><active xmlns={ns_chatstates}/></message>;
-
-    if(contactResource) 
-        message.@to = '/' + contactResource;
-
-    message.body = <body>{text}</body>;
-    message.ns_xhtml_im::html.body =
-        <body xmlns={ns_xhtml}>{text}</body>
-
-    $('#xmpp-outgoing').text(message.toXMLString());
-}
-
-function sendXHTML(xhtmlBody) {
-    var message =
-        <message><x xmlns={ns_event}><composing/></x><active xmlns={ns_chatstates}/></message>;
-
-    if(contactResource)
-        message.@to = '/' + contactResource;
-
-    // Should not be needed, but apparently is.
-    XML.prettyPrinting = false;
-    XML.ignoreWhitespace = false;
-    message.body = <body>{filter.htmlEntitiesToCodes(
-                              conv.xhtmlToText(
-                                  xhtmlBody))}</body>;
-
-    message.ns_xhtml_im::html.body =
-        filter.xhtmlIM.keepRecommended(xhtmlBody);
-
-    $('#xmpp-outgoing').text(message.toString());
-}
-
-function sendEvent(event) {
-    var message;
-    switch(event) {
-    case 'composing':
-        message = <message><x xmlns={ns_event}><composing/></x><composing xmlns={ns_chatstates}/></message>;
-
-        break;
-    case 'active':
-        message = <message><x xmlns={ns_event}/><active xmlns={ns_chatstates}/></message>;
-        
-        break;
-    }
-
-    $('#xmpp-outgoing').text(message.toXMLString());
+function send(stanza) {
+    $('#xmpp-outgoing').text(stanza.toXMLString());
 }
 
 
@@ -512,4 +465,55 @@ function seenIq(stanza) {
             _('info').updateAddress(stanza..ns_roster::item.@jid);
         }
     }
+}
+
+
+// UTILITIES
+// ----------------------------------------------------------------------
+
+function wrapAs(data, contentType) {
+    var message =
+        <message><x xmlns={ns_event}><composing/></x><active xmlns={ns_chatstates}/></message>;
+    if(contactResource)
+        message.@to = '/' + contactResource;
+    // Should not be needed, but apparently is.
+    XML.prettyPrinting = false;
+    XML.ignoreWhitespace = false;
+
+    switch(contentType) {
+    case 'text/unicode':
+        message.body = <body>{data}</body>;
+        message.ns_xhtml_im::html.body = <body xmlns={ns_xhtml}>{data}</body>
+        break;
+    case 'application/xhtml+xml':
+        message.body = <body>{filter.htmlEntitiesToCodes(
+            conv.xhtmlToText(data))}</body>;
+        
+        message.ns_xhtml_im::html.body = filter.xhtmlIM.keepRecommended(data);
+        break;
+    default:
+        throw new Error('Unknown content type. (' + contentType + ')');
+    }
+    return message;
+}
+
+function chatEvent(eventName) {
+    var message;
+    switch(eventName) {
+    case 'composing':
+        message = <message><x xmlns={ns_event}><composing/></x><composing xmlns={ns_chatstates}/></message>;
+        break;
+    case 'active':
+        message = <message><x xmlns={ns_event}/><active xmlns={ns_chatstates}/></message>;
+        break;
+    }
+    return message;
+}
+
+// Uses a hidden iframe to parse HTML, then converts resulting DOM to
+// an E4X object representing XHTML
+
+function html2xhtml(htmlString) {
+    _('html-conversion-area').contentDocument.body.innerHTML = htmlString;
+    return conv.htmlDOMToXHTML(_('html-conversion-area').contentDocument.body);
 }
