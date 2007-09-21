@@ -23,6 +23,7 @@
 // ----------------------------------------------------------------------
 
 var displayFilters = [processURLs, processEmoticons];
+var outFilters = [commandFilter]
 
 
 // GLOBAL STATE
@@ -37,6 +38,55 @@ var contactName;
 
 XML.prettyPrinting = false;
 XML.ignoreWhitespace = false;
+
+
+// OUT FILTERS
+// ----------------------------------------------------------------------
+
+var commands = {
+    'topic': function(argstring) {
+        if(!isGroupchat)
+            return;
+
+        return (<message type="groupchat">
+                <subject>{argstring}</subject>
+                </message>);
+    },
+
+    'kick': function(argstring) {
+        if(!isGroupchat)
+            return;
+
+        var nick = $.trim(argstring);
+
+        return (<iq type="set">
+                <query xmlns='http://jabber.org/protocol/muc#admin'>
+                <item nick={nick} role='none'/>
+                </query>
+                </iq>) 
+    }
+};
+
+
+function commandFilter(message) {
+    if(message.body == undefined)
+        return message;
+    
+    var match = message.body.toString().match(/^\/(\w+)($|\s.+$)/);
+    if(!match)
+        return message;
+
+    var [_, commandName, argstring] = match;
+
+    if(commandName in commands) {
+        return commands[commandName].call(null, argstring);
+    } else {
+        window.alert('Unknown command: ' + command);
+        return null;
+    }
+
+    return null;
+}
 
 
 // DISPLAY FILTERS
@@ -395,6 +445,11 @@ function requestedFormatCommand(event) {
 // ----------------------------------------------------------------------
 
 function send(stanza) {
+    outFilters.forEach(function(filter) { stanza = filter(stanza); });
+
+    if(!stanza)
+        return;
+    
     $('#xmpp-outgoing').text(stanza.toXMLString());
 }
 
