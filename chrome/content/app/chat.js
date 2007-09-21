@@ -225,84 +225,84 @@ function _(thing) {
 // ----------------------------------------------------------------------
 
 function init(event) {
-    _('xmpp-incoming').addEventListener(
-        'DOMNodeInserted', function(event) {
-            var stanza = new XML(event.target.textContent);
-            switch(stanza.localName()) {
-            case 'message':
-                seenMessage(stanza);
-                break;
-            case 'presence':
-                seenPresence(stanza);
-                break;
-            case 'iq':
-                seenIq(stanza);
-                break;
-            }
-        }, false);
+    $('#xmpp-incoming').bind('DOMNodeInserted', null, function(event) {
+        var stanza = new XML(event.target.textContent);
+        switch(stanza.localName()) {
+        case 'message':
+            seenMessage(stanza);
+            break;
+        case 'presence':
+            seenPresence(stanza);
+            break;
+        case 'iq':
+            seenIq(stanza);
+            break;
+        }
+    });
 
     behaviour.info(_('info'));
     behaviour.input(_('chat-input'));
     behaviour.palette(_('palette'));
 
-    _('palette').addEventListener(
-        'click', function(event) {
-            _('chat-input').execCommand(
-                'insertImage', event.target.getAttribute('src'));
-        }, false);
-        
-    _('chat-output').addEventListener(
-        'hsDrop', function(event) { droppedDataInConversation(event); }, false);
+    $('#palette').click(function(event) {
+        _('chat-input').execCommand(
+            'insertImage', event.target.getAttribute('src'));
+    });
 
-    _('chat-output').addEventListener(
-        'scroll', function(event) { scrolledWindow(event); }, false);
+    $('#chat-output').bind('hsDrop', null, function() {
+        droppedDataInConversation(event);
+    });
 
+    $('#chat-output').scroll(function(event) {
+        scrolledWindow(event); 
+    });
 
-    window.addEventListener(
-        'resize', function(event) { resizedWindow(event); }, false);
+    // XXX obsolete?
+    //    window.addEventListener(
+    //      'resize', function(event) { resizedWindow(event); }, false);
 
-    window.addEventListener(
-        'focus', function(event) { _('chat-input').focus(); }, false);
+    // XXX obsolete?
+    // _('chat-input').addEventListener(
+    // 'load', function(event) {
+    // _('chat-input').focus();
+    // }, false);
 
-    window.addEventListener(
-        'blur', function(event) { _('chat-input').blur(); }, false);
+    $(window).focus(function(event) {
+        _('chat-input').focus();
+    });
 
+    $(window).blur(function(event) {
+        _('chat-input').blur();
+    });
 
-    _('chat-input').editArea.addEventListener(
-        'hsDrop', function(event) { droppedDataInInput(event)}, false);
+    $('#chat-input').bind('hsDrop', null, function(event) {
+        droppedDataInInput(event);
+    });
 
-    _('chat-input').addEventListener(
-        'load', function(event) {
-            _('chat-input').focus();
-        }, false);
+    $('#chat-input').bind('accept', null, function(event) {
+        send(wrapAs(event.target.xhtml, 'application/xhtml+xml'));        
+    });
 
-    _('chat-input').addEventListener(
-        'accept', function(event) {
-            send(wrapAs(event.target.xhtml, 'application/xhtml+xml'));
-        }, false);
-    
-    _('chat-input').addEventListener(
-        'resizing', function(event) {
-            // XXX This should not be hardcoded.
-            _('chat-output').style.bottom = event.target.clientHeight + 8 + 'px';
-            _('lower-menus').style.bottom = event.target.clientHeight + 2 + 'px';
-            repositionOutput();
-        }, false);
+    $('#chat-input').bind('resizing', null, function(event) {
+        // XXX This should not be hardcoded.
+        _('chat-output').style.bottom = event.target.clientHeight + 8 + 'px';
+        _('lower-menus').style.bottom = event.target.clientHeight + 2 + 'px';
+        repositionOutput();
+    });
 
     var composing = false;
-    _('chat-input').addEventListener(
-        'keyup', function(event) {
-            if(isGroupchat)
-                return;
-            
-            if(composing && event.target.isEmpty()) {
-                composing = false;
-                send(chatEvent('active'));
-            } else if(!composing && !event.target.isEmpty()) {
-                composing = true;
-                send(chatEvent('composing'));
-            }
-        }, false);
+    $('#chat-input').keyup(function(event) {
+        if(isGroupchat)
+            return;
+        
+        if(composing && event.target.isEmpty()) {
+            composing = false;
+            send(chatEvent('active'));
+        } else if(!composing && !event.target.isEmpty()) {
+            composing = true;
+            send(chatEvent('composing'));
+        }
+    });
 }
 
 
@@ -424,6 +424,11 @@ function droppedDataInConversation(event) {
 }
 
 function scrolledWindow(event) {
+    // Whenever conversation is scrolled, save here user's
+    // "intention", so that if position changes as a side effect of
+    // something (e.g. window resize) we can re-assert user's
+    // intention.
+
     wantBottom = isNearBottom(_('chat-output'));
 }
 
