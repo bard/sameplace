@@ -464,10 +464,10 @@ function requestedAdditionalInteraction(event) {
     var address = attr(conversation, 'address');
     var url = event.target.value;
 
-    if(!(url.match(/^javascript:/) || getBrowser().currentURI.spec == 'about:blank'))
+    if(!(url.match(/^javascript:/) || getBrowser().currentURI.spec == 'about:blank' || url == 'current'))
         getBrowser().selectedTab = getBrowser().addTab();
     
-    interact(account, address, url, getBrowser().selectedBrowser);
+    interact(account, address, url == 'current' ? null : url, getBrowser().selectedBrowser);
 }
 
 // Front-end to interact().  Start an interaction with a contact.
