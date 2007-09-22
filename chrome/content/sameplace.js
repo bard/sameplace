@@ -44,16 +44,24 @@ var conversations = load('chrome://sameplace/content/facades/conversations.js');
 // ----------------------------------------------------------------------
 
 function init(event) {
-    if(!event.target)
-        return;
+    initNetworkReactions();
+    initConversations();
+    initCustomWidgets();
+    initApplicationMenu();
 
+    XMPP.accounts.filter(XMPP.isUp).forEach(function(account) {
+        autojoinRooms(account.jid);
+    });
+}
+
+function initNetworkReactions() {
     channel = XMPP.createChannel(
-        <query xmlns="http://jabber.org/protocol/disco#info">
-        <feature var="http://jabber.org/protocol/muc"/>
-        <feature var="http://jabber.org/protocol/muc#user"/>
-        <feature var="http://jabber.org/protocol/xhtml-im"/>
-        <feature var="http://jabber.org/protocol/chatstates"/>
-        </query>);
+            <query xmlns="http://jabber.org/protocol/disco#info">
+            <feature var="http://jabber.org/protocol/muc"/>
+            <feature var="http://jabber.org/protocol/muc#user"/>
+            <feature var="http://jabber.org/protocol/xhtml-im"/>
+            <feature var="http://jabber.org/protocol/chatstates"/>
+            </query>);
 
     channel.on({
         event     : 'message',
@@ -91,8 +99,8 @@ function init(event) {
         event     : 'presence',
         direction : 'out',
         stanza    : function(s) {
-            return s.ns_muc::x.length() > 0 && s.@type != 'unavailable';
-        }
+            return s.ns_muc::x.length() > 0 && s.@type != 'unavailable'; 
+       }
     }, function(presence) { sentMUCPresence(presence) });
     
     channel.on({
@@ -102,18 +110,20 @@ function init(event) {
             return s.ns_auth::query != undefined;
         }
     }, function(iq) {
-        var replyListener = channel.on(
-            {event: 'iq', direction: 'in', stanza: function(s) {
+        var replyListener = channel.on({
+            event     : 'iq',
+            direction : 'in',
+            stanza    : function(s) {
                 return s.@id == iq.stanza.@id && s.@type == 'result';
-            }}, function(reply) {
-                channel.forget(replyListener);
-                connectedAccount(iq.account);
-            });
-    });
+            }
+        }, function(reply) {
+            channel.forget(replyListener);
+            connectedAccount(iq.account);
+        });
+    });    
+}
 
-    // Wiring events from conversation subsystem to contact subsystem
-    // and elsewhere
-
+function initConversations() {
     var conversationContainer;
     switch(pref.getCharPref('conversationsArea')) {
     case 'appcontent':
@@ -162,7 +172,9 @@ function init(event) {
                 _('contact').value = '';
             }
         }, false);
+}
 
+function initCustomWidgets() {
     // Setting up contact autocompletion
 
     autoComplete(_('contact'));
@@ -184,16 +196,6 @@ function init(event) {
             startInteraction(event.target.getAttribute('account'),
                              event.target.getAttribute('address'));
         }, false);
-
-    // Filling shared application menu
-
-    initApplicationMenu(_('menu-applications'));
-
-    // Autojoin rooms
-
-    XMPP.accounts.filter(XMPP.isUp).forEach(function(account) {
-        autojoinRooms(account.jid);
-    });
 }
 
 function finish() {
@@ -283,37 +285,36 @@ function hide() {
     top.sameplace.frameFor('conversations').collapsed = true;
 }
 
-function initApplicationMenu(menuPopup) {
-    fetchFeed(
-        'http://apps.sameplace.cc/feed.xml',
-        function(feed, e) {
-            if(!feed) throw e;
-
-            var menus = {};
-            function menuFor(category) {
-                if(!menus[category]) {
-                    var menu = document.createElement('menu');
-                    menu.setAttribute('label', category);
-                    menu.setAttribute('tooltiptext', category);
-                    menuPopup.insertBefore(menu, menuPopup.getElementsByTagName('menuseparator')[0]);
-
-                    var popup = document.createElement('menupopup');
-                    menu.appendChild(popup);
-                    menus[category] = popup;
-                }
-                return menus[category];
+function initApplicationMenu() {
+    var menuPopup = _('menu-applications');
+    fetchFeed('http://apps.sameplace.cc/feed.xml', function(feed, e) {
+        if(!feed) throw e;
+        
+        var menus = {};
+        function menuFor(category) {
+            if(!menus[category]) {
+                var menu = document.createElement('menu');
+                menu.setAttribute('label', category);
+                menu.setAttribute('tooltiptext', category);
+                menuPopup.insertBefore(menu, menuPopup.getElementsByTagName('menuseparator')[0]);
+                
+                var popup = document.createElement('menupopup');
+                menu.appendChild(popup);
+                menus[category] = popup;
             }
-
-            for(var i=0; i<feed.items.length; i++) {
-                var item = feed.items.queryElementAt(i, Ci.nsIFeedEntry);
-
-                var menuItem = document.createElement('menuitem');
-                menuItem.setAttribute('label', item.fields.getProperty('title'));
-                menuItem.setAttribute('value', item.fields.getProperty('link'));
-                menuItem.setAttribute('tooltiptext', item.fields.getProperty('description'));
-                menuFor(item.fields.getProperty('dc:subject')).appendChild(menuItem);
-            }
-        });
+            return menus[category];
+        }
+        
+        for(var i=0; i<feed.items.length; i++) {
+            var item = feed.items.queryElementAt(i, Ci.nsIFeedEntry);
+            
+            var menuItem = document.createElement('menuitem');
+            menuItem.setAttribute('label', item.fields.getProperty('title'));
+            menuItem.setAttribute('value', item.fields.getProperty('link'));
+            menuItem.setAttribute('tooltiptext', item.fields.getProperty('description'));
+            menuFor(item.fields.getProperty('dc:subject')).appendChild(menuItem);
+        }
+    });
 }
 
 function buildContactCompletions(xulCompletions) {
