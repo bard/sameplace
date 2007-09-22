@@ -220,6 +220,7 @@ a:hover {
 /* POPUP - INFO */
 
 #info {
+    display: none;
     left: 80px;
     z-index: 1000;
     min-height: 10px;
@@ -266,7 +267,7 @@ a:hover {
 #chat-output {
     position: absolute;
     top: 0;
-    left: 0;
+    left: 16px;
     right: 0;
     bottom: 51px;
     padding-right: 5px;
@@ -493,4 +494,107 @@ img.emoticon {
 
 #blueprints {
     display: none;
+}
+
+
+
+
+
+
+
+
+
+
+/* POPUPS */
+
+.sidestrip.left {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 16px;
+    height: 100%;
+    background: #eef;
+}
+
+
+/* POPUP */
+
+.popup {
+    position: absolute;
+    z-index: 1000;
+    top: 5%;
+    left: 16px;
+    max-height: 50%;
+    background-color: transparent;
+    -moz-border-radius-topright: 12px;
+    -moz-border-radius-bottomright: 12px;
+    opacity: 0.95;
+}
+
+.popup * {
+    margin: 0;
+    padding: 0;
+}
+
+.popup .content {
+    padding: 4px;
+    background-color: #ccf;
+}
+
+.popup .content {
+    font-size: smaller;
+    width: 150px;
+    overflow-x: hidden;
+    -moz-border-radius-topright: 4px;
+    -moz-border-radius-bottomright: 4px;
+}
+
+.popup .toggle {
+    position: absolute;
+    top: 8px;
+    right: -16px;
+    width: 16px;
+    color: black;
+    font-size: larger;
+    font-weight: bold;
+    cursor: pointer;
+    -moz-border-radius-topright: 12px;
+    -moz-border-radius-bottomright: 12px;
+    height: 40px;
+    background-color: #ccf;
+}
+
+.popup .toggle:after {
+    content: "»"
+}
+
+.popup.visible .toggle:after {
+    content: "«"
+}
+
+.popup + .popup .toggle {
+    margin-top: 40px;
+    background: #faa;
+}
+
+.popup + .popup .content {
+    background: #faa;
+}
+
+
+/* INFO POPUP */
+
+.popup .content.info .header {
+    margin-top: 6px;
+    margin-bottom: 3px;
+    font-weight: bold;
+}
+
+.popup .content.info ul.resources {
+    list-style-type: none;
+    overflow: auto;
+}
+
+.popup .content.info ul.resources li:before {
+    content: "» "
 }

@@ -34,9 +34,10 @@
     <script type="text/javascript" src="lib/xml.js"/>
     <script type="text/javascript" src="lib/crc32.js"/>
     <script type="text/javascript" src="lib/jquery.js"/>
+    <script type="text/javascript" src="lib/jquery.dimensions.min.js"/>
 
     <!-- XHTML lightweight widgets -->
-    
+
     <script type="text/javascript" src="behaviours/input.js"/> 
     <script type="text/javascript" src="behaviours/info.js"/>
     <script type="text/javascript" src="behaviours/palette.js"/>
@@ -48,10 +49,25 @@
   </head>
 
   <body onload="init(event);">
-    <div class="menu-bar upper"/>
+    <div class="sidestrip left"/>
+
+    <div class="popup">
+      <div class="content info">
+        <dl>
+          <dt class="header header-address">Contact:</dt>
+          <dd class="address"/>
+          
+          <dt class="header header-resources">Logged from:</dt>
+          <dd>
+            <ul class="resources"/>
+          </dd>
+        </dl>
+      </div>
+      <div class="toggle"/>
+    </div>      
 
     <div id="chat-area">
-      <div id="chat-output">
+      <div id="chat-output">        
         <ul id="messages"/>
       </div>
 

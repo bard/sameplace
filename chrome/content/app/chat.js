@@ -259,7 +259,7 @@ function init(event) {
 
     // When conversation window is at bottom and browser window gets
     // resized, conversation window loses position, so we re-set it.
-    
+
     $(window).resize(function(event) {
         resizedWindow(event);
     });
@@ -304,6 +304,30 @@ function init(event) {
         } else if(!composing && !event.target.isEmpty()) {
             composing = true;
             send(chatEvent('composing'));
+        }
+    });
+
+    $('.popup').css('left', -$('.popup').width());
+
+    $('.popup ul.resources').css('max-height', $(window).height()*0.3);
+    $(window).resize(function() {
+        $('.popup ul').css('max-height', $(window).height()*0.3);    
+    });
+    
+    $('.popup .toggle').click(function(event) {
+        var popup = $(this).parent('.popup');
+
+        if(popup.offset().left == 16) {
+            popup.removeClass('visible');
+            popup.animate({left: -popup.width()});
+        } else {
+            $('.popup.visible').each(function() {
+                $(this).removeClass('visible');
+                $(this).animate({left: -$(this).width()});
+            });
+
+            popup.addClass('visible');
+            popup.animate({left: 16});
         }
     });
 }
@@ -497,7 +521,14 @@ function seenPresence(stanza) {
     if(stanza.@from == undefined) {
         if(stanza.ns_muc::x.length() > 0)
             isGroupchat = true;
+
+        if(stanza.ns_muc::x != undefined)
+            $('.popup .content.info')
+            .find('.header-address').text('Room:')
+            .end()
+            .find('.header-resources').text('Participants:');            
     } else {
+        
         if(stanza.ns_muc_user::x.length() > 0) {
             _('info').setMode('groupchat');
 
@@ -513,6 +544,22 @@ function seenPresence(stanza) {
                stanza.@type == 'unavailable')
                 contactResource = undefined;
     
+        
+        $('.popup .content.info .address').text(JID(stanza.@from).address);
+        var resource = JID(stanza.@from).resource;
+        if(resource) {
+            var resourceObj = $('.popup .content.info ul.resources li')
+            .filter(function() { return $(this).text() == resource; });
+
+            if(stanza.@type == 'unavailable') {
+                resourceObj.remove();
+            } else if(resourceObj.length > 0) {
+                resourceObj.replace($('<li/>').text(resource))
+            } else {
+                $('<li/>').text(resource).prependTo('.popup .content.info ul.resources');
+            }
+        }
+
         _('info').updateAddress(JID(stanza.@from).address);
         _('info').updateResources(JID(stanza.@from).resource, stanza.@type);
         document.title = contactName || JID(stanza.@from).username || stanza.@from;
@@ -580,3 +627,11 @@ function html2xhtml(htmlString) {
     _('html-conversion-area').contentDocument.body.innerHTML = htmlString;
     return conv.htmlDOMToXHTML(_('html-conversion-area').contentDocument.body);
 }
+
+jQuery.fn.replace = function() {
+    var stack = [];
+    return this.domManip(arguments, true, 1, function(a){
+        this.parentNode.replaceChild( a, this );
+        stack.push(a);
+    }).pushStack( stack );
+};
