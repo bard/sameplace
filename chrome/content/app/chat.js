@@ -240,14 +240,7 @@ function init(event) {
         }
     });
 
-    behaviour.info(_('info'));
     behaviour.input(_('chat-input'));
-    behaviour.palette(_('palette'));
-
-    $('#palette').click(function(event) {
-        _('chat-input').execCommand(
-            'insertImage', event.target.getAttribute('src'));
-    });
 
     $('#chat-output').bind('hsDrop', null, function() {
         droppedDataInConversation(event);
@@ -529,22 +522,6 @@ function seenPresence(stanza) {
             .find('.header-resources').text('Participants:');            
     } else {
         
-        if(stanza.ns_muc_user::x.length() > 0) {
-            _('info').setMode('groupchat');
-
-            if(stanza.@type == undefined &&
-               !_('info').hasResource(JID(stanza.@from).resource)) 
-                displayEvent('join', JID(stanza.@from).resource + ' entered the room');
-            else if(stanza.@type == 'unavailable')
-                displayEvent('leave', JID(stanza.@from).resource + ' left the room');
-            else if(stanza.@type == 'error')
-                displayEvent('error', 'Error: code ' + stanza.error.@code);
-        } else
-            if(JID(stanza.@from).resource == contactResource &&
-               stanza.@type == 'unavailable')
-                contactResource = undefined;
-    
-        
         $('.popup .content.info .address').text(JID(stanza.@from).address);
         var resource = JID(stanza.@from).resource;
         if(resource) {
@@ -553,15 +530,25 @@ function seenPresence(stanza) {
 
             if(stanza.@type == 'unavailable') {
                 resourceObj.remove();
+                if(isGroupchat)
+                    displayEvent('leave', JID(stanza.@from).resource + ' left the room');                    
             } else if(resourceObj.length > 0) {
                 resourceObj.replace($('<li/>').text(resource))
+            } else if(stanza.@type == 'error') {
+                displayEvent('error', 'Error: code ' + stanza.error.@code);                
             } else {
                 $('<li/>').text(resource).prependTo('.popup .content.info ul.resources');
+                if(isGroupchat)
+                    displayEvent('join', JID(stanza.@from).resource + ' entered the room');                    
             }
         }
 
-        _('info').updateAddress(JID(stanza.@from).address);
-        _('info').updateResources(JID(stanza.@from).resource, stanza.@type);
+        if(!isGroupchat)
+            // Resource tracking
+            if(JID(stanza.@from).resource == contactResource &&
+               stanza.@type == 'unavailable')
+                contactResource = undefined;
+    
         document.title = contactName || JID(stanza.@from).username || stanza.@from;
     }
 }
@@ -572,7 +559,7 @@ function seenIq(stanza) {
         
         if(stanza..ns_roster::item.length() > 0) {
             contactName = stanza..ns_roster::item.@name.toString();
-            _('info').updateAddress(stanza..ns_roster::item.@jid);
+            $('.popup .content.info .header-contact').text(stanza..ns_roster::item.@jid);
         }
     }
 }
