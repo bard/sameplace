@@ -70,6 +70,11 @@ function tabbedArea(deck, tabs) {
     deck.__defineGetter__('selectedBrowser', function() {
         return this.selectedPanel;
     });
+
+    deck.__defineGetter__('contentWindow', function() {
+        if(this.selectedPanel)
+            return this.selectedPanel.contentWindow;
+    });
     
     deck.__defineGetter__('currentURI', function() {
         if(this.selectedPanel && this.selectedPanel.nodeName == 'browser')
