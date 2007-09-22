@@ -264,11 +264,11 @@ function init(event) {
     // }, false);
 
     $(window).focus(function(event) {
-        _('chat-input').focus();
+        $('#chat-input').focus();
     });
 
     $(window).blur(function(event) {
-        _('chat-input').blur();
+        $('#chat-input').blur();
     });
 
     $('#chat-input').bind('hsDrop', null, function(event) {
@@ -337,66 +337,64 @@ function repositionOutput() {
 function displayMessage(stanza) {
     const DATE_RX = /^(\d{4})(\d{2})(\d{2})T(\d{2}):(\d{2}):(\d{2})/;
 
-    scrollingOnlyIfAtBottom(
-        _('chat-output'), function() {
-            var domMessage = $('#blueprints > .message').clone(true).get(0);
-
-            var txtTimeSent =
-                (stanza.ns_delay::x == undefined) ?
-                new Date() :
-                let([_full, year, month, day, hour, min, sec] =
-                    stanza.ns_delay::x.@stamp.toString().match(DATE_RX))
-                    new Date(Date.UTC(year, month, day, hour, min, sec));
-            
-            var txtSender =
-                (stanza.@type == 'groupchat' ?
-                 JID(stanza.@from).nick : (stanza.@from == undefined ?
-                                           JID(userAddress).username : (contactName ||
-                                                                        JID(stanza.@from).username ||
-                                                                        stanza.@from).toString()))
-
-            var senderStyle = (stanza.@type == 'groupchat' ?
-                               {color: 'rgb(' + textToRGB(JID(stanza.@from).nick).join(',') + ')'} : {});
-            
-            $(domMessage)
-            .addClass(stanza.@type != 'groupchat' ?
-                      (stanza.@from == undefined ? 'user' : 'contact') : '')
-            .find('.sender')
-            .css(senderStyle)
-            .text(txtSender)
-            .end()
-            .find('.time')
-            .text(formatTime(txtTimeSent));
-            
-            // Without this, applyTextProcessors will add whitespace
-            // and indentation.  Wo don't want that, especially with a
-            // -moz-pre-wrap around the corner.
-            XML.prettyPrinting = false;
-            XML.ignoreWhitespace = false;
-            var body;
-            if(stanza.ns_xhtml_im::html == undefined) {
-                body = filter.applyTextProcessors(stanza.body, displayFilters);
-                body.setNamespace(ns_xhtml);
-                $(domMessage).find('.content').css('white-space', '-moz-pre-wrap');
-            } else
-                body = filter.applyTextProcessors(
-                    filter.xhtmlIM.keepRecommended(stanza.ns_xhtml_im::html.ns_xhtml::body),
-                    displayFilters);
-            
-            copyDomContents(conv.toDOM(body), $(domMessage).find('.content').get(0));
-
-            _('messages').appendChild(domMessage);
-        });
+    var domMessage = $('#blueprints > .message').clone(true).get(0);
+    
+    var txtTimeSent =
+        (stanza.ns_delay::x == undefined) ?
+        new Date() :
+        let([_full, year, month, day, hour, min, sec] =
+            stanza.ns_delay::x.@stamp.toString().match(DATE_RX))
+            new Date(Date.UTC(year, month, day, hour, min, sec));
+    
+    var txtSender =
+        (stanza.@type == 'groupchat' ?
+         JID(stanza.@from).nick : (stanza.@from == undefined ?
+                                   JID(userAddress).username : (contactName ||
+                                                                JID(stanza.@from).username ||
+                                                                stanza.@from).toString()))
+    
+    var senderStyle = (stanza.@type == 'groupchat' ?
+                       {color: 'rgb(' + textToRGB(JID(stanza.@from).nick).join(',') + ')'} : {});
+    
+    $(domMessage)
+    .addClass(stanza.@type != 'groupchat' ?
+              (stanza.@from == undefined ? 'user' : 'contact') : '')
+    .find('.sender')
+    .css(senderStyle)
+    .text(txtSender)
+    .end()
+    .find('.time')
+    .text(formatTime(txtTimeSent));
+    
+    // Without this, applyTextProcessors will add whitespace
+    // and indentation.  Wo don't want that, especially with a
+    // -moz-pre-wrap around the corner.
+    XML.prettyPrinting = false;
+    XML.ignoreWhitespace = false;
+    var body;
+    if(stanza.ns_xhtml_im::html == undefined) {
+        body = filter.applyTextProcessors(stanza.body, displayFilters);
+        body.setNamespace(ns_xhtml);
+        $(domMessage).find('.content').css('white-space', '-moz-pre-wrap');
+    } else
+        body = filter.applyTextProcessors(
+            filter.xhtmlIM.keepRecommended(stanza.ns_xhtml_im::html.ns_xhtml::body),
+            displayFilters);
+    
+    copyDomContents(conv.toDOM(body), $(domMessage).find('.content').get(0));
+    
+    scrollingOnlyIfAtBottom($('#chat-output').get(0), function() {
+        $('#messages').append(domMessage);
+    });
 }
 
 function displayEvent(eventClass, text) {
-    scrollingOnlyIfAtBottom(
-        $('#chat-output').get(0), function() {
-            $('#blueprints > .' + eventClass)
-            .clone(true)
-            .text(text)
-            .appendTo('#messages');
-        });
+    scrollingOnlyIfAtBottom($('#chat-output').get(0), function() {
+        $('#blueprints > .' + eventClass)
+        .clone(true)
+        .text(text)
+        .appendTo('#messages');
+    });
 }
 
 
@@ -470,6 +468,8 @@ function requestedFormatCommand(event) {
 // ----------------------------------------------------------------------
 
 function send(stanza) {
+    // XXX behaviour when there is more than one out filter and one of
+    // them returns null (or equivalent) is unspecified.
     outFilters.forEach(function(filter) { stanza = filter(stanza); });
 
     if(!stanza)
@@ -622,3 +622,4 @@ jQuery.fn.replace = function() {
         stack.push(a);
     }).pushStack( stack );
 };
+
