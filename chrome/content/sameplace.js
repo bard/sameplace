@@ -188,6 +188,12 @@ function init(event) {
     // Filling shared application menu
 
     initApplicationMenu(_('menu-applications'));
+
+    // Autojoin rooms
+
+    XMPP.accounts.filter(XMPP.isUp).forEach(function(account) {
+        autojoinRooms(account.jid);
+    });
 }
 
 function finish() {
