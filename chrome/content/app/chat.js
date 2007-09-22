@@ -257,9 +257,12 @@ function init(event) {
         scrolledWindow(event); 
     });
 
-    // XXX obsolete?
-    //    window.addEventListener(
-    //      'resize', function(event) { resizedWindow(event); }, false);
+    // When conversation window is at bottom and browser window gets
+    // resized, conversation window loses position, so we re-set it.
+    
+    $(window).resize(function(event) {
+        resizedWindow(event);
+    });
 
     // XXX obsolete?
     // _('chat-input').addEventListener(
