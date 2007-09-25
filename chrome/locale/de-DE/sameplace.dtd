@@ -2,6 +2,6 @@
 <!ENTITY command.hide.tooltip "Verstecken">
 <!ENTITY contact.label "Kontakt:">
 <!ENTITY contact.accesskey "a">
-<!ENTITY attach.tooltip "Eine zusŠtzliche Anwendung nutzen, um mit dem Kontakt zu interagieren">
+<!ENTITY attach.tooltip "Eine zusÃ¤tzliche Anwendung nutzen, um mit dem Kontakt zu interagieren">
 <!ENTITY attach.menu.current_page.label "Aktuelle Seite">
 <!ENTITY attach.menu.current_page.tooltip "Mit Kontakt auf der aktuellen Seite interagieren (aktuelle Seite muss eine "Shared Application" sein)">

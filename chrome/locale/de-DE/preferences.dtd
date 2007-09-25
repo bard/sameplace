@@ -1,7 +1,7 @@
 <!ENTITY sameplace.prefs.default_application_url.label "Standard Application URL:">
 <!ENTITY sameplace.prefs.default_application_url.accesskey "U">
-<!ENTITY sameplace.prefs.toggle_sidebar_hotkey "Seitenleiste umschalten (Tastaturk웦zel):">
+<!ENTITY sameplace.prefs.toggle_sidebar_hotkey "Seitenleiste umschalten (Tastaturk체rzel):">
 <!ENTITY sameplace.prefs.capture.label "Erfassen">
-<!ENTITY sameplace.prefs.hotkey_help_text.label "(Tastaturk웦zel m웧sen eindeutig sein und d웦fen nicht mit bereits vorhandenen identisch sein.)">
+<!ENTITY sameplace.prefs.hotkey_help_text.label "(Tastaturk체rzel m체ssen eindeutig sein und d체rfen nicht mit bereits vorhandenen identisch sein.)">
 <!ENTITY sameplace.prefs.flash_taskbar.label "Taskleiste aufblinken lassen bei eingehender Nachricht">
 <!ENTITY sameplace.prefs.flash_taskbar.accesskey "F">

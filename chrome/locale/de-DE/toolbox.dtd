@@ -1,4 +1,4 @@
-<!ENTITY command.add_contact.label "Kontakt hinzuf웗en...">
+<!ENTITY command.add_contact.label "Kontakt hinzuf체gen...">
 <!ENTITY command.add_contact.tooltip "Einen neuen Kontakt in die Kontaktliste aufnehmen">
 <!ENTITY command.open_conversation.label "Unterhaltung beginnen...">
 <!ENTITY command.open_conversation.accesskey "O">
@@ -6,14 +6,14 @@
 <!ENTITY command.join_room.label "Chatruam betreten...">
 <!ENTITY command.join_room.accesskey "r">
 <!ENTITY command.join_room.tooltip "Einen Chatraum betreten">
-<!ENTITY command.switch_to_unread.label "N둩hste ungelesenen Unterhaltung anzeigen">
-<!ENTITY command.switch_to_unread.tooltip "Springe zur n둩hsten Unterhaltung mit ungelesenen Nachrichten">
-<!ENTITY command.switch_to_next.label "N둩hste ungelesenen Unterhaltung anzeigen">
-<!ENTITY command.switch_to_next.tooltip "Springe zur n둩hsten Unterhaltung">
+<!ENTITY command.switch_to_unread.label "N채chste ungelesenen Unterhaltung anzeigen">
+<!ENTITY command.switch_to_unread.tooltip "Springe zur n채chsten Unterhaltung mit ungelesenen Nachrichten">
+<!ENTITY command.switch_to_next.label "N채chste ungelesenen Unterhaltung anzeigen">
+<!ENTITY command.switch_to_next.tooltip "Springe zur n채chsten Unterhaltung">
 <!ENTITY command.view_help_pages.label "Hilfe anzeigen...">
 <!ENTITY command.view_help_pages.accesskey "h">
 <!ENTITY command.view_help_pages.tooltip "Hilfe finden">
-<!ENTITY command.run_wizard.label "Konto-Assistent ausf웘ren...">
+<!ENTITY command.run_wizard.label "Konto-Assistent ausf체hren...">
 <!ENTITY command.run_wizard.accesskey "W">
 <!ENTITY command.visit_forum.label "Forum besuchen">
 <!ENTITY command.visit_forum.tooltip "Das Hilfe-Forum besuchen">
@@ -30,11 +30,11 @@
 <!ENTITY command.hide.tooltip "Verstecken">
 <!ENTITY command.import_contacts.label "Kontakte importieren...">
 <!ENTITY command.import_contacts.accesskey "I">
-<!ENTITY command.open_standalon.label "Standalone-Anwendung 쉌fnen (Achtung: EXPERIMENTELL)">
+<!ENTITY command.open_standalon.label "Standalone-Anwendung 철ffnen (Achtung: EXPERIMENTELL)">
 <!ENTITY command.open_standalon.accesskey "S">
 <!ENTITY menu.participate.label "Mit entwickeln...">
 <!ENTITY menu.participate.accesskey "P">
 <!ENTITY menu.scriptlets.label "Scriptlets">
 <!ENTITY menu.scriptlets.manage.label "Manage...">
 <!ENTITY menu.scriptlets.manage.accesskey "M">
-<!ENTITY status_message.tooltip.label "Statusnachricht 둵dern">
+<!ENTITY status_message.tooltip.label "Statusnachricht 채ndern">
