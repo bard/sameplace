@@ -1,0 +1,5 @@
+<!ENTITY dialog.title "Unterhaltung beginnen">
+<!ENTITY contact_address.label "Adresse:">
+<!ENTITY contact_address.accesskey "A">
+<!ENTITY user_account.label "Konto:">
+<!ENTITY user_account.accesskey "c">

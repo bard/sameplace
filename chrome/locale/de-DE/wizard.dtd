@@ -1,0 +1,62 @@
+<!ENTITY title "SamePlace Konfigurations-Assistent">
+
+<!ENTITY page.current_status.description "Dieser Assistent wird Sie durch die Konfiguration eines neuen Kontos fŸhren.">
+<!ENTITY page.current_status.text1 "Sie kšnnen jedes gŸltige Jabber-Konto einschlie§lich GTalk/GMail.com, LiveJournal.com usw. nutzen. Haben Sie bisher noch kein Jabber-Konto kšnnen sie jetzt eines anlegen.">
+<!ENTITY page.current_status.text2 "Haben Sie bereits ein Jabber-Konto?">
+<!ENTITY page.current_status.choices.have_gmail_account.label "Ich habe ein GTalk/GMail.com Konto">
+<!ENTITY page.current_status.choices.have_gmail_account.accesskey "G">
+<!ENTITY page.current_status.choices.have_other_account.label "Ich habe ein Konto auf einem anderen Jabber Server">
+<!ENTITY page.current_status.choices.have_other_account.accesskey "I">
+<!ENTITY page.current_status.choices.have_no_account.label "Ich habe noch kein Jabber-Konto">
+<!ENTITY page.current_status.choices.have_no_account.accesskey "d">
+
+<!ENTITY page.account_existing.address.label "Adresse:">
+<!ENTITY page.account_existing.address.accesskey "A">
+<!ENTITY page.account_existing.password.label "Passwort:">
+<!ENTITY page.account_existing.password.accesskey "P">
+<!ENTITY page.account_existing.autologin.label "Automatisch beim Start von Firefox anmelden">
+<!ENTITY page.account_existing.autologin.accesskey "o">
+<!ENTITY page.account_existing.remember_password.label "Passwort speichern">
+<!ENTITY page.account_existing.remember_password.accesskey "e">
+<!ENTITY page.account_existing.advanced.label "Erweitert...">
+<!ENTITY page.account_existing.advanced.accesskey "d">
+<!ENTITY page.account_existing.resource.label "Ressource:">
+<!ENTITY page.account_existing.resource.accesskey "e">
+<!ENTITY page.account_existing.server_for_connection.label "Verbindungsserver:">
+<!ENTITY page.account_existing.server_for_connection.accesskey "S">
+<!ENTITY page.account_existing.server_port.label "Server Port:">
+<!ENTITY page.account_existing.server_port.accesskey "P">
+<!ENTITY page.account_existing.encryption.label "VerschlŸsselung:">
+<!ENTITY page.account_existing.encryption.accesskey "E">
+<!ENTITY page.account_existing.encryption.none "keine">
+
+<!ENTITY page.account_new.description.label "Neues Jabber-Konto">
+<!ENTITY page.account_new.text1 "WŠhlen Sie einen Server, auf dem das Konto angelegt werden soll.">
+<!ENTITY page.account_new.choices.select_from_list.label "Von Liste wŠhlen">
+<!ENTITY page.account_new.choices.enter_custom_server.label "Benutzerdefinierten Server wŠhlen">
+<!ENTITY page.account_new.login_automatically.label "Automatisch beim Start von Firefox verbinden">
+<!ENTITY page.account_new.login_automatically.accesskey "L">
+<!ENTITY page.account_new.remember_password.label "Passwort speichern">
+<!ENTITY page.account_new.remember_password.accesskey "R">
+<!ENTITY page.account_new.advanced.label "Erweitert...">
+<!ENTITY page.account_new.advanced.accesskey "v">
+<!ENTITY page.account_new.advanced.server_for_connection.label "Verbindungsserver:">
+<!ENTITY page.account_new.advanced.server_for_connection.accesskey "C">
+<!ENTITY page.account_new.advanced.resource.label "Resource:">
+<!ENTITY page.account_new.advanced.resource.accesskey "R">
+<!ENTITY page.account_new.advanced.server_port.label "Server Port:">
+<!ENTITY page.account_new.advanced.server_port.accesskey "P">
+<!ENTITY page.account_new.advanced.encryption.label "VerschlŸsselung:">
+<!ENTITY page.account_new.advanced.encryption.accesskey "E">
+<!ENTITY page.account_new.advanced.encryption.ssl "SSL">
+<!ENTITY page.account_new.advanced.encryption.none "keine">
+
+<!ENTITY page.account_registration.text1 "Verbinde... (sollte dies lange dauern, erwŠgen Sie einen anderen Server zu wŠhlen.)">
+<!ENTITY page.account_registration.connect_success "Verbunden. Erfrage Registrieruns-Informationen...">
+<!ENTITY page.account_registration.registration_success "Konto erfolgreich angelegt!  Klicken Sie Next um die Konfiguration abzuschlie§en.">
+<!ENTITY page.account_registration.registration_failure "Fehler beim Anlegen des Kontos:">
+
+<!ENTITY page.finish.text1 "Konto konfiguriert">
+<!ENTITY page.finish.text2 "WŠhlen sie Ihr Konto aus dem Jabber-MenŸ um sich zu verbinden:">
+<!ENTITY page.finish.connect_now.label "Verbinde jetzt">
+    

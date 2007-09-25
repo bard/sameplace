@@ -1,0 +1,11 @@
+<!ENTITY dialog.title "Chatraum betreten">
+<!ENTITY room_address.label "Adresse:">
+<!ENTITY room_address.accesskey "A">
+<!ENTITY user_nick.label "Spitzname:">
+<!ENTITY user_nick.accesskey "N">
+<!ENTITY user_account.label "Konto:">
+<!ENTITY user_account.accesskey "c">
+<!ENTITY save.label "In Kontaktliste speichern">
+<!ENTITY save.accesskey "S">
+<!ENTITY autojoin.label "automatisch verbinden">
+<!ENTITY autojoin.accesskey "J">

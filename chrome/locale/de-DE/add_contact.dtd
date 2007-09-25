@@ -1,0 +1,7 @@
+<!ENTITY dialog.add_contact.title "Kontakt hinzufŸgen">
+<!ENTITY contact_address.label "Kontakt:">
+<!ENTITY contact_address.accesskey "C">
+<!ENTITY contact_subscribe_to_presence.label "Anzeigen, wenn dieser Kontakt angemeldet ist">
+<!ENTITY contact_subscribe_to_presence.accesskey "S">
+<!ENTITY user_account.label "Konto:">
+<!ENTITY user_account.accesskey "A">
