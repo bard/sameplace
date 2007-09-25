@@ -3,6 +3,7 @@ locale sameplace en-US  chrome/locale/en-US/
 locale sameplace fr-FR  chrome/locale/fr-FR/
 locale sameplace ru-RU  chrome/locale/ru-RU/
 locale sameplace wa-BE  chrome/locale/wa-BE/
+locale sameplace de-DE  chrome/locale/de-DE/
 skin sameplace classic/1.0 chrome/skin/classic/
 
 overlay chrome://browser/content/browser.xul chrome://sameplace/content/overlay_browser.xul
