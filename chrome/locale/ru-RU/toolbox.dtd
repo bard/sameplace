@@ -11,9 +11,9 @@
 <!ENTITY command.switch_to_unread.tooltip "Переключиться к следующей в очереди беседе с непрочитанными сообщениями">
 <!ENTITY command.switch_to_next.label "Перейти к следующей беседе">
 <!ENTITY command.switch_to_next.tooltip "Переключиться к следующей беседе">
-<!ENTITY command.view_help_pages.label "View help pages...">
-<!ENTITY command.view_help_pages.accesskey "h">
-<!ENTITY command.view_help_pages.tooltip "View help pages">
+<!ENTITY command.view_help_pages.label "Посмотреть страницы справки...">
+<!ENTITY command.view_help_pages.accesskey "">
+<!ENTITY command.view_help_pages.tooltip "Посмотреть страницы справки">
 <!ENTITY command.run_wizard.label "Запустить мастер учетных записей...">
 <!ENTITY command.run_wizard.accesskey "м">
 <!ENTITY command.view_help_pages.label "Посмотреть справку">
