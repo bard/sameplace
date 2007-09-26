@@ -149,15 +149,15 @@ function init(event) {
 
         if(popup.offset().left == 16) {
             popup.removeClass('visible');
-            popup.animate({left: -popup.width()});
+            popup.animate({opacity: 0.3, left: -popup.width()});
         } else {
             $('.popup.visible').each(function() {
                 $(this).removeClass('visible');
-                $(this).animate({left: -$(this).width()});
+                $(this).animate({opacity: 0.3, left: -$(this).width()});
             });
 
             popup.addClass('visible');
-            popup.animate({left: 16});
+            popup.animate({opacity: 1, left: 16});
         }
     });
 }
