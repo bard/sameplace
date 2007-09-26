@@ -182,13 +182,19 @@ function displayMessage(stanza) {
         let([_full, year, month, day, hour, min, sec] =
             stanza.ns_delay::x.@stamp.toString().match(DATE_RX))
             new Date(Date.UTC(year, month, day, hour, min, sec));
-    
-    var txtSender =
-        (stanza.@type == 'groupchat' ?
-         JID(stanza.@from).nick : (stanza.@from == undefined ?
-                                   JID(userAddress).username : (contactName ||
-                                                                JID(stanza.@from).username ||
-                                                                stanza.@from).toString()))
+
+    var sender;
+    if(stanza.@type == 'groupchat')
+        sender = JID(stanza.@from).nick;
+    else if(stanza.@type == 'chat' && isGroupchat)
+        // XXX replace with appropriate class and CSS-generated content
+        sender = '[' + JID(stanza.@from).nick + ']';
+    else if(stanza.@from == undefined)
+        sender = JID(userAddress).username;
+    else
+        sender = (contactName ||
+                  JID(stanza.@from).username ||
+                  stanza.@from).toString();
     
     var senderStyle = (stanza.@type == 'groupchat' ?
                        {color: 'rgb(' + textToRGB(JID(stanza.@from).nick).join(',') + ')'} : {});
@@ -198,7 +204,7 @@ function displayMessage(stanza) {
               (stanza.@from == undefined ? 'user' : 'contact') : '')
     .find('.sender')
     .css(senderStyle)
-    .text(txtSender)
+    .text(sender)
     .end()
     .find('.time')
     .text(formatTime(txtTimeSent));

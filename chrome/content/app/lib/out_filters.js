@@ -60,5 +60,21 @@ var commands = {
                 <item nick={nick} role='none'/>
                 </query>
                 </iq>) 
+    },
+
+    // XXX does not support XHTML messages yet
+    
+    'msg': function(argstring) {
+        if(!isGroupchat)
+            return;
+        
+        var match = argstring.match(/^\s*([^\s]+)\s+(.+)$/);
+        if(match) {
+            var [_, nick, body] = match;
+            return (<message type="chat" to={'/' + nick}>
+                    <body>{body}</body>
+                    </message>);
+        }
+        return match;
     }
 };
