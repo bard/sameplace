@@ -71,12 +71,6 @@ a:hover {
     height: 20px;
 }
 
-.menu-bar.upper {
-    border-top: 1px solid #dedede;
-    top: 0px;
-    display: none;
-}
-
 .menu-bar.lower {
     border-bottom: 1px solid #dedede;
     bottom: 46px;
@@ -150,14 +144,6 @@ a:hover {
 }
 
 
-/* POPUP - OPTIONS */
-
-#options.menu {
-    left: 75px;
-    display: none;
-}
-
-
 /* POPUP - STYLES */
 
 #styles.menu {
@@ -196,69 +182,6 @@ a:hover {
 
 #styles #underline {
     text-decoration: underline;
-}
-
-/* POPUP - PALETTE */
-
-#palette {
-    display: none;
-    left: 150px;
-    max-width: 150px;
-}
-
-#palette > .menu-content > img {
-    border: 1px solid transparent;
-    max-width: 32px;
-    max-height: 32px;
-}
-
-#palette > .menu-content > img:hover {
-    border: 1px dotted gray;
-}
-
-
-/* POPUP - INFO */
-
-#info {
-    display: none;
-    left: 80px;
-    z-index: 1000;
-    min-height: 10px;
-    white-space: nowrap;
-    overflow: hidden;
-}
-
-#info > .box {
-    display: none;
-}
-
-#info:hover {
-    padding: 10px;
-}
-
-#info:hover > .box {
-    display: block;
-}
-
-.box {
-    margin-bottom: 0.5em;
-}
-
-.box > h3 {
-    margin: 0;
-    font-size: 10px;
-}
-
-.box[for="resources"] > ul,
-.box[for="groups"] > ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-}
-
-.box[for="resources"],
-.box[for="groups"] {
-    display: none;
 }
 
 
