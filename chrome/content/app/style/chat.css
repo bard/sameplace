@@ -461,7 +461,6 @@ img.emoticon {
 
 .popup .content {
     padding: 4px;
-    background-color: #ccf;
 }
 
 .popup .content {
@@ -484,7 +483,11 @@ img.emoticon {
     -moz-border-radius-topright: 12px;
     -moz-border-radius-bottomright: 12px;
     height: 40px;
-    background-color: #ccf;
+}
+
+.popup .content,
+.popup .toggle {
+    background-color: #CFDCE6;
 }
 
 .popup .toggle:after {
@@ -497,11 +500,6 @@ img.emoticon {
 
 .popup + .popup .toggle {
     margin-top: 40px;
-    background: #faa;
-}
-
-.popup + .popup .content {
-    background: #faa;
 }
 
 
@@ -520,4 +518,10 @@ img.emoticon {
 
 .popup .content.info ul.resources li:before {
     content: "» "
+}
+
+/* SMILEY POPUP */
+
+.popup .content.smileys ul li {
+    display: inline;
 }
