@@ -136,8 +136,11 @@ function forEach(action) {
     var list = [];
     var entries = dir.directoryEntries;
 
-    while(entries.hasMoreElements())
-        action(this.get(entries.getNext().QueryInterface(Ci.nsIFile)));
+    while(entries.hasMoreElements()) {
+        var entry = entries.getNext().QueryInterface(Ci.nsIFile); 
+        if(entry.leafName.match(/\.js$/))
+            action(this.get(entry));
+    }
 }
 
 function create(name) {
