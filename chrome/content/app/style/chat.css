@@ -279,6 +279,15 @@ ul#messages {
     display: none;
 }
 
+#chat-output.groupchat .message.chat .sender:before {
+    content: "[";
+}
+
+#chat-output.groupchat .message.chat .sender:after {
+    content: "]";
+}
+
+
 
 /* MESSAGE - TIME */
 

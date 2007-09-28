@@ -184,11 +184,9 @@ function displayMessage(stanza) {
             new Date(Date.UTC(year, month, day, hour, min, sec));
 
     var sender;
-    if(stanza.@type == 'groupchat')
+    if(stanza.@type == 'groupchat' ||
+      (stanza.@type == 'chat' && isGroupchat))
         sender = JID(stanza.@from).nick;
-    else if(stanza.@type == 'chat' && isGroupchat)
-        // XXX replace with appropriate class and CSS-generated content
-        sender = '[' + JID(stanza.@from).nick + ']';
     else if(stanza.@from == undefined)
         sender = JID(userAddress).username;
     else
@@ -200,6 +198,7 @@ function displayMessage(stanza) {
                        {color: 'rgb(' + textToRGB(JID(stanza.@from).nick).join(',') + ')'} : {});
     
     $(domMessage)
+    .addClass(stanza.@type.toString() || 'normal')
     .addClass(stanza.@type != 'groupchat' ?
               (stanza.@from == undefined ? 'user' : 'contact') : '')
     .find('.sender')
@@ -355,8 +354,10 @@ function seenMessage(stanza) {
 
 function seenPresence(stanza) {
     if(stanza.@from == undefined) {
-        if(stanza.ns_muc::x.length() > 0)
+        if(stanza.ns_muc::x != undefined) {
             isGroupchat = true;
+            $('#chat-output').removeClass('chat').addClass('groupchat');
+        }
 
         if(stanza.ns_muc::x != undefined)
             $('.popup .content.info')
