@@ -124,40 +124,39 @@ function initNetworkReactions() {
 }
 
 function initConversations() {
-    var conversationContainer;
     switch(pref.getCharPref('conversationsArea')) {
     case 'appcontent':
         // This is the main browser/mail area.  We act as an off-site
         // manager for it.
-        conversationContainer =
+        conversations.ui =
             top.document.getElementById('sameplace-conversations') ||
             top.getBrowser();
-        conversations.init(conversationContainer, false);
+        conversations.init(conversations.ui, false);
         break;
     case 'left':
     case 'right':
         tabbedArea(_('conversations'), _('conversation-tabs'));
-        conversationContainer = _('conversations');
-        conversations.init(conversationContainer, false);
+        conversations.ui = _('conversations');
+        conversations.init(conversations.ui, false);
         break;
     default:
         break;
     }
 
-    conversationContainer.addEventListener(
+    conversations.ui.addEventListener(
         'conversation/open', function(event) {
             if(getBrowser() && typeof(getBrowser().addTab) == 'function')
                 _('contact-toolbox', {role: 'attach'}).hidden = false;
         }, false);
 
-    conversationContainer.addEventListener(
+    conversations.ui.addEventListener(
         'conversation/focus', function(event) {
             _('contact').value = XMPP.nickFor(
                 event.originalTarget.getAttribute('account'),
                 event.originalTarget.getAttribute('address'));
         }, false);
 
-    conversationContainer.addEventListener(
+    conversations.ui.addEventListener(
         'conversation/close', function(event) {
             var panel = event.originalTarget;
             var account = attr(panel, 'account');
@@ -192,7 +191,7 @@ function initCustomWidgets() {
             // focus on contact textbox.  XXX This must be handled by
             // the conversation subsystem.
 
-            conversationContainer.contentWindow.focus();
+            conversations.ui.contentWindow.focus();
             startInteraction(event.target.getAttribute('account'),
                              event.target.getAttribute('address'));
         }, false);
