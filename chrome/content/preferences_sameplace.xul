@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+
+<!--
+  Copyright (C) 2005-2006 by Massimiliano Mirra
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+  Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
+-->
+
+<!DOCTYPE overlay SYSTEM "chrome://sameplace/locale/preferences.dtd">
+
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <prefpane id="sameplace-pane"
+            orient="vertial">
+    
+    <script type="application/x-javascript;version=1.7" src="preferences.js"/>
+
+    <preferences>
+      <preference id="sameplace-get-attention-on-message"
+                  name="extensions.sameplace.getAttentionOnMessage"
+                  type="bool"/>
+      <preference id="sameplace-default-app-url"
+                  name="extensions.sameplace.defaultAppUrl"
+                  type="string"/>
+    </preferences>
+
+    <groupbox>
+      <grid>
+        <columns>
+          <column/>
+          <column flex="1"/>
+        </columns>
+        <rows>
+          <row>
+            <label value="&sameplace.prefs.default_application_url.label;"
+                   accesskey="&sameplace.prefs.default_application_url.accesskey;"
+                   for="sameplace-textbox-default-app-url"/>
+            <textbox preference="sameplace-default-app-url" flex="1"/>
+          </row>
+  
+          <row>
+            <label value="&sameplace.prefs.toggle_sidebar_hotkey;"/>
+            <vbox flex="1">
+              <hbox align="center" flex="1">
+                <textbox flex="1" id="sameplace-toggle-contacts-key"
+                         readonly="true" style="text-align: center"/>
+                <button label="&sameplace.prefs.capture.label;"
+                        oncommand="sameplacePrefs.captureKey('contacts');"/>
+              </hbox>
+              <hbox align="center" flex="1">
+                <textbox flex="1" id="sameplace-toggle-conversations-key"
+                         readonly="true" style="text-align: center"/>
+                <button label="&sameplace.prefs.capture.label;"
+                        oncommand="sameplacePrefs.captureKey('conversations');"/>
+              </hbox>
+              <description style="font-size: smaller;">
+                &sameplace.prefs.hotkey_help_text.label;
+              </description>
+            </vbox>
+          </row>
+  
+          <row>
+            <spacer/>
+            <checkbox label="&sameplace.prefs.flash_taskbar.label;"
+                      accesskey="&sameplace.prefs.flash_taskbar.accesskey;"
+                      preference="sameplace-get-attention-on-message"/>
+          </row>
+        </rows>
+      </grid>
+    </groupbox>
+  </prefpane>
+</overlay>
