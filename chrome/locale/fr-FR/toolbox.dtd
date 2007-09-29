@@ -30,7 +30,7 @@
 <!ENTITY command.hide.tooltip "Masquer">
 <!ENTITY command.import_contacts.label "Importer des Contacts...">
 <!ENTITY command.import_contacts.accesskey "I">
-<!ENTITY command.open_standalon.label "Ouvrir en fenêtre externe(EXPERIMENTAL)">
+<!ENTITY command.open_standalon.label "Ouvrir en fenêtre externe (EXPERIMENTAL)">
 <!ENTITY command.open_standalon.accesskey "S">
 <!ENTITY menu.participate.label "Participer">
 <!ENTITY menu.participate.accesskey "P">
