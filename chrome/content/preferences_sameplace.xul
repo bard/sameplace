@@ -60,7 +60,7 @@
                 <button label="&sameplace.prefs.capture.label;"
                         oncommand="sameplacePrefs.captureKey('contacts');"/>
               </hbox>
-              <hbox align="center" flex="1">
+              <hbox align="center" flex="1" hidden="true">
                 <textbox flex="1" id="sameplace-toggle-conversations-key"
                          readonly="true" style="text-align: center"/>
                 <button label="&sameplace.prefs.capture.label;"
