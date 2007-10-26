@@ -94,7 +94,8 @@
     display: none;
 }
 
-#contacts.show-offline [role="contact"][availability="unavailable"] {
+#contacts.show-offline [role="contact"][availability="unavailable"],
+[role="contact"][availability="unavailable"][open="true"] {
     display: -moz-box;
 }
 
