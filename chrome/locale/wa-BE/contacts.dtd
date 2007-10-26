@@ -1,4 +1,5 @@
 <!ENTITY popup.set_alias.label "No metou...">
+<!ENTITY popup.toggle_offline.label "Hide/Show Offline Contacts">
 <!ENTITY popup.remove.label "Disfacer">
 <!ENTITY tooltip.contact_of.label "Soçon da:">
 <!ENTITY tooltip.presence_notification.label "Notifiaedje:">

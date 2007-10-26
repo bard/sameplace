@@ -49,15 +49,29 @@
   </stringbundleset>
   
 
+  <!-- COMMANDS -->
+
+  <commandset>
+    <command id="toggle-offline"
+             label="&popup.toggle_offline.label;"
+             oncommand="toggleOfflineContacts();"/>
+  </commandset>
+
+  
   <!-- MENUS -->
 
   <popupset>
-    <popup id="contact-menu" flex="1" onpopupshowing="showingContactContextMenu(this);">
+    <popup id="contact-menu" onpopupshowing="showingContactContextMenu(this);">
       <menuitem role="set-alias" label="&popup.set_alias.label;"
                 oncommand="requestedSetContactAlias(document.popupNode);"/>
       <menuitem role="remove" label="&popup.remove.label;"
                 oncommand="requestedRemoveContact(document.popupNode);"/>
       <menuseparator/>
+      <menuitem command="toggle-offline"/>
+    </popup>
+
+    <popup id="contacts-menu">
+      <menuitem command="toggle-offline"/>
     </popup>
 
     <tooltip id="contact-tooltip" noautohide="true"
@@ -96,7 +110,7 @@
   <!-- MAIN -->
 
   <notificationbox id="notify" flex="1">
-    <vbox id="contacts" flex="1" style="overflow: auto;" context="contacts-menu">
+    <vbox id="contacts" flex="1" style="overflow: auto;" context="contacts-menu" persist="class">
       <label role="open" value="In conversation" hidden="true" />
       <label role="online" value="Online" hidden="true" />
       <spacer role="away" hidden="true" />

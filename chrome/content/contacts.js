@@ -429,6 +429,13 @@ function receivedMUCPresence(presence) {
 // GUI ACTIONS
 // ----------------------------------------------------------------------
 
+function toggleOfflineContacts() {
+    if(_('contacts').getAttribute('class') == 'show-offline')
+        _('contacts').removeAttribute('class')
+    else
+        _('contacts').setAttribute('class', 'show-offline');
+}
+
 function getContactPosition(contact) {
     var previousElement = contact.previousSibling;
     while(previousElement) {

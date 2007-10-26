@@ -87,6 +87,21 @@
     visibility: hidden;
 }
 
+
+/* CONTACT VISIBILITY START */
+
+[role="contact"][availability="unavailable"] {
+    display: none;
+}
+
+#contacts.show-offline [role="contact"][availability="unavailable"] {
+    display: -moz-box;
+}
+
+/* CONTACT VISIBILITY END */
+
+
+
 /* STATUS INDICATOR END */
 
 #contacts label[role="open"],
