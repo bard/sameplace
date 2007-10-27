@@ -3,7 +3,7 @@
 <!ENTITY command.open_conversation.label "Open conversation...">
 <!ENTITY command.open_conversation.accesskey "O">
 <!ENTITY command.open_conversation.tooltip "Open a conversation">
-<!ENTITY command.join_room.label "Join chat room...">
+<!ENTITY command.join_room.label "Join/create chat room...">
 <!ENTITY command.join_room.accesskey "r">
 <!ENTITY command.join_room.tooltip "Join a chat room">
 <!ENTITY command.switch_to_unread.label "Go to next unread conversation">
@@ -18,8 +18,8 @@
 <!ENTITY command.visit_forum.label "Visit forum">
 <!ENTITY command.visit_forum.tooltip "Visit support forum">
 <!ENTITY command.visit_forum.accesskey "f">
-<!ENTITY command.report_bug.label "Report bugs/request features">
-<!ENTITY command.report_bug.tooltip "Report bugs/request features">
+<!ENTITY command.report_bug.label "Report a problem/request a feature">
+<!ENTITY command.report_bug.tooltip "Report a problem/request a feature">
 <!ENTITY command.report_bug.accesskey "R">
 <!ENTITY command.join_users_room.label "Visit SamePlace chatroom">
 <!ENTITY command.join_users_room.tooltip "Visit SamePlace users' chatroom">
