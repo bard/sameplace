@@ -349,6 +349,14 @@ function initScriptlets() {
 // GUI REACTIONS
 // ----------------------------------------------------------------------
 
+function selectedAccount(event) {
+    var accountJid = event.target.value;
+    if(XMPP.isUp(accountJid))
+        XMPP.down(accountJid);
+    else
+        XMPP.up(accountJid);
+}
+
 function requestedInstallScriptlet(domElement) {
     if(!isPossibleScriptletLink(domElement))
         return;

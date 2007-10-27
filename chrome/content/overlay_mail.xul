@@ -36,10 +36,14 @@
   <!-- COMMANDS -->
 
   <commandset id="mailCommands">
+    <command id="sameplace-edit-accounts"
+             label="Accounts"
+             accesskey="A"
+             oncommand="xmpp4moz.openPreferences();"/>
     <command id="sameplace-command-toggle"
-             label="Toggle"
+             label="Hide/Show"
              oncommand="sameplace.toggle();"
-             accesskey="T"/>
+             accesskey="H"/>
     <command id="sameplace-command-load"
              label="SamePlace"
              oncommand="sameplace.loadAreas();"
@@ -68,17 +72,19 @@
 
   <!-- MENUS -->
 
-  <menupopup id="xmpp-menu-main">
-    <menu label="SamePlace" accesskey="S" insertbefore="xmpp-menu-applications-separator">
-      <menupopup>
+  <menubar id="mail-menubar">
+    <menu label="SamePlace" accesskey="P" insertbefore="helpMenu">
+      <menupopup id="sameplace-menu">
+        <menu label="Connect" accesskey="C" oncommand="sameplace.selectedAccount(event);">
+          <menupopup id="xmpp-popup-accounts"/>
+        </menu>
         <menuitem command="sameplace-command-toggle"
                   key="sameplace-key-toggle"
                   class="menuitem-iconic"/>
-        <menuitem command="sameplace-command-open-standalone"
-                  class="menuitem-iconic"/>
-      </menupopup>      
-    </menu>
-  </menupopup>
+        <menuitem command="sameplace-edit-accounts"/>
+      </menupopup>
+    </menu>    
+  </menubar>
 
   <menupopup id="xmpp-popup-accounts-secondary">
     <menuitem label="Toggle SamePlace"
