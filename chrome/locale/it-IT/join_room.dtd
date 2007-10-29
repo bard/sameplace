@@ -1,4 +1,4 @@
-!ENTITY dialog.title "Entra in una Chat Room">
+<!ENTITY dialog.title "Entra in una Chat Room">
 <!ENTITY room_address.label "Indirizzo:">
 <!ENTITY room_address.accesskey "A">
 <!ENTITY user_nick.label "Nickname:">
