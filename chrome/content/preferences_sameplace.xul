@@ -54,17 +54,18 @@
           <row>
             <label value="&sameplace.prefs.toggle_sidebar_hotkey;"/>
             <vbox flex="1">
-              <hbox align="center" flex="1">
+              <hbox flex="0" align="center">
                 <textbox flex="1" id="sameplace-toggle-contacts-key"
                          readonly="true" style="text-align: center"/>
                 <button label="&sameplace.prefs.capture.label;"
                         oncommand="sameplacePrefs.captureKey('contacts');"/>
               </hbox>
-              <hbox align="center" flex="1" hidden="true">
+              <hbox align="center" flex="0" hidden="true">
                 <textbox flex="1" id="sameplace-toggle-conversations-key"
                          readonly="true" style="text-align: center"/>
                 <button label="&sameplace.prefs.capture.label;"
-                        oncommand="sameplacePrefs.captureKey('conversations');"/>
+                        oncommand="sameplacePrefs.captureKey('conversations');"
+                        flex="1"/>
               </hbox>
               <description style="font-size: smaller;">
                 &sameplace.prefs.hotkey_help_text.label;
