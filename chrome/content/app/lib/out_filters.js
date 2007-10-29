@@ -76,5 +76,16 @@ var commands = {
                     </message>);
         }
         return match;
+    },
+
+    // Implements the output side of a "Send a nudge" feature.
+    // http://www.xmpp.org/extensions/xep-0224.html
+    
+    'nudge': function(argstring) {
+        var body = $.trim(argstring);
+        return (<message type="chat">
+                <attention xmlns="http://www.xmpp.org/extensions/xep-0224.html#ns"/>
+                <body>{body}</body>
+                </message>);
     }
 };
