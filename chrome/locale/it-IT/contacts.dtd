@@ -1,0 +1,4 @@
+<!ENTITY popup.set_alias.label "Imposta Alias...">
+<!ENTITY popup.remove.label "Rimuovi">
+<!ENTITY tooltip.contact_of.label "Contatto di:">
+<!ENTITY tooltip.presence_notification.label "Notifiche:">

@@ -1,0 +1,40 @@
+<!ENTITY command.add_contact.label "Aggiungi un contatto...">
+<!ENTITY command.add_contact.tooltip "Aggiungi un contatto alla tua lista contatti">
+<!ENTITY command.open_conversation.label "Inizia una conversazione...">
+<!ENTITY command.open_conversation.accesskey "O">
+<!ENTITY command.open_conversation.tooltip "Inizia una conversazione">
+<!ENTITY command.join_room.label "Entra in una chat room...">
+<!ENTITY command.join_room.accesskey "r">
+<!ENTITY command.join_room.tooltip "Entra in una chat room">
+<!ENTITY command.switch_to_unread.label "Vai al prossimo messaggio non letto">
+<!ENTITY command.switch_to_unread.tooltip "Va alla prossima conversazione con messaggi non ancora letti">
+<!ENTITY command.switch_to_next.label "Vai alla prossima conversazione">
+<!ENTITY command.switch_to_next.tooltip "Va alla prossia conversazione">
+<!ENTITY command.view_help_pages.label "Visualizza la guida...">
+<!ENTITY command.view_help_pages.accesskey "h">
+<!ENTITY command.view_help_pages.tooltip "Visualizza la guida">
+<!ENTITY command.run_wizard.label "Lancia l'Account Wizard...">
+<!ENTITY command.run_wizard.accesskey "W">
+<!ENTITY command.visit_forum.label "Visita il forum">
+<!ENTITY command.visit_forum.tooltip "Visita il forum di supporto">
+<!ENTITY command.visit_forum.accesskey "f">
+<!ENTITY command.report_bug.label "Segnala problemi/richiedi funzionalità">
+<!ENTITY command.report_bug.tooltip "Segnala problemi/richiedi funzionalità">
+<!ENTITY command.report_bug.accesskey "R">
+<!ENTITY command.join_users_room.label "Visita la room SamePlace">
+<!ENTITY command.join_users_room.tooltip "Visita la chatroom degli utenti di SamePlace">
+<!ENTITY command.join_users_room.accesskey "V">
+<!ENTITY command.read_latest_news.label "Leggi le ultime notizie">
+<!ENTITY command.read_latest_news.accesskey "n">
+<!ENTITY command.hide.label "Nascondi">
+<!ENTITY command.hide.tooltip "Nascondi">
+<!ENTITY command.import_contacts.label "Importa i contatti...">
+<!ENTITY command.import_contacts.accesskey "I">
+<!ENTITY command.open_standalon.label "Apri il client standalone (EXPERIMENTAL)">
+<!ENTITY command.open_standalon.accesskey "S">
+<!ENTITY menu.participate.label "Partecipa">
+<!ENTITY menu.participate.accesskey "P">
+<!ENTITY menu.scriptlets.label "Scriptlets">
+<!ENTITY menu.scriptlets.manage.label "Gestisci...">
+<!ENTITY menu.scriptlets.manage.accesskey "M">
+<!ENTITY status_message.tooltip.label "Cambia il tuo messaggio di stato">

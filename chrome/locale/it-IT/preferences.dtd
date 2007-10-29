@@ -1,0 +1,7 @@
+<!ENTITY sameplace.prefs.default_application_url.label "Default application URL:">
+<!ENTITY sameplace.prefs.default_application_url.accesskey "U">
+<!ENTITY sameplace.prefs.toggle_sidebar_hotkey "Mostra/Nascondi la sidebar:">
+<!ENTITY sameplace.prefs.capture.label "Cattura">
+<!ENTITY sameplace.prefs.hotkey_help_text.label "(La combinazione di tasti deve essere unica e non già esistente)">
+<!ENTITY sameplace.prefs.flash_taskbar.label "Illumina la taskbar quando ci sono nuovi messaggi">
+<!ENTITY sameplace.prefs.flash_taskbar.accesskey "F">
