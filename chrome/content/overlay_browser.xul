@@ -85,14 +85,7 @@
 
   <!-- MENUS -->
 
-  <menupopup id="xmpp-popup-accounts-secondary">
-    <menuitem label="Toggle SamePlace"
-              key="sameplace-key-toggle"
-              class="menuitem-iconic"
-              insertafter="xmpp-menu-set-status"
-              oncommand="sameplace.toggleSidebar();
-                         event.stopPropagation();"/>
-  </menupopup>
+  <menupopup id="xmpp-popup-accounts-secondary"/>
 
   <popup id="contentAreaContextMenu">
     <menuitem id="sameplace-install-scriptlet"
