@@ -25,6 +25,7 @@
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <prefwindow id="xmpp-preferences">
     <prefpane id="sameplace-pane" label="SamePlace"
+              image="chrome://sameplace/skin/logo.png"
               src="chrome://sameplace/content/preferences_sameplace.xul"/>
   </prefwindow>
 </overlay>
