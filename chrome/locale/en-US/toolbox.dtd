@@ -13,17 +13,17 @@
 <!ENTITY command.view_help_pages.label "View help pages...">
 <!ENTITY command.view_help_pages.accesskey "h">
 <!ENTITY command.view_help_pages.tooltip "View help pages">
-<!ENTITY command.run_wizard.label "Run Account Wizard...">
+<!ENTITY command.run_wizard.label "Account Wizard...">
 <!ENTITY command.run_wizard.accesskey "W">
-<!ENTITY command.visit_forum.label "Visit forum">
-<!ENTITY command.visit_forum.tooltip "Visit support forum">
+<!ENTITY command.visit_forum.label "Ask on the forum">
+<!ENTITY command.visit_forum.tooltip "Ask on the forum">
 <!ENTITY command.visit_forum.accesskey "f">
 <!ENTITY command.report_bug.label "Report a problem/request a feature">
 <!ENTITY command.report_bug.tooltip "Report a problem/request a feature">
 <!ENTITY command.report_bug.accesskey "R">
-<!ENTITY command.join_users_room.label "Visit SamePlace chatroom">
-<!ENTITY command.join_users_room.tooltip "Visit SamePlace users' chatroom">
-<!ENTITY command.join_users_room.accesskey "V">
+<!ENTITY command.join_users_room.label "Join support chatroom">
+<!ENTITY command.join_users_room.tooltip "Join support chatroom">
+<!ENTITY command.join_users_room.accesskey "s">
 <!ENTITY command.read_latest_news.label "Read latest news">
 <!ENTITY command.read_latest_news.accesskey "n">
 <!ENTITY command.hide.label "Hide">
