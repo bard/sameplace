@@ -83,6 +83,42 @@ function finish() {
 // Application-dependent functions dealing with user interface.  They
 // affect the domain.
 
+function refreshAccounts(menuPopup) {
+    function refreshAccounts1() {
+        while(menuPopup.lastChild &&
+              menuPopup.lastChild.nodeName != 'menuseparator')
+            menuPopup.removeChild(menuPopup.lastChild);
+        
+        XMPP.accounts.forEach(function(account) {
+            var accountPresence =
+                XMPP.cache.fetch({
+                    event     : 'presence',
+                    direction : 'out',
+                    account   : account.jid,
+                    stanza    : function(s) { return s.ns_muc::x == undefined; }
+                    })[0] ||
+                { stanza: <presence type="unavailable"/> };
+    
+            var menu = $('#blueprints > [role="account"]')._.cloneNode(true);
+
+            menu.setAttribute('label', account.jid);
+            menu.setAttribute('value', account.jid);
+            menu.setAttribute('availability',
+                              accountPresence.stanza.@type == undefined ?
+                              'available' : 'unavailable');
+            menu.setAttribute('show',
+                              accountPresence.stanza.show.toString());
+    
+            menuPopup.appendChild(menu);
+        });
+    }
+
+    // When called from the event listener and adding menus with
+    // sub-menus, will crash as soon as mouse hovers a menu (for someh
+    // reason).  The following seems to workaround.
+    window.setTimeout(refreshAccounts1, 0);
+}
+
 function sizeToContent() {
     frameElement.style.height = _('notify').boxObject.height + 'px';
 }
@@ -170,6 +206,45 @@ function changeStatusMessage(message) {
 
 // GUI REACTIONS
 // ----------------------------------------------------------------------
+
+function requestedChangeStatus(xulStatus) {
+    var status = xulStatus.value;
+    var account = $(xulStatus).$('^ [role="account"]')._.value;
+    if(account == 'all') {
+        alert('Error: not implemented yet.  Sorry. 0:-)');
+        return;
+    }
+
+    if(status == 'available' && XMPP.isDown(account))
+        XMPP.up(account);
+    else if(status == 'unavailable' && XMPP.isUp(account))
+        XMPP.down(account);
+    else {
+        var previousPresence = XMPP.cache.fetch({
+            event     : 'presence',
+            account   : account,
+            direction : 'out',
+            stanza    : function(s) { return s.ns_muc::x == undefined; }
+        })[0];
+        
+        var newPresenceStanza = (previousPresence ?
+                                 previousPresence.stanza.copy() :
+                                 <presence/>);
+    
+        switch(status) {
+        case 'available':
+            delete newPresenceStanza.show;
+            break;
+        case 'away':
+            newPresenceStanza.show = <show>away</show>;
+            break;
+        case 'dnd':
+            newPresenceStanza.show = <show>dnd</show>;
+            break;
+        }
+        XMPP.send(account, newPresenceStanza);
+    } 
+}
 
 function requestedChangeStatusMessage(event) {
     if(event.keyCode != KeyEvent.DOM_VK_RETURN)

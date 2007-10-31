@@ -1,6 +1,51 @@
+/* ACCOUNTS */
+
+#accounts > menu[role="account"],
+#accounts > menu > menupopup > menuitem {
+    list-style-image: url("chrome://xmpp4moz/skin/status/all-small.png");
+}
+
+#accounts > [role="account"][availability="unavailable"] {
+    color: graytext;
+    -moz-image-region: rect(48px 16px 64px 0px);
+}
+
+#accounts > [role="account"][availability="available"] {
+    -moz-image-region: rect(16px 16px 32px 0px);
+}
+
+#accounts > [role="account"][availability="available"][show="dnd"] {
+    -moz-image-region: rect(0px 16px 16px 0px);
+}
+
+#accounts > [role="account"][availability="available"][show="away"],
+#accounts > [role="account"][availability="available"][show="xa"] {
+    -moz-image-region: rect(32px 16px 48px 0px);
+}
+
+#accounts > menu > menupopup > menuitem[value="available"] {
+    -moz-image-region: rect(16px 16px 32px 0px);
+}
+
+#accounts > menu > menupopup > menuitem[value="away"] {
+    -moz-image-region: rect(32px 16px 48px 0px);    
+}
+
+#accounts > menu > menupopup > menuitem[value="dnd"] {
+    -moz-image-region: rect(0px 16px 16px 0px);
+}
+
+#accounts > menu > menupopup > menuitem[value="unavailable"] {
+    -moz-image-region: rect(48px 16px 64px 0px);
+}
+
+/* MIDDLE TOOLBAR */
+
 [role="attach"] {
     list-style-image: url("attach.png");
 }
+
+/* CONTACT POPUP */
 
 #contact > popup > menuitem {
     list-style-image: url("all-small.png"); 

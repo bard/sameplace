@@ -37,6 +37,7 @@
   <script type="application/x-javascript;version=1.7" src="lib/utilities.js"/>
   <script type="application/x-javascript;version=1.7" src="lib/utilities_gui.js"/>
   <script type="application/x-javascript;version=1.7" src="lib/utilities_xmpp.js"/>
+  <script type="application/x-javascript;version=1.7" src="lib/css_query.js"/>
   <script type="application/x-javascript;version=1.7" src="toolbox.js"/>
 
 
@@ -140,8 +141,21 @@
           </menupopup>
         </toolbarbutton>
 
-        <toolbarbutton label="Status" type="menu">
-
+        <toolbarbutton label="Status" type="menu" oncommand="requestedChangeStatus(event.target);">
+          <menupopup maxwidth="250" id="accounts"
+                     onpopupshowing="if(event.target == this)
+                                     /* otherwise, catches event from sub-menus */
+                                     refreshAccounts(this);">
+            <menu role="account" label="All" value="all">
+              <menupopup>
+                <menuitem class="menuitem-iconic" label="Online" value="available"/>
+                <menuitem class="menuitem-iconic" label="Away" value="away"/>
+                <menuitem class="menuitem-iconic" label="Busy" value="dnd"/>
+                <menuitem class="menuitem-iconic" label="Offline" value="unavailable"/>
+              </menupopup>
+            </menu>
+            <menuseparator/>
+          </menupopup>
         </toolbarbutton>
 
         <toolbarbutton label="Tools" type="menu">
@@ -189,4 +203,15 @@
                flex="1"/>
     </vbox>
   </notificationbox>
+
+  <box hidden="true" id="blueprints">
+    <menu role="account" class="menu-iconic">
+      <menupopup>
+        <menuitem class="menuitem-iconic" label="Online" value="available"/>
+        <menuitem class="menuitem-iconic" label="Away" value="away"/>
+        <menuitem class="menuitem-iconic" label="Busy" value="dnd"/>
+        <menuitem class="menuitem-iconic" label="Offline" value="unavailable"/>
+      </menupopup>
+    </menu>
+  </box>
 </page>
