@@ -126,16 +126,17 @@
             <menuitem class="menuitem-iconic" command="import-contacts"/>
             <menuitem class="menuitem-iconic" command="join-room"/>
             <menuitem class="menuitem-iconic" command="open-conversation"/>
-            <menuitem class="menuitem-iconic" command="switch-to-unread"
-                      key="key-switch-to-unread"/>
-            <menuitem class="menuitem-iconic" command="switch-to-next"
-                      key="key-switch-to-next"/>
             <menuseparator/>
             <menuitem class="menuitem-iconic" command="visit-users-room"/>
             <menuitem class="menuitem-iconic" command="visit-forum"/>
             <menuitem class="menuitem-iconic" command="view-help"/>
             <menuitem class="menuitem-iconic" command="report-bug"/>
             <menuitem class="menuitem-iconic" command="read-latest-news"/>
+            <menuseparator/>
+            <menuitem class="menuitem-iconic" command="switch-to-unread"
+                      key="key-switch-to-unread"/>
+            <menuitem class="menuitem-iconic" command="switch-to-next"
+                      key="key-switch-to-next"/>
           </menupopup>
         </toolbarbutton>
 
@@ -154,7 +155,6 @@
                           oncommand="requestedManageScriptlets();"/>
               </menupopup>
             </menu>
-            <menuitem class="menuitem-iconic" command="open-standalone"/>
           </menupopup>
         </toolbarbutton>
 
