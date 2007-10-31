@@ -72,9 +72,10 @@
 /* HEADER */
 
 #head {
-    height: 31px;
-    padding: 0;
-    background-image: url("header_bg_1x34.png");
+/*
+  height: 31px;
+  padding: 0;
+  background-image: url("header_bg_1x34.png");*/
 }
 
 /* TOOLBAR */
@@ -165,7 +166,7 @@ textbox#status-message {
 
 #contact-toolbox > toolbar {
     -moz-appearance: none;
-    background: transparent url("conv_bg_1x28.png") top left repeat-x;
+/*    background: transparent url("conv_bg_1x28.png") top left repeat-x;*/
 }
 
 
