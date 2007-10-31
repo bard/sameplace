@@ -32,18 +32,7 @@
     background-image: url("header_bg_1x34.png");
 }
 
-#logo {
-    width: 65px;
-    height: 19px;
-    margin: 0 10px 8px 5px;
-    background-image: url("logo_sp_65x19.png");
-}
-
-/* BUTTONS */
-
-#head > toolbarbutton > .toolbarbutton-text {
-    display: none;
-}
+/* TOOLBAR */
 
 toolbarbutton[command="hide"] {
     -moz-appearance: none;
@@ -54,95 +43,45 @@ toolbarbutton[command="hide"] {
     background: url("hide_10x12.png") center left no-repeat;
 }
 
-toolbarbutton[command="add-contact"] {      
-    -moz-appearance: none;
-    border: none;
-    width: 18px;
-    height: 18px;
-    margin: 0 5px 0 0;
-    background: transparent url("add_button_18x18.png") top left no-repeat;
-}
-
-toolbarbutton[command="join-room"] {
-    -moz-appearance: none;
-    border: none;
-    width: 18px;
-    height: 18px;
-    margin: 0 5px 0 0;
-    background: transparent url("open_conv_button_18x18.png") top left no-repeat;
-}
-
-toolbarbutton[command="switch-to-next"] {      
-    -moz-appearance: none;
-    border: none;
-    width: 18px;
-    height: 18px;
-    margin: 0 5px 0 0;
-    background: transparent url("switch_conv_button_18x18.png") top left no-repeat;
-}
-
-toolbarbutton[command="switch-to-unread"] {  
-    -moz-appearance: none;
-    border: none;
-    width: 18px;
-    height: 18px;
-    margin: 0 10px 0 0;
-    background: transparent url("unread_msg_button_18x18.png") top left no-repeat;
-}
-
-
 toolbarbutton[command="hide"]:hover {  
     background: transparent url("hide_hover_10x12.png") center left no-repeat;
 }
 
-toolbarbutton[command="add-contact"]:hover {  
-    background: transparent url("add_hover_18x18.png") top left no-repeat;
-}
-
-toolbarbutton[command="join-room"]:hover {
-    background: transparent url("open_conv_hover_18x18.png") top left no-repeat;
-}
-
-toolbarbutton[command="switch-to-next"]:hover {      
-    background: transparent url("switch_conv_hover_18x18.png") top left no-repeat;
-}
-
-toolbarbutton[command="switch-to-unread"]:hover {  
-    background: transparent url("unread_msg_hover_18x18.png") top left no-repeat;
-}
-
-toolbarbutton#actions > .toolbarbutton-menu-dropmarker {
-    display: none !important;
-}
-
-toolbarbutton[command="add-contact"]:active {  
-    background: transparent url("add_click_18x18.png") top left no-repeat;
-}
-
-toolbarbutton[command="open-conversation"]:active {      
-    background: transparent url("open_conv_click_18x18.png") top left no-repeat;
-}
-
-toolbarbutton[command="switch-to-next"]:active {      
-    background: transparent url("switch_conv_click_18x18.png") top left no-repeat;
-}
-
-toolbarbutton[command="switch-to-unread"]:active {  
-    background: transparent url("unread_msg_click_18x18.png") top left no-repeat;
-}
-
-toolbarbutton#actions {  
+toolbarbutton[label="People"],
+toolbarbutton[label="Status"],
+toolbarbutton[label="Tools"] {
     -moz-appearance: none;
     border: none;
-    width: 64px;
+    margin: 0 5px;
     height: 16px;
-    background: transparent url("actions_button_64x16.png") top left no-repeat;
-    margin: 0 0 0 0;
 }
 
-toolbarbutton#actions:hover {  
-    background: transparent url("actions_hover_64x16.png") top left no-repeat;
+toolbarbutton[label="People"] {
+    list-style-image: url("chrome://sameplace/skin/contacts.png");
 }
+
+toolbarbutton[label="Status"] {
+    list-style-image: url("chrome://xmpp4moz/skin/status/all-small.png");    
+    -moz-image-region: rect(16px 16px 32px 0px);
+}
+
+toolbarbutton[label="Tools"] {
+    list-style-image: url("chrome://sameplace/skin/tools.png");
+}
+
+toolbarbutton[label="People"] > .toolbarbutton-text,
+toolbarbutton[label="Status"] > .toolbarbutton-text,
+toolbarbutton[label="Tools"] > .toolbarbutton-text {
+    font-size: 80%;
+}
+
+toolbarbutton[label="People"] > .toolbarbutton-menu-dropmarker,
+toolbarbutton[label="Status"] > .toolbarbutton-menu-dropmarker,
+toolbarbutton[label="Tools"] > .toolbarbutton-menu-dropmarker {
+    padding-left: 2px;
+}
+
+/* PROFILE AREA */
 
 vbox#profile {
     background-color: #fcfcfc;
@@ -175,6 +114,9 @@ textbox#status-message {
     border: none;
     background-color: #fcfcfc;
 }
+
+
+/* CONTACT BAR */
 
 #contact-toolbox > toolbar {
     -moz-appearance: none;

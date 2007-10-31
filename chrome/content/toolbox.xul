@@ -117,30 +117,13 @@
 
   <notificationbox id="notify" orient="vertical" style="overflow: hidden;">
     <toolbox>
-      <toolbar id="head" align="center">
-        <toolbaritem>
-          <label id="logo"/>        
-        </toolbaritem>
+      <toolbar id="head" pack="center">
+        <toolbaritem align="center" style="width: 16px;"/>
         <toolbarspring/>
-        <toolbarbutton command="add-contact"/>
-        <toolbarbutton command="join-room"/>
-        <toolbarbutton command="switch-to-next"/>
-        <toolbarbutton command="switch-to-unread"/>   
-        <toolbarspring/>
-        <toolbarbutton id="actions" label="actions" type="menu">
-          <menupopup id="actions-popup">
-            <menu label="&menu.participate.label;"
-                  accesskey="&menu.participate.accesskey;">
-              <menupopup>
-                <menuitem class="menuitem-iconic" command="visit-users-room"/>
-                <menuitem class="menuitem-iconic" command="visit-forum"/>
-                <menuitem class="menuitem-iconic" command="view-help"/>
-                <menuitem class="menuitem-iconic" command="report-bug"/>
-                <menuitem class="menuitem-iconic" command="read-latest-news"/>
-              </menupopup>
-            </menu>
-            <menuseparator/>
+        <toolbarbutton class="button-people" label="People" type="menu">
+          <menupopup>
             <menuitem class="menuitem-iconic" command="add-contact"/>
+            <menuitem class="menuitem-iconic" command="import-contacts"/>
             <menuitem class="menuitem-iconic" command="join-room"/>
             <menuitem class="menuitem-iconic" command="open-conversation"/>
             <menuitem class="menuitem-iconic" command="switch-to-unread"
@@ -148,9 +131,21 @@
             <menuitem class="menuitem-iconic" command="switch-to-next"
                       key="key-switch-to-next"/>
             <menuseparator/>
+            <menuitem class="menuitem-iconic" command="visit-users-room"/>
+            <menuitem class="menuitem-iconic" command="visit-forum"/>
+            <menuitem class="menuitem-iconic" command="view-help"/>
+            <menuitem class="menuitem-iconic" command="report-bug"/>
+            <menuitem class="menuitem-iconic" command="read-latest-news"/>
+          </menupopup>
+        </toolbarbutton>
 
-            <menuitem class="menuitem-iconic" command="import-contacts"/>
+        <toolbarbutton label="Status" type="menu">
 
+        </toolbarbutton>
+
+        <toolbarbutton label="Tools" type="menu">
+          <menupopup>
+            <menuitem class="menuitem-iconic" command="run-wizard"/>
             <menu class="menuitem-iconic" label="&menu.scriptlets.label;">
               <menupopup id="scriptlets-popup" onpopupshowing="requestedShowScriptletList(this);">
                 <menuseparator/>
@@ -159,16 +154,15 @@
                           oncommand="requestedManageScriptlets();"/>
               </menupopup>
             </menu>
-
             <menuitem class="menuitem-iconic" command="open-standalone"/>
-            <menuitem class="menuitem-iconic" command="run-wizard"/>
-                      
-            <menuseparator id="actions-separator" hidden="true"/>
           </menupopup>
         </toolbarbutton>
+
+        <toolbarspring/>
         <toolbarbutton command="hide"/>
       </toolbar>
     </toolbox>
+
 
     <!-- PROFILE -->
 
