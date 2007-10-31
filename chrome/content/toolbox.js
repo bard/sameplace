@@ -208,42 +208,62 @@ function changeStatusMessage(message) {
 // ----------------------------------------------------------------------
 
 function requestedChangeStatus(xulStatus) {
-    var status = xulStatus.value;
-    var account = $(xulStatus).$('^ [role="account"]')._.value;
-    if(account == 'all') {
-        alert('Error: not implemented yet.  Sorry. 0:-)');
-        return;
-    }
-
-    if(status == 'available' && XMPP.isDown(account))
-        XMPP.up(account);
-    else if(status == 'unavailable' && XMPP.isUp(account))
-        XMPP.down(account);
-    else {
-        var previousPresence = XMPP.cache.fetch({
+    function previousPresenceStanza(account) {
+        var p = XMPP.cache.fetch({
             event     : 'presence',
             account   : account,
             direction : 'out',
             stanza    : function(s) { return s.ns_muc::x == undefined; }
         })[0];
-        
-        var newPresenceStanza = (previousPresence ?
-                                 previousPresence.stanza.copy() :
-                                 <presence/>);
+
+        return p ? p.stanza : null;
+    }
+
+    function updatePresence(stanza, status) {
+        var newStanza = stanza.copy();
     
         switch(status) {
         case 'available':
-            delete newPresenceStanza.show;
+            delete newStanza.show;
             break;
         case 'away':
-            newPresenceStanza.show = <show>away</show>;
+            newStanza.show = <show>away</show>;
             break;
         case 'dnd':
-            newPresenceStanza.show = <show>dnd</show>;
+            newStanza.show = <show>dnd</show>;
             break;
         }
-        XMPP.send(account, newPresenceStanza);
+        return newStanza;
+    }
+    
+    var status = xulStatus.value;
+    var account = $(xulStatus).$('^ [role="account"]')._.value;
+
+    if(account == 'all') {
+        var accountsUp = XMPP.accounts.filter(XMPP.isUp);
+        if(status == 'unavailable')
+            accountsUp.forEach(XMPP.down);
+        else if(status == 'available' && accountsUp.length == 0)
+            XMPP.accounts.forEach(XMPP.up);
+        else
+            accountsUp.forEach(function(account) {
+                XMPP.send(account,
+                          updatePresence(
+                              previousPresenceStanza(account.jid) || <presence/>,
+                              status));
+            });
+    } else {
+        if(status == 'available' && XMPP.isDown(account))
+            XMPP.up(account);
+        else if(status == 'unavailable' && XMPP.isUp(account))
+            XMPP.down(account);
+        else
+            XMPP.send(account,
+                      updatePresence(
+                          previousPresenceStanza(account) || <presence/>,
+                          status));
     } 
+
 }
 
 function requestedChangeStatusMessage(event) {
