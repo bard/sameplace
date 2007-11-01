@@ -1,5 +1,5 @@
 #contacts {
-    background: white url("contacts-background") bottom right no-repeat;
+    background: white url("contacts-background.png") bottom right no-repeat;
 }
 
 #contacts [role="contact"] [role="status"] {
