@@ -520,7 +520,7 @@ function isActiveSomewhere() {
 }
 
 function isPopupWindow() {
-    return window.toolbar.visible;
+    return !window.toolbar.visible;
 }
 
 function upgradeCheck(id, versionPref, actions, ignoreTrailingParts) {
