@@ -102,6 +102,13 @@ toolbarbutton[label="Tools"] {
     height: 16px;
 }
 
+toolbarbutton[label="People"] .toolbarbutton-icon,
+toolbarbutton[label="Status"] .toolbarbutton-icon,
+toolbarbutton[label="Tools"] .toolbarbutton-icon {
+    width: 16px;
+    height: 16px;
+}
+
 toolbarbutton[label="People"] {
     list-style-image: url("chrome://sameplace/skin/contacts.png");
 }
