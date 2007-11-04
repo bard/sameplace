@@ -23,7 +23,7 @@
 // ----------------------------------------------------------------------
 
 var displayFilters = [processURLs, processEmoticons];
-var outFilters = [commandFilter]
+var outFilters = [commandFilter, formatFilter]
 
 
 // GLOBAL STATE
