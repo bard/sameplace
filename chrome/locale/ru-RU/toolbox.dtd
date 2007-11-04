@@ -6,7 +6,7 @@
 <!ENTITY command.open_conversation.tooltip "Начать беседу">
 <!ENTITY command.join_room.label "Присоединиться к чат-комнате...">
 <!ENTITY command.join_room.accesskey "ч">
-<!ENTITY command.join_room.tooltip "Присоединиться к чат-комнате">
+<!ENTITY command.join_room.tooltip "Присоединиться или создать чат-комнату">
 <!ENTITY command.switch_to_unread.label "Перейти к следующей непрочитанной беседе">
 <!ENTITY command.switch_to_unread.tooltip "Переключиться к следующей в очереди беседе с непрочитанными сообщениями">
 <!ENTITY command.switch_to_next.label "Перейти к следующей беседе">
@@ -19,14 +19,14 @@
 <!ENTITY command.view_help_pages.label "Посмотреть справку">
 <!ENTITY command.view_help_pages.tooltip "Посмотреть справочные страницы">
 <!ENTITY command.view_help_pages.accesskey "а">
-<!ENTITY command.visit_forum.label "Посетить форум">
-<!ENTITY command.visit_forum.tooltip "Посетить форум помощи">
+<!ENTITY command.visit_forum.label "Спросить на форуме">
+<!ENTITY command.visit_forum.tooltip "Спросить на форуме">
 <!ENTITY command.visit_forum.accesskey "р">
 <!ENTITY command.report_bug.label "Сообщить об ошибке/пожелании">
 <!ENTITY command.report_bug.tooltip "Сообщить об ошибке/пожелании">
 <!ENTITY command.report_bug.accesskey "ь">
-<!ENTITY command.join_users_room.label "Посетить чат-комнату SamePlace">
-<!ENTITY command.join_users_room.tooltip "Посетить чат-комнату пользователей SamePlace">
+<!ENTITY command.join_users_room.label "Посетить комнату поддержки">
+<!ENTITY command.join_users_room.tooltip "Посетить комнату поддержки">
 <!ENTITY command.join_users_room.accesskey "т">
 <!ENTITY command.read_latest_news.label "Прочитать последние новости">
 <!ENTITY command.read_latest_news.accesskey "н">

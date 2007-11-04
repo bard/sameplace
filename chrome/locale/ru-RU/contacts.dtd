@@ -1,5 +1,5 @@
 <!ENTITY popup.set_alias.label "Сменить имя...">
-<!ENTITY popup.toggle_offline.label "Hide/Show Offline Contacts">
+<!ENTITY popup.toggle_offline.label "Скрыть/Показать отключенных собеседников">
 <!ENTITY popup.remove.label "Удалить">
 <!ENTITY tooltip.contact_of.label "Контакт:">
 <!ENTITY tooltip.presence_notification.label "Извещение о присутствии:">
