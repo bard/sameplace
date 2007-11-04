@@ -118,7 +118,8 @@ function processEmoticons(xmlMessageBody) {
         ':-O':   'surprise',
         ':O':    'surprise',
         ';)':    'wink',
-        ';-)':   'wink'
+        ';-)':   'wink',
+        '<3':	'heart'
     };
     _.regexp = _.regexp || makeMatcher(getKeys(_.emoticons));
 
