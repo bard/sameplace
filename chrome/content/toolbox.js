@@ -83,6 +83,10 @@ function finish() {
 // Application-dependent functions dealing with user interface.  They
 // affect the domain.
 
+function toggleOfflineContacts() {
+    top.sameplace.viewFor('contacts').toggleOfflineContacts();
+}
+
 function refreshAccounts(menuPopup) {
     function refreshAccounts1() {
         while(menuPopup.lastChild &&

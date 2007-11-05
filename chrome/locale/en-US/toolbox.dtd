@@ -38,3 +38,4 @@
 <!ENTITY menu.scriptlets.manage.label "Manage...">
 <!ENTITY menu.scriptlets.manage.accesskey "M">
 <!ENTITY status_message.tooltip.label "Change your status message">
+<!ENTITY popup.toggle_offline.label "Hide/Show Offline Contacts">

@@ -42,3 +42,4 @@
 <!ENTITY menu.scriptlets.manage.label "Менеджер...">
 <!ENTITY menu.scriptlets.manage.accesskey "д">
 <!ENTITY status_message.tooltip.label "Изменить свое статусное сообщение">
+<!ENTITY popup.toggle_offline.label "Скрыть/Показать отключенных собеседников">

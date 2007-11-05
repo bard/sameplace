@@ -38,3 +38,4 @@
 <!ENTITY menu.scriptlets.manage.label "Manaedjî...">
 <!ENTITY menu.scriptlets.manage.accesskey "M">
 <!ENTITY status_message.tooltip.label "Candjî l' messaedje d' estat da vosse">
+<!ENTITY popup.toggle_offline.label "Hide/Show Offline Contacts">

@@ -103,6 +103,9 @@
              oncommand="window.open(
                         'chrome://sameplace/content/standalone/contacts.xul',
                         'SamePlace:Contacts', 'chrome,titlebar=no,toolbar=no');"/>
+    <command id="toggle-offline"
+             label="&popup.toggle_offline.label;"
+             oncommand="toggleOfflineContacts();"/>    
   </commandset>
 
   
@@ -134,6 +137,7 @@
             <menuitem class="menuitem-iconic" command="report-bug"/>
             <menuitem class="menuitem-iconic" command="read-latest-news"/>
             <menuseparator/>
+            <menuitem command="toggle-offline"/>
             <menuitem class="menuitem-iconic" command="switch-to-unread"
                       key="key-switch-to-unread"/>
             <menuitem class="menuitem-iconic" command="switch-to-next"
