@@ -90,8 +90,8 @@ function updatePageAccountExisting(event) {
         }
     }
 
-    _('account-existing.password-remember').checked = (password != '')
-
+    _('account-existing.password-remember').checked = (password != '');
+    
     _('wizard').canAdvance = address &&
         _('account-existing.server-hostname').value &&
         isValidAddress(address);
@@ -104,7 +104,7 @@ function updatePageAccountNew() {
 
     var server = _('account-new.server-' +
                    _('account-new.server-selection-mode').value).value;
-    
+
     _('wizard').canAdvance = isValidServer(server);
     _('account-new.server-hostname').value = server;
 }
@@ -139,24 +139,27 @@ function shownPageAccountRegistration() {
     var serverJid = _('account-new.server-' +
                       _('account-new.server-selection-mode').value).value;
 
-    registerAccount(
-        serverJid,
-        _('account-new.server-hostname').value,
-        _('account-new.server-port').value,
-        _('account-new.server-security').value == 1,
-        function(query) {
+    registerAccount({
+        address: _('account-new.field-username').value + '@' + serverJid,
+        password: _('account-new.field-password').value,
+        connectionHost: _('account-new.server-hostname').value,
+        connectionPort: _('account-new.server-port').value,
+        connectionSecurity: _('account-new.server-security').value,
+    }, {
+        onSuccess: function(query) {
             channel.release();
-            account.address = query.username + '@' + serverJid;
+            account.address = query.ns_register::username + '@' + serverJid;
             if(_('account-new.password-remember').checked)
-                account.password = query.password;
+                account.password = query.ns_register::password;
             _('account-registration.success').hidden = false;
             _('wizard').canAdvance = true;
         },
-        function(errorDescription) {
+        onFailure: function(errorDescription) {
             channel.release();
             _('account-registration.failure-reason').value = errorDescription;
             _('account-registration.failure').hidden = false;
-        });
+        }
+    });
 }
 
 function shownPageFinish() {
@@ -288,48 +291,67 @@ function getServerList(continuation) {
     req.send(null);
 }
 
-function registerAccount(serverJid, serverHostname, serverPort, ssl,
-                         successCallback, failureCallback) {
+// XXX eliminate repetition from preferences_impl.js
+
+function registerAccount(account, callbacks) {
+    var username = XMPP.JID(account.address).username || '';
+    var hostname = XMPP.JID(account.address).hostname;
+    var password = account.password || '';
+    var ssl = account.connectionSecurity == 1;
+    var connectionHost = account.connectionHost;
+    var connectionPort = account.connectionPort;
+
     var request = {
         confirm: false,
-        query: undefined, 
-        presets: {}
+        query: undefined
     };
 
     XMPP.open(
-        serverJid, { host: serverHostname, port: serverPort, ssl: ssl },
+        hostname, { host: connectionHost, port: connectionPort, ssl: ssl },
         function() {
             XMPP.send(
-                serverJid,
-                <iq to={serverJid} type="get">
+                hostname,
+                <iq to={hostname} type="get">
                 <query xmlns="jabber:iq:register"/>
                 </iq>,
                 function(reply) {
                     request.query = reply.stanza.ns_register::query;
+                    if(request.query.ns_register::username.text() == undefined)
+                        request.query.ns_register::username = username;
+                    if(request.query.ns_register::password.text() == undefined)
+                        request.query.ns_register::password = password;
 
-                    window.openDialog(
-                        'chrome://xmpp4moz/content/ui/registration.xul',
-                        'xmpp4moz-registration', 'modal,centerscreen',
-                        request);
+                    // Only bring up registration requester if more
+                    // information is required.
+                    if(request.query.ns_register::username != undefined &&
+                       request.query.ns_register::password != undefined &&
+                       request.query.ns_register::instructions != undefined &&
+                       request.query.ns_register::*.length() == 3)
+                        request.confirm = true;
+                    else
+                        window.openDialog(
+                            'chrome://xmpp4moz/content/ui/registration.xul',
+                            'xmpp4moz-registration', 'modal,centerscreen',
+                            request);
                     
                     if(request.confirm) {
-                        var iq = <iq to={serverJid} type="set"/>;
+                        var iq = <iq to={hostname} type="set"/>;
                         iq.query = request.query;
                         XMPP.send(
-                            serverJid, iq, function(reply) {
-                                if(reply.stanza.@type == 'result') 
-                                    successCallback(request.query);
+                            hostname, iq, function(reply) {
+                                if(reply.stanza.@type == 'result')
+                                    callbacks.onSuccess(reply.stanza.ns_register::query);
                                 else
-                                    failureCallback(
-                                        reply.stanza.error.*[0].name().localName.replace(/-/g, ' ') +
-                                        ' (' + reply.stanza.error.@code + ')');
-                                
-
-                                XMPP.close(serverJid);
+                                    callbacks.onFailure(reply
+                                                        .stanza.error.*[0]
+                                                        .name().localName.replace(/-/g, ' ') +
+                                                        ' (' + reply.stanza.error.@code + ')');
+                                    
+                                XMPP.close(hostname);
                             });
                         
                     } else {
-                        XMPP.close(serverJid);
+                        XMPP.close(hostname);
                     }
                 });
         });

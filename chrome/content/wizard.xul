@@ -175,46 +175,68 @@
 
     <spacer height="10"/>
 
-    <hbox pack="center" align="center">
-      <vbox>
-        <menulist id="account-new.server-list"
-                  oncommand="updatePageAccountNew();">
-          <menupopup>
-            <menuitem label="sameplace.cc"
-                      value="sameplace.cc"/>
-          </menupopup>
-        </menulist>
-        
-        <textbox hidden="true" id="account-new.server-custom"
-                 onkeyup="updatePageAccountNew();"/>
-      </vbox>
+    <grid>
+      <columns>
+        <column flex="0"/>
+        <column flex="0"/>
+        <column flex="0"/>
+      </columns>
+      
+      <rows>
+        <row align="center">
+          <label value="Username"/>
+          <textbox id="account-new.field-username" value=""
+                   onkeyup="updatePageAccountNew(event);"/>
+        </row>
+        <row align="center">
+          <label value="Password"/>
+          <textbox id="account-new.field-password" type="password" value=""
+                   onkeyup="updatePageAccountNew(event);"/>
+        </row>
+        <row align="center">
+          <label value="Server"/>
+          <vbox>
+            <menulist id="account-new.server-list"
+                      oncommand="updatePageAccountNew();">
+              <menupopup>
+                <menuitem label="sameplace.cc"
+                          value="sameplace.cc"/>
+              </menupopup>
+            </menulist>
 
-      <radiogroup id="account-new.server-selection-mode"
-                  oncommand="changedServerSelectionMode(event);"
-                  value="list"
-                  pack="center"
-                  style="font-size: smaller;">
-        <radio label="&page.account_new.choices.select_from_list.label;"
-               value="list" selected="true"/>
-        <radio label="&page.account_new.choices.enter_custom_server.label;"
-               value="custom"/>
-      </radiogroup>
-    </hbox>
+            <textbox hidden="true" id="account-new.server-custom"
+                     onkeyup="updatePageAccountNew();"/>
+          </vbox>
 
+          <radiogroup id="account-new.server-selection-mode"
+                      oncommand="changedServerSelectionMode(event);"
+                      value="list"
+                      orient="horizontal"
+                      pack="center"
+                      style="font-size: smaller;">
+            <radio label="&page.account_new.choices.select_from_list.label;"
+                   value="list" selected="true"/>
+            <radio label="&page.account_new.choices.enter_custom_server.label;"
+                   value="custom"/>
+          </radiogroup>
+        </row>
+      </rows>
+    </grid>
+    
     <spacer height="10"/>
     
     <checkbox id="account-new.auto-login"
               label="&page.account_new.login_automatically.label;"
               accesskey="&page.account_new.login_automatically.accesskey;"
               checked="true"/>
-
+    
     <checkbox id="account-new.password-remember"
               label="&page.account_new.remember_password.label;"
               accesskey="&page.account_new.remember_password.accesskey;"
-              checked="false"/>
-
+              checked="true"/>
+    
     <separator class="groove"/>
-
+    
     <hbox pack="end">
       <button label="&page.account_new.advanced.label;"
               accesskey="&page.account_new.advanced.accesskey;"
@@ -225,7 +247,7 @@
     <grid id="account-new.advanced" hidden="true">
       <columns>
         <column flex="0"/>
-        <column flex="1"/>
+        <column flex="0"/>
       </columns>
 
       <rows>
@@ -262,7 +284,9 @@
           </radiogroup>
         </row>
       </rows>
-    </grid>
+    </grid>      
+
+
   </wizardpage>
 
   <wizardpage id="page-account-registration"
