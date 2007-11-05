@@ -32,6 +32,10 @@
 
 <!ENTITY page.account_new.description.label "Nuovo account Jabber">
 <!ENTITY page.account_new.text1 "Scegli un server su cui registrare il tuo account.">
+<!ENTITY page.account_new.username.label "Username">
+<!ENTITY page.account_new.username.accesskey "U">
+<!ENTITY page.account_new.password.label "Password">
+<!ENTITY page.account_new.password.accesskey "P">
 <!ENTITY page.account_new.choices.select_from_list.label "Seleziona dalla lista">
 <!ENTITY page.account_new.choices.enter_custom_server.label "Inserisci un server">
 <!ENTITY page.account_new.login_automatically.label "Effettua login all'avvio">

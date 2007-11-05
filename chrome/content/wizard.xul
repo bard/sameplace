@@ -184,12 +184,16 @@
       
       <rows>
         <row align="center">
-          <label value="Username"/>
+          <label control="account-new.field-username"
+                 value="&page.account_new.username.label;"
+                 accesskey="&page.account_new.username.accesskey;"/>
           <textbox id="account-new.field-username" value=""
                    onkeyup="updatePageAccountNew(event);"/>
         </row>
         <row align="center">
-          <label value="Password"/>
+          <label control="account-new.field-password"
+                 value="&page.account_new.password.label;"
+                 accesskey="&page.account_new.password.accesskey;"/>
           <textbox id="account-new.field-password" type="password" value=""
                    onkeyup="updatePageAccountNew(event);"/>
         </row>

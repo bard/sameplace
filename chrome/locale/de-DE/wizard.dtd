@@ -32,6 +32,10 @@
 
 <!ENTITY page.account_new.description.label "Neues Jabber-Konto">
 <!ENTITY page.account_new.text1 "Wählen Sie einen Server, auf dem das Konto angelegt werden soll.">
+<!ENTITY page.account_new.username.label "Username">
+<!ENTITY page.account_new.username.accesskey "U">
+<!ENTITY page.account_new.password.label "Password">
+<!ENTITY page.account_new.password.accesskey "P">
 <!ENTITY page.account_new.choices.select_from_list.label "Von Liste wählen">
 <!ENTITY page.account_new.choices.enter_custom_server.label "Benutzerdefinierten Server wählen">
 <!ENTITY page.account_new.login_automatically.label "Automatisch beim Start von Firefox verbinden">
