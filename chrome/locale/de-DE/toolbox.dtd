@@ -32,8 +32,6 @@
 <!ENTITY command.import_contacts.accesskey "I">
 <!ENTITY command.open_standalon.label "Standalone-Anwendung öffnen (Achtung: EXPERIMENTELL)">
 <!ENTITY command.open_standalon.accesskey "S">
-<!ENTITY menu.participate.label "Mit entwickeln...">
-<!ENTITY menu.participate.accesskey "P">
 <!ENTITY menu.scriptlets.label "Scriptlets">
 <!ENTITY menu.scriptlets.manage.label "Manage...">
 <!ENTITY menu.scriptlets.manage.accesskey "M">

@@ -36,8 +36,6 @@
 <!ENTITY command.import_contacts.accesskey "ы">
 <!ENTITY command.open_standalon.label "Открыть отдельно (ЭКСПЕРИМЕНТАЛЬНО)">
 <!ENTITY command.open_standalon.accesskey "о">
-<!ENTITY menu.participate.label "Принять участие">
-<!ENTITY menu.participate.accesskey "у">
 <!ENTITY menu.scriptlets.label "Скриптлеты">
 <!ENTITY menu.scriptlets.manage.label "Менеджер...">
 <!ENTITY menu.scriptlets.manage.accesskey "д">

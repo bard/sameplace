@@ -32,8 +32,6 @@
 <!ENTITY command.import_contacts.accesskey "i">
 <!ENTITY command.open_standalon.label "Drovi on dfoûtrin purnea (ESPERIMINTÅ)">
 <!ENTITY command.open_standalon.accesskey "D">
-<!ENTITY menu.participate.label "Pårticiper">
-<!ENTITY menu.participate.accesskey "P">
 <!ENTITY menu.scriptlets.label "Sicripe-apliketes">
 <!ENTITY menu.scriptlets.manage.label "Manaedjî...">
 <!ENTITY menu.scriptlets.manage.accesskey "M">
