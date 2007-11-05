@@ -92,54 +92,28 @@ var commands = {
 
 
 function formatFilter(message) {
-   if(message.body == undefined)
-       return message;
-
-   var bolds = message.body.toString().match(/\*.+?\*+/g);
-   var italics = message.body.toString().match(/\_.+?\_+/g);
-
-   if(!bolds && !italics) {
-       return message;
-   }
-
-   else if(bolds && italics) {
-       var msg = processFormatBold(processFormatItalic(message));
-       return msg;
-   }
-   else if(bolds) {
-       var msg = processFormatBold(message);
-       return msg;
-   }
-   else if(italics) {
-       var msg = processFormatItalic(message);
-       return msg;
-   }
-}
-
-function processFormatBold(xmlMessageBody) {
-   var regexp = /\*.+?\*+/g
-
-   return xml.mapTextNodes(xmlMessageBody, function(textNode) {
-       return text.mapMatch( textNode.toString(), regexp, function(word) {
-           var length = word.length;
-           var temp = word.substring(1,length-1);
-           var final = temp;
-           return <span style="font-weight: bold;"
-           xmlns:xhtml="http://www.w3.org/1999/xhtml">{final}</span>;
+    if(message.body == undefined)
+        return message;
+    
+    function processFormatBold(xmlMessageBody) {
+        var regexp = /\*(.+?)\*+/g
+    
+       return xml.mapTextNodes(xmlMessageBody, function(textNode) {
+           return text.mapMatch( textNode.toString(), regexp, function(wholeMatch, content) {
+               return <span style="font-weight: bold;">{content}</span>;
+           });
        });
-   });
-}
-
-function processFormatItalic(xmlMessageBody) {
-   var regexp = /_.+?_+/g
-
-    return xml.mapTextNodes(xmlMessageBody, function(textNode) {
-        return text.mapMatch( textNode.toString(), regexp, function(word) {
-            var length = word.length;
-            var temp = word.substring(1,length-1);
-            var final = temp;
-            return <span style="font-style: italic;"
-            xmlns:xhtml="http://www.w3.org/1999/xhtml">{final}</span>;
+    }
+    
+    function processFormatItalic(xmlMessageBody) {
+        var regexp = /_(.+?)_+/g
+    
+        return xml.mapTextNodes(xmlMessageBody, function(textNode) {
+            return text.mapMatch( textNode.toString(), regexp, function(wholeMatch, content) {
+                return <span style="font-style: italic;">{content}</span>;
+            });
         });
-    });
+    }
+    
+    return processFormatBold(processFormatItalic(message));
 }
