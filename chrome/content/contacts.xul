@@ -66,8 +66,6 @@
                 oncommand="requestedRemoveContact(document.popupNode);"/>
     </popup>
 
-    <popup id="contacts-menu"/>
-
     <tooltip id="contact-tooltip" noautohide="true"
              orient="vertical"
              onpopupshowing="requestedUpdateContactTooltip(document.tooltipNode);">
@@ -104,7 +102,7 @@
   <!-- MAIN -->
 
   <notificationbox id="notify" flex="1">
-    <vbox id="contacts" flex="1" style="overflow: auto;" context="contacts-menu" persist="class">
+    <vbox id="contacts" flex="1" style="overflow: auto;" persist="class">
       <label role="open" value="In conversation" hidden="true" />
       <label role="online" value="Online" hidden="true" />
       <spacer role="away" hidden="true" />
