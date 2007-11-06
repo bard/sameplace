@@ -29,14 +29,10 @@ function commandFilter(message) {
 
     var [_, commandName, argstring] = match;
 
-    if(commandName in commands) {
+    if(commandName in commands)
         return commands[commandName].call(null, argstring);
-    } else {
-        window.alert('Unknown command: ' + command);
-        return null;
-    }
-
-    return null;
+    else
+        return message;
 }
 
 var commands = {
