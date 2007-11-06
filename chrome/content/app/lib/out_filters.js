@@ -96,24 +96,31 @@ function formatFilter(message) {
         return message;
     
     function processFormatBold(xmlMessageBody) {
-        var regexp = /\*(.+?)\*+/g
-    
-       return xml.mapTextNodes(xmlMessageBody, function(textNode) {
-           return text.mapMatch( textNode.toString(), regexp, function(wholeMatch, content) {
-               return <span style="font-weight: bold;">{content}</span>;
-           });
-       });
-    }
-    
-    function processFormatItalic(xmlMessageBody) {
-        var regexp = /_(.+?)_+/g
-    
+        var regexp = /(^|\s)\*(.+?)\*($|\b)/g;
+        
         return xml.mapTextNodes(xmlMessageBody, function(textNode) {
-            return text.mapMatch( textNode.toString(), regexp, function(wholeMatch, content) {
-                return <span style="font-style: italic;">{content}</span>;
+            return text.mapMatch(textNode.toString(), regexp, function(wholeMatch, before,
+                                                                content, after) {
+                return <span style="font-weight: bold;">{content}</span>;
             });
         });
     }
     
-    return processFormatBold(processFormatItalic(message));
+    function processFormatItalic(xmlMessageBody) {
+        var regexp = /(^|\s)_(.+?)_($|\b)/g;
+        
+        return xml.mapTextNodes(xmlMessageBody, function(textNode) {
+            return text.mapMatch(
+                textNode.toString(), regexp, function(wholeMatch, before,
+                                               content, after) {
+                    return <span style="font-style: italic;">{before}{content}{after}</span>;
+                });
+        });
+    }
+
+    message.ns_xhtml_im::html.ns_xhtml::body =
+        processFormatBold(
+            processFormatItalic(message.ns_xhtml_im::html.ns_xhtml::body));
+    
+    return message;
 }
