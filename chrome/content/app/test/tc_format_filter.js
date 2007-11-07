@@ -1,4 +1,4 @@
-var regexp = /(^|\s)\*(.+?)\*($|[^\d\w])/g;
+var regexp = /(^|\s)\*(\S.+?\S)\*($|[^\d\w])/g;
 
 var shouldMatch = [
     ' *hello* ',
@@ -11,7 +11,8 @@ var shouldMatch = [
 
 var shouldNotMatch = [
     'http://test.com/my*nice*url',
-    'inner*stars*stars'
+    'inner*stars*stars',
+    ' * stars with spaces * '
 ];
 
 var matchResults = shouldMatch.map(function(string) {
