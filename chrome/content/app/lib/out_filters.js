@@ -92,7 +92,7 @@ function formatFilter(message) {
         return message;
     
     function processFormatBold(xmlMessageBody) {
-        var regexp = /(^|\s)\*(.+?)\*($|[^\w\d])/g;
+        var regexp = /(^|\s)\*(\S|\S.+?\S)\*($|[^\d\w])/g;
         
         return xml.mapTextNodes(xmlMessageBody, function(textNode) {
             return text.mapMatch(textNode.toString(), regexp, function(wholeMatch, before,
@@ -103,7 +103,7 @@ function formatFilter(message) {
     }
     
     function processFormatItalic(xmlMessageBody) {
-        var regexp = /(^|\s)_(.+?)_($|[^\w\d])/g;
+        var regexp = /(^|\s)_(\S.+?\S)_($|[^\d\w])/g;
         
         return xml.mapTextNodes(xmlMessageBody, function(textNode) {
             return text.mapMatch(
