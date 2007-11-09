@@ -60,10 +60,12 @@
 
   <popupset>
     <popup id="contact-menu" onpopupshowing="showingContactContextMenu(this);">
-      <menuitem role="set-alias" label="&popup.set_alias.label;"
+      <menuitem role="set-contact-alias" label="&popup.set_alias.label;"
                 oncommand="requestedSetContactAlias(document.popupNode);"/>
-      <menuitem role="remove" label="&popup.remove.label;"
+      <menuitem role="remove-contact" label="&popup.remove.label;"
                 oncommand="requestedRemoveContact(document.popupNode);"/>
+      <menuitem role="remove-room" label="Remove"
+                oncommand="requestedRemoveRoom(document.popupNode);"/>
     </popup>
 
     <tooltip id="contact-tooltip" noautohide="true"

@@ -618,18 +618,6 @@ function joinRoom(account, roomAddress, roomNick) {
               </presence>);
 }
 
-function getJoinPresence(account, address) {
-    return XMPP.cache.find({
-        event: 'presence',
-        direction: 'out',
-        account: account,
-        stanza: function(s) {
-                return (s.@to != undefined &&
-                        s.ns_muc::x.length() > 0 &&
-                        XMPP.JID(s.@to).address == address);
-            }});
-}
-
 
 // NETWORK REACTIONS
 // ----------------------------------------------------------------------

@@ -462,18 +462,8 @@ function showingContactContextMenu(xulPopup) {
     var account = attr(document.popupNode, 'account');
     var address = attr(document.popupNode, 'address');
 
-    var enableRemove;
-    if(isMUC(account, address))
-        if(isMUCJoined(account, address))
-            enableRemove = false;
-        else if(isMUCBookmarked(account, address))
-            enableRemove = true;
-        else
-            enableRemove = false;
-    else
-        enableRemove = true;
-    
-    $(xulPopup).$('[role="remove"]')._.setAttribute('disabled', !enableRemove);
+    xulPopup.setAttribute('class',
+                          isMUC(account, address) ? 'groupchat' : 'chat');
 }
 
 function requestedUpdateContactTooltip(element) {
@@ -503,6 +493,21 @@ function requestedSetContactAlias(element) {
                   <iq type="set"><query xmlns="jabber:iq:roster">
                   <item jid={address} name={alias.value}/>
                   </query></iq>);
+}
+
+function requestedRemoveRoom(element) {
+    var account = attr(element, 'account');
+    var address = attr(element, 'address');
+    var nick = XMPP.JID(getJoinPresence(account, address).stanza.@to).resource;
+
+    if(isMUCJoined(account, address))
+        XMPP.send(account,
+                  <presence to={address + '/' + nick} type="unavailable">
+                  <x xmlns={ns_muc}/>
+                  </presence>,
+                  function() { removeMUCBookmark(account, address); });
+    else
+        removeMUCBookmark(account, address);
 }
 
 function requestedRemoveContact(element) {

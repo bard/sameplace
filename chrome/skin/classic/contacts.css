@@ -135,3 +135,12 @@
 #contacts [role="contact"][chatstate="gone"] [role="name"]{
     color: black;
 }
+
+#contact-menu.groupchat [role="set-contact-alias"],
+#contact-menu.groupchat [role="remove-contact"] {
+    display: none;
+}
+
+#contact-menu.chat [role="remove-room"] {
+    display: none;
+}
