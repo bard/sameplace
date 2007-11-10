@@ -50,6 +50,7 @@ function init(event) {
         <feature var="http://jabber.org/protocol/chatstates"/>
         </query>);
 
+
     channel.on({
         event     : 'iq',
         direction : 'out',
@@ -91,14 +92,18 @@ function init(event) {
     _('main').addEventListener('DOMAttrModified', function(event) {
         if(event.attrName == 'collapsed')
             setTimeout(sizeToContent, 0);
-    }, false);
-    
-    sizeToContent();
+    }, false);    
 
-    if(XMPP.accounts.some(XMPP.isUp)) {
-        _('offline').collapsed = true;
-        _('profile').collapsed = false;
+    if(XMPP.accounts.every(XMPP.isDown)) {
+        _('offline').collapsed = false;
+        _('profile').collapsed = true;
     }
+
+    _('button-go-online').label = (XMPP.accounts.length == 0 ?
+                                   'Configure and connect...' :
+                                   'Connect');
+
+    sizeToContent();
 }
 
 function finish() {
@@ -241,6 +246,13 @@ function changeStatusMessage(message) {
 
 // GUI REACTIONS
 // ----------------------------------------------------------------------
+
+function requestedConnection() {
+    if(XMPP.accounts.length > 0)
+        XMPP.up();
+    else
+        runWizard();
+}
 
 function requestedChangeStatus(xulStatus) {
     function previousPresenceStanza(account) {

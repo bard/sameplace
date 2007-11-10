@@ -184,7 +184,7 @@
 
     <!-- PROFILE -->
 
-    <vbox id="profile" collapsed="true">
+    <vbox id="profile">
       <hbox>
         <textbox readonly="true" value="" id="profile-username"/>
         <toolbarbutton type="menu" label="online" id="status-menu" hidden="true">
@@ -207,10 +207,10 @@
                flex="1"/>
     </vbox>
 
-    <vbox id="offline" height="300" align="center" pack="center">
+    <vbox id="offline" height="300" align="center" pack="center" collapsed="true">
       <vbox>
-        <button flex="1" label="Go Online" oncommand="XMPP.up();"/>
-        <button flex="1" command="run-wizard"/>
+        <button flex="1" id="button-go-online"
+                label="Go Online" oncommand="requestedConnection();"/>
       </vbox>
     </vbox>
   </vbox>
