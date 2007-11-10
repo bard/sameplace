@@ -132,6 +132,14 @@ toolbarbutton[label="Tools"] > .toolbarbutton-menu-dropmarker {
     padding-left: 2px;
 }
 
+
+/* OFFLINE PANE */
+
+vbox#offline {
+    background: white;
+}
+
+
 /* PROFILE AREA */
 
 vbox#profile {

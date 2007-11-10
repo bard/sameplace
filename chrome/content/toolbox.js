@@ -54,20 +54,49 @@ function init(event) {
         <feature var="http://jabber.org/protocol/chatstates"/>
         </query>);
 
-    channel.on(
-        {event: 'presence', direction: 'out', stanza: function(s) {
-                return (s.@type == undefined || s.@type == 'unavailable') &&
-                    s.ns_muc::x == undefined && s.@to == undefined;
-            }},
-        function(presence) { sentAvailablePresence(presence) });
+    channel.on({
+        event     : 'iq',
+        direction : 'out',
+        stanza    : function(s) { return s.ns_auth::query != undefined; }
+    }, function() {
+        _('profile').collapsed = false;
+        _('offline').collapsed = true;
+    });
+
+    channel.on({
+        event: 'stream',
+        state: 'close'
+    }, function() {
+        _('profile').collapsed = true;
+    });
+
+    channel.on({
+        event     : 'presence',
+        direction : 'out',
+        stanza    : function(s) {
+            return (s.@type == undefined || s.@type == 'unavailable') &&
+                s.ns_muc::x == undefined && s.@to == undefined;
+        }
+    }, function(presence) { sentAvailablePresence(presence) });
 
     XMPP.cache.fetch({
-        event: 'presence',
-        direction: 'out',
-        }).forEach(sentAvailablePresence);
+        event     : 'presence',
+        direction : 'out',
+    }).forEach(sentAvailablePresence);
 
     scriptlets = top.sameplace.scriptlets;
 
+    // We're in an <iframe/>, thus interface changes won't
+    // automatically be accomodated by the container.  We keep an eye
+    // on the main cause of size changes (collapsing elements) and
+    // force the container to adapt by calling the custom
+    // sizeToContent().
+
+    _('main').addEventListener('DOMAttrModified', function(event) {
+        if(event.attrName == 'collapsed')
+            setTimeout(function() { sizeToContent(); }, 0);
+    }, false);
+    
     sizeToContent();
 }
 
@@ -124,7 +153,7 @@ function refreshAccounts(menuPopup) {
 }
 
 function sizeToContent() {
-    frameElement.style.height = _('notify').boxObject.height + 'px';
+    frameElement.style.height = _('main').boxObject.height + 'px';
 }
 
 function hide() {

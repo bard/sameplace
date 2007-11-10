@@ -119,7 +119,7 @@
 
   <!-- MAIN -->
 
-  <notificationbox id="notify" orient="vertical" style="overflow: hidden;">
+  <vbox id="main" style="overflow: hidden;">
     <toolbox>
       <toolbar id="head" pack="center">
         <toolbaritem align="center" style="width: 16px;"/>
@@ -184,7 +184,7 @@
 
     <!-- PROFILE -->
 
-    <vbox id="profile">
+    <vbox id="profile" collapsed="true">
       <hbox>
         <textbox readonly="true" value="" id="profile-username"/>
         <toolbarbutton type="menu" label="online" id="status-menu" hidden="true">
@@ -206,7 +206,14 @@
                tooltiptext="&status_message.tooltip.label;"
                flex="1"/>
     </vbox>
-  </notificationbox>
+
+    <vbox id="offline" height="300" align="center" pack="center">
+      <vbox>
+        <button flex="1" label="Go Online" oncommand="XMPP.up();"/>
+        <button flex="1" command="run-wizard"/>
+      </vbox>
+    </vbox>
+  </vbox>
 
   <box hidden="true" id="blueprints">
     <menu role="account" class="menu-iconic">

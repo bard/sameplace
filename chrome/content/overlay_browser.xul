@@ -115,8 +115,9 @@
           minwidth="80">
       <iframe id="sameplace-toolbox-left"
               class="sameplace-toolbox"
-              src="toolbox.xul"
-              collapsed="true"/>
+              src="about:blank"
+              collapsed="true"
+              flex="0"/>
       <iframe id="sameplace-contacts-left"
               class="sameplace-contacts"
               src="about:blank"
@@ -146,7 +147,7 @@
           minwidth="80">
       <iframe id="sameplace-toolbox-right"
               class="sameplace-toolbox"
-              src="toolbox.xul"
+              src="about:blank"
               collapsed="true"/>
       <iframe id="sameplace-contacts-right"
               class="sameplace-contacts"
