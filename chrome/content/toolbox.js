@@ -94,6 +94,11 @@ function init(event) {
     }, false);
     
     sizeToContent();
+
+    if(XMPP.accounts.some(XMPP.isUp)) {
+        _('offline').collapsed = true;
+        _('profile').collapsed = false;
+    }
 }
 
 function finish() {
