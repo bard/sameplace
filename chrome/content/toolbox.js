@@ -24,10 +24,6 @@
 
 const Cc = Components.classes;
 const Ci = Components.interfaces;
-
-const prefBranch = Cc["@mozilla.org/preferences-service;1"]
-    .getService(Ci.nsIPrefService)
-    .getBranch('extensions.sameplace.');
 const srvPrompt = Cc["@mozilla.org/embedcomp/prompt-service;1"]
     .getService(Ci.nsIPromptService);
 
@@ -94,7 +90,7 @@ function init(event) {
 
     _('main').addEventListener('DOMAttrModified', function(event) {
         if(event.attrName == 'collapsed')
-            setTimeout(function() { sizeToContent(); }, 0);
+            setTimeout(sizeToContent, 0);
     }, false);
     
     sizeToContent();
@@ -109,11 +105,23 @@ function finish() {
 
 // GUI ACTIONS
 // ----------------------------------------------------------------------
-// Application-dependent functions dealing with user interface.  They
-// affect the domain.
 
 function toggleOfflineContacts() {
+    // Exit point
+
     top.sameplace.viewFor('contacts').toggleOfflineContacts();
+}
+
+function sizeToContent() {
+    // Exit point
+    
+    frameElement.style.height = _('main').boxObject.height + 'px';
+}
+
+function hide() {
+    // Exit point
+    
+    top.sameplace.areaFor('contacts').collapsed = true;
 }
 
 function refreshAccounts(menuPopup) {
@@ -150,14 +158,6 @@ function refreshAccounts(menuPopup) {
     // sub-menus, will crash as soon as mouse hovers a menu (for someh
     // reason).  The following seems to workaround.
     window.setTimeout(refreshAccounts1, 0);
-}
-
-function sizeToContent() {
-    frameElement.style.height = _('main').boxObject.height + 'px';
-}
-
-function hide() {
-    top.sameplace.areaFor('contacts').collapsed = true;
 }
 
 function focusStatus() {
@@ -216,24 +216,21 @@ function visitUsersRoom() {
 }
 
 function changeStatusMessage(message) {
-    for each(var account in XMPP.accounts)
-        if(XMPP.isUp(account)) {
-            var stanza = XMPP.cache.find({
-                event     : 'presence',
-                direction : 'out',
-                account   : account.jid,
-                stanza    : function(s) {
-                        return s.ns_muc::x == undefined;
-                    }
-                }).stanza.copy();
-            
-            if(message)
-                stanza.status = message;
-            else
-                delete stanza.status;
-            
-            XMPP.send(account, stanza);
-        }
+    XMPP.accounts.filter(XMPP.isUp).forEach(function(account) {
+        var stanza = XMPP.cache.find({
+            event     : 'presence',
+            direction : 'out',
+            account   : account.jid,
+            stanza    : function(s) { return s.ns_muc::x == undefined; }
+        }).stanza.copy();
+        
+        if(message)
+            stanza.status = message;
+        else
+            delete stanza.status;
+        
+        XMPP.send(account, stanza);
+    });
 }
 
 
@@ -308,6 +305,9 @@ function requestedChangeStatusMessage(event) {
         changeStatusMessage(event.target.value);
     
     document.commandDispatcher.advanceFocus();
+
+    // Exit point
+    
     top.sameplace.viewFor('conversations').conversations.focusCurrent();
 }
 
@@ -357,33 +357,30 @@ function requestedShowScriptletList(xulPopup) {
         xulPopup.removeChild(xulPopup.firstChild);
     
     var count = 0;
-    scriptlets.forEach(
-        function(scriptlet) {
-            count++;
-            var xulScriptlet = document.createElement('menuitem');
-            try {
-                xulScriptlet.setAttribute('label', scriptlet.info.name);
-                xulScriptlet.addEventListener(
-                    'command', function(event) {
-                        if(scriptlet.enabled)
-                            scriptlet.disable();
-                        else
-                            scriptlet.enable();
-                    }, false);
-            } catch(e) {
-                xulScriptlet.setAttribute(
-                    'label', _('strings').getFormattedString('scriptletLoadingError', [scriptlet.fileName]));
-                xulScriptlet.setAttribute('style', 'color:red;')
-                xulScriptlet.addEventListener(
-                    'command', function(event) {
-                        window.alert(e.name + '\n' + e.stack);
-                    }, false);
-            }
-            xulScriptlet.setAttribute('type', 'checkbox');
-            xulScriptlet.setAttribute('checked', scriptlet.enabled ? 'true' : 'false');
-            xulPopup.insertBefore(xulScriptlet, xulSeparator);
-        });
-
+    scriptlets.forEach(function(scriptlet) {
+        count++;
+        var xulScriptlet = document.createElement('menuitem');
+        try {
+            xulScriptlet.setAttribute('label', scriptlet.info.name);
+            xulScriptlet.addEventListener('command', function(event) {
+                if(scriptlet.enabled)
+                    scriptlet.disable();
+                else
+                    scriptlet.enable();
+            }, false);
+        } catch(e) {
+            xulScriptlet.setAttribute(
+                'label', _('strings').getFormattedString('scriptletLoadingError', [scriptlet.fileName]));
+            xulScriptlet.setAttribute('style', 'color:red;')
+            xulScriptlet.addEventListener('command', function(event) {
+                window.alert(e.name + '\n' + e.stack);
+            }, false);
+        }
+        xulScriptlet.setAttribute('type', 'checkbox');
+        xulScriptlet.setAttribute('checked', scriptlet.enabled ? 'true' : 'false');
+        xulPopup.insertBefore(xulScriptlet, xulSeparator);
+    });
+    
     xulPopup.getElementsByTagName('menuseparator')[0].hidden = (count == 0);
 }
 
