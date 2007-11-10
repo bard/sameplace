@@ -1,6 +1,5 @@
 <!ENTITY command.add_contact.label "Добавить контакт...">
 <!ENTITY command.add_contact.tooltip "Добавить контакт в свой контакт-лист">
-<!ENTITY command.add_contact.accesskey "к">
 <!ENTITY command.open_conversation.label "Начать беседу...">
 <!ENTITY command.open_conversation.accesskey "б">
 <!ENTITY command.open_conversation.tooltip "Начать беседу">
