@@ -359,6 +359,30 @@ img.emoticon {
     vertical-align: text-bottom;
 }
 
+body.icons-on .smiley {
+    background-position: center bottom;
+    display: -moz-inline-box;
+    font-size: 26px;
+    height: 32px;
+    overflow: hidden;
+    padding: 0px 0pt 0pt 32px;
+    width: 32px;
+}
+body.icons-on .smiley-angel      { background: url(../emoticons/angel.png); }
+body.icons-on .smiley-crying     { background: url(../emoticons/crying.png); }
+body.icons-on .smiley-devil-grin { background: url(../emoticons/devil-grin.png); }
+body.icons-on .smiley-glasses    { background: url(../emoticons/glasses.png); }
+body.icons-on .smiley-kiss       { background: url(../emoticons/kiss.png); }
+body.icons-on .smiley-monkey     { background: url(../emoticons/monkey.png); }
+body.icons-on .smiley-plain      { background: url(../emoticons/plain); }
+body.icons-on .smiley-sad        { background: url(../emoticons/sad.png); }
+body.icons-on .smiley-smile-big  { background: url(../emoticons/smile-big.png); }
+body.icons-on .smiley-smile      { background: url(../emoticons/smile.png); }
+body.icons-on .smiley-grin       { background: url(../emoticons/grin.png); }
+body.icons-on .smiley-surprise   { background: url(../emoticons/surprise.png); }
+body.icons-on .smiley-wink       { background: url(../emoticons/wink.png); }
+body.icons-on .smiley-heart      { background: url(../emoticons/heart.png); }
+body.icons-on .smiley-cool       { background: url(../emoticons/cool.png); }
 
 
 /* SOCKET */

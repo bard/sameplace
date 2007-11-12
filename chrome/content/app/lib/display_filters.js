@@ -100,8 +100,8 @@ function processEmoticons(xmlMessageBody) {
         ':\'(':  'crying',
         '>:-)':  'devil-grin',
         '>:)':   'devil-grin',
-        'B-)':   'glasses',
-        'B)':    'glasses',
+        '8-)':   'glasses',
+        '8)':    'glasses',
         ':-*':   'kiss',
         ':*':    'kiss',
         ':-(|)': 'monkey',
@@ -119,8 +119,10 @@ function processEmoticons(xmlMessageBody) {
         ':O':    'surprise',
         ';)':    'wink',
         ';-)':   'wink',
-        '<3':	'heart'
-    };
+        '<3':	 'heart',
+        'B-)':   'cool',
+        'B)':    'cool'
+   };
     _.regexp = _.regexp || makeMatcher(getKeys(_.emoticons));
 
     return xml.mapTextNodes(xmlMessageBody, function(textNode) {
@@ -128,7 +130,8 @@ function processEmoticons(xmlMessageBody) {
             textNode.toString(), _.regexp,
             function(emoticonSymbol) {
                 var url = 'emoticons/' + _.emoticons[emoticonSymbol] + '.png';
-                return <img src={url} class="emoticon" alt={emoticonSymbol}/>;
+                var cls = "smiley smiley-" + _.emoticons[emoticonSymbol];
+                return <span class={cls}>{emoticonSymbol}</span>;
             });
     });
 }
