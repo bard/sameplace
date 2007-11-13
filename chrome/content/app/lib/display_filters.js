@@ -107,6 +107,7 @@ function processEmoticons(xmlMessageBody) {
         ':-(|)': 'monkey',
         ':(|)':  'monkey',
         ':-|':   'plain',
+        ':|':    'plain',
         ':-(':   'sad',
         ':(':    'sad',
         ':-))':  'smile-big',
