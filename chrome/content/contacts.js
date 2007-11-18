@@ -46,40 +46,56 @@ function init() {
 
     channel = XMPP.createChannel();
 
-    channel.on(
-        {event: 'presence', direction: 'in', stanza: function(s) {
-                return s.@type == undefined || s.@type == 'unavailable';
-            }},
-        function(presence) { receivedPresence(presence) });
-    channel.on(
-        {event: 'iq', direction: 'in', stanza: function(s) {
-                return s.ns_roster::query.length() > 0;
-            }},
-        function(iq) { receivedRoster(iq); });
-    channel.on(
-        {event: 'message', direction: 'in'},
-        function(message) {
-            receivedMessage(message);
-        });
-    channel.on(
-        {event: 'presence', direction: 'in', stanza: function(s) {
-                return s.@type == 'subscribe';
-            }},
-        function(presence) { receivedSubscriptionRequest(presence); });
-    channel.on(
-        {event: 'presence', direction: 'in', stanza: function(s) {
-                return s.ns_muc_user::x.length() > 0;
-            }}, function(presence) { receivedMUCPresence(presence) });
-    channel.on(
-        {event: 'iq', direction: 'out', stanza: function(s) {
-                return s.@type == 'set' &&
-                    s.ns_private::query.ns_bookmarks::storage != undefined;
-            }}, function(iq) { requestMUCBookmarks(iq.account); });
-    channel.on(
-        {event: 'iq', direction: 'in', stanza: function(s) {
-                return s.@type == 'result' &&
-                    s.ns_private::query.ns_bookmarks::storage != undefined;
-            }}, function(iq) { receivedMUCBookmarks(iq); });
+    channel.on({
+        event     : 'presence',
+        direction : 'in',
+        stanza    : function(s) {
+            return s.@type == undefined || s.@type == 'unavailable';
+        }
+    }, function(presence) { receivedPresence(presence) });
+    channel.on({
+        event     : 'iq',
+        direction : 'in',
+        stanza    : function(s) {
+            return s.ns_roster::query.length() > 0;
+        }
+    }, function(iq) { receivedRoster(iq); });
+    channel.on({
+        event     : 'message',
+        direction : 'in'
+    }, function(message) {
+        receivedMessage(message);
+    });
+    channel.on({
+        event     : 'presence',
+        direction : 'in',
+        stanza    : function(s) {
+            return s.@type == 'subscribe';
+        }
+    }, function(presence) { receivedSubscriptionRequest(presence); });
+    channel.on({
+        event     : 'presence',
+        direction : 'in',
+        stanza    : function(s) {
+            return s.ns_muc_user::x.length() > 0;
+        }
+    }, function(presence) { receivedMUCPresence(presence) });
+    channel.on({
+        event     : 'iq',
+        direction : 'out',
+        stanza    : function(s) {
+            return s.@type == 'set' &&
+                s.ns_private::query.ns_bookmarks::storage != undefined;
+        }
+    }, function(iq) { requestMUCBookmarks(iq.account); });
+    channel.on({
+        event     : 'iq',
+        direction : 'in',
+        stanza    : function(s) {
+            return s.@type == 'result' &&
+                s.ns_private::query.ns_bookmarks::storage != undefined;
+        }
+    }, function(iq) { receivedMUCBookmarks(iq); });
     channel.on({
         event     : 'presence',
         direction : 'in',
@@ -100,27 +116,25 @@ function init() {
     });
 
     XMPP.cache.fetch({
-        event: 'iq',
-        direction: 'in',
-        stanza: function(s) {
-                return s.ns_roster::query.length() > 0;
-            }})
-        .forEach(receivedRoster);
+        event     : 'iq',
+        direction : 'in',
+        stanza    : function(s) {
+            return s.ns_roster::query.length() > 0;
+        }
+    }).forEach(receivedRoster);
 
     XMPP.cache.fetch({
-        event: 'presence',
-        direction: 'in',
-        })
-        .forEach(receivedPresence);
+        event     : 'presence',
+        direction : 'in',
+    }).forEach(receivedPresence);
 
     XMPP.cache.fetch({
-        event: 'iq',
-        direction: 'in',
-        stanza: function(s) {
-                return s.ns_private::query.ns_bookmarks::storage != undefined;
-            }
-        })
-        .forEach(receivedMUCBookmarks);
+        event     : 'iq',
+        direction : 'in',
+        stanza    : function(s) {
+            return s.ns_private::query.ns_bookmarks::storage != undefined;
+        }
+    }).forEach(receivedMUCBookmarks);
 }
 
 function finish() {
@@ -315,12 +329,11 @@ function requestMUCBookmarks(account, action) {
 }
 
 function addContact(account, address, subscribe) {
-    XMPP.send(
-        account,
-        <iq type='set' id='set1'>
-        <query xmlns='jabber:iq:roster'>
-        <item jid={address}/>
-        </query></iq>);
+    XMPP.send(account,
+              <iq type='set' id='set1'>
+              <query xmlns='jabber:iq:roster'>
+              <item jid={address}/>
+              </query></iq>);
 
     XMPP.send(account, <presence to={address} type="subscribe"/>);
 }
@@ -531,15 +544,14 @@ function clickedContact(contact) {
 // ----------------------------------------------------------------------
 
 var notify;
-window.addEventListener(
-    'load', function(event) {
-        if(typeof($('#notify')._.appendNotification) == 'function') {
-            notify = function() {
-                return $('#notify')._.appendNotification.apply($('#notify')._, arguments);
-            }
-            for(var name in $('#notify')._)
-                if(name.match(/^PRIORITY_/))
-                    notify[name] = $('#notify')._[name];
+window.addEventListener('load', function(event) {
+    if(typeof($('#notify')._.appendNotification) == 'function') {
+        notify = function() {
+            return $('#notify')._.appendNotification.apply($('#notify')._, arguments);
         }
-    }, false);
+        for(var name in $('#notify')._)
+            if(name.match(/^PRIORITY_/))
+                notify[name] = $('#notify')._[name];
+    }
+}, false);
 
