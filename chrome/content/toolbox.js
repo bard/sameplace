@@ -64,7 +64,8 @@ function init(event) {
         event: 'stream',
         state: 'close'
     }, function() {
-        _('profile').collapsed = true;
+        if(XMPP.accounts.every(XMPP.isDown))
+            _('profile').collapsed = true;
     });
 
     channel.on({
