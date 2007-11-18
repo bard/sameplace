@@ -52,34 +52,32 @@ function init() {
         stanza    : function(s) {
             return s.@type == undefined || s.@type == 'unavailable';
         }
-    }, function(presence) { receivedPresence(presence) });
+    }, receivedPresence);
     channel.on({
         event     : 'iq',
         direction : 'in',
         stanza    : function(s) {
             return s.ns_roster::query.length() > 0;
         }
-    }, function(iq) { receivedRoster(iq); });
+    }, receivedRoster);
     channel.on({
         event     : 'message',
         direction : 'in'
-    }, function(message) {
-        receivedMessage(message);
-    });
+    }, receivedMessage);
     channel.on({
         event     : 'presence',
         direction : 'in',
         stanza    : function(s) {
             return s.@type == 'subscribe';
         }
-    }, function(presence) { receivedSubscriptionRequest(presence); });
+    }, receivedSubscriptionRequest);
     channel.on({
         event     : 'presence',
         direction : 'in',
         stanza    : function(s) {
             return s.ns_muc_user::x.length() > 0;
         }
-    }, function(presence) { receivedMUCPresence(presence) });
+    }, receivedMUCPresence);
     channel.on({
         event     : 'iq',
         direction : 'out',
@@ -87,7 +85,7 @@ function init() {
             return s.@type == 'set' &&
                 s.ns_private::query.ns_bookmarks::storage != undefined;
         }
-    }, function(iq) { requestMUCBookmarks(iq.account); });
+    }, authenticatedAccount);
     channel.on({
         event     : 'iq',
         direction : 'in',
@@ -95,25 +93,14 @@ function init() {
             return s.@type == 'result' &&
                 s.ns_private::query.ns_bookmarks::storage != undefined;
         }
-    }, function(iq) { receivedMUCBookmarks(iq); });
+    }, receivedMUCBookmarks);
     channel.on({
         event     : 'presence',
         direction : 'in',
         stanza    : function(s) {
             return s.@type == 'subscribe';
         },
-    }, function(presence) {
-        var roster = XMPP.cache.find({
-            event     : 'iq',
-            direction : 'in',
-            account   : presence.account,
-            stanza    : function(s) {
-                return s.ns_roster::query != undefined
-            }
-        });
-        if(roster.stanza..ns_roster::item.(@jid == presence.stanza.@from))
-            receivedSubscriptionApproval(presence);
-    });
+    }, receivedSubscriptionPacket);
 
     XMPP.cache.fetch({
         event     : 'iq',
@@ -349,6 +336,23 @@ function denySubscriptionRequest(account, address) {
 
 // NETWORK REACTIONS
 // ----------------------------------------------------------------------
+
+function receivedSubscriptionPacket(presence) {
+    var roster = XMPP.cache.find({
+        event     : 'iq',
+        direction : 'in',
+        account   : presence.account,
+        stanza    : function(s) {
+            return s.ns_roster::query != undefined
+        }
+    });
+    if(roster.stanza..ns_roster::item.(@jid == presence.stanza.@from))
+        receivedSubscriptionApproval(presence);
+}
+
+function authenticatedAccount(iq) {
+    requestMUCBookmarks(iq.account);
+}
 
 function receivedMUCBookmarks(iq) {
     $('#contacts [role="contact"][bookmark="true"]')._all.forEach(
