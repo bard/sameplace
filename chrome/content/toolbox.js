@@ -56,8 +56,8 @@ function init(event) {
         direction : 'out',
         stanza    : function(s) { return s.ns_auth::query != undefined; }
     }, function() {
-        _('profile').collapsed = false;
-        _('offline').collapsed = true;
+        uncollapse(_('profile'));
+        collapse(_('offline'));
     });
 
     channel.on({
@@ -65,7 +65,7 @@ function init(event) {
         state: 'close'
     }, function() {
         if(XMPP.accounts.every(XMPP.isDown))
-            _('profile').collapsed = true;
+            collapse(_('profile'));
     });
 
     channel.on({
@@ -90,14 +90,11 @@ function init(event) {
     // force the container to adapt by calling the custom
     // sizeToContent().
 
-    _('main').addEventListener('DOMAttrModified', function(event) {
-        if(event.attrName == 'collapsed')
-            setTimeout(sizeToContent, 0);
-    }, false);    
+    _('main').addEventListener('collapse', sizeToContent, false);
 
     if(XMPP.accounts.every(XMPP.isDown)) {
-        _('offline').collapsed = false;
-        _('profile').collapsed = true;
+        uncollapse(_('offline'));
+        collapse(_('profile'));
     }
 
     _('button-go-online').label = (XMPP.accounts.length == 0 ?
@@ -499,4 +496,30 @@ function registerToTransport(account, address, callbacks) {
     }
 
     start();
+}
+
+
+// GUI UTILITIES
+// ----------------------------------------------------------------------
+
+function collapse(element) {
+    if(element.collapsed)
+        return;
+
+    element.collapsed = true;
+    fireCollapseEvent(element);
+}
+
+function uncollapse(element) {
+    if(!element.collapsed)
+        return;
+
+    element.collapsed = false;
+    fireCollapseEvent(element);
+}
+
+function fireCollapseEvent(element) {
+    var collapseEvent = document.createEvent('Event');
+    collapseEvent.initEvent('collapse', true, false);
+    element.dispatchEvent(collapseEvent);
 }
