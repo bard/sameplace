@@ -78,17 +78,6 @@ function initNetworkReactions() {
     });
 
     channel.on({
-        event     : 'iq',
-        direction : 'out',
-        stanza    : function(s) { return s.ns_auth::query != undefined; }
-    }, function() {
-        if(window == getMostRecentWindow() && window.toolbar.visible) {
-            viewFor('contacts').frameElement.collapsed = false;
-            viewFor('toolbox').frameElement.collapsed = false;
-        }
-    });
-
-    channel.on({
         event     : 'message',
         direction : 'in',
         stanza    : function(s) { return s.@type == 'chat' && s.body.text() != undefined; }
