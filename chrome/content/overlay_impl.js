@@ -97,10 +97,11 @@ function initDisplayRules() {
     // do with this).  Go figure.
     
     frameFor('toolbox').addEventListener(
-        'DOMAttrModified', function(event) {
-            if(event.currentTarget == event.target &&
-               event.attrName == 'collapsed')
-                setTimeout(function(){ viewFor('toolbox').sizeToContent(); }, 0)
+        'collapse', function(event) {
+            viewFor('toolbox').sizeToContent();
+//             if(event.currentTarget == event.target &&
+//                event.attrName == 'collapsed')
+//                 setTimeout(function(){ viewFor('toolbox').sizeToContent(); }, 0)
         }, false);
 
     // When contact is selected, tell so to the conversation view, so
@@ -182,7 +183,7 @@ function initDisplayRules() {
 
         frameFor('contacts').addEventListener(
             'contact/select', function(event) {
-                frameFor('conversations').collapsed = false;
+                uncollapse(frameFor('conversations'));
                 //viewFor('conversations').focused();
             }, false);
         
@@ -192,7 +193,7 @@ function initDisplayRules() {
         frameFor('conversations').addEventListener(
             'conversation/close', function(event) {
                 if(viewFor('conversations').conversations.count == 1)
-                    frameFor('conversations').collapsed = true;
+                    collapse(frameFor('conversations'));
             }, false);
     }
 
@@ -218,74 +219,76 @@ function initDisplayRules() {
     // - if conversation frame was receiving input, take input away
     //   from it, back to the content area
 
-    frameFor('conversations').addEventListener(
-        'DOMAttrModified', function(event) {
-            if(!(event.attrName == 'collapsed' && event.target == frameFor('conversations')))
-                return;
+    frameFor('conversations').addEventListener('collapse', function(event) {
+        if(event.target != frameFor('conversations'))
+            return;
 
-            // Hiding the splitter if frame is collapsed.
-            event.target.previousSibling.hidden = event.target.collapsed;
+        var xulFrame = event.target;
+
+        // If frame is collapsed, hide corresponding splitter
+        xulFrame.previousSibling.hidden = xulFrame.collapsed;
+
+        if(xulFrame.collapsed) {
+            viewFor('contacts').nowTalkingWith(null, null);
             
-            if(event.newValue == 'true') {
-                viewFor('contacts').nowTalkingWith(null, null);
-
-                if(viewFor('conversations').isReceivingInput()) {
-                    var contentArea = (document.getElementById('content') ||
-                                       document.getElementById('messagepane'));
-                    if(contentArea)
-                        contentArea.focus();
-                    // XXX need a fallback in case no content area is recognized
-                }
-            } else {
-                viewFor('conversations').shown();
-            }
-        }, false);
-
-    // Conversations are no longer visible even when they're *area* is
-    // collapsed, so take focus away in this case, too.
-    
-    areaFor('conversations').addEventListener(
-        'DOMAttrModified', function(event) {
-            if(!(event.attrName == 'collapsed' && event.target == areaFor('conversations')))
-                return;
-
-            if(event.newValue == 'true' && viewFor('conversations').isReceivingInput()) {
+            if(viewFor('conversations').isReceivingInput()) {
                 var contentArea = (document.getElementById('content') ||
                                    document.getElementById('messagepane'));
                 if(contentArea)
                     contentArea.focus();
                 // XXX need a fallback in case no content area is recognized
             }
-        }, false);
+        } else {
+            viewFor('conversations').shown();
+        }
+    }, false);
+
+    // Conversations are no longer visible even when they're *area* is
+    // collapsed, so take focus away in this case, too.
+    
+    areaFor('conversations').addEventListener('collapse', function(event) {
+        if(event.target != areaFor('conversations'))
+            // Event came from descendant
+            return;
+
+        var xulConversations = event.target;
+
+        if(xulConversations.collapsed && viewFor('conversations').isReceivingInput()) {
+            var contentArea = (document.getElementById('content') ||
+                               document.getElementById('messagepane'));
+            if(contentArea)
+                contentArea.focus();
+            // XXX need a fallback in case no content area is recognized
+        }
+    }, false);
 
     // Apply rules to areas
     
     var xulAreas = document.getElementsByAttribute('class', 'sameplace-area');
     
     for(var i=0; i<xulAreas.length; i++)
-        xulAreas[i].addEventListener(
-            'DOMAttrModified', function(event) {
-                if(event.attrName == 'collapsed') {
-                    if(event.target.getAttribute('class') == 'sameplace-area') {
-                        // When area is collapsed, hide corresponding splitter.
-                        var xulArea =
-                            event.target;
-                        var xulSplitter = document.getElementById(
-                            xulArea.id.replace(/^sameplace-area/, 'sameplace-splitter'));
-                        xulSplitter.hidden = (event.newValue.toString() == 'true');
-                    } else if(event.target.nodeName == 'iframe') {
-                        // When view is collapsed, possibly hide containing area too.
-                        var xulArea =
-                            event.currentTarget;
-                        var xulContactsView =
-                            xulArea.getElementsByAttribute('class', 'sameplace-contacts')[0];
-                        var xulConversationsView =
-                            xulArea.getElementsByAttribute('class', 'sameplace-conversations')[0];
-                        xulArea.collapsed = 
-                            (xulContactsView.collapsed && xulConversationsView.collapsed);
-                    }
-                }
-            }, false);
+        xulAreas[i].addEventListener('collapse', function(event) {
+            if(event.target.getAttribute('class') == 'sameplace-area') {
+                // When area is collapsed, hide corresponding splitter.
+                var xulArea =
+                    event.target;
+                var xulSplitter = document.getElementById(
+                    xulArea.id.replace(/^sameplace-area/, 'sameplace-splitter'));
+                xulSplitter.hidden = (event.target.collapsed);
+            } else if(event.target.nodeName == 'iframe') {
+                // When view is collapsed, possibly hide containing area too.
+                var xulArea =
+                    event.currentTarget;
+                var xulContactsView =
+                    xulArea.getElementsByAttribute('class', 'sameplace-contacts')[0];
+                var xulConversationsView =
+                    xulArea.getElementsByAttribute('class', 'sameplace-conversations')[0];
+                if(xulContactsView.collapsed && xulConversationsView.collapsed)
+                    collapse(xulArea);
+                else
+                    uncollapse(xulArea);
+            }
+        }, false);
 
     // In page context menu (if available), only display the "install
     // scriptlet" option if user clicked on what could be a scriptlet.
@@ -307,7 +310,8 @@ function initHotkeys() {
             toggle();
         
         if(matchKeyEvent(event, toggleConversationsKey))
-            frameFor('conversations').collapsed = !frameFor('conversations').collapsed;
+            if(!frameFor('conversations').collapsed)
+                collapse(frameFor('conversations'));
     }, true);
 
     pref.QueryInterface(Ci.nsIPrefBranch2)
@@ -368,11 +372,37 @@ function requestedInstallScriptlet(domElement) {
 // GUI ACTIONS
 // ----------------------------------------------------------------------
 
+function collapse(element) {
+    if(element.collapsed)
+        return;
+
+    element.collapsed = true;
+    fireSimpleEvent(element, 'collapse');
+}
+
+function uncollapse(element) {
+    if(!element.collapsed)
+        return;
+
+    element.collapsed = false;
+    fireSimpleEvent(element, 'collapse');
+}
+
+function fireSimpleEvent(element, eventName) {
+    var event = document.createEvent('Event');
+    event.initEvent(eventName, true, false);
+    element.dispatchEvent(event);
+}
+
 function toggle(event) {
-    areaFor('contacts').collapsed = !areaFor('contacts').collapsed;
+    if(areaFor('contacts').collapsed)
+        uncollapse(areaFor('contacts'));
+    else
+        collapse(areaFor('contacts'));
+    
     if(!areaFor('contacts').collapsed) {
-        frameFor('contacts').collapsed = false;
-        frameFor('toolbox').collapsed = false;
+        uncollapse(frameFor('contacts'));
+        uncollapse(frameFor('toolbox'));
     }
 }
 
@@ -396,6 +426,28 @@ function loadAreas(force) {
 
 // GUI UTILITIES
 // ----------------------------------------------------------------------
+
+function collapse(element) {
+    if(element.collapsed)
+        return;
+
+    element.collapsed = true;
+    fireSimpleEvent(element, 'collapse');
+}
+
+function uncollapse(element) {
+    if(!element.collapsed)
+        return;
+
+    element.collapsed = false;
+    fireSimpleEvent(element, 'collapse');
+}
+
+function fireSimpleEvent(element, eventName) {
+    var event = document.createEvent('Event');
+    event.initEvent(eventName, true, false);
+    element.dispatchEvent(event);
+}
 
 function _(id) {
     return document.getElementById('sameplace-' + id);
