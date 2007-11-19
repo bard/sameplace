@@ -507,7 +507,7 @@ function collapse(element) {
         return;
 
     element.collapsed = true;
-    fireCollapseEvent(element);
+    fireSimpleEvent(element, 'collapse');
 }
 
 function uncollapse(element) {
@@ -515,11 +515,11 @@ function uncollapse(element) {
         return;
 
     element.collapsed = false;
-    fireCollapseEvent(element);
+    fireSimpleEvent(element, 'collapse');
 }
 
-function fireCollapseEvent(element) {
-    var collapseEvent = document.createEvent('Event');
-    collapseEvent.initEvent('collapse', true, false);
-    element.dispatchEvent(collapseEvent);
+function fireSimpleEvent(element, eventName) {
+    var event = document.createEvent('Event');
+    event.initEvent(eventName, true, false);
+    element.dispatchEvent(event);
 }
