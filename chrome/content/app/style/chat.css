@@ -363,11 +363,12 @@ img.emoticon {
 body.icons-on .smiley {
     background-position: center bottom;
     display: -moz-inline-box;
-    font-size: 26px;
-    height: 32px;
+    vertical-align: bottom;
     overflow: hidden;
     padding: 0px 0pt 0pt 32px;
+    height: 32px;
     width: 32px;
+    max-width: 32px;
 }
 body.icons-on .smiley-angel      { background: url(../emoticons/angel.png); }
 body.icons-on .smiley-crying     { background: url(../emoticons/crying.png); }
