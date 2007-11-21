@@ -15,6 +15,7 @@
                 <minVersion>2.0</minVersion>
                 <maxVersion>3.0.0.*</maxVersion>
                 <updateLink>http://repo.hyperstruct.net/sameplace/unstable/sameplace-unstable.xpi</updateLink>
+                <updateHash/>
               </r:Description>
             </targetApplication>
 
@@ -26,6 +27,7 @@
                 <maxVersion>1.0</maxVersion>
                 <minVersion>0.9</minVersion>
                 <updateLink>http://repo.hyperstruct.net/sameplace/unstable/sameplace-unstable.xpi</updateLink>
+                <updateHash/>
               </Description>
             </targetApplication>
 
@@ -37,6 +39,7 @@
                 <minVersion>2.0</minVersion>
                 <maxVersion>2.0.0.*</maxVersion>
                 <updateLink>http://repo.hyperstruct.net/sameplace/unstable/sameplace-unstable.xpi</updateLink>
+                <updateHash/>
               </Description>
             </targetApplication>
           </r:Description>
@@ -45,5 +48,6 @@
     </updates>
     <version/>
     <updateLink>http://repo.hyperstruct.net/sameplace/unstable/sameplace-unstable.xpi</updateLink>
+    <updateHash/>
   </r:Description>
 </r:RDF>
