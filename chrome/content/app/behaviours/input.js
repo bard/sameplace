@@ -70,7 +70,8 @@ behaviour.input = function(container) {
     // ------------------------------------------------------------
 
     var iframe = container.getElementsByTagName('iframe')[0];
-    var originalHeight; // initialized in load handler
+    // XXX should not be hardcoded; but other means of setting it seem unreliable
+    var originalHeight = 36;
 
 
     // Setting up iframe content
@@ -165,7 +166,6 @@ behaviour.input = function(container) {
         }, false);
 
     iframe.addEventListener('load', function(event) {
-        originalHeight = iframe.contentDocument.body.scrollHeight;
         if(event.currentTarget)
             dispatchSimpleEvent('load', container);
     }, true);
