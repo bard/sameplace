@@ -77,7 +77,7 @@ function init(event) {
         }
     });
 
-    behaviour.input(_('chat-input'));
+
 
     $('#chat-output').bind('hsDrop', null, function() {
         droppedDataInConversation(event);
@@ -94,12 +94,6 @@ function init(event) {
         resizedWindow(event);
     });
 
-    // XXX obsolete?
-    // _('chat-input').addEventListener(
-    // 'load', function(event) {
-    // _('chat-input').focus();
-    // }, false);
-
     $(window).focus(function(event) {
         $('#chat-input').focus();
     });
@@ -108,6 +102,8 @@ function init(event) {
         $('#chat-input').blur();
     });
 
+    // Wiring chat input area
+    
     $('#chat-input').bind('hsDrop', null, function(event) {
         droppedDataInInput(event);
     });
@@ -136,6 +132,11 @@ function init(event) {
             send(chatEvent('composing'));
         }
     });
+
+    behaviour.input(_('chat-input'));
+
+
+    // Wiring popups
 
     $('.popup').css('left', -$('.popup').width());
 
