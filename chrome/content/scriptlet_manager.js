@@ -85,7 +85,7 @@ function updateScriptlet(xulScriptlet, scriptlet) {
         $(xulScriptlet).$('.version')._.value = scriptlet.info.version;
         $(xulScriptlet).$('.description')._.value = scriptlet.info.description;
     } catch(e) {
-        $(xulScriptlet).$('.name')._.value = scriptlet.fileName;
+        $(xulScriptlet).$('.title')._.value = scriptlet.fileName;
         $(xulScriptlet).$('.description')._.value = 'Error while reading.';
     }
 }
