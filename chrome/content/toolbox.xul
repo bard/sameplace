@@ -216,13 +216,11 @@
   </vbox>
 
   <box hidden="true" id="blueprints">
-    <menu role="account" class="menu-iconic">
-      <menupopup>
-        <menuitem class="menuitem-iconic" label="Online" value="available"/>
-        <menuitem class="menuitem-iconic" label="Away" value="away"/>
-        <menuitem class="menuitem-iconic" label="Busy" value="dnd"/>
-        <menuitem class="menuitem-iconic" label="Offline" value="unavailable"/>
-      </menupopup>
-    </menu>
+    <menupopup role="status-popup">
+      <menuitem class="menuitem-iconic" label="Online" value="available"/>
+      <menuitem class="menuitem-iconic" label="Away" value="away"/>
+      <menuitem class="menuitem-iconic" label="Busy" value="dnd"/>
+      <menuitem class="menuitem-iconic" label="Offline" value="unavailable"/>
+    </menupopup>
   </box>
 </page>

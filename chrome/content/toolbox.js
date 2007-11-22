@@ -147,9 +147,10 @@ function refreshAccounts(menuPopup) {
                     stanza    : function(s) { return s.ns_muc::x == undefined; }
                     })[0] ||
                 { stanza: <presence type="unavailable"/> };
-    
-            var menu = $('#blueprints > [role="account"]')._.cloneNode(true);
 
+            var menu = document.createElement('menu');
+            menu.setAttribute('class', 'menu-iconic')
+            menu.setAttribute('role', 'account');
             menu.setAttribute('label', account.jid);
             menu.setAttribute('value', account.jid);
             menu.setAttribute('availability',
@@ -157,7 +158,8 @@ function refreshAccounts(menuPopup) {
                               'available' : 'unavailable');
             menu.setAttribute('show',
                               accountPresence.stanza.show.toString());
-    
+  
+            menu.appendChild($('#blueprints  [role="status-popup"]')._.cloneNode(true));
             menuPopup.appendChild(menu);
         });
     }
