@@ -389,7 +389,8 @@ Usage samples:
 function interact(account, address, url, panel, nextAction) {
     function activate() {
         XMPP.enableContentDocument(panel, account, address,
-                                   isMUC(account, address) ? 'groupchat' : 'chat');
+                                   isMUC(account, address) ? 'groupchat' : 'chat',
+                                   /^javascript:/.test(url));
     }
 
     nextAction = nextAction || function() {};
