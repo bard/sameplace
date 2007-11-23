@@ -36,6 +36,8 @@
 <!ENTITY page.account_new.username.accesskey "">
 <!ENTITY page.account_new.password.label "Пароль">
 <!ENTITY page.account_new.password.accesskey "П">
+<!ENTITY page.account_new.server.label "Сервер">
+<!ENTITY page.account_new.server.accesskey "в">
 <!ENTITY page.account_new.choices.select_from_list.label "Выбрать из списка">
 <!ENTITY page.account_new.choices.enter_custom_server.label "Другой сервер">
 <!ENTITY page.account_new.login_automatically.label "Соединяться автоматически при запуске">

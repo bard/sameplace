@@ -191,16 +191,16 @@
                    onkeyup="updatePageAccountNew(event);"/>
         </row>
         <row align="center">
-          <label control="account-new.field-password"
+          <label control="page.account_new.field-password"
                  value="&page.account_new.password.label;"
                  accesskey="&page.account_new.password.accesskey;"/>
           <textbox id="account-new.field-password" type="password" value=""
                    onkeyup="updatePageAccountNew(event);"/>
         </row>
         <row align="center">
-          <label value="&account-new.field-server;"/>
+          <label value="&page.account_new.server.label;"/>
           <vbox>
-            <menulist id="account-new.server-list"
+            <menulist id="page.account-new.server-list"
                       oncommand="updatePageAccountNew();">
               <menupopup>
                 <menuitem label="sameplace.cc"
