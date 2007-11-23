@@ -1,6 +1,7 @@
 function autoComplete(textbox) {
     var popup = document.createElement('popup');
     textbox.appendChild(popup);
+    popup.enableKeyboardNavigator(false);
 
     function showCompletions() {
         popup.showPopup(
@@ -29,13 +30,6 @@ function autoComplete(textbox) {
 
     popup.addEventListener(
         'popupshowing', function(event) {
-            while(popup.firstChild)
-                popup.removeChild(popup.firstChild);
-
-            var completeEvent = document.createEvent('Event');
-            completeEvent.initEvent('complete', true, false);
-            event.target.dispatchEvent(completeEvent);
-
             if(popup.childNodes.length == 0) {
                 event.preventDefault();
                 popup.hidePopup();
@@ -45,19 +39,16 @@ function autoComplete(textbox) {
     popup.addEventListener(
         'command', function(event) {
             textbox.value = event.target.label;
+            popup.enableKeyboardNavigator(false);
             var completedEvent = document.createEvent('Event');
             completedEvent.initEvent('completed', true, false);
             event.target.dispatchEvent(completedEvent);
         }, false);
 
-    popup.addEventListener(
-        'popupshown', function(event) {
-            
-        }, false);
-
     textbox.addEventListener(
         'keypress', function(event) {
             switch(event.keyCode) {
+
             case KeyEvent.DOM_VK_ESCAPE:
                 popup.hidePopup();
                 break;
@@ -67,18 +58,18 @@ function autoComplete(textbox) {
 
             case KeyEvent.DOM_VK_DOWN:
                 popup.enableKeyboardNavigator(true);
+                if('state' in popup) {
+                    // gecko1.9 - no idea why it is needed
+                    hideCompletions();
+                    showCompletions();
+                }
                 popup.dispatchEvent(synthKeyEvent(KeyEvent.DOM_VK_DOWN));
+                
                 break;
 
             case KeyEvent.DOM_VK_UP:
                 popup.enableKeyboardNavigator(true);
                 popup.dispatchEvent(synthKeyEvent(KeyEvent.DOM_VK_UP));
-                break;
-
-            case KeyEvent.DOM_VK_TAB:
-                event.preventDefault();
-                popup.enableKeyboardNavigator(true);
-                popup.dispatchEvent(synthKeyEvent(KeyEvent.DOM_VK_DOWN));
                 break;
 
             default:
@@ -89,8 +80,16 @@ function autoComplete(textbox) {
         'input', function(event) {
             if(textbox.value == '')
                 hideCompletions();
-            else
+            else {
+                while(popup.firstChild)
+                    popup.removeChild(popup.firstChild);
+                
+                var completeEvent = document.createEvent('Event');
+                completeEvent.initEvent('complete', true, false);
+                popup.dispatchEvent(completeEvent);
+                
                 showCompletions();
+            }
         }, false);
 
     textbox.addEventListener(
