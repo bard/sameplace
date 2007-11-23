@@ -503,7 +503,10 @@ function requestedSetContactAlias(element) {
     var alias = { value: XMPP.nickFor(account, address) };
 
     var confirm = srvPrompt.prompt(
-        null, 'Alias Change', 'Choose an alias for ' + address, alias, null, {});
+        null,
+        _('strings').getString('aliasChangeTitle'),
+        _('strings').getFormattedString('aliasChangeMessage', [address]),
+        alias, null, {});
 
     if(confirm)
         XMPP.send(account,
