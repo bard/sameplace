@@ -54,13 +54,17 @@ function initOverlay(event) {
     // Depending on entity of update, run wizard and/or show
     // changelog.
 
-    upgradeCheck(
-        'sameplace@hyperstruct.net',
-        'extensions.sameplace.version', {
-            onFirstInstall: function() {
-                runWizard();
-            }
-        });    
+    if(pref.getCharPref('branch') != 'devel')
+        upgradeCheck(
+            'sameplace@hyperstruct.net',
+            'extensions.sameplace.version', {
+                onFirstInstall: function() {
+                    runWizard();
+                },
+                onUpgrade: function() {
+                    openURL('http://sameplace.cc/changelog');
+                }
+            });
 }
 
 function initNetworkReactions() {
