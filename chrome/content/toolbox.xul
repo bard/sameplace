@@ -197,7 +197,7 @@
       <textbox id="status-message"
                onkeypress="requestedChangeStatusMessage(event);"
                oninput="this.setAttribute('draft', 'true');"
-               onfocus="var textbox = this.parentNode.parentNode; /* 'this' is anonymous html:input */
+               onfocus="var textbox = _('status-message');
                         if(textbox.getAttribute('draft') == 'true')
                         textbox.value = '';
                         else
