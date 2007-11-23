@@ -98,8 +98,8 @@ function init(event) {
     }
 
     _('button-go-online').label = (XMPP.accounts.length == 0 ?
-                                   _('strings').getString('connectButton') :
-                                   _('strings').getString('connectConfigureButton'));
+                                   _('strings').getString('connectConfigureButton') :
+                                   _('strings').getString('connectButton'));
 
     sizeToContent();
 }
