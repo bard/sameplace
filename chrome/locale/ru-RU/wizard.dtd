@@ -32,10 +32,10 @@
 
 <!ENTITY page.account_new.description.label "Новая учетная запись Jabber">
 <!ENTITY page.account_new.text1 "Выберите сервер для регистрации учетной записи.">
-<!ENTITY page.account_new.username.label "Username">
-<!ENTITY page.account_new.username.accesskey "U">
-<!ENTITY page.account_new.password.label "Password">
-<!ENTITY page.account_new.password.accesskey "P">
+<!ENTITY page.account_new.username.label "Имя пользователя">
+<!ENTITY page.account_new.username.accesskey "">
+<!ENTITY page.account_new.password.label "Пароль">
+<!ENTITY page.account_new.password.accesskey "П">
 <!ENTITY page.account_new.choices.select_from_list.label "Выбрать из списка">
 <!ENTITY page.account_new.choices.enter_custom_server.label "Другой сервер">
 <!ENTITY page.account_new.login_automatically.label "Соединяться автоматически при запуске">

@@ -2,6 +2,6 @@
 <!ENTITY sameplace.prefs.default_application_url.accesskey "п">
 <!ENTITY sameplace.prefs.toggle_sidebar_hotkey "Горячая клавиша сворачивания бокового меню:">
 <!ENTITY sameplace.prefs.capture.label "Захватить">
-<!ENTITY sameplace.prefs.hotkey_help_text.label "(Горячие клавиши должны быть разными и не конфликтовать с уже существующими.)">
+<!ENTITY sameplace.prefs.hotkey_help_text.label "(Горячие клавиши должны быть разными и отличаться от существующих.)">
 <!ENTITY sameplace.prefs.flash_taskbar.label "Мигать на панели задач при новых входящих сообщениях">
 <!ENTITY sameplace.prefs.flash_taskbar.accesskey "М">
