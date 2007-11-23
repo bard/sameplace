@@ -75,7 +75,7 @@
     <tooltip id="attach-tooltip"
              onpopupshowing="updateAttachTooltip();">
       <label role="message"
-             value="Make this conversation channel available to this web page"/>
+             value="&attach.tooltip-message;"/>
     </tooltip>
   </popupset>
 
@@ -104,7 +104,7 @@
                       tooltiptext="&attach.menu.current_page.tooltip;"/>
           </menupopup>
         </toolbarbutton>
-        <toolbarbutton command="hide"/>
+        <toolbarbutton command="hide" hidden="true"/>
       </toolbar>
     </toolbox>
 

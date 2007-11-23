@@ -5,3 +5,4 @@
 <!ENTITY attach.tooltip "Eine zusätzliche Anwendung nutzen, um mit dem Kontakt zu interagieren">
 <!ENTITY attach.menu.current_page.label "Aktuelle Seite">
 <!ENTITY attach.menu.current_page.tooltip "Mit Kontakt auf der aktuellen Seite interagieren (aktuelle Seite muss eine gemeinsam nutzbare Anwendung sein)">
+<!ENTITY attach.tooltip-message "Make this conversation channel available to this web page">

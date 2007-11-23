@@ -124,7 +124,7 @@
       <toolbar id="head" pack="center">
         <toolbaritem align="center" style="width: 16px;"/>
         <toolbarspring/>
-        <toolbarbutton class="button-people" label="People" type="menu">
+        <toolbarbutton class="button-people" label="&toolbar.people.label;" type="menu">
           <menupopup>
             <menuitem class="menuitem-iconic" command="add-contact"/>
             <menuitem class="menuitem-iconic" command="import-contacts"/>
@@ -145,17 +145,17 @@
           </menupopup>
         </toolbarbutton>
 
-        <toolbarbutton label="Status" type="menu" oncommand="requestedChangeStatus(event.target);">
+        <toolbarbutton label="&toolbar.status.label;" type="menu" oncommand="requestedChangeStatus(event.target);">
           <menupopup maxwidth="250" id="accounts"
                      onpopupshowing="if(event.target == this)
                                      /* otherwise, catches event from sub-menus */
                                      refreshAccounts(this);">
-            <menu role="account" label="All" value="all">
+            <menu role="account" label="&menu.status-all-accounts.label;" value="all">
               <menupopup>
-                <menuitem class="menuitem-iconic" label="Online" value="available"/>
-                <menuitem class="menuitem-iconic" label="Away" value="away"/>
-                <menuitem class="menuitem-iconic" label="Busy" value="dnd"/>
-                <menuitem class="menuitem-iconic" label="Offline" value="unavailable"/>
+                <menuitem class="menuitem-iconic" label="&menu.status-online.label;" value="available"/>
+                <menuitem class="menuitem-iconic" label="&menu.status-away.label;" value="away"/>
+                <menuitem class="menuitem-iconic" label="&menu.status-busy.label;" value="dnd"/>
+                <menuitem class="menuitem-iconic" label="&menu.status-offline.label;" value="unavailable"/>
               </menupopup>
             </menu>
             <menuseparator/>
@@ -217,10 +217,10 @@
 
   <box hidden="true" id="blueprints">
     <menupopup role="status-popup">
-      <menuitem class="menuitem-iconic" label="Online" value="available"/>
-      <menuitem class="menuitem-iconic" label="Away" value="away"/>
-      <menuitem class="menuitem-iconic" label="Busy" value="dnd"/>
-      <menuitem class="menuitem-iconic" label="Offline" value="unavailable"/>
+      <menuitem class="menuitem-iconic" label="&menu.status-online.label;" value="available"/>
+      <menuitem class="menuitem-iconic" label="&menu.status-away.label;" value="away"/>
+      <menuitem class="menuitem-iconic" label="&menu.status-busy.label;" value="dnd"/>
+      <menuitem class="menuitem-iconic" label="&menu.status-offline.label;" value="unavailable"/>
     </menupopup>
   </box>
 </page>

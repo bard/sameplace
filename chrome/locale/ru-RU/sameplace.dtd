@@ -5,3 +5,4 @@
 <!ENTITY attach.tooltip "Использовать дополнительное приложение для взаимодействия с контактом">
 <!ENTITY attach.menu.current_page.label "Текущая страница">
 <!ENTITY attach.menu.current_page.tooltip "Работать с контактом на текущей странице (должна быть общим приложением)">
+<!ENTITY attach.tooltip-message "Make this conversation channel available to this web page">

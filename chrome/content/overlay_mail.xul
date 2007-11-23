@@ -22,7 +22,7 @@
   Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
 -->
 
-<!DOCTYPE overlay>
+<!DOCTYPE overlay SYSTEM "chrome://sameplace/locale/overlay.dtd">
 <overlay id="sameplace-overlay"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
@@ -37,11 +37,11 @@
 
   <commandset id="mailCommands">
     <command id="sameplace-edit-accounts"
-             label="Accounts"
+             label="&command.show-accounts;"
              accesskey="A"
              oncommand="xmpp4moz.openPreferences();"/>
     <command id="sameplace-command-toggle"
-             label="Hide/Show"
+             label="&command.hide-show;"
              oncommand="sameplace.toggle();"
              accesskey="H"/>
     <command id="sameplace-command-load"
@@ -75,7 +75,7 @@
   <menubar id="mail-menubar">
     <menu label="SamePlace" accesskey="P" insertbefore="helpMenu">
       <menupopup id="sameplace-menu">
-        <menu label="Connect" accesskey="C" oncommand="sameplace.selectedAccount(event);">
+        <menu label="&menu.connect;" accesskey="C" oncommand="sameplace.selectedAccount(event);">
           <menupopup id="xmpp-popup-accounts"/>
         </menu>
         <menuitem command="sameplace-command-toggle"

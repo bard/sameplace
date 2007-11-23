@@ -37,3 +37,10 @@
 <!ENTITY menu.scriptlets.manage.accesskey "M">
 <!ENTITY status_message.tooltip.label "Change your status message">
 <!ENTITY popup.toggle_offline.label "Hide/Show Offline Contacts">
+<!ENTITY toolbar.people.label "People">
+<!ENTITY toolbar.status.label "Status">
+<!ENTITY menu.status-all-accounts.label "All">
+<!ENTITY menu.status-online.label "Online">
+<!ENTITY menu.status-away.label "Away">
+<!ENTITY menu.status-busy.label "Busy">
+<!ENTITY menu.status-offline.label "Offline">

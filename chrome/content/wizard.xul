@@ -198,7 +198,7 @@
                    onkeyup="updatePageAccountNew(event);"/>
         </row>
         <row align="center">
-          <label value="Server"/>
+          <label value="&account-new.field-server;"/>
           <vbox>
             <menulist id="account-new.server-list"
                       oncommand="updatePageAccountNew();">
