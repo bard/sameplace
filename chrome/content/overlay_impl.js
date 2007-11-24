@@ -65,6 +65,7 @@ function initOverlay(event) {
             'sameplace@hyperstruct.net',
             'extensions.sameplace.version', {
                 onFirstInstall: function() {
+                    openURL('http://sameplace.cc/get-started');
                     runWizard();
                 },
                 onUpgrade: function() {
