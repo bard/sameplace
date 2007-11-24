@@ -51,8 +51,9 @@ function initOverlay(event) {
     if(!isActiveSomewhere() && !isPopupWindow())
         loadAreas();
 
-    // Depending on entity of update, run wizard and/or show
-    // changelog.
+    // Depending on whether this is a first installation or an
+    // upgrade, and on whether this is the devel branch or not, run
+    // wizard or show changelog.  (devel branch is updated too often.)
 
     if(pref.getCharPref('branch') != 'devel')
         upgradeCheck(
@@ -520,6 +521,21 @@ function viewFor(aspect) {
 
 // UTILITIES
 // ----------------------------------------------------------------------
+
+function openURL(url) {
+    if(typeof(getBrowser().addTab) == 'function')
+        // XXX bard: apparently needed otherwise it won't have any
+        // effect when called from an onload handler
+        setTimeout(function() {
+            getBrowser().selectedTab = getBrowser().addTab(url)
+        }, 500);
+    else
+        Cc['@mozilla.org/uriloader/external-protocol-service;1']
+            .getService(Ci.nsIExternalProtocolService)
+            .loadUrl(Cc['@mozilla.org/network/io-service;1']
+                     .getService(Ci.nsIIOService)
+                     .newURI(url, null, null));
+}
 
 function load(url) {
     var context = {};
