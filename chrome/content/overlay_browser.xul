@@ -127,6 +127,7 @@
       <iframe id="sameplace-conversations-left"
               class="sameplace-conversations"
               src="about:blank"
+              height="300"
               collapsed="true"
               persist="height"
               flex="1"/>
