@@ -46,23 +46,25 @@ function init(_dom, onlyHostsConversations) {
 
         }, false);
 
-    if(onlyHostsConversations) {
-        dom.mPrefs = proxy.create(dom.mPrefs, {
-            getBoolPref: function(originalTarget, prefName) {
-                if(prefName == 'browser.tabs.autoHide')
-                    return false;
-                else
-                    return originalTarget(prefName);
-            }
-        });
-        
-        dom.setStripVisibilityTo(true);
 
-        dom.setAttribute('handleCtrlPageUpDown', 'false');
-
-        var tabbox = dom.ownerDocument.getAnonymousElementByAttribute(dom, 'anonid', 'tabbox');
-        tabbox.setAttribute('handleCtrlTab', false);
-    }
+    // OBSOLETE
+    //     if(onlyHostsConversations) {
+    //         dom.mPrefs = proxy.create(dom.mPrefs, {
+    //             getBoolPref: function(originalTarget, prefName) {
+    //                 if(prefName == 'browser.tabs.autoHide')
+    //                     return false;
+    //                 else
+    //                     return originalTarget(prefName);
+    //             }
+    //         });
+    
+    //         dom.setStripVisibilityTo(true);
+    
+    //         dom.setAttribute('handleCtrlPageUpDown', 'false');
+    
+    //         var tabbox = dom.ownerDocument.getAnonymousElementByAttribute(dom, 'anonid', 'tabbox');
+    //         tabbox.setAttribute('handleCtrlTab', false);
+    //     }
 }
 
 
