@@ -38,7 +38,7 @@
              accesskey="A"
              oncommand="xmpp4moz.openPreferences();"/>
     <command id="sameplace-command-toggle"
-             label="&command.hide-show;"
+             label="&command.hide-show; (F12)"
              oncommand="sameplace.toggle();"
              accesskey="H"/>
     <command id="sameplace-command-load"
