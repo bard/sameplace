@@ -40,12 +40,12 @@ function init(_dom, onlyHostsConversations) {
     dom.tabContainer.addEventListener(
         'select', function(event) {
             var panel = event.target.selectedItem.linkedBrowser;
-            if(panel && isConversation(panel))
+            if(panel && isConversation(panel)) {
+                panel.contentWindow.focus();
                 focused(panel.getAttribute('account'),
                         panel.getAttribute('address'));
-
+            }
         }, false);
-
 
     // OBSOLETE
     //     if(onlyHostsConversations) {
@@ -72,26 +72,26 @@ function init(_dom, onlyHostsConversations) {
 // ----------------------------------------------------------------------
 
 function focused(account, address) {
+    // XXX would be more appropriate outside, in an event listener
+    var conversation = get(account, address);
+    conversation.removeAttribute('unread');
+
     var focusEvent = dom.ownerDocument.createEvent('Event');
     focusEvent.initEvent('conversation/focus', true, false);
-    get(account, address).removeAttribute('unread');
-    get(account, address).dispatchEvent(focusEvent);
-
-    // Force a separate thread, otherwise input area gets focus
-    // but cursor does not appear.
-    setTimeout(function() {
-        get(account, address).contentWindow.focus();
-        dom.ownerDocument.commandDispatcher.advanceFocus();
-    }, 0);
+    conversation.dispatchEvent(focusEvent);
 }
 
 function opened(account, address) {
     var openEvent = dom.ownerDocument.createEvent('Event');
     openEvent.initEvent('conversation/open', true, false);
-    get(account, address).dispatchEvent(openEvent);
+    var conversation = get(account, address);
+    conversation.dispatchEvent(openEvent);
 
     if(isCurrent(account, address))
-        focused(account, address);
+        setTimeout(function(){
+            conversation.contentWindow.focus();
+            focused(account, address);
+        }, 0);
 }
 
 function closed(account, address) {
@@ -125,7 +125,6 @@ function create(account, address) {
             
             browser.removeEventListener(
                 'load', arguments.callee, true);
-
             browser.contentWindow.addEventListener(
                 'beforeunload', function(event) {
                     conversations.closed(account, address);
@@ -174,10 +173,8 @@ function focusCurrent() {
 
 function focus(account, address) {
     var i = getIndexForConversation(account, address);
-    if(i > -1) {
-        var conversation = dom.browsers[i];
+    if(i > -1)
         dom.selectedTab = dom.tabContainer.childNodes[i];
-    }
 }
 
 
