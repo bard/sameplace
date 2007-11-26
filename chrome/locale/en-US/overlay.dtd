@@ -1,4 +1,4 @@
 <!ENTITY command.hide-show "Hide/Show">
-<!ENTITY command.show-accounts "Accounts">
+<!ENTITY command.show-accounts "Accounts & Prefs...">
 <!ENTITY menu.connect "Connect">
 <!ENTITY context.install-scriptlet "Install SamePlace scriptlet...">
