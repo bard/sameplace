@@ -95,7 +95,7 @@ function init(event) {
     });
 
     $(window).focus(function(event) {
-        $('#chat-input').focus();
+        setTimeout(function(){ $('#chat-input').focus(); }, 0);
     });
 
     $(window).blur(function(event) {
