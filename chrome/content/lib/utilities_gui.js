@@ -130,8 +130,6 @@ function afterLoad(contentPanel, action) {
             contentPanel.removeEventListener('load', arguments.callee, true);
         }, true);
 }
-// XXX remove when all instances of queuePostLoadAction have been removed.
-var queuePostLoadAction = afterLoad;
 
 function hasAncestor(element, parentName, parentNamespace) {
     var elementDoc = element.ownerDocument;
