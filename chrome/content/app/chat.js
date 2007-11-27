@@ -382,7 +382,10 @@ function seenPresence(stanza) {
             } else if(stanza.@type == 'error') {
                 displayEvent('error', 'Error: code ' + stanza.error.@code);                
             } else {
-                $('<li/>').text(resource).prependTo('.popup .content.info ul.resources');
+                $('<li/>')
+                    .attr('title', stanza..ns_muc_user::item.@jid.toString() || '')
+                    .text(resource)
+                    .prependTo('.popup .content.info ul.resources');
                 if(isGroupchat)
                     displayEvent('join', JID(stanza.@from).resource + ' entered the room');                    
             }
