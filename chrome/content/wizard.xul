@@ -200,7 +200,7 @@
         <row align="center">
           <label value="&page.account_new.server.label;"/>
           <vbox>
-            <menulist id="page.account-new.server-list"
+            <menulist id="account-new.server-list"
                       oncommand="updatePageAccountNew();">
               <menupopup>
                 <menuitem label="sameplace.cc"
