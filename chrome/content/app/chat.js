@@ -375,8 +375,14 @@ function seenPresence(stanza) {
 
             if(stanza.@type == 'unavailable') {
                 resourceObj.remove();
-                if(isGroupchat)
-                    displayEvent('leave', JID(stanza.@from).resource + ' left the room');                    
+                if(isGroupchat) {
+                    if(stanza..ns_muc_user::status.@code == 303)
+                        displayEvent('leave', JID(stanza.@from).resource +
+                                     ' changed nickname to ' + stanza..ns_muc_user::item.@nick);
+                    else
+                        displayEvent('leave', JID(stanza.@from).resource + ' left the room');
+                }
+                    
             } else if(resourceObj.length > 0) {
                 resourceObj.replace($('<li/>').text(resource))
             } else if(stanza.@type == 'error') {
@@ -387,7 +393,7 @@ function seenPresence(stanza) {
                     .text(resource)
                     .prependTo('.popup .content.info ul.resources');
                 if(isGroupchat)
-                    displayEvent('join', JID(stanza.@from).resource + ' entered the room');                    
+                    displayEvent('join', JID(stanza.@from).resource + ' entered the room');
             }
         }
 

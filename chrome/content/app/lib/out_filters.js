@@ -58,6 +58,15 @@ var commands = {
                 </iq>) 
     },
 
+    'nick': function(argstring) {
+        if(!isGroupchat)
+            return;
+
+        var nick = $.trim(argstring);
+
+        return <presence to={"/" + nick}/>;
+    },
+
     // XXX does not support XHTML messages yet
     
     'msg': function(argstring) {
