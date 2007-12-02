@@ -200,18 +200,6 @@ a:hover {
     overflow-x: hidden;
 }
 
-#chat-output[horiz-scrollbar="auto"] {
-    overflow-x: auto;
-}
-
-#chat-output[horiz-scrollbar="never"] {
-    overflow-x: hidden;
-}
-
-#chat-output[horiz-scrollbar="always"] {
-    overflow-x: scroll;
-}
-
 ul#messages {  
     list-style-type: none;
     margin: 0;
