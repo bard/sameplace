@@ -74,7 +74,7 @@
 
   <menubar id="mail-menubar">
     <menu label="SamePlace" accesskey="P" insertbefore="helpMenu">
-      <menupopup id="sameplace-menu">
+      <menupopup id="sameplace-menu" onpopupshowing="sameplace.showingMainMenu(event);">
         <menu label="&menu.connect;" accesskey="C" oncommand="sameplace.selectedAccount(event);">
           <menupopup id="xmpp-popup-accounts"/>
         </menu>

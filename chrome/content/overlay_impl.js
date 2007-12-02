@@ -347,6 +347,14 @@ function initScriptlets() {
 // GUI REACTIONS
 // ----------------------------------------------------------------------
 
+function showingMainMenu(event) {
+    var toggleContactsKey = eval(pref.getCharPref('toggleContactsKey'));
+    var label = _('command-toggle').getAttribute('label');
+    _('command-toggle').setAttribute(
+        'label', label.replace(/\((.+?)\)/,
+                               '(' + keyDescToKeyRepresentation(toggleContactsKey) + ')'));
+}
+
 function selectedAccount(event) {
     var accountJid = event.target.value;
     if(XMPP.isUp(accountJid))
@@ -618,4 +626,28 @@ function upgradeCheck(id, versionPref, actions, ignoreTrailingParts) {
 
         pref.setCharPref(versionPref, curVersion);
     }
+}
+
+// Duplicated from sameplace_preferences_impl.js
+
+function keyDescToKeyRepresentation(desc) {
+    var modifiers = {
+        ctrlKey  : 'Control',
+        shiftKey : 'Shift',
+        altKey   : 'Alt',
+        metaKey  : 'Meta'
+    };
+
+    var repres = [];
+    
+    for(var name in modifiers)
+        if(desc[name])
+            repres.push(modifiers[name]);
+
+    if(desc.charCode)
+        repres.push(String.fromCharCode(desc.charCode))
+    else if(desc.keyCodeName)
+        repres.push(desc.keyCodeName.replace(/^DOM_VK_/, ''))
+
+    return repres.join('+');
 }
