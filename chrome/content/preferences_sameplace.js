@@ -24,4 +24,4 @@ var sameplacePrefs = {};
 Components
 .classes['@mozilla.org/moz/jssubscript-loader;1']
 .getService(Components.interfaces.mozIJSSubScriptLoader)
-    .loadSubScript('chrome://sameplace/content/preferences_impl.js', sameplacePrefs);
+    .loadSubScript('chrome://sameplace/content/preferences_sameplace_impl.js', sameplacePrefs);

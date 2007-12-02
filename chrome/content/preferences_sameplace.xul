@@ -26,7 +26,7 @@
   <prefpane id="sameplace-pane"
             orient="vertial">
     
-    <script type="application/x-javascript;version=1.7" src="preferences.js"/>
+    <script type="application/x-javascript;version=1.7" src="preferences_sameplace.js"/>
 
     <preferences>
       <preference id="sameplace-get-attention-on-message"
