@@ -50,16 +50,6 @@ function init(event) {
         <feature var="http://jabber.org/protocol/chatstates"/>
         </query>);
 
-
-    channel.on({
-        event     : 'iq',
-        direction : 'out',
-        stanza    : function(s) { return s.ns_auth::query != undefined; }
-    }, function() {
-        uncollapse(_('profile'));
-        collapse(_('offline'));
-    });
-
     channel.on({
         event: 'stream',
         state: 'close'
@@ -406,6 +396,9 @@ function requestedShowScriptletList(xulPopup) {
 // ----------------------------------------------------------------------
 
 function sentAvailablePresence(presence) {
+    uncollapse(_('profile'));
+    collapse(_('offline'));
+
     var status = presence.stanza.status.toString();
     if(status) {
         _('status-message').value = status;
