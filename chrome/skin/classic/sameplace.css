@@ -105,6 +105,7 @@ toolbarbutton[label="Status"] .toolbarbutton-icon,
 toolbarbutton[label="Tools"] .toolbarbutton-icon {
     width: 16px;
     height: 16px;
+    min-height: 16px;
 }
 
 toolbarbutton[label="People"] {
