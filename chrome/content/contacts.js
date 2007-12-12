@@ -79,13 +79,13 @@ function init() {
         }
     }, receivedMUCPresence);
     channel.on({
-        event     : 'iq',
+        event     : 'presence',
         direction : 'out',
         stanza    : function(s) {
-            return s.@type == 'set' &&
-                s.ns_private::query.ns_bookmarks::storage != undefined;
+            return (s.@type == undefined || s.@type == 'unavailable') &&
+                s.ns_muc::x == undefined && s.@to == undefined;
         }
-    }, authenticatedAccount);
+    }, function(presence) { requestMUCBookmarks(presence.account) });
     channel.on({
         event     : 'iq',
         direction : 'in',
@@ -348,10 +348,6 @@ function receivedSubscriptionPacket(presence) {
     });
     if(roster.stanza..ns_roster::item.(@jid == presence.stanza.@from))
         receivedSubscriptionApproval(presence);
-}
-
-function authenticatedAccount(iq) {
-    requestMUCBookmarks(iq.account);
 }
 
 function receivedMUCBookmarks(iq) {
