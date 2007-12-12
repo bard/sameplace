@@ -102,18 +102,16 @@ function init() {
         },
     }, receivedSubscriptionPacket);
 
-    XMPP.cache.fetch({
-        event     : 'iq',
-        direction : 'in',
-        stanza    : function(s) {
-            return s.ns_roster::query.length() > 0;
-        }
-    }).forEach(receivedRoster);
+    var accountsUp = XMPP.accounts.filter(XMPP.isUp);
+    accountsUp.forEach(requestRoster);
+    accountsUp.forEach(requestMUCBookmarks);
 
     XMPP.cache.fetch({
         event     : 'presence',
         direction : 'in',
     }).forEach(receivedPresence);
+
+    
 
     XMPP.cache.fetch({
         event     : 'iq',
@@ -291,6 +289,26 @@ function stoppedConversationWith(account, address) {
 // NETWORK ACTIONS
 // ----------------------------------------------------------------------
 
+function requestMUCBookmarks(account) {
+    XMPP.send(account,
+              <iq type='get'>
+              <query xmlns={ns_private}>
+              <storage xmlns={ns_bookmarks}/>
+              </query>
+              <cache-control xmlns={ns_x4m_in}/>
+              </iq>,
+              receivedMUCBookmarks);
+}
+
+function requestRoster(account) {
+    XMPP.send(account,
+              <iq type='get'>
+              <query xmlns={ns_roster}/>
+              <cache-control xmlns={ns_x4m_in}/>
+              </iq>,
+              receivedRoster);
+}
+
 function removeContact(account, address) {
     XMPP.send(account,
               <iq type="set"><query xmlns={ns_roster}>
@@ -303,16 +321,6 @@ function removeMUCBookmark(account, address) {
               <iq type="set">
               {delMUCBookmark(address, getMUCBookmarks(account))}
               </iq>);
-}
-
-function requestMUCBookmarks(account, action) {
-    XMPP.send(account,
-              <iq type="get">
-              <query xmlns={ns_private}>
-              <storage xmlns={ns_bookmarks}/>
-              </query>
-              </iq>,
-              function(reply) { if(typeof(action) == 'function') action(reply); });
 }
 
 function addContact(account, address, subscribe) {
