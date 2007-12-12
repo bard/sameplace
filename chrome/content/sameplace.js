@@ -102,25 +102,15 @@ function initNetworkReactions() {
             return s.ns_muc::x.length() > 0 && s.@type != 'unavailable'; 
        }
     }, function(presence) { sentMUCPresence(presence) });
-    
+
     channel.on({
-        event     : 'iq',
+        event     : 'presence',
         direction : 'out',
         stanza    : function(s) {
-            return s.ns_auth::query != undefined;
+            return (s.@type == undefined || s.@type == 'unavailable') &&
+                s.ns_muc::x == undefined && s.@to == undefined;
         }
-    }, function(iq) {
-        var replyListener = channel.on({
-            event     : 'iq',
-            direction : 'in',
-            stanza    : function(s) {
-                return s.@id == iq.stanza.@id && s.@type == 'result';
-            }
-        }, function(reply) {
-            channel.forget(replyListener);
-            connectedAccount(iq.account);
-        });
-    });    
+    }, function(presence) { sentAvailablePresence(presence) });
 }
 
 function initConversations() {
@@ -564,16 +554,6 @@ function requestedOpenConversation(type) {
 // function should instead be created that calls these ones and passes
 // the gathered data via function parameters.
 
-function requestBookmarks(account, action) {
-    XMPP.send(account,
-              <iq type="get">
-              <query xmlns={ns_private}>
-              <storage xmlns={ns_bookmarks}/>
-              </query>
-              </iq>,
-              function(reply) { if(typeof(action) == 'function') action(reply); });
-}
-
 function autojoinRooms(account) {
     function delayedJoinRoom(account, roomAddress, roomNick, delay) {
         window.setTimeout(
@@ -582,27 +562,27 @@ function autojoinRooms(account) {
             }, delay);
     }
 
-    XMPP.send(
-        account,
-        <iq type="get">
-        <query xmlns={ns_private}>
-        <storage xmlns={ns_bookmarks}/>
-        </query>
-        </iq>,
-        function(reply) {
-            if(reply.stanza.@type != 'result')
-                return;
-            var delay = 500;
-            for each(var conf in reply
-                     .stanza.ns_private::query
-                     .ns_bookmarks::storage
-                     .ns_bookmarks::conference) {
-                if(conf.@autojoin == 'true') {
-                    delayedJoinRoom(account, conf.@jid, XMPP.JID(account).username, delay)
-                    delay += 1000;
-                }
-            }
-        });
+    XMPP.send(account,
+              <iq type="get">
+              <query xmlns={ns_private}>
+              <storage xmlns={ns_bookmarks}/>
+              </query>
+              <cache-control xmlns={ns_x4m_in}/>
+              </iq>,
+              function(reply) {
+                  if(reply.stanza.@type != 'result')
+                      return;
+                  var delay = 500;
+                  for each(var conf in reply
+                           .stanza.ns_private::query
+                           .ns_bookmarks::storage
+                           .ns_bookmarks::conference) {
+                      if(conf.@autojoin == 'true') {
+                          delayedJoinRoom(account, conf.@jid, XMPP.JID(account).username, delay)
+                          delay += 1000;
+                      }
+                  }
+              });
 }
 
 function exitRoom(account, roomAddress, roomNick) {
@@ -622,14 +602,6 @@ function joinRoom(account, roomAddress, roomNick) {
 
 // NETWORK REACTIONS
 // ----------------------------------------------------------------------
-
-function connectedAccount(account) {
-    requestBookmarks(
-        account, function() {
-            if(top == getMostRecentWindow())
-                autojoinRooms(account);
-        });
-}
 
 function seenCachableMessage(message) {
     var account = message.session.name;
@@ -722,6 +694,10 @@ function seenDisplayableMessage(message) {
         });
     } else
         maybeSetUnread(panel);
+}
+
+function sentAvailablePresence(presence) {
+    autojoinRooms(presence.account);
 }
 
 function sentMUCPresence(presence) {
