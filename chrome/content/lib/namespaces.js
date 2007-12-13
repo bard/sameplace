@@ -37,3 +37,4 @@ const ns_chatstates = 'http://jabber.org/protocol/chatstates';
 const ns_event      = 'jabber:x:event';
 const ns_stanzas    = 'urn:ietf:params:xml:ns:xmpp-stanzas';
 const ns_x4m_in     = 'http://hyperstruct.net/xmpp4moz/protocol/internal';
+const ns_http_auth  = 'http://jabber.org/protocol/http-auth';
