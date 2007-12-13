@@ -47,6 +47,11 @@ var channel;
 // ----------------------------------------------------------------------
 
 function init() {
+    if(Cc['@mozilla.org/extensions/manager;1']
+       .getService(Ci.nsIExtensionManager)
+       .getItemForID('{73a6fe31-595d-460b-a920-fcc0f8843232}'))
+        window.alert(_('strings').getString('noscriptAlert'));
+
     getServerList(
         function(list) {
             var xulMenu = _('account-new.server-list').firstChild;
