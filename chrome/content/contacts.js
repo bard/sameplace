@@ -396,13 +396,12 @@ function receivedRoster(iq) {
 
 function receivedSubscriptionRequest(presence) {
     // Skip notification if appendNotification() not available (as in Firefox 1.5)
-    if(typeof(notify) == 'function')
-        notify('Request from ' + presence.stanza.@from,
-               'sameplace-presence-subscription',
-               null, notify.PRIORITY_INFO_HIGH,
-               [{label: 'View', accessKey: 'V', callback: viewRequest}]);
-    else
-        viewRequest();
+    var xulNotify = $('#notify')._;
+    xulNotify.appendNotification(
+        'Request from ' + presence.stanza.@from, // XXX localize
+        'sameplace-presence-subscription',
+        null, xulNotify.PRIORITY_INFO_HIGH,
+        [{label: 'View', accessKey: 'V', callback: viewRequest}]);
 
     function viewRequest() {
         var account = presence.session.name;
@@ -434,11 +433,11 @@ function receivedSubscriptionRequest(presence) {
 }
 
 function receivedSubscriptionApproval(presence) {
-    // Skip notification if appendNotification() not available (as in Firefox 1.5)
-    if(typeof(notify) == 'function')
-        notify(_('strings').getFormattedString('contactAccepted', [presence.stanza.@from]),
-               'sameplace-presence-subscription',
-               null, notify.PRIORITY_INFO_HIGH, []);
+    var xulNotify = $('#notify')._;
+    xulNotify.appendNotification(
+        _('strings').getFormattedString('contactAccepted', [presence.stanza.@from]),
+        'sameplace-presence-subscription',
+        null, xulNotify.PRIORITY_INFO_HIGH, []);
 }
 
 function receivedMUCPresence(presence) {
@@ -549,20 +548,4 @@ function clickedContact(contact) {
     selectEvent.initEvent('contact/select', true, false);
     contact.dispatchEvent(selectEvent);
 }
-
-
-// GUI UTILITIES (SPECIFIC)
-// ----------------------------------------------------------------------
-
-var notify;
-window.addEventListener('load', function(event) {
-    if(typeof($('#notify')._.appendNotification) == 'function') {
-        notify = function() {
-            return $('#notify')._.appendNotification.apply($('#notify')._, arguments);
-        }
-        for(var name in $('#notify')._)
-            if(name.match(/^PRIORITY_/))
-                notify[name] = $('#notify')._[name];
-    }
-}, false);
 
