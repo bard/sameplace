@@ -647,6 +647,13 @@ function seenOutgoingChatActivation(message) {
 }
 
 function seenDisplayableMessage(message) {
+    if(message.stanza.ns_http_auth::confirm != undefined)
+        // Balk at auth requests since these are handled elsewhere.
+        // We have to do this since auth requests usually have a
+        // <body> and upstream channel listener will send them our
+        // way.
+        return;
+
     function maybeSetUnread(conversation) {
         if(message.direction == 'in' &&
            !conversations.isCurrent(message.session.name,

@@ -156,7 +156,8 @@ function receivedMessage(message) {
     var contact = get(account, address) || add(account, address);
 
     if(contact.getAttribute('current') != 'true' &&
-       message.stanza.body.length() > 0) {
+       message.stanza.body != undefined &&
+       message.stanza.ns_http_auth::confirm == undefined) {
         var pending = $(contact).$('[role="pending"]')._;
         pending.value = parseInt(pending.value) + 1;
     }
