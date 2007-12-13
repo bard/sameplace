@@ -28,6 +28,9 @@ const pref = Cc['@mozilla.org/preferences-service;1']
 .getService(Ci.nsIPrefService)
 .getBranch('extensions.sameplace.');
 
+const ns_auth = 'jabber:iq:auth';
+const ns_http_auth  = 'http://jabber.org/protocol/http-auth';
+
 
 // GLOBAL STATE
 // ----------------------------------------------------------------------
@@ -69,8 +72,6 @@ function initOverlay(event) {
 }
 
 function initNetworkReactions() {
-    const ns_auth = 'jabber:iq:auth';
-
     channel = XMPP.createChannel();
     
     channel.on({
@@ -89,6 +90,17 @@ function initNetworkReactions() {
     }, function(message) {
         if(pref.getBoolPref('getAttentionOnMessage'))
             window.getAttention();
+    });
+
+    channel.on({
+        event     : 'message',
+        direction : 'in',
+        stanza    : function(s) {
+            return s.ns_http_auth::confirm != undefined;
+        }
+    }, function(message) {
+        if(window == getMostRecentWindow())
+            receivedAuthConfirmRequest(message);
     });
 }
 
@@ -341,6 +353,54 @@ function initScriptlets() {
                     'extensions.sameplace.',
                     'chrome://sameplace/content/scriptlet_sample.js');
     scriptlets.start();
+}
+
+
+// NETWORK REACTIONS
+// ----------------------------------------------------------------------
+
+function receivedAuthConfirmRequest(message) {
+    var request = message.stanza;
+
+    var response =
+        <message to={request.@from}>
+        <confirm xmlns={ns_http_auth}
+    method={request.ns_http_auth::confirm.@method}
+    url={request.ns_http_auth::confirm.@url}
+    id={request.ns_http_auth::confirm.@id}/>
+        </message>;
+
+    function onDeny() {
+        response.@type = 'error';
+        response.error =
+            <error code="401" type="auth">
+            <not-authorized xmlns="urn:ietf:params:xml:xmpp-stanzas"/>
+            </error>;
+        XMPP.send(message.account, response);
+    }
+
+    function onAuthorize() {
+        XMPP.send(message.account, response)
+    }
+
+    var userMessage = 'Someone (maybe you) tried to authenticate on ' + // XXX localize
+        request.ns_http_auth::confirm.@url + ' \n' +
+        'as ' + request.@to + ', with transaction ID "' +
+        request.ns_http_auth::confirm.@id + '". Authorize?'
+
+    var xulNotify = getBrowser().getNotificationBox();
+    if(xulNotify) {
+        xulNotify.appendNotification(
+            userMessage, 'sameplace-auth-confirm',
+            null, xulNotify.PRIORITY_INFO_HIGH,
+            [{label: 'Confirm', accessKey: 'C', callback: onAuthorize},
+             {label: 'Deny', accessKey: 'D', callback: onDeny}]);
+    } else {
+        if(window.confirm(userMessage))
+            onAuthorize();
+        else
+            onDeny();
+    }
 }
 
 
