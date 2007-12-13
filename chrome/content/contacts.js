@@ -110,16 +110,6 @@ function init() {
         event     : 'presence',
         direction : 'in',
     }).forEach(receivedPresence);
-
-    
-
-    XMPP.cache.fetch({
-        event     : 'iq',
-        direction : 'in',
-        stanza    : function(s) {
-            return s.ns_private::query.ns_bookmarks::storage != undefined;
-        }
-    }).forEach(receivedMUCBookmarks);
 }
 
 function finish() {
