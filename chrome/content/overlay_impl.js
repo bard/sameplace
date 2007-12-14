@@ -96,7 +96,8 @@ function initNetworkReactions() {
     channel.on({
         event     : 'message',
         stanza    : function(s) {
-            return s.ns_x4m_ext::share != undefined;
+            return (s.ns_x4m_ext::share != undefined &&
+                    s.@type != 'error');
         }
     }, function(message) {
         if(window == getMostRecentWindow())
