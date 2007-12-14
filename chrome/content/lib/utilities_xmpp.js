@@ -19,32 +19,6 @@
 */
 
 
-function isMUC(account, address) {
-    var ns_muc = 'http://jabber.org/protocol/muc';
-    var ns_private = 'jabber:iq:private';
-    var ns_bookmarks = 'storage:bookmarks';
-
-    return XMPP.cache.fetch({
-        event     : 'presence',
-        direction : 'out',
-        account   : account,
-        stanza    : function(s) {
-                return (s.@to != undefined &&
-                        XMPP.JID(s.@to).address == address &&
-                        s.ns_muc::x != undefined);
-            }}).length > 0 ||
-        XMPP.cache.fetch({
-            event     : 'iq',
-            direction : 'in',
-            account   : account,
-            stanza    : function(s) {
-                    return (s.ns_private::query
-                            .ns_bookmarks::storage
-                            .ns_bookmarks::conference
-                            .(@jid == address) != undefined);
-                }}).length > 0;
-}
-
 function displayNameFor(presence) {
    var memo = arguments.callee.memo || (arguments.callee.memo = {});
    var stanzaString = presence.stanza.toXMLString();

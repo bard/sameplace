@@ -152,7 +152,7 @@ function initConversations() {
             var account = attr(panel, 'account');
             var address = attr(panel, 'address');
             
-            if(isMUC(account, address))
+            if(XMPP.isMUC(account, address))
                 exitRoom(account, address,
                          XMPP.JID(getJoinPresence(account, address).stanza.@to).resource);
 
@@ -486,7 +486,7 @@ function startInteraction(account, address, url) {
     // address} coordinates, and no clue that it's a room, not a
     // person.  Since the course of action for opening a multi-user
     // conversation is different, we need the following check.
-    if(isMUC(account, address) && !conversations.isOpen(account, address)) {
+    if(XMPP.isMUC(account, address) && !conversations.isOpen(account, address)) {
         window.openDialog('chrome://sameplace/content/join_room.xul',
                           'sameplace-open-conversation', 'centerscreen',
                           account, address);

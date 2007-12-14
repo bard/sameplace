@@ -474,7 +474,7 @@ function showingContactContextMenu(xulPopup) {
     var address = attr(document.popupNode, 'address');
 
     xulPopup.setAttribute('class',
-                          isMUC(account, address) ? 'groupchat' : 'chat');
+                          XMPP.isMUC(account, address) ? 'groupchat' : 'chat');
 }
 
 function requestedUpdateContactTooltip(element) {
