@@ -30,6 +30,7 @@ const pref = Cc['@mozilla.org/preferences-service;1']
 
 const ns_auth = 'jabber:iq:auth';
 const ns_http_auth  = 'http://jabber.org/protocol/http-auth';
+const ns_x4m_ext = 'http://hyperstruct.net/xmpp4moz/protocol/external';
 
 
 // GLOBAL STATE
@@ -90,6 +91,16 @@ function initNetworkReactions() {
     }, function(message) {
         if(pref.getBoolPref('getAttentionOnMessage'))
             window.getAttention();
+    });
+
+    channel.on({
+        event     : 'message',
+        stanza    : function(s) {
+            return s.ns_x4m_ext::share != undefined;
+        }
+    }, function(message) {
+        if(window == getMostRecentWindow())
+            seenSharedAppNegotiation(message);
     });
 
     channel.on({
@@ -358,6 +369,114 @@ function initScriptlets() {
 
 // NETWORK REACTIONS
 // ----------------------------------------------------------------------
+
+function seenSharedAppNegotiation(message) {
+    if(!('addTab' in getBrowser()))
+        return;
+
+    var url = message.stanza.ns_x4m_ext::share.@url;
+    var xulNotify = getBrowser().getNotificationBox();
+    if(!xulNotify)
+        return;
+
+    function interact(account, address, url, panel, nextAction) { // XXX duplicated
+        function activate() {
+            XMPP.connectPanel(panel, account, address, /^javascript:/.test(url));
+        }
+
+        nextAction = nextAction || function() {};
+        // XXX *maybe* these should be moved to the conversations facade
+        // (but what to do for panels not handled by the facade? hmmm...)
+        // also, why is it not enough to set these in jsapi.js? hmmm
+        panel.setAttribute('account', account);
+        panel.setAttribute('address', address);
+
+        if(!url) {
+            activate();
+            nextAction();
+        }
+        else if(url.match(/^javascript:/)) {
+            panel.loadURI(url);
+            activate();
+            nextAction();
+        }
+        else {
+            afterLoad(panel, function(panel) {
+                activate();
+                nextAction();
+            });
+            panel.setAttribute('src', url);
+        }
+    }
+
+    function afterLoad(panel, action) { // XXX duplicated
+        // catch the load event of panel's document in capturing
+        // phase. then catch the load event of the contained window in
+        // bubbling phase (we can't do this before there's a window,
+        // obviously.)
+
+        panel.addEventListener('load', function(event) {
+            if(event.target != panel.contentDocument)
+                return;
+            panel.removeEventListener('load', arguments.callee, true);
+            
+            // The following appears not to work if reference to
+            // panel is not the one carried by event object.
+            panel = event.currentTarget;
+            panel.contentWindow.addEventListener('load', function(event) {
+                action(panel);
+            }, false);
+        }, true);
+    }
+
+    function onAccept() {
+        XMPP.send(message.account,
+                  <message to={message.stanza.@from}>
+                  <share xmlns={ns_x4m_ext} response='accept' url={url}/>
+                  </message>);
+
+        if(!(url.match(/^javascript:/) || getBrowser().currentURI.spec == 'about:blank'))
+            getBrowser().selectedTab = getBrowser().addTab();
+        
+        interact(message.account, XMPP.JID(message.stanza.@from).address,
+                 url == 'current' ? null : url,
+                 getBrowser().selectedBrowser);
+    }
+
+    function onDecline() {
+        XMPP.send(message.account,
+                  <message to={message.stanza.@from}>
+                  <share xmlns={ns_x4m_ext} response='decline' url={url}/>
+                  </message>);
+    }
+
+    if(message.direction == 'in') {
+        switch(message.stanza.ns_x4m_ext::share.@response.toString()) {
+        case '':
+            // it's a request
+            xulNotify.appendNotification(
+                message.stanza.@from + ' invites you to interact on ' +
+                    url + '. Do you accept?', // XXX localize
+                    'sameplace-shareapp-request',
+                null, xulNotify.PRIORITY_INFO_HIGH,
+                [{label: 'Accept', accessKey: 'A', callback: onAccept},
+                 {label: 'Decline', accessKey: 'D', callback: onDecline}]);
+            break;
+        case 'accept':
+            xulNotify.appendNotification(
+                message.stanza.@from + ' accepted to interact on ' + url,
+                    'sameplace-shareapp-request',
+                null, xulNotify.PRIORITY_INFO_HIGH);
+            break;
+        case 'decline':
+            xulNotify.appendNotification(
+                message.stanza.@from + ' declined to interact on ' + url,
+                    'sameplace-shareapp-request',
+                null, xulNotify.PRIORITY_INFO_HIGH);
+            break;
+        }
+    }
+}
 
 function receivedAuthConfirmRequest(message) {
     var request = message.stanza;

@@ -381,12 +381,21 @@ function interact(account, address, url, panel, nextAction) {
         XMPP.connectPanel(panel, account, address, /^javascript:/.test(url));
     }
 
+    function notifyContact() {
+        if(url != getDefaultAppUrl())
+            XMPP.send(account,
+                      <message to={address}>
+                      <share xmlns={ns_x4m_ext} url={panel.currentURI.spec}/>
+                      </message>);
+    }
+
     nextAction = nextAction || function() {};
     panel.setAttribute('account', account);
     panel.setAttribute('address', address);
 
     if(!url) {
         activate();
+        notifyContact();
         nextAction();
     }
     else if(url.match(/^javascript:/)) {
@@ -397,6 +406,7 @@ function interact(account, address, url, panel, nextAction) {
     else {
         afterLoad(panel, function(panel) {
             activate();
+            notifyContact();
             nextAction();
         });
         panel.setAttribute('src', url);
