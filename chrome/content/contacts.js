@@ -73,6 +73,13 @@ function init() {
     }, receivedSubscriptionRequest);
     channel.on({
         event     : 'presence',
+        direction : 'out',
+        stanza    : function(s) {
+            return s.@type == 'subscribed';
+        }
+    }, sentSubscriptionConfirmation);
+    channel.on({
+        event     : 'presence',
         direction : 'in',
         stanza    : function(s) {
             return s.ns_muc_user::x.length() > 0;
@@ -385,12 +392,21 @@ function receivedRoster(iq) {
     }
 }
 
+function sentSubscriptionConfirmation(presence) {
+    var xulNotify = $('#notify')._;
+    var xulNotification = xulNotify
+        .getNotificationWithValue('subscribe-' + presence.stanza.@to);
+
+    if(xulNotification)
+        xulNotify.removeNotification(xulNotification);
+}
+
 function receivedSubscriptionRequest(presence) {
     // Skip notification if appendNotification() not available (as in Firefox 1.5)
     var xulNotify = $('#notify')._;
     xulNotify.appendNotification(
         'Request from ' + presence.stanza.@from, // XXX localize
-        'sameplace-presence-subscription',
+        'subscribe-' + presence.stanza.@from,
         null, xulNotify.PRIORITY_INFO_HIGH,
         [{label: 'View', accessKey: 'V', callback: viewRequest}]);
 
