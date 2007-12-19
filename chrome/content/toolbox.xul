@@ -71,6 +71,9 @@
     <command id="run-wizard" oncommand="runWizard();"
              label="&command.run_wizard.label;"
              accesskey="&command.run_wizard.accesskey;"/>
+    <command id="run-new-wizard" oncommand="runNewWizard();"
+             label="&command.run_wizard.label; (NEW)"
+             accesskey="&command.run_wizard.accesskey;"/>
     <command id="view-help" oncommand="viewHelp();"
              label="&command.view_help_pages.label;"
              accesskey="&command.view_help_pages.accesskey;"
@@ -165,6 +168,7 @@
         <toolbarbutton label="Tools" type="menu">
           <menupopup>
             <menuitem class="menuitem-iconic" command="run-wizard"/>
+            <menuitem class="menuitem-iconic" command="run-new-wizard"/>
             <menu class="menuitem-iconic" label="&menu.scriptlets.label;">
               <menupopup id="scriptlets-popup" onpopupshowing="requestedShowScriptletList(this);">
                 <menuseparator/>

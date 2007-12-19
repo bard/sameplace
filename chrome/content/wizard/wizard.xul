@@ -1,0 +1,374 @@
+<?xml version="1.0"?>
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://sameplace/skin/wizard/wizard.css" "text/css"?>
+
+<wizard id="wizard"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        title="SamePlace Configuration Wizard"
+        onload="init();"
+        onunload="finish();">
+
+  <script type="application/x-javascript;version=1.7" src="chrome://xmpp4moz/content/xmpp.js"/>
+  <script type="application/x-javascript;version=1.7" src="../lib/getElementsBySelector.js"/>
+  <script type="application/x-javascript;version=1.7" src="wizard.js"/>
+
+  <wizardpage id="page-selection" pageid="selection"
+              flex="1" align="center"
+              onpageshow="shownPageSelection();"> <!-- XXX can't center from css, why? -->
+
+    <description class="header">
+      Select the services you want to connect to:
+    </description>
+
+    <hbox id="services"
+          onmouseover="var service = $(event.target, '^ .service');
+                       if(service) hoveredService(service);"
+          onmouseout="$('#service-infos').selectedIndex = -1;"
+          onclick="var service = $(event.target, '^ .service');
+                   if(service) selectedService(service);">
+      <vbox class="service gtalk"><image/></vbox>
+      <vbox class="service jabber"><image/></vbox>
+      <vbox class="service sameplace"><image/></vbox>
+      <vbox class="service twitter"><image/></vbox>
+      <vbox class="service aim"><image/></vbox>
+      <vbox class="service msn"><image/></vbox>
+    </hbox>
+
+    <deck id="service-infos" selectedIndex="-1">
+      <vbox class="service-info" id="service-info-gtalk">
+        <hbox>
+          <vbox class="service-ok">
+            <image/>
+          </vbox>
+          <vbox flex="1">
+            <description>
+              GMail [Description]
+            </description>
+
+            <description style="font-style: italic;">
+              [Notices]
+            </description>
+          </vbox>
+        </hbox>
+      </vbox>
+
+      <vbox class="service-info" id="service-info-jabber">
+        <hbox>
+          <vbox class="service-ok">
+            <image/>
+          </vbox>
+          <vbox flex="1">
+            <description>
+              Jabber [Description]
+            </description>
+
+            <description style="font-style: italic;">
+              [Notices]
+            </description>
+          </vbox>
+        </hbox>
+      </vbox>
+
+      <vbox class="service-info" id="service-info-sameplace">
+        <hbox>
+          <vbox class="service-ok">
+            <image/>
+          </vbox>
+          <vbox flex="1">
+            <description>
+              SamePlace [Description]
+            </description>
+
+            <description style="font-style: italic;">
+              [Notices]
+            </description>
+          </vbox>
+        </hbox>
+      </vbox>
+
+      <vbox class="service-info" id="service-info-twitter">
+        <hbox>
+          <vbox class="service-external">
+            <image/>
+          </vbox>
+          <vbox flex="1">
+            <description>
+              Twitter [Description]
+            </description>
+
+            <description style="font-style: italic;">
+              [Notices]
+            </description>
+          </vbox>
+        </hbox>
+      </vbox>
+
+      <vbox class="service-info" id="service-info-msn">
+        <hbox>
+          <vbox class="service-warning">
+            <image/>
+          </vbox>
+          <vbox flex="1">
+            <description>
+              MSN [Description]
+            </description>
+
+            <description style="font-style: italic;">
+              [Notices]
+            </description>
+          </vbox>
+        </hbox>
+      </vbox>
+
+      <vbox class="service-info" id="service-info-aim">
+        <hbox>
+          <vbox class="service-warning">
+            <image/>
+          </vbox>
+          <vbox flex="1">
+            <description>
+              AIM [Description]
+            </description>
+
+            <description style="font-style: italic;">
+              [Notices]
+            </description>
+          </vbox>
+        </hbox>
+      </vbox>
+    </deck>
+  </wizardpage>
+
+  <wizardpage pageid="jabber" flex="1"
+              onpageshow="shownPageJabber();"
+              onpageadvanced="return advancedPageJabber(this);"
+              oninput="updateJabberConfig();">
+    <hbox flex="1">
+      <spacer flex="1"/>
+
+      <vbox class="content" flex="0">
+        <grid>
+          <columns>
+            <column/>
+            <column flex="1"/>
+          </columns>
+          <rows>
+            <row>
+              <label value="Username:"/>
+              <textbox class="username"/>
+            </row>
+            <row class="domain-field">
+              <label value="Domain:"/>
+              <vbox>
+                <textbox class="domain-jabber"/>
+                <menulist class="domain-gtalk"
+                          editable="true"
+                          value="gmail.com"
+                          oncommand="if(this.value == 'Your own...')
+                                     this.select();
+                                     else
+                                     updateJabberConfig();">
+                  <menupopup>
+                    <menuitem label="gmail.com"/>
+                    <menuitem label="googlemail.com"/>
+                    <menuseparator/>
+                    <menuitem label="Your own..."/>
+                  </menupopup>
+                </menulist>
+                <label class="domain-sameplace"
+                       value="sameplace.cc"/>
+                <label class="domain-twitter"
+                       value="twitter.x4m.localhost"/>
+              </vbox>
+            </row>
+            <row>
+              <label value="Password:"/>
+              <textbox class="password" type="password"/>
+            </row>
+            <row>
+              <label class="password-confirm-label"
+                     value="Confirm password:"/>
+              <textbox class="password-confirm" type="password"/>
+            </row>
+          </rows>
+        </grid>
+
+        <groupbox class="address-box">
+          <caption label="Your ID"/>
+          <label class="address" flex="1"/>
+        </groupbox>
+
+        <vbox>
+          <checkbox class="auto-login"
+                    label="Login on startup"
+                    checked="true"/>
+          <checkbox class="password-remember"
+                    label="Remember password"
+                    checked="true"/>
+        </vbox>
+
+        <vbox class="progress-notifications">
+          <progressmeter class="progress" mode="undetermined"/>
+
+          <vbox class="progress-success">
+            <description>
+              Account verified!
+            </description>            
+          </vbox>
+
+          <vbox class="progress-failure">
+            <description>
+              Failure. :-(
+            </description>
+
+            <description>
+              If you tried to register a new account, the username is
+              already taken.  If this is an existing account, you
+              probably provided the wrong password.  If this is a
+              non-Jabber account, service might not support
+              registration.
+            </description>
+          </vbox>
+        </vbox>
+
+        <spacer flex="1"/>
+
+        <grid class="config-advanced" hidden="true">
+          <columns>
+            <column/>
+            <column flex="1"/>
+          </columns>
+          <rows>
+            <row>
+              <vbox>
+                <label value="Resource:"/>
+                <description>
+                  E.g.: Home, Office, ...
+                </description>
+              </vbox>
+              <textbox class="resource" value="SamePlace"/>
+            </row>
+
+            <row>
+              <label value="Server:"/>
+              <textbox class="connection-server"/>
+            </row>
+
+            <row>
+              <label value="Port:"/>
+              <textbox class="connection-port" value="5223"/>
+            </row>
+
+            <row>
+              <label value="Encryption:"/>
+              <radiogroup class="connection-security"
+                          value="1" orient="horizontal">
+                <radio value="1" label="SSL" selected="true" flex="1"/>
+                <radio value="0" label="None" flex="1"/>
+              </radiogroup>
+            </row>
+          </rows>
+        </grid>
+
+        <hbox pack="end">
+          <button class="config-advanced-button"
+                  label="Advanced..."
+                  oncommand="$(this, '^ .content .config-advanced').hidden =
+                             !$(this, '^ .content .config-advanced').hidden;"/>
+        </hbox>
+      </vbox>
+
+      <vbox flex="1" align="start">
+        <vbox class="logo">
+          <image/>
+        </vbox>
+
+        <vbox class="logo next">
+          <image/>
+        </vbox>
+      </vbox>
+    </hbox>
+  </wizardpage>
+
+  <wizardpage pageid="transport"
+              flex="1"
+              onpageshow="shownPageTransport();"
+              onpageadvanced="return advancedPageTransport(this);"
+              oninput="updateTransportConfig();">
+    <hbox flex="1">
+      <spacer flex="1"/>
+
+      <vbox class="content" flex="0">
+        <grid>
+          <columns>
+            <column/>
+            <column flex="1"/>
+          </columns>
+          <rows>
+            <row>
+              <label value="Username:"/>
+              <vbox>
+                <textbox class="username"/>
+                <description class="example msn">
+                  Example: john@hotmail.com
+                </description>
+                <description class="example aim">
+                  Example: john, mary
+                </description>
+              </vbox>
+            </row>
+            <row>
+              <label value="Password:"/>
+              <textbox class="password" type="password"/>
+            </row>
+            <row>
+              <label class="password-confirm-label" value="Confirm password:"/>
+              <textbox class="password-confirm" type="password"/>
+            </row>
+          </rows>
+        </grid>
+
+        <vbox class="progress-notifications">
+          <progressmeter class="progress" mode="undetermined"/>
+
+          <vbox class="progress-success">
+            <description>
+              Configured!
+            </description>            
+          </vbox>
+
+          <vbox class="progress-failure">
+            <description>
+              Failure. :-(
+            </description>
+
+            <description>
+              If you tried to register a new account, the username is
+              already taken.  If this is an existing account, you
+              probably provided the wrong password.  If this is a
+              non-Jabber account, service might not support
+              registration.
+            </description>
+          </vbox>
+        </vbox>
+      </vbox>
+
+      <vbox flex="1" align="start">
+        <vbox class="logo prev">
+          <image/>
+        </vbox>
+
+        <vbox class="logo">
+          <image/>
+        </vbox>
+      </vbox>
+    </hbox>
+  </wizardpage>
+
+  <wizardpage pageid="finish" pack="center" align="center">
+    <description style="font-size: 30px;">
+      Done!
+    </description>
+  </wizardpage>
+</wizard>

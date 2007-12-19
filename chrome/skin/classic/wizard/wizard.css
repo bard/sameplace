@@ -1,0 +1,194 @@
+/* GENERAL */
+
+description.header {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+row {
+    -moz-box-align: center;
+}
+
+wizardpage .content {
+    width: 350px;
+}
+
+description.example {
+    font-size: smaller;
+}
+
+label[signal-error="true"] { color: red; }
+
+
+.logo {
+    margin-left: 10px;
+    margin-bottom: 30px;
+    font-size: smaller;
+}
+
+.logo image {
+    width: 74px;
+    height: 74px;
+    padding: 5px;
+    -moz-border-radius: 8px;
+    border: none;
+    background-color: -moz-buttonhoverface;
+}
+
+.logo.next image,
+.logo.prev image {
+    border: 1px solid -moz-buttonhoverface;
+    background-color: transparent;
+}
+
+.service-info,
+.progress-notifications .progress-success,
+.progress-notifications .progress-failure { /* find commond class */
+    width: 350px;
+    -moz-border-radius: 15px;
+    border: 1px solid #b4b4b4;
+    background: #f0f0f0;
+    margin: 1em;
+    padding: 1em;
+}
+
+
+wizardpage .progress,
+wizardpage .progress-success,
+wizardpage .progress-failure {
+    display: none;
+}
+
+wizardpage .progress-success > description:first-child,
+wizardpage .progress-failure > description:first-child {
+    font-size: 18px;
+    text-align: center;
+}
+
+wizardpage[state="verifying"] .progress,
+wizardpage[state="verified"] .progress-success,
+wizardpage[state="failure"] .progress-failure {
+    display: -moz-box;
+}
+
+
+
+/* SERVICE SELECTION PAGE */
+
+[pageid="selection"] > hbox {
+    margin-top: 2em;
+}
+
+[pageid="selection"] {
+    -moz-box-align: center; /* not working, why? */
+}
+
+[pageid="selection"] .service {
+    width: 72px; height: 72px;
+    border: 1px solid transparent;
+    -moz-appearance: none;
+    -moz-border-radius: 15px;
+    -moz-box-align: center;
+    -moz-box-pack: center;
+}
+
+[pageid="selection"] .service:hover {
+    background-color: -moz-buttonhoverface;
+}
+
+[pageid="selection"] .service image {
+    width: 64px; 
+    height: 64px;
+}
+
+[pageid="selection"] .service.gtalk     { list-style-image: url("services/gtalk.png"); }
+[pageid="selection"] .service.jabber    { list-style-image: url("services/jabber.png"); }
+[pageid="selection"] .service.sameplace { list-style-image: url("services/sameplace.png"); }
+[pageid="selection"] .service.msn       { list-style-image: url("services/msn.png"); }
+[pageid="selection"] .service.aim       { list-style-image: url("services/aim.png"); }
+[pageid="selection"] .service.twitter   { list-style-image: url("services/twitter.png"); }
+
+[pageid="selection"] .service-info image { padding: 5px 10px 0 5px; }
+[pageid="selection"] .service-info .service-warning { list-style-image: url("icon_info.png"); }
+[pageid="selection"] .service-info .service-ok      { list-style-image: url("icon_ok.png");   }
+
+[pageid="selection"] #service-infos > vbox {
+    width: 300px;
+    -moz-border-radius: 15px;
+    border: 1px solid #b4b4b4;
+    background: #f0f0f0;
+    margin: 1em;
+    padding: 1em;
+}
+
+
+/* JABBER CONFIGURATION PAGE */
+
+[pageid="jabber"] .address {
+    font-weight: bold;
+    text-align: center;
+}
+
+[pageid="jabber"] .auto-login {
+    margin-top: 10px;
+}
+
+[pageid="jabber"] .config-advanced-button { /* hack */
+    font-size: smaller;
+    margin-top: 10px;
+}
+
+wizardpage:not([state="configuring"]) .progress-notifications {
+    -moz-box-pack: center;
+    display: -moz-box;
+    height: 80px;
+}
+
+
+/* config item visibility */
+
+[pageid="jabber"] .domain-jabber,
+[pageid="jabber"] .domain-gtalk,
+[pageid="jabber"] .domain-sameplace,
+[pageid="jabber"] .domain-twitter {
+    display: none;
+}
+
+[pageid="jabber"][service="jabber"]    .domain-jabber    { display: -moz-box; }
+[pageid="jabber"][service="gtalk"]     .domain-gtalk     { display: -moz-box; }
+[pageid="jabber"][service="sameplace"] .domain-sameplace { display: -moz-box; }
+[pageid="jabber"][service="twitter"]   .domain-twitter   { display: -moz-box; }
+
+[pageid="jabber"][service="jabber"]    .logo { list-style-image: url("services/jabber.png"); }
+[pageid="jabber"][service="gtalk"]     .logo { list-style-image: url("services/gtalk.png"); }
+[pageid="jabber"][service="sameplace"] .logo { list-style-image: url("services/sameplace.png"); }
+[pageid="jabber"][service="twitter"]   .logo { list-style-image: url("services/twitter.png"); }
+
+
+[pageid="jabber"][service="sameplace"] .domain-field,
+[pageid="jabber"][service="twitter"] .domain-field {
+    display: none;
+}
+
+[pageid="jabber"][service="twitter"] .address-box,
+[pageid="jabber"][service="twitter"] .config-advanced-button {
+    display: none;
+}
+
+[pageid="jabber"] .logo.next               { display: none; }
+[pageid="jabber"][next-service] .logo.next { display: -moz-box; }
+[pageid="jabber"][next-service="msn"] .logo.next { list-style-image: url("services/msn.png"); }
+[pageid="jabber"][next-service="aim"] .logo.next { list-style-image: url("services/aim.png"); }
+
+
+/* TRANSPORT CONFIGURATION PAGE */
+
+[pageid="transport"][service="aim"] .logo { list-style-image: url("services/aim.png"); }
+[pageid="transport"][service="msn"] .logo { list-style-image: url("services/msn.png"); }
+[pageid="transport"] .example { display: none; }
+[pageid="transport"][service="aim"] .example.aim { display: -moz-box; }
+[pageid="transport"][service="msn"] .example.msn { display: -moz-box; }
+
+[pageid="transport"] .logo.prev               { display: none; }
+[pageid="transport"][prev-service] .logo.prev { display: -moz-box; }
+[pageid="transport"][prev-service="sameplace"] .logo.prev { list-style-image: url("services/sameplace.png"); }

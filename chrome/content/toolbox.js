@@ -170,6 +170,12 @@ function runWizard() {
         'sameplace-wizard', 'chrome');
 }
 
+function runNewWizard() {
+    window.openDialog(
+        'chrome://sameplace/content/wizard/wizard.xul',
+        'sameplace-wizard', 'chrome');
+}
+
 function importContacts() {
     var input = { value: 'msn.jabber.sameplace.cc' };
     
