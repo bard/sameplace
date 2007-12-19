@@ -91,7 +91,8 @@ function initNetworkReactions() {
     channel.on({
         event  : 'message',
         stanza : function(s) {
-            return s.@type != 'error' && s.body.text() != undefined;
+            return ((s.@type != 'error' && s.body.text() != undefined) ||
+                    (s.@type == 'error'));
         }
     }, function(message) { seenCachableMessage(message); });
     
