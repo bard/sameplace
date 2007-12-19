@@ -101,13 +101,17 @@ function init() {
                 s.ns_private::query.ns_bookmarks::storage != undefined;
         }
     }, receivedMUCBookmarks);
-    channel.on({
-        event     : 'presence',
-        direction : 'in',
-        stanza    : function(s) {
-            return s.@type == 'subscribe';
-        },
-    }, receivedSubscriptionPacket);
+
+    // XXX Ultimately triggers a "foobar has accepted you".  But
+    // seeing foobar in the contact list is probably a sufficient
+    // notification.
+    //     channel.on({
+    //         event     : 'presence',
+    //         direction : 'in',
+    //         stanza    : function(s) {
+    //             return s.@type == 'subscribe';
+    //         },
+    //     }, receivedSubscriptionPacket);
 
     var accountsUp = XMPP.accounts.filter(XMPP.isUp);
     accountsUp.forEach(requestRoster);
@@ -343,18 +347,18 @@ function denySubscriptionRequest(account, address) {
 // NETWORK REACTIONS
 // ----------------------------------------------------------------------
 
-function receivedSubscriptionPacket(presence) {
-    var roster = XMPP.cache.find({
-        event     : 'iq',
-        direction : 'in',
-        account   : presence.account,
-        stanza    : function(s) {
-            return s.ns_roster::query != undefined
-        }
-    });
-    if(roster.stanza..ns_roster::item.(@jid == presence.stanza.@from))
-        receivedSubscriptionApproval(presence);
-}
+// function receivedSubscriptionPacket(presence) {
+//     var roster = XMPP.cache.find({
+//         event     : 'iq',
+//         direction : 'in',
+//         account   : presence.account,
+//         stanza    : function(s) {
+//             return s.ns_roster::query != undefined
+//         }
+//     });
+//     if(roster.stanza..ns_roster::item.(@jid == presence.stanza.@from))
+//         receivedSubscriptionApproval(presence);
+// }
 
 function receivedMUCBookmarks(iq) {
     $('#contacts [role="contact"][bookmark="true"]')._all.forEach(
@@ -402,7 +406,6 @@ function sentSubscriptionConfirmation(presence) {
 }
 
 function receivedSubscriptionRequest(presence) {
-    // Skip notification if appendNotification() not available (as in Firefox 1.5)
     var xulNotify = $('#notify')._;
     xulNotify.appendNotification(
         'Request from ' + presence.stanza.@from, // XXX localize
@@ -439,13 +442,13 @@ function receivedSubscriptionRequest(presence) {
     }
 }
 
-function receivedSubscriptionApproval(presence) {
-    var xulNotify = $('#notify')._;
-    xulNotify.appendNotification(
-        _('strings').getFormattedString('contactAccepted', [presence.stanza.@from]),
-        'sameplace-presence-subscription',
-        null, xulNotify.PRIORITY_INFO_HIGH, []);
-}
+// function receivedSubscriptionApproval(presence) {
+//     var xulNotify = $('#notify')._;
+//     xulNotify.appendNotification(
+//         _('strings').getFormattedString('contactAccepted', [presence.stanza.@from]),
+//         'sameplace-presence-subscription',
+//         null, xulNotify.PRIORITY_INFO_HIGH, []);
+// }
 
 function receivedMUCPresence(presence) {
     resourceChangedPresence(presence.account,
