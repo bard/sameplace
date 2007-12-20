@@ -57,7 +57,7 @@ function showingPopup(event) {
         var address = XMPP.JID(presence.stanza.@from).address;
         return makeContactItem(presence.account,
                                address,
-                               XMPP.nickFor(presence.account, address)
+                               XMPP.nickFor(presence.account, address),
                                presence.stanza.show.toString());
     });
 
