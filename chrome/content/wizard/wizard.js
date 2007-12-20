@@ -68,8 +68,6 @@ function updateJabberConfig() {
         break;
     }
 
-    $(page, '.password-remember').checked = (password != '');
-
     $(page, '.password-confirm-label').setAttribute(
         'signal-error',
         (passwordConfirm.length == password.length &&

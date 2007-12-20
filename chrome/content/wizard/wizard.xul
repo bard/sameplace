@@ -21,20 +21,21 @@
       Select the services you want to connect to:
     </description>
 
-    <hbox id="services"
-          onmouseover="var service = $(event.target, '^ .service');
-                       if(service) hoveredService(service);"
-          onmouseout="$('#service-infos').selectedIndex = -1;"
-          onclick="var service = $(event.target, '^ .service');
-                   if(service) selectedService(service);">
+    <description id="services"
+                 style="text-align: center;"
+                 onmouseover="var service = $(event.target, '^ .service');
+                              if(service) hoveredService(service);"
+                 onmouseout="$('#service-infos').selectedIndex = -1;"
+                 onclick="var service = $(event.target, '^ .service');
+                          if(service) selectedService(service);">
       <vbox class="service gtalk"><image/></vbox>
       <vbox class="service jabber"><image/></vbox>
       <vbox class="service sameplace"><image/></vbox>
       <vbox class="service twitter"><image/></vbox>
       <vbox class="service aim"><image/></vbox>
       <vbox class="service msn"><image/></vbox>
-    </hbox>
-
+    </description>
+    
     <deck id="service-infos" selectedIndex="-1">
       <vbox class="service-info" id="service-info-gtalk">
         <hbox>
@@ -203,9 +204,6 @@
           <checkbox class="auto-login"
                     label="Login on startup"
                     checked="true"/>
-          <checkbox class="password-remember"
-                    label="Remember password"
-                    checked="true"/>
         </vbox>
 
         <vbox class="progress-notifications">
@@ -241,13 +239,13 @@
           </columns>
           <rows>
             <row>
+              <label value="Resource:"/>
               <vbox>
-                <label value="Resource:"/>
-                <description>
+                <textbox class="resource" value="SamePlace"/>
+                <description class="example">
                   E.g.: Home, Office, ...
                 </description>
               </vbox>
-              <textbox class="resource" value="SamePlace"/>
             </row>
 
             <row>
