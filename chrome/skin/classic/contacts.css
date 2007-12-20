@@ -105,17 +105,6 @@
 
 /* STATUS INDICATOR END */
 
-#contacts label[role="open"],
-#contacts label[role="online"],
-#contacts label[role="offline"] {
-    background: url('label-bg.png') repeat-y;
-    font-size: smaller;
-    font-style: italic;
-    margin-left: 0;
-    margin-top: 2px;
-    padding-left: 1em;
-}
-
 #contacts [role="contact"][chatstate="active"] [role="name"]{
     color: black;
 }
