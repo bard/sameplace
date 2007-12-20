@@ -37,7 +37,8 @@ const ns_x4m_ext = 'http://hyperstruct.net/xmpp4moz/protocol/external';
 // ----------------------------------------------------------------------
 
 var channel;
-var scriptlets = load('chrome://sameplace/contact/facades/scriptlets.js');
+var scriptlets = load('chrome://sameplace/contact/facades/scriptlets.js', {});
+var sendTo = load('chrome://sameplace/contact/send_to.js', {});
 
 
 // INITIALIZATION
@@ -725,15 +726,27 @@ function openURL(url) {
                      .newURI(url, null, null));
 }
 
-function load(url) {
-    var context = {};
-    Cc['@mozilla.org/moz/jssubscript-loader;1']
-    .getService(Ci.mozIJSSubScriptLoader).loadSubScript(url, context);
-    
-    var names = Array.slice(arguments, 1);
-    return (names.length > 0 ?
-            names.map(function(name) { return context[name]; }) :
-            context);
+function load(url, context) {
+    var loader = Cc['@mozilla.org/moz/jssubscript-loader;1']
+        .getService(Ci.mozIJSSubScriptLoader);
+
+    if(!context)
+        // load everything in current context
+        loader.loadSubScript(url);
+    else if(arguments.length == 2) {
+        // load everything in specified context and also return it
+        loader.loadSubScript(url, context);
+        return context;
+    } else {
+        // load some things in current or specified context
+        context = context || this;
+        var tmpContext = {};
+        loader.loadSubScript(url, tmpContext);
+        for each(var name in Array.slice(arguments, 2)) {
+            this[name] = tmpContext[name];
+        }
+        return context;
+    }
 }
 
 function matchKeyEvent(e1, e2) {

@@ -88,6 +88,15 @@
   <menupopup id="xmpp-popup-accounts-secondary"/>
 
   <popup id="contentAreaContextMenu">
+    <!-- XXX localize -->
+    <menu label="Send Link to..."
+          accesskey="S"
+          id="sameplace-sendto">
+      <menupopup oncommand="sameplace.sendTo.selectedContact(event);"
+                 onpopupshowing="sameplace.sendTo.showingPopup(event);"
+                 onpopuphidden="sameplace.sendTo.hiddenPopup(event);"/>
+    </menu>
+
     <menuitem id="sameplace-install-scriptlet"
               label="&context.install-scriptlet;" accesskey="I"
               oncommand="sameplace.requestedInstallScriptlet(document.popupNode);"/>

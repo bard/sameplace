@@ -1,0 +1,22 @@
+.xmpp-presence {
+    list-style-image: url("all-small.png");
+    -moz-image-region: rect(48px 16px 64px 0px);
+}
+
+.xmpp-presence[availability="available"][show="dnd"] {
+    -moz-image-region: rect(0px 16px 16px 0px);
+}
+
+.xmpp-presence[availability="available"] {
+    -moz-image-region: rect(16px 16px 32px 0px);
+}
+
+.xmpp-presence[availability="available"][show="away"],
+.xmpp-presence[availability="available"][show="xa"] {
+    -moz-image-region: rect(32px 16px 48px 0px);
+}
+
+.xmpp-presence[availability="unavailable"] {
+    -moz-image-region: rect(48px 16px 64px 0px);
+}
+
