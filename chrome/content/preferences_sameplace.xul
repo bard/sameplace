@@ -23,11 +23,7 @@
 <!DOCTYPE overlay SYSTEM "chrome://sameplace/locale/preferences.dtd">
 
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-  <prefpane id="sameplace-pane"
-            orient="vertial">
-    
-    <script type="application/x-javascript;version=1.7" src="preferences_sameplace.js"/>
-
+  <prefpane id="sameplace-pane">
     <preferences>
       <preference id="sameplace-get-attention-on-message"
                   name="extensions.sameplace.getAttentionOnMessage"

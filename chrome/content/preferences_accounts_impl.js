@@ -1,0 +1,326 @@
+
+// DEFINITIONS
+// ----------------------------------------------------------------------
+
+var Cc = Components.classes;
+var Ci = Components.interfaces;
+var Cr = Components.results;
+
+var pref = Cc['@mozilla.org/preferences-service;1']
+    .getService(Ci.nsIPrefService)
+    .getBranch('xmpp.account.');
+
+
+// STATE
+// ----------------------------------------------------------------------
+
+var accounts;
+
+
+// INITIALIZATION
+// ----------------------------------------------------------------------
+
+function init() {
+    refresh();
+}
+
+
+// GUI ACTIONS
+// ----------------------------------------------------------------------
+
+function refresh() {
+    var xulAccounts = $('#accounts');
+    xulAccounts.selectedItem = null;
+    while(xulAccounts.firstChild)
+        xulAccounts.removeChild(xulAccounts.firstChild);
+
+    accounts = XMPP.accounts.map(convertAccount).sort(function(a, b) {
+        return a.username.toLowerCase() > b.username.toLowerCase();
+    });
+    accounts.forEach(addAccount);
+
+    updateForm();
+}
+
+function getCurrentAccount() {
+    var xulAccount = $('#accounts').selectedItem;
+    if(xulAccount)
+        return findAccount(xulAccount.getAttribute('id'));
+}
+
+function addAccount(account) {
+    var xulAccount = $('#blueprints > .account').cloneNode(true);
+    xulAccount.setAttribute('id', account.id);
+    xulAccount.setAttribute('service', account.service);
+    xulAccount.setAttribute('category', account.category);
+    xulAccount.setAttribute('type', account.type);
+    $(xulAccount, '.username').setAttribute('value',
+                                            account.connection == 'direct' ?
+                                            account.username :
+                                            XMPP.JID(account.connection).username);
+    $(xulAccount, '.name').setAttribute('value', account.name);
+    $(xulAccount, '.description').setAttribute('value', account.description);
+    $('#accounts').appendChild(xulAccount);
+}
+
+function updateForm() {
+    $('#action-pane').selectedIndex =
+        $('#accounts').selectedIndex == -1 ? 0 : 1;
+}
+
+
+// GUI REACTIONS
+// ----------------------------------------------------------------------
+
+function updatedField(xulField) {
+    getCurrentAccount()[camelize(xulField.id)] = 
+        ('checked' in xulField) ? xulField.checked : xulField.value;
+}
+
+function requestedDeleteAccount() {
+    deleteAccount(getCurrentAccount().id);
+}
+
+function requestedAddAccount() {
+    var wizard = window.openDialog(
+        'chrome://sameplace/content/wizard/wizard.xul',
+        'sameplace-wizard', 'chrome');
+    wizard.addEventListener('beforeunload', function(event) {
+        refresh();
+    }, false);
+}
+
+function selectedAccount(event) {
+    var account = findAccount(event.target.selectedItem.id);
+    $('#username').value = account.username || '';
+    $('#password').value = account.password || '';
+    $('#service').value = account.service;
+    $('#resource').value = account.resource;
+    $('#connection-host').value = account.connectionHost;
+    $('#connection-port').value = account.connectionPort;
+    $('#connection-security').value = account.connectionSecurity;
+    $('#auto-login').checked  = account.autoLogin;
+    updateForm();
+}
+
+
+// OTHER ACTIONS
+// ----------------------------------------------------------------------
+
+function findAccount(id) {
+    for each(var account in accounts) {
+        if(account.id == id)
+            return account;
+    }
+}
+
+function deleteAccount(accountId) {
+    pref.deleteBranch(accountId + '.');
+    refresh();
+}
+
+
+// UTILITIES
+// ----------------------------------------------------------------------
+
+function convertAccount(source) {
+    return {
+        get id() {
+            return source.key;
+        },
+
+        get service() {
+            return XMPP.JID(source.address).hostname;
+        },
+
+        get username() {
+            return XMPP.JID(source.address).username;
+        },
+
+        get password() {
+            return source.password;
+        },
+
+        get connection() {
+            return 'direct';
+        },
+
+        get name() {
+            switch(XMPP.JID(source.address).hostname) {
+            case 'sameplace.cc':
+                return 'SamePlace';
+                break;
+            case 'gmail.com':
+            case 'googlemail.com':
+                return 'GTalk/GMail';
+                break;
+            default:
+                return XMPP.JID(source.address).hostname;
+            }
+        },
+
+        get description() {
+            switch(this.category) {
+            case 'server':
+                switch(this.type) {
+                case 'im':
+                    return 'IM Server';
+                    break;
+                case 'x-turtle-twitter':
+                    return 'Connector';
+                    break;
+                default:
+                    return 'Undefined';
+                }
+                break;
+            default:
+                return 'Undefined';
+            }
+        },
+
+        get category() {
+            return 'server';
+        },
+
+        get type() {
+            var m = XMPP.JID(source.address).hostname
+                .match(/^([^.]+)\.x4m\.localhost$/);
+
+            if(m)
+                return 'x-turtle-' + m[1];
+            else
+                return 'im';
+        },
+
+        get jid() {
+            return source.jid;
+        },
+
+        get connectionHost() {
+            return source.connectionHost;
+        },
+
+        get connectionPort() {
+            return source.connectionPort;
+        },
+
+        get connectionSecurity() {
+            return source.connectionSecurity;
+        },
+
+        get autoLogin() {
+            return source.autoLogin;
+        },
+
+        get resource() {
+            return source.resource;
+        },
+
+        set address(val) {
+            pref.setCharPref(this.id + '.address', val);
+        },
+
+        set resource(val) {
+            pref.setCharPref(this.id + '.resource', val);
+        },
+
+        set password(val) {
+            pref.setCharPref(this.id + '.password', val);
+        },
+
+        set autoLogin(val) {
+            pref.setBoolPref(this.id + '.autoLogin', val);
+        },
+
+        set connectionHost(val) {
+            pref.setCharPref(this.id + '.connectionHost', val);
+        },
+
+        set connectionPort(val) {
+            pref.setIntPref(this.id + '.connectionPort', val);
+        },
+
+        set connectionSecurity(val) {
+            pref.setIntPref(this.id + '.connectionSecurity', val);
+        },
+
+        set username(val) {
+            this.address = val + '@' + this.service;
+        },
+
+        set service(val) {
+            this.address = this.username + '@' + val;
+        }
+    };
+}
+
+function camelize(string) {
+    var parts = string.split('-');
+    return (parts[0] +
+            parts.slice(1).map(function(part) {
+                return part[0].toUpperCase() + part.slice(1);
+            }).join());
+}
+
+// Future format:
+//
+// var accounts = {
+//     '218732948': {
+//         username: 'foobar',
+//         service: 'sameplace.cc',
+//         password: 'secret',
+//         connection: 'direct',
+
+//         name: 'SamePlace',
+//         category: 'server',
+//         type: 'im',
+//         description: 'IM Server' // to be generated dynamically
+//     },
+
+//     '82394878': {
+//         username: 'foobar',
+//         service: 'gmail.com',
+//         password: 'secret',
+//         connection: 'direct',
+
+//         name: 'GTalk',
+//         category: 'server',
+//         type: 'im',
+//         description: 'IM Server'
+//     },
+
+//     '89789798': {
+//         username: 'foobar',
+//         service: 'twitter.x4m.localhost',
+//         password: 'secret',
+//         connection: 'direct',
+
+//         name: 'Twitter',
+//         category: 'server',
+//         type: 'x-turtle-twitter',
+//         description: 'Local Gateway'
+//     },
+
+//     '89283999': {
+//         service: 'msn.sameplace.cc',
+//         connection: 'foobar@sameplace.cc',
+
+//         name: 'MSN',
+//         description: 'Remote Gateway',
+//         category: 'gateway',
+//         type: 'msn'
+//     },
+
+//     '839247932': {
+//         username: 'foobar',
+//         service: 'jabber.org',
+//         password: '',
+//         connection: 'direct',
+
+//         category: 'server',
+//         type: 'im',
+//         description: 'IM Server',
+//         name: 'Jabber',
+//     }
+// };
+

@@ -31,6 +31,15 @@ var pref = Cc['@mozilla.org/preferences-service;1']
     .getBranch('extensions.sameplace.');
 
 
+// INITIALIZATION
+// ----------------------------------------------------------------------
+
+function init() {
+    displayKey('contacts', eval(pref.getCharPref('toggleContactsKey')));
+    displayKey('conversations', eval(pref.getCharPref('toggleConversationsKey')));
+}
+
+
 // ACTIONS
 // ----------------------------------------------------------------------
 
@@ -60,12 +69,6 @@ function saveKey(which, desc) {
 
 // REACTIONS
 // ----------------------------------------------------------------------
-
-window.addEventListener(
-    'load', function(event) {
-        displayKey('contacts', eval(pref.getCharPref('toggleContactsKey')));
-        displayKey('conversations', eval(pref.getCharPref('toggleConversationsKey')));
-    }, false);
 
 function capturedKey(which, desc) {
     displayKey(which, desc);

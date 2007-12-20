@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+
+<!--
+  Copyright (C) 2005-2006 by Massimiliano Mirra
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+  Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
+-->
+
+<?xml-stylesheet href="chrome://sameplace/skin/preferences_accounts.css"?>
+
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+<prefpane id="accounts-pane">
+  <hbox>
+    <vbox>
+      <richlistbox id="accounts"
+                   onselect="accountPrefs.selectedAccount(event);"/>
+      <button label="Add account..." accesskey="A"
+              oncommand="accountPrefs.requestedAddAccount();"/>
+    </vbox>
+
+    <deck id="action-pane" flex="1">
+      <box id="help-message" flex="1">
+        <description flex="1">
+          Select an account from the list or add a new one.
+        </description>
+      </box>
+
+      <vbox id="account-form" flex="1">
+        <grid>
+          <columns>
+            <column flex="0"/>
+            <column flex="1"/>
+          </columns>
+          <rows>
+            <row class="credential">
+              <label value="Username:"/>
+              <textbox id="username" 
+                       oninput="accountPrefs.updatedField(this);"/>
+            </row>
+
+            <row class="credential">
+              <label value="Password:"/>
+              <textbox id="password" type="password" 
+                       oninput="accountPrefs.updatedField(this);"/>
+            </row>
+
+            <row>
+              <label value="Service:"/>
+              <textbox id="service" value="" 
+                       oninput="accountPrefs.updatedField(this);"/>
+            </row>
+          </rows>
+        </grid>
+
+        <hbox pack="end">
+          <checkbox id="auto-login" label="Login on startup"
+                    oncommand="accountPrefs.updatedField(this);"/>
+        </hbox>          
+
+        <separator class="groove"/>
+
+        <hbox id="commands-secondary" pack="end">
+          <button id="delete" 
+                  label="Delete"
+                  oncommand="accountPrefs.requestedDeleteAccount();"/>
+          <button id="config-advanced-button"
+                  label="Advanced..."
+                  accesskey="d"
+                  oncommand="$('#config-advanced').hidden =
+                             !$('#config-advanced').hidden;"/>
+        </hbox>
+
+        <grid id="config-advanced" hidden="true">
+          <columns>
+            <column/>
+            <column flex="1"/>
+          </columns>
+          <rows>
+            <row>
+              <label value="Resource:"/>
+              <vbox>
+                <textbox id="resource" value=""
+                         oninput="accountPrefs.updatedField(this);"/>
+                <description class="example">
+                  Example: Home, Office, ...
+                </description>
+              </vbox>
+            </row>
+
+            <row>
+              <label value="Server:"/>
+              <textbox id="connection-host"
+                       oninput="accountPrefs.updatedField(this);"/>
+            </row>
+
+            <row>
+              <label value="Port:"/>
+              <textbox id="connection-port" value=""
+                       oninput="accountPrefs.updatedField(this);"/>
+            </row>
+
+            <row>
+              <label value="Encryption:"/>
+              <radiogroup id="connection-security"
+                          value="1" orient="horizontal"
+                          oncommand="accountPrefs.updatedField(this);">
+                <radio value="1" label="SSL" selected="true" flex="1"/>
+                <radio value="0" label="None" flex="1"/>
+              </radiogroup>
+            </row>
+          </rows>
+        </grid>
+      </vbox>
+    </deck>
+  </hbox>
+
+  <box hidden="true" id="blueprints">
+    <richlistitem class="account" category="" type="" service="">
+      <hbox>
+        <image class="icon"/>
+        <label class="username"/>
+      </hbox>
+      <hbox class="service-info">
+        <label class="name"/> - <label class="description"/>
+      </hbox>
+    </richlistitem>
+  </box>
+</prefpane>
+</overlay>

@@ -566,6 +566,34 @@ function requestedInstallScriptlet(domElement) {
 // GUI ACTIONS
 // ----------------------------------------------------------------------
 
+function openPreferences(paneID) {
+    var instantApply;
+    try {
+        instantApply = prefBranch.getBoolPref('browser.preferences.instantApply', false);
+    } catch(e) {
+        instantApply = false;
+    }
+        
+    var features = 'chrome,titlebar,toolbar,centerscreen' +
+        (instantApply ? ',dialog=no' : ',modal');
+    
+    var wm = Cc['@mozilla.org/appshell/window-mediator;1']
+        .getService(Ci.nsIWindowMediator);
+
+    var win = wm.getMostRecentWindow('SamePlace:Preferences');
+    
+    if(win) {
+        win.focus();
+        if(paneID) {
+            var pane = win.document.getElementById(paneID);
+            win.document.documentElement.showPane(pane);
+        }
+    } else {
+        window.openDialog('chrome://sameplace/content/preferences.xul',
+                          'SamePlace Preferences', features, paneID);
+    }
+}
+
 function collapse(element) {
     if(element.collapsed)
         return;

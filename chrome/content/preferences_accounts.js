@@ -1,7 +1,5 @@
-<?xml version="1.0"?>
-
-<!--
-  Copyright (C) 2005-2006 by Massimiliano Mirra
+/*
+  Copyright (C) 2005-2007 by Massimiliano Mirra
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -18,14 +16,11 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
   Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
--->
+*/
 
-<!DOCTYPE overlay SYSTEM "chrome://sameplace/locale/preferences.dtd">
+var accountPrefs = {};
 
-<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-  <prefwindow id="xmpp-preferences">
-    <prefpane id="sameplace-pane" label="SamePlace"
-              image="chrome://sameplace/skin/logo.png"
-              src="chrome://sameplace/content/preferences_sameplace.xul"/>
-  </prefwindow>
-</overlay>
+Components
+    .classes['@mozilla.org/moz/jssubscript-loader;1']
+    .getService(Components.interfaces.mozIJSSubScriptLoader)
+    .loadSubScript('chrome://sameplace/content/preferences_accounts_impl.js', accountPrefs);

@@ -1,0 +1,71 @@
+row {
+    -moz-box-align: center;
+}
+
+
+#accounts {
+    min-width: 180px;
+    height: 285px;
+}
+
+#accounts .account {
+    overflow: hidden;
+    -moz-box-orient: vertical;
+    padding: 6px 16px 6px 8px;
+}
+
+#accounts .account .icon {
+
+}
+
+#accounts .account .service-info {
+    font-size: smaller;
+}
+
+#accounts .account > hbox {
+    -moz-box-align: center;
+}
+
+#accounts .account[category="server"][type="im"][service="sameplace.cc"] image {
+    list-style-image: url("services/server_im_sameplace.png");
+}
+
+#accounts .account[category="server"][type="im"][service="gmail.com"] image {
+    list-style-image: url("services/server_im_gtalk.png");
+}
+
+#accounts .account[category="server"][type="im"] image {
+    list-style-image: url("services/server_im.png");
+}
+
+#accounts .account[category="gateway"][type="msn"] image {
+    list-style-image: url("services/gateway_msn.png");
+}
+
+#accounts .account[category="server"][type="x-turtle-twitter"] image {
+    list-style-image: url("services/server_x-turtle-twitter.png");
+}
+
+#remote-password-notice {
+    text-align: center;
+    padding: 12px 0;
+}
+
+#help-message description {
+    text-align: center;
+    padding: 1em;
+}
+
+#help-message,
+#account-form {
+    padding: 10px;
+}
+
+description.example {
+    font-size: smaller;
+}
+
+#commands-secondary {
+    font-size: smaller;
+}
+
