@@ -47,9 +47,13 @@ var channel;
 // ----------------------------------------------------------------------
 
 function init() {
-    if(Cc['@mozilla.org/extensions/manager;1']
-       .getService(Ci.nsIExtensionManager)
-       .getItemForID('{73a6fe31-595d-460b-a920-fcc0f8843232}'))
+    var noScriptUpdateItem = Cc['@mozilla.org/extensions/manager;1']
+        .getService(Ci.nsIExtensionManager)
+        .getItemForID('{73a6fe31-595d-460b-a920-fcc0f8843232}');
+    // In Firefox2, an updateItem is always returned, even for
+    // non-installed apps, so we use the name test to check if
+    // NoScript is installed for real.
+    if(noScriptUpdateItem && noScriptUpdateItem.name != '')
         window.alert(_('strings').getString('noscriptAlert'));
 
     getServerList(
