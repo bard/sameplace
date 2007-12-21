@@ -64,6 +64,13 @@ function initNetworkReactions() {
             </query>);
 
     channel.on({
+        event     : 'connector',
+        state     : 'active'
+    }, function(connector) {
+        connectedAccount(connector.account);
+    });
+
+    channel.on({
         event     : 'message',
         direction : 'in',
         stanza    : function(s) {
@@ -103,15 +110,6 @@ function initNetworkReactions() {
             return s.ns_muc::x.length() > 0 && s.@type != 'unavailable'; 
        }
     }, function(presence) { sentMUCPresence(presence) });
-
-    channel.on({
-        event     : 'presence',
-        direction : 'out',
-        stanza    : function(s) {
-            return (s.@type == undefined || s.@type == 'unavailable') &&
-                s.ns_muc::x == undefined && s.@to == undefined;
-        }
-    }, function(presence) { sentAvailablePresence(presence) });
 }
 
 function initConversations() {
@@ -712,8 +710,8 @@ function seenDisplayableMessage(message) {
         maybeSetUnread(panel);
 }
 
-function sentAvailablePresence(presence) {
-    autojoinRooms(presence.account);
+function connectedAccount(account) {
+    autojoinRooms(account);
 }
 
 function sentMUCPresence(presence) {
