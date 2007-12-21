@@ -27,6 +27,7 @@
   <hbox>
     <vbox>
       <richlistbox id="accounts"
+                   class="box-inset"
                    onselect="accountPrefs.selectedAccount(event);"/>
       <button label="Add account..." accesskey="A"
               oncommand="accountPrefs.requestedAddAccount();"/>

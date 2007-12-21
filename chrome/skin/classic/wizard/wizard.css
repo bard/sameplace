@@ -90,6 +90,7 @@ wizardpage[state="failure"] .progress-failure {
     -moz-border-radius: 15px;
     -moz-box-align: center;
     -moz-box-pack: center;
+    display: -moz-inline-box;
 }
 
 [pageid="selection"] .service:hover {

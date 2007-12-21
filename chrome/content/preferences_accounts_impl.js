@@ -30,7 +30,6 @@ function init() {
 
 function refresh() {
     var xulAccounts = $('#accounts');
-    xulAccounts.selectedItem = null;
     while(xulAccounts.firstChild)
         xulAccounts.removeChild(xulAccounts.firstChild);
 
