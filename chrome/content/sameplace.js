@@ -563,10 +563,11 @@ function requestedOpenConversation(type) {
 
 function autojoinRooms(account) {
     function delayedJoinRoom(account, roomAddress, roomNick, delay) {
-        window.setTimeout(
-            function() {
-                joinRoom(account, roomAddress, roomNick);
-            }, delay);
+        // This needs to be in a separate function to "capture"
+        // account, address & nick.
+        window.setTimeout(function() {
+            joinRoom(account, roomAddress, roomNick);
+        }, delay);
     }
 
     XMPP.send(account,
@@ -579,14 +580,18 @@ function autojoinRooms(account) {
               function(reply) {
                   if(reply.stanza.@type != 'result')
                       return;
-                  var delay = 500;
+
+                  var delay = 0;
                   for each(var conf in reply
                            .stanza.ns_private::query
                            .ns_bookmarks::storage
                            .ns_bookmarks::conference) {
                       if(conf.@autojoin == 'true') {
-                          delayedJoinRoom(account, conf.@jid, XMPP.JID(account).username, delay)
                           delay += 1000;
+                          delayedJoinRoom(account,
+                                          conf.@jid, 
+                                          conf.@nick.toString() || XMPP.JID(account).username,
+                                          delay);
                       }
                   }
               });
