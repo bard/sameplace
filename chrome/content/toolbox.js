@@ -42,13 +42,7 @@ function init(event) {
     if(!event.target)
         return;
 
-    channel = XMPP.createChannel(
-        <query xmlns="http://jabber.org/protocol/disco#info">
-        <feature var="http://jabber.org/protocol/muc"/>
-        <feature var="http://jabber.org/protocol/muc#user"/>
-        <feature var="http://jabber.org/protocol/xhtml-im"/>
-        <feature var="http://jabber.org/protocol/chatstates"/>
-        </query>);
+    channel = XMPP.createChannel();
 
     channel.on({
         event: 'stream',
