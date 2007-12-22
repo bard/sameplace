@@ -13,7 +13,6 @@ var pref = Cc['@mozilla.org/preferences-service;1']
 // ----------------------------------------------------------------------
 
 var channel;
-var autoSubscribeEnabledDomains = [];
 
 
 // INITIALIZATION/FINALIZATION
@@ -21,18 +20,6 @@ var autoSubscribeEnabledDomains = [];
 
 function init() {
     channel = XMPP.createChannel();
-
-    channel.on({
-        event     : 'presence',
-        direction : 'in',
-        stanza    : function(s) {
-            return (s.@type == 'subscribe' &&
-                    isAutoSubscriptionAllowed(s.@from));
-        }
-    }, function(presence) {
-        XMPP.send(presence.account,
-                  <presence to={presence.stanza.@from} type='subscribed'/>);
-    });
 }
 
 function finish() {
@@ -264,7 +251,6 @@ function advancedPageTransport(page) {
     $('#wizard').canAdvance = false;
 
     XMPP.up(sameplaceAccount, function() {
-        allowAutoSubscriptionsTo(transportAddress);
         registerToTransport(
             sameplaceAccount,
             transportAddress,
@@ -272,11 +258,10 @@ function advancedPageTransport(page) {
             legacyPassword, {
                 onSuccess: function() {
                     page.setAttribute('state', 'verified');
-
-                    window.setTimeout(function() {
+                    waitForSubscription(transportAddress, function() {
                         $('#wizard').canAdvance = true;
                         $('#wizard').advance(page.getAttribute('next'));
-                    }, 2000); // XXX might not be enough to flush all incoming subscription reqs
+                    });
                 },
                 
                 onError: function(condition) {
@@ -445,14 +430,6 @@ function getSamePlaceAccount() {
     })[0];
 }
 
-function allowAutoSubscriptionsTo(domain) {
-    autoSubscribeEnabledDomains.push(domain);
-}
-
-function isAutoSubscriptionAllowed(jid) {
-    return autoSubscribeEnabledDomains.indexOf(XMPP.JID(jid).hostname) != -1;
-}
-
 function saveAccount(account) {
     var key = (new Date()).getTime();
 
@@ -520,3 +497,30 @@ function smoothScrollTo(scrollbox) {
     }, 40);
 }
 
+function waitForSubscription(transportAddress, continuation) {
+    // If within 5 seconds we're not done, go ahead anyway.
+    var done = false;
+    window.setTimeout(function() {
+        if(!done) {
+            done = true;
+            continuation();
+        }
+    }, 5000);
+
+    var reaction = channel.on({
+        event     : 'presence',
+        direction : 'in',
+        stanza    : function(s) {
+            return (s.@type == 'subscribe' &&
+                    s.@from == transportAddress);
+        }
+    }, function(presence) {
+        channel.forget(reaction);
+        XMPP.send(presence.account,
+                  <presence to={presence.stanza.@from} type='subscribed'/>);
+        if(!done) {
+            done = true;
+            continuation();
+        }
+    });
+}
