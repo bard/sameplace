@@ -36,6 +36,7 @@ var prefBranch = Cc["@mozilla.org/preferences-service;1"]
 // ----------------------------------------------------------------------
 
 var channel;
+var subscriptionAccumulator;
 
 
 // INITIALIZATION
@@ -43,6 +44,9 @@ var channel;
 
 function init() {
     $('#contacts')._.selectedIndex = -1;
+
+    subscriptionAccumulator = new TimedAccumulator(
+        receivedSubscriptionRequestSequence, 1500);
 
     channel = XMPP.createChannel();
 
@@ -397,48 +401,59 @@ function receivedRoster(iq) {
 }
 
 function sentSubscriptionConfirmation(presence) {
-    var xulNotify = $('#notify')._;
-    var xulNotification = xulNotify
-        .getNotificationWithValue('subscribe-' + presence.stanza.@to);
-
-    if(xulNotification)
-        xulNotify.removeNotification(xulNotification);
+    subscriptionAccumulator.deleteIf(function(p) {
+        return (p.account = presence.account &&
+                p.stanza.@from == presence.stanza.@from);
+    });
 }
 
 function receivedSubscriptionRequest(presence) {
+    subscriptionAccumulator.receive(presence);
+}
+
+function receivedSubscriptionRequestSequence(sequence) {
     var xulNotify = $('#notify')._;
     xulNotify.appendNotification(
-        'Request from ' + presence.stanza.@from, // XXX localize
-        'subscribe-' + presence.stanza.@from,
-        null, xulNotify.PRIORITY_INFO_HIGH,
+        sequence.length + ' request(s) pending',
+        'subscription-request', null, xulNotify.PRIORITY_INFO_HIGH,
         [{label: 'View', accessKey: 'V', callback: viewRequest}]);
 
     function viewRequest() {
-        var account = presence.session.name;
-        var address = presence.stanza.@from.toString();
-        var accept, reciprocate;
+        var request = { };
+        request.choice = false;
+        request.contacts = sequence.map(function(presence) {
+            return [presence.account,
+                    XMPP.JID(presence.stanza.@from).address,
+                    true];
+        });
+        request.description =
+            'These contacts want to add you to their contact list. ' +
+            'Do you accept?';
 
-        if(get(account, address) == undefined ||
-           get(account, address).getAttribute('subscription') == 'none') {
-            var check = {value: true};
-            accept = srvPrompt.confirmCheck(
-                null, _('strings').getString('contactRequestTitle'),
-                _('strings').getFormattedString('contactRequestMessage', [address, presence.stanza.@to]),
-                _('strings').getFormattedString('contactRequestReciprocate', [address]),
-                check);
-            reciprocate = check.value;
+        window.openDialog(
+            'chrome://sameplace/content/contact_selection.xul',
+            'contact-selection',
+            'modal,centerscreen', request);
+
+        if(request.choice == true) {
+            for each(var [account, address, authorize] in request.contacts) {
+                if(authorize) {
+                    acceptSubscriptionRequest(account, address);
+                    if(get(account, address) == undefined ||
+                       get(account, address).getAttribute('subscription') == 'none') {
+                        // contact not yet in our contact list, request
+                        // auth to make things even ;-)
+                        addContact(account, address);
+                    }
+                } else {
+                    denySubscriptionRequest(account, address);
+                }
+            }
+        } else {
+            for each(var [account, address, authorize] in request.contacts) {
+                denySubscriptionRequest(account, address);
+            }
         }
-        else
-            accept = srvPrompt.confirm(
-                null, _('strings').getString('contactRequestTitle'),
-                _('strings').getFormattedString('contactRequestMessage', [address, presence.stanza.@to]));
-
-        if(accept) {
-            acceptSubscriptionRequest(account, address);
-            if(reciprocate)
-                addContact(account, address);
-        } else
-            denySubscriptionRequest(account, address);
     }
 }
 
@@ -559,3 +574,41 @@ function clickedContact(contact) {
     contact.dispatchEvent(selectEvent);
 }
 
+
+// UTILITIES
+// ----------------------------------------------------------------------
+
+
+function TimedAccumulator(onReceive, waitPeriod) {
+    this._queue = [];
+    this._checkInterval = 500;
+    this._waitPeriod = waitPeriod || 1500;
+    this._onReceive = onReceive;
+}
+
+TimedAccumulator.prototype = {
+    deleteIf: function(conditionFn) {
+        this._queue = this._queue.every(function(item) { return !conditionFn(item); });
+    },
+
+    receive: function(stanza) {
+        if(!this._checker)
+            this._startChecker();
+
+        this._queue.push(stanza);
+        this._lastReceived = new Date();
+    },
+
+    _startChecker: function() {
+        var self = this;
+        this._checker = window.setInterval(function() {
+            if((new Date()) - self._lastReceived > self._waitPeriod) {
+                window.clearInterval(self._checker);
+                self._checker = null;
+                var queue = self._queue.splice(0);
+                if(queue.length != 0)
+                    self._onReceive(queue);
+            }
+        }, this._checkInterval);
+    },
+};
