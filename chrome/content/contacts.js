@@ -590,7 +590,7 @@ function TimedAccumulator(onReceive, waitPeriod) {
 
 TimedAccumulator.prototype = {
     deleteIf: function(conditionFn) {
-        this._queue = this._queue.every(function(item) { return !conditionFn(item); });
+        this._queue = this._queue.filter(function(item) { return !conditionFn(item); });
     },
 
     receive: function(stanza) {
