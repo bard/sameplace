@@ -404,8 +404,8 @@ function receivedRoster(iq) {
 
 function sentSubscriptionConfirmation(presence) {
     subscriptionAccumulator.deleteIf(function(p) {
-        return (p.account = presence.account &&
-                p.stanza.@from == presence.stanza.@from);
+        return (p.account == presence.account &&
+                p.stanza.@from == presence.stanza.@to);
     });
 }
 
