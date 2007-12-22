@@ -384,16 +384,22 @@ function seenSharedAppNegotiation(message) {
         return;
 
     function interact(account, address, url, panel, nextAction) { // XXX duplicated
+        if(account)
+            dump('**** SamePlace **** Deprecation **** ' + getStackTrace() + '\n');
+        if(address)
+            dump('**** SamePlace **** Deprecation **** ' + getStackTrace() + '\n');
+
+        // XXX these are set here and re-set in XMPP.connectPanel().
+        // find out why it wasn't enough to set them in
+        // XMPP.connectPanel() only.
+        var account = panel.getAttribute('account');
+        var address = panel.getAttribute('address');
+
         function activate() {
             XMPP.connectPanel(panel, account, address, /^javascript:/.test(url));
         }
 
         nextAction = nextAction || function() {};
-        // XXX *maybe* these should be moved to the conversations facade
-        // (but what to do for panels not handled by the facade? hmmm...)
-        // also, why is it not enough to set these in jsapi.js? hmmm
-        panel.setAttribute('account', account);
-        panel.setAttribute('address', address);
 
         if(!url) {
             activate();
@@ -442,9 +448,10 @@ function seenSharedAppNegotiation(message) {
         if(!(url.match(/^javascript:/) || getBrowser().currentURI.spec == 'about:blank'))
             getBrowser().selectedTab = getBrowser().addTab();
         
-        interact(message.account, XMPP.JID(message.stanza.@from).address,
-                 url == 'current' ? null : url,
-                 getBrowser().selectedBrowser);
+        var panel = getBrowser().selectedBrowser;
+        panel.setAttribute('account', message.account);
+        panel.setAttribute('address', XMPP.JID(message.stanza.@from).address);
+        interact(null, null, url == 'current' ? null : url, panel);
     }
 
     function onDecline() {

@@ -376,6 +376,17 @@ Usage samples:
 **********************************************************************/
 
 function interact(account, address, url, panel, nextAction) {
+    if(account)
+        dump('**** SamePlace **** Deprecation **** ' + getStackTrace() + '\n');
+    if(address)
+        dump('**** SamePlace **** Deprecation **** ' + getStackTrace() + '\n');
+
+    // XXX these are set here and re-set in XMPP.connectPanel().
+    // find out why it wasn't enough to set them in
+    // XMPP.connectPanel() only.
+    var account = panel.getAttribute('account');
+    var address = panel.getAttribute('address');
+
     function activate() {
         XMPP.connectPanel(panel, account, address, /^javascript:/.test(url));
     }
@@ -389,8 +400,6 @@ function interact(account, address, url, panel, nextAction) {
     }
 
     nextAction = nextAction || function() {};
-    panel.setAttribute('account', account);
-    panel.setAttribute('address', address);
 
     if(!url) {
         activate();
@@ -465,7 +474,10 @@ function requestedAdditionalInteraction(event) {
     if(!(url.match(/^javascript:/) || getBrowser().currentURI.spec == 'about:blank' || url == 'current'))
         getBrowser().selectedTab = getBrowser().addTab();
     
-    interact(account, address, url == 'current' ? null : url, getBrowser().selectedBrowser);
+    var panel = getBrowser().selectedBrowser;
+    panel.setAttribute('account', account);
+    panel.setAttribute('address', address);
+    interact(null, null, url == 'current' ? null : url, getBrowser().selectedBrowser);
 }
 
 // Front-end to interact().  Start an interaction with a contact.
@@ -502,7 +514,7 @@ function startInteraction(account, address, url) {
     } else {
         var panel = conversations.create(account, address);
         initPanel(panel); // XXX initPanel-after-create: repeated pattern, factor?
-        interact(account, address, url, panel, function() {
+        interact(null, null, url, panel, function() {
             if(messageCache[account] && messageCache[account][address]) {
                 messageCache[account][address].forEach(function(message) {
                     panel.xmppChannel.receive(message);
@@ -638,7 +650,7 @@ function seenOutgoingChatActivation(message) {
     if(!panel) {
         panel = conversations.create(message.account, contact.address);
         initPanel(panel);
-        interact(message.account, contact.address, getDefaultAppUrl(), panel, function() {
+        interact(null, null, getDefaultAppUrl(), panel, function() {
             conversations.focus(message.account, contact.address);
             panel.xmppChannel.receive(message);
         });
@@ -681,8 +693,8 @@ function seenDisplayableMessage(message) {
     if(!panel) {
         panel = conversations.create(message.account, contact.address);
         initPanel(panel);
-        interact(message.account, contact.address, getDefaultAppUrl(), panel, function() {
-
+        interact(null, null, getDefaultAppUrl(), panel, function() {
+            // XXX this should be ignored in the case of chat rooms
             if(messageCache[message.account] && messageCache[message.account][contact.address]) {
                 messageCache[message.account][contact.address].forEach(function(message) {
                     panel.xmppChannel.receive(message);
@@ -728,7 +740,7 @@ function sentMUCPresence(presence) {
     if(!panel) {
         panel = conversations.create(account, address);
         initPanel(panel);
-        interact(account, address, getDefaultAppUrl(), panel, function() {
+        interact(null, null, getDefaultAppUrl(), panel, function() {
             conversations.focus(account, address);
         })
     }

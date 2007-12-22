@@ -114,6 +114,9 @@ function create(account, address) {
                    dom.selectedBrowser :
                    dom.getBrowserForTab(dom.addTab()));
 
+    browser.setAttribute('account', account);
+    browser.setAttribute('address', address);
+
     browser.addEventListener(
         'load', function(event) {
             if(!event.target)
