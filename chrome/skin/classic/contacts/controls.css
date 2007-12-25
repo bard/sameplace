@@ -63,9 +63,16 @@
     display: none;
 }
 
-#controls .scroll-arrow-down {
 
-}
+#controls .scroll-arrow[speed="0"] image { height: 21px; }
+#controls .scroll-arrow[speed="1"] image { height: 24px; }
+#controls .scroll-arrow[speed="2"] image { height: 27px; }
+#controls .scroll-arrow[speed="3"] image { height: 30px; }
+#controls .scroll-arrow[speed="4"] image { height: 33px; }
+#controls .scroll-arrow[speed="5"] image { height: 36px; }
+#controls .scroll-arrow[speed="6"] image { height: 39px; }
+#controls .scroll-arrow[speed="7"] image { height: 42px; }
+#controls .scroll-arrow[speed="8"] image { height: 45px; }
 
 #controls .scroll-arrow-up {
     -moz-border-radius-topleft: 0;

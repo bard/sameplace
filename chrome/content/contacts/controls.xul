@@ -77,10 +77,16 @@
           </hbox>
         </vbox>
 
-        <vbox class="control scroll-arrow-up"
+        <vbox class="control scroll-arrow scroll-arrow-up"
               onmouseover="scroller.mouseMovedOnScrollUp(event);"
-              onmouseout="scroller.mouseLeftScroller(event);"
-              onmousemove="scroller.increment = -Math.abs(this.boxObject.height - (event.clientY-this.boxObject.y))/1.5;"
+              onmouseout="scroller.mouseLeftScroller(event);
+                          this.setAttribute('speed', '0');"
+              onmousemove="var distance = Math.abs(
+                               this.boxObject.height -
+                               (event.clientY-this.boxObject.y));
+                           scroller.increment = -Math.floor(distance/2);
+                           this.setAttribute('speed',
+                                             Math.floor(distance*8/this.boxObject.height));"
               mousethrough="never"
               flex="1">
           <image/>
@@ -104,10 +110,15 @@
 
       <hbox>
         <spacer flex="1"/>
-        <vbox class="control scroll-arrow-down"
+        <vbox class="control scroll-arrow scroll-arrow-down"
               onmouseover="scroller.mouseMovedOnScrollDown(event);"
-              onmouseout="scroller.mouseLeftScroller(event);"
-              onmousemove="scroller.increment = Math.abs(event.clientY-this.boxObject.y)/2;"
+              onmouseout="scroller.mouseLeftScroller(event);
+                          this.setAttribute('speed', '0');"
+              onmousemove="var distance = Math.abs(event.clientY-this.boxObject.y);
+                           scroller.increment = Math.floor(distance/2);
+                           this.setAttribute(
+                               'speed',
+                               Math.floor(distance*8/this.boxObject.height));"
               mousethrough="never"
               flex="1">
           <image/>
