@@ -27,7 +27,12 @@ function $$(first, second) {
     }
 
     if(query.match(/^\s*$/))
-        return { forEach: function() {} }
+        return {
+            forEach: function() {}, 
+            map: function() {},
+            length: 0,
+            toArray: function() { return []; }
+        }
 
     var xpath = query.match(/^(\/|\.\/)/) ?
         query : cssToXPath(query);
@@ -38,6 +43,15 @@ function $$(first, second) {
         forEach: function(action) {
             for(var i=0; i < result.snapshotLength; i++)
                 action(result.snapshotItem(i));
+        },
+        map: function(action) {
+            var results = [];
+            for(var i=0; i < result.snapshotLength; i++)
+                results.push(action(result.snapshotItem(i)));
+            return results;
+        },
+        toArray: function() {
+            return this.map(function(item) { return item; })
         }
     }
 }
