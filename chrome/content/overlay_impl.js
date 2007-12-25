@@ -591,7 +591,7 @@ function checkNoScript() {
 function openPreferences(paneID) {
     var instantApply;
     try {
-        instantApply = prefBranch.getBoolPref('browser.preferences.instantApply', false);
+        instantApply = pref.getBoolPref('browser.preferences.instantApply', false);
     } catch(e) {
         instantApply = false;
     }
