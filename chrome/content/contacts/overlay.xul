@@ -38,8 +38,17 @@
                    label="SP"
                    tooltiptext="SamePlace"
                    availability="unavailable"
-                   oncommand="var sameplaceBox = document.getElementById('sameplace-box');
-                              sameplaceBox.collapsed = !sameplaceBox.collapsed;">
+                   oncommand="var box = document.getElementById('sameplace-box');
+                              if(box.collapsed) {
+                                  box.collapsed = false;
+                                  if(box.__restore_width)
+                                      box.width = box.__restore_width;
+                              } else if(box.width == 60) {
+                                  box.collapsed = true;
+                              } else {
+                                  box.__restore_width = box.width;
+                                  box.width = 60;
+                              }">
     </toolbarbutton>
   </toolbarpalette>
 
