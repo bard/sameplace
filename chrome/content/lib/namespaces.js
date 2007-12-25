@@ -41,3 +41,5 @@ const ns_stanzas    = 'urn:ietf:params:xml:ns:xmpp-stanzas';
 const ns_x4m_in     = 'http://hyperstruct.net/xmpp4moz/protocol/internal';
 const ns_http_auth  = 'http://jabber.org/protocol/http-auth';
 const ns_x4m_ext    = 'http://hyperstruct.net/xmpp4moz/protocol/external';
+const ns_vcard      = 'vcard-temp';
+const ns_vcard_update = 'vcard-temp:x:update';
