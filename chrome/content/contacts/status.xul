@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+
+<!--
+  Copyright 2006-2007 by Massimiliano Mirra
+  
+  This file is part of SamePlace.
+  
+  SamePlace is free software; you can redistribute it and/or modify it
+  under the terms of the GNU General Public License as published by the
+  Free Software Foundation; either version 3 of the License, or (at your
+  option) any later version.
+  
+  SamePlace is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  
+  Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
+-->
+
+
+<?xml-stylesheet href="chrome://sameplace/skin/contacts/status.css"?>
+
+<!DOCTYPE overlay SYSTEM "chrome://sameplace/locale/toolbox.dtd">
+
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script type="application/x-javascript" src="status.js"/>
+
+  <popupset id="popups">
+    <popup id="status-popup"
+           onpopupshowing="if(event.target == this)
+                           /* otherwise it'll catch events from sub-menus */
+                           refreshAccounts(this);"
+           oncommand="requestedChangeStatus(event.target);">
+      <menu class="account" label="&menu.status-all-accounts.label;" value="all">
+        <menupopup>
+          <menuitem class="menuitem-iconic" label="&menu.status-online.label;"
+                    value="available"/>
+          <menuitem class="menuitem-iconic" label="&menu.status-away.label;"
+                    value="away"/>
+          <menuitem class="menuitem-iconic" label="&menu.status-busy.label;"
+                    value="dnd"/>
+          <menuitem class="menuitem-iconic" label="&menu.status-offline.label;"
+                    value="unavailable"/>
+        </menupopup>
+      </menu>
+      <menuseparator hidden="true"/>
+    </popup>
+  </popupset>
+</overlay>

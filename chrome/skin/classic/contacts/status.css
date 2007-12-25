@@ -1,0 +1,61 @@
+/*
+ * Copyright 2006-2007 by Massimiliano Mirra
+ * 
+ * This file is part of SamePlace.
+ * 
+ * SamePlace is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 3 of the License, or (at your
+ * option) any later version.
+ * 
+ * SamePlace is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
+ *  
+ */
+
+
+#status-popup > menu.account,
+#status-popup > menu > menupopup > menuitem {
+    list-style-image: url("chrome://xmpp4moz/skin/status/all-small.png");
+}
+
+#status-popup > .account[availability="unavailable"] {
+    color: graytext;
+    -moz-image-region: rect(48px 16px 64px 0px);
+}
+
+#status-popup > .account[availability="available"] {
+    -moz-image-region: rect(16px 16px 32px 0px);
+}
+
+#status-popup > .account[availability="available"][show="dnd"] {
+    -moz-image-region: rect(0px 16px 16px 0px);
+}
+
+#status-popup > .account[availability="available"][show="away"],
+#status-popup > .account[availability="available"][show="xa"] {
+    -moz-image-region: rect(32px 16px 48px 0px);
+}
+
+#status-popup > menu > menupopup > menuitem[value="available"] {
+    -moz-image-region: rect(16px 16px 32px 0px);
+}
+
+#status-popup > menu > menupopup > menuitem[value="away"] {
+    -moz-image-region: rect(32px 16px 48px 0px);    
+}
+
+#status-popup > menu > menupopup > menuitem[value="dnd"] {
+    -moz-image-region: rect(0px 16px 16px 0px);
+}
+
+#status-popup > menu > menupopup > menuitem[value="unavailable"] {
+    -moz-image-region: rect(48px 16px 64px 0px);
+}

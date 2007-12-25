@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://sameplace/skin/contacts/controls.css"?>
+<?xul-overlay href="status.xul"?>
+
+<!--
+  Copyright 2006-2007 by Massimiliano Mirra
+  
+  This file is part of SamePlace.
+  
+  SamePlace is free software; you can redistribute it and/or modify it
+  under the terms of the GNU General Public License as published by the
+  Free Software Foundation; either version 3 of the License, or (at your
+  option) any later version.
+  
+  SamePlace is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  
+  Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
+-->
+
+
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+  <script type="application/x-javascript" src="controls.js"/>
+
+  <keyset id="keys">
+    <key modifiers="alt" key="c" oncommand="addClass($('#controls .dock-tools'), 'active');
+                                            var field = $('#controls .field.filter');
+                                            field.collapsed = false;
+                                            field.focus();"/>
+  </keyset>
+
+  <stack id="contacts-stack">
+    <vbox id="controls" flex="1" mousethrough="always">
+      <hbox align="start">
+        <vbox class="control dock" mousethrough="never" flex="1">
+          <hbox class="dock-tools"
+                onmouseover="if(hasClass(event.target, 'icon')) {
+                             var tooltip = $(this, '^ .control .inline-tooltip');
+                             tooltip.firstChild.value = event.target.getAttribute('helptext');
+                             tooltip.hidden = false;
+                             }"
+                onmouseout="$(this, '^ .control .inline-tooltip').hidden = true;">
+            <image class="icon people" popup="people-popup"
+                   helptext="Edit Contacts"/>
+            <image class="icon status" popup="status-popup"
+                   helptext="Change Status"/>
+            <image class="icon filter"
+                   onclick="this.nextSibling.collapsed = !this.nextSibling.collapsed;
+                            if(!this.nextSibling.collapsed) this.nextSibling.firstChild.focus();"
+                   helptext="Search Contacts"/>
+            <vbox class="field filter" pack="center" collapsed="true">
+              <textbox value="Type part of nick…"
+                       onblur="blurredFilterField(this);"
+                       onfocus="focusedFilterField(this);"
+                       oninput="inputInFilterField(this);"
+                       onkeypress="keypressInInputField(event);"/>              
+            </vbox>
+            <image class="icon sort" popup="sort-popup"
+                   helptext="Sort Contacts"/>
+            <image class="icon help" popup="help-popup"
+                   helptext="Help"/>
+            <image class="icon conversations"
+                   onclick="toggleConversations();"
+                   helptext="Show/Hide Conversations"/>
+          </hbox>
+
+          <hbox class="inline-tooltip"
+                mousethrough="always"
+                hidden="true">
+            <label crop="end" flex="1"/>
+          </hbox>
+        </vbox>
+
+        <vbox class="control scroll-arrow-up"
+              onmouseover="scroller.mouseMovedOnScrollUp(event);"
+              onmouseout="scroller.mouseLeftScroller(event);"
+              onmousemove="scroller.increment = -Math.abs(this.boxObject.height - (event.clientY-this.boxObject.y))/1.5;"
+              mousethrough="never"
+              flex="1">
+          <image/>
+        </vbox>
+      </hbox>
+
+      <spacer flex="1" mousethrough="always"/>
+
+      <vbox class="control offline-notice" hidden="true">
+        <description class="notice">
+          You're offline.
+        </description>
+
+        <description class="action"
+                     onclick="requestedConnection();">
+          Connect »
+        </description>
+      </vbox>
+
+      <spacer flex="2" mousethrough="always"/>
+
+      <hbox>
+        <spacer flex="1"/>
+        <vbox class="control scroll-arrow-down"
+              onmouseover="scroller.mouseMovedOnScrollDown(event);"
+              onmouseout="scroller.mouseLeftScroller(event);"
+              onmousemove="scroller.increment = Math.abs(event.clientY-this.boxObject.y)/2;"
+              mousethrough="never"
+              flex="1">
+          <image/>
+        </vbox>
+      </hbox>
+    </vbox>
+  </stack>
+</overlay>

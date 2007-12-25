@@ -1,0 +1,294 @@
+/*
+ * Copyright 2006-2007 by Massimiliano Mirra
+ * 
+ * This file is part of SamePlace.
+ * 
+ * SamePlace is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 3 of the License, or (at your
+ * option) any later version.
+ * 
+ * SamePlace is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
+ *  
+ */
+
+
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+@namespace html url("http://www.w3.org/1999/xhtml");
+
+/* CONTACT LIST */
+
+#contacts {
+    background: white;
+    margin: 0px;
+}
+
+#contacts scrollbar {
+    /* works in Firefox2.  needs run-time application of ./scrollbars.css in Firefox3. */
+    display: none;
+}
+
+#contacts .scrollbox-innerbox {
+    /* make room for upper control */
+    margin-top: 56px;
+}
+
+
+/* HEADERS */
+
+#contacts .header {
+    -moz-box-pack: center;
+    font-size: 9px;
+    font-weight: bold;
+}
+
+#contacts .header:not(.active) {
+    display: none;
+}
+
+
+/* CONTACT */
+
+#contacts .contact {
+    padding: 2px 4px 6px 4px;
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid rgb(237,237,237);
+}
+
+#contacts .contact[selected="true"] {
+    color: black;
+    border-top-color: rgb(210,210,210);
+    border-bottom-color: rgb(210,210,210);
+    background: rgb(232,232,232);
+}
+
+#contacts .contact:hover {
+    border-top-color: rgb(215,215,215);
+    border-bottom-color: rgb(215,215,215);
+    background: rgb(241,241,241);
+}
+
+#contacts .contact[dragover="true"] {
+    border-top: 1px solid lightblue;
+    border-bottom: 1px solid lightblue;
+}
+
+
+/* CONTACT CONTENT */
+
+/* avatar area */
+
+#contacts .contact .avatar-stack {
+    width: 52px;
+    height: 58px;
+}
+
+#contacts .contact .avatar-stack > vbox {
+    -moz-box-align: start;
+}
+
+/* avatar area -> small name (visible when no avatar available) */
+
+#contacts .contact .avatar-stack .small-name {
+    margin: 32px 0 0 0;
+    width: 48px;
+    color: #444;
+    font-size: 9px;
+    text-align: center;
+    padding: 0 2px;
+}
+
+/* avatar area -> avatar */
+
+#contacts .contact .avatar-stack .avatar {
+    width: 48px;
+    height: 48px;
+    -moz-border-radius: 3px;
+    list-style-image: url("avatar-default.png");
+    border: 1px solid lightgray;
+}
+
+/* avatar area -> indicators (status etc.) */
+
+#contacts .contact .avatar-stack .indicators {
+    padding: 0 4px;
+    margin-top: 44px;
+}
+
+#contacts .contact .avatar-stack .icon-pending {
+    list-style-image: url("email.png");
+    visibility: hidden;
+}
+
+#contacts .contact .avatar-stack .icon-status {
+    list-style-image: url("chrome://xmpp4moz/skin/status/all-small.png");
+}
+
+#contacts .contact[availability="unavailable"] .avatar-stack .icon-status {
+    -moz-image-region: rect(48px 16px 64px 0px);
+}
+
+#contacts .contact[availability="available"][show=""] .avatar-stack .icon-status,
+#contacts .contact[availability="available"][show="chat"] .avatar-stack .icon-status {
+    visibility: hidden;
+    -moz-image-region: rect(16px 16px 32px 0px);
+}
+
+#contacts .contact[availability="available"][show="away"] .avatar-stack .icon-status,
+#contacts .contact[availability="available"][show="xa"] .avatar-stack .icon-status {
+    -moz-image-region: rect(32px 16px 48px 0px);
+}
+
+#contacts .contact[availability="available"][show="dnd"] .avatar-stack .icon-status {
+    -moz-image-region: rect(0px 16px 16px 0px);
+}
+
+#contacts .contact .service {
+    list-style-image: url("../services/server_im.png");
+    opacity: 0.15;
+}
+
+#contacts .contact .service:hover {
+    opacity: 0.8;
+}
+
+#contacts .contact[address$="@sameplace.cc"] .service {
+    list-style-image: url("../services/server_im_sameplace.png");
+}
+
+#contacts .contact[address$="@gmail.com"] .service,
+#contacts .contact[address$="@googlemail.com"] .service {
+    list-style-image: url("../services/server_im_gtalk.png");
+}
+
+#contacts .contact[address$="@twitter.x4m.localhost"] .service {
+    list-style-image: url("../services/server_x-turtle-twitter.png");
+}
+
+
+/*
+#contacts .contact:not([pending="0"]) .icon.icon-email {
+    display: -moz-box;
+    list-style-image: url("email.png");
+}
+*/
+
+/* contact content area */
+
+#contacts .contact vbox.info {
+    overflow: hidden
+}
+
+#contacts .contact .info label.name {
+    font-size: 14px;
+    color: rgb(30,30,30);
+}
+
+#contacts .contact .info label.name:hover {
+    text-decoration: underline;
+    color: blue;
+}
+
+#contacts .contact .status {
+    font-size: 10px;
+    color: rgb(80,80,80);
+    padding-left: 4px;
+    overflow: hidden;
+}
+
+#contacts .contact .status label.text-link {
+    margin: 0;
+}
+
+#contacts .contact vbox.extra {
+    overflow: hidden;
+}
+
+
+
+/* DISPLAY MODES */
+
+/* sort by activity */
+
+#contacts[sort="activity"] .header {
+    display: none;
+}
+
+/* filtering */
+
+#contacts[filtering="true"] .contact:not([candidate="true"]) {
+    display: none;
+}
+
+#contacts[filtering="true"] .header {
+    display: none;
+}
+
+/* show/hide unavailable contacts */
+
+#contacts.hide-unavailable .contact[availability="unavailable"] {
+    display: none;
+}
+
+/* compact/expanded view */
+
+#view #contacts .contact .small-name {
+    display: none;
+}
+
+#view.compact #contacts .small-name {
+    display: -moz-box;
+}
+
+
+/* POPUPS */
+
+popup.with-headers menuitem.header {
+    font-weight: bold;
+    color: black;
+}
+
+popup.with-headers menuitem.offset {
+    padding-left: 1em;
+}
+
+#status-popup {
+    max-width: 200px;
+}
+
+
+/* BUTTONS */
+
+button#collapse-conversations {
+    -moz-appearance: none !important;
+    border: none;
+    margin: 0;
+    padding: 0;
+    min-width: 7px;
+    list-style-image: url("chrome://global/skin/arrow/arrow-lft.gif");
+}
+
+button#collapse-conversations[checked="true"] {
+    list-style-image: url("chrome://global/skin/arrow/arrow-rit.gif");
+}
+
+
+/* experiments ... */
+
+
+.contact {
+    opacity: 0.9;
+}
+
+.contact:hover {
+    opacity: 1;
+}
+

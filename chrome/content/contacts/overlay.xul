@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+
+<!--
+  Copyright 2006-2007 by Massimiliano Mirra
+  
+  This file is part of SamePlace.
+  
+  SamePlace is free software; you can redistribute it and/or modify it
+  under the terms of the GNU General Public License as published by the
+  Free Software Foundation; either version 3 of the License, or (at your
+  option) any later version.
+  
+  SamePlace is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  
+  Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
+-->
+
+<?xml-stylesheet href="chrome://sameplace/skin/contacts/overlay.css" type="text/css"?>
+<?xml-stylesheet href="chrome://sameplace/skin/toolbar-button.css" type="text/css"?>
+
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+  <script type="application/x-javascript;version=1.7" src="overlay.js"/>
+
+  <!-- TOOLBAR -->
+ 
+  <toolbox id="navigator-toolbox"/>
+
+  <toolbarpalette id="BrowserToolbarPalette">
+    <toolbarbutton id="sameplace-button"
+                   class="toolbarbutton-1 chromeclass-toolbar-additional"
+                   label="SP"
+                   tooltiptext="SamePlace"
+                   availability="unavailable"
+                   oncommand="var sameplaceBox = document.getElementById('sameplace-box');
+                              sameplaceBox.collapsed = !sameplaceBox.collapsed;">
+    </toolbarbutton>
+  </toolbarpalette>
+
+  <!-- BROWSER -->
+
+  <hbox id="browser">
+    <splitter insertafter="sidebar-splitter"
+              state="open"
+              resizebefore="closest"
+              resizeafter="closest"/>
+
+    <vbox id="sameplace-box"
+          insertafter="sidebar-splitter"
+          width="300"
+          minwidth="60"
+          collapsed="true">
+      <iframe id="sameplace-frame" flex="1"/>
+    </vbox>
+  </hbox>
+</overlay>

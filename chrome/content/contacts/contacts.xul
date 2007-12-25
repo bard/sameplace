@@ -1,0 +1,218 @@
+<?xml version="1.0"?>
+
+<!--
+  Copyright 2006-2007 by Massimiliano Mirra
+  
+  This file is part of SamePlace.
+  
+  SamePlace is free software; you can redistribute it and/or modify it
+  under the terms of the GNU General Public License as published by the
+  Free Software Foundation; either version 3 of the License, or (at your
+  option) any later version.
+  
+  SamePlace is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  
+  Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
+-->
+
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://sameplace/skin/contacts/contacts.css" type="text/css"?>
+<?xul-overlay href="controls.xul"?>
+<?xul-overlay href="conversations.xul"?>
+<?xul-overlay href="hintbar.xul"?>
+
+<!DOCTYPE page SYSTEM "chrome://sameplace/locale/toolbox.dtd">
+
+<page xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+      xmlns:html="http://www.w3.org/1999/xhtml"
+      title="SamePlace"
+      onload="init();"
+      onunload="finish();"
+      orient="horizontal"
+      id="view">
+
+  <script type="application/x-javascript" src="chrome://global/content/nsDragAndDrop.js"/>
+  <script type="application/x-javascript" src="chrome://global/content/nsTransferable.js"/>
+  <script type="application/x-javascript;version=1.7" src="chrome://xmpp4moz/content/xmpp.js"/>
+  <script type="application/x-javascript;version=1.7" src="../lib/namespaces.js"/>  
+  <script type="application/x-javascript;version=1.7" src="../lib/getElementsBySelector.js"/>
+  <script type="application/x-javascript;version=1.7" src="../app/lib/filter.js"/>
+  <script type="application/x-javascript;version=1.7" src="../app/lib/text.js"/>
+  <script type="application/x-javascript;version=1.7" src="../app/lib/xml.js"/>
+  <script type="application/x-javascript;version=1.7" src="gecko1.9-scrollbar.js"/>
+  <script type="application/x-javascript;version=1.7" src="contacts.js"/>
+
+  <keyset id="keys"/>
+
+  <commandset>
+    <command id="add-contact" oncommand="requestedAddContact();"
+             label="&command.add_contact.label;"
+             tooltiptext="&command.add_contact.tooltip;"/>
+    <command id="open-conversation" oncommand="requestedOpenConversation('chat');"
+             label="&command.open_conversation.label;"
+             accesskey="&command.open_conversation.accesskey;"
+             tooltiptext="&command.open_conversation.tooltip;"/>
+    <command id="join-room" oncommand="requestedOpenConversation('groupchat');"
+             label="&command.join_room.label;"
+             accesskey="&command.join_room.accesskey;"
+             tooltiptext="&command.join_room.tooltip;"/>
+    <command id="toggle-offline"
+             label="&popup.toggle_offline.label;"
+             oncommand="toggleOfflineContacts();"/>
+    
+    <command id="view-help" oncommand="viewHelp();"
+             label="&command.view_help_pages.label;"
+             accesskey="&command.view_help_pages.accesskey;"
+             tooltiptext="&command.view_help_pages.tooltip;"/>
+    <command id="visit-forum" oncommand="visitForum();"
+             label="&command.visit_forum.label;"
+             accesskey="&command.visit_forum.accesskey;"
+             tooltiptext="&command.visit_forum.tooltip;"/>
+    <command id="report-bug" oncommand="reportBug();"
+             label="&command.report_bug.label;"
+             accesskey="&command.report_bug.accesskey;"
+             tooltiptext="&command.report_bug.tooltip;"/>
+    <command id="visit-users-room" oncommand="visitUsersRoom();"
+             label="&command.join_users_room.label;"
+             accesskey="&command.join_users_room.accesskey;"
+             tooltiptext="&command.join_users_room.tooltip;"/>
+    <command id="read-latest-news" oncommand="readLatestNews();"
+             label="&command.read_latest_news.label;"
+             accesskey="&command.read_latest_news.accesskey;"/>    
+  </commandset>
+
+  <stringbundleset>
+    <stringbundle id="strings" src="chrome://sameplace/locale/contacts.properties"/>
+  </stringbundleset>
+
+  <popupset id="popups">
+    <popup id="people-popup" class="with-headers"
+           onpopupshowing="showingPeopleMenu(event);">
+      <menuitem class="header" label="People" disabled="true"/>
+      <menuseparator/>
+      <menuitem class="menuitem-iconic" command="add-contact"/>
+      <menuitem class="menuitem-iconic" command="join-room"/>
+      <menuitem class="menuitem-iconic" command="open-conversation"/>
+      <menuseparator/>
+      <menuitem command="toggle-offline"/>
+      <menuseparator/>
+      <menuitem class="header" label="Sort by:" disabled="true"/>
+      <menuitem label="Name" value="display-name" name="sort" type="radio"
+                oncommand="setInsertionStrategy(this.value);"/>
+      <menuitem label="Recent activity" value="activity" name="sort" type="radio"
+                oncommand="setInsertionStrategy(this.value);"/>
+    </popup>
+
+    <popup id="status-popup" class="with-headers">
+      <menuitem class="header" label="Status" disabled="true"/>
+      <menuseparator/>
+    </popup>
+
+    <popup id="sort-popup" class="with-headers">
+      <menuitem class="header" label="Sort" disabled="true"/>
+      <menuseparator/>
+      <menuitem type="radio" name="sort" label="Group" value="group"/>
+      <menuitem type="radio" name="sort" label="Name" value="name" checked="true"/>
+      <menuitem type="radio" name="sort" label="Activity stream" value="activity"/>
+      <menuitem type="radio" name="sort" label="Most talked with" value="messages"/>
+      <menuseparator/>
+      <menuitem label="Custom criteria..." value="custom"/>
+    </popup>
+
+    <popup id="help-popup" class="with-headers">
+      <menuitem class="header" label="Help" disabled="true"/>
+      <menuseparator/>
+      <menuitem class="menuitem-iconic" command="visit-users-room"/>
+      <menuitem class="menuitem-iconic" command="visit-forum"/>
+      <menuitem class="menuitem-iconic" command="view-help"/>
+      <menuitem class="menuitem-iconic" command="report-bug"/>
+      <menuitem class="menuitem-iconic" command="read-latest-news"/>      
+    </popup>
+    
+    <popup id="contact-popup" class="with-headers">
+      <menuitem label="Set Alias..."
+                oncommand="requestedSetContactAlias(document.popupNode);"/>
+      <menuseparator/>
+      <menuitem class="header" label="Interact:" disabled="true"/>
+      <menuitem class="offset" label="Whiteboard"/>
+      <menuitem class="offset" label="Chessboard"/>
+    </popup>
+  </popupset>
+
+  <vbox id="main" flex="1">
+    <vbox id="profile" hidden="true"> <!-- XXX to reintegrate? -->
+      <textbox style="-moz-appearance: none; border: none;
+                      font-size: smaller;
+                      color: gray;"
+               value="[Click or Ctrl+Alt+T to change status]"/>
+    </vbox>
+    <stack flex="1" id="contacts-stack">
+      <richlistbox id="contacts"
+                   persist="sort"
+                   sort="activity"
+                   class="inset hide-scrollbar hide-unavailable"
+                   flex="1"
+                   onoverflow="changedContactsOverflow();"/>
+    </stack>
+  </vbox>
+
+  <!-- BLUEPRINTS -->
+
+  <box hidden="true" id="blueprints">
+    <menupopup class="status-menu">
+      <menuitem class="menuitem-iconic" label="&menu.status-online.label;" value="available"/>
+      <menuitem class="menuitem-iconic" label="&menu.status-away.label;" value="away"/>
+      <menuitem class="menuitem-iconic" label="&menu.status-busy.label;" value="dnd"/>
+      <menuitem class="menuitem-iconic" label="&menu.status-offline.label;" value="unavailable"/>
+    </menupopup>
+
+    <richlistitem class="contact" 
+                  account="" address=""
+                  availability="unavailable" show="" primary-group=""
+                  orient="vertical" display-name=""
+                  pending="0"
+                  context="contact-popup"
+                  ondragenter="onContactDragEnter(event);"
+                  ondragexit="onContactDragExit(event);">
+      <hbox>
+        <stack class="avatar-stack">
+          <vbox>
+            <label class="small-name" crop="end"/>
+          </vbox>
+          <vbox>
+            <image class="avatar"/>            
+          </vbox>
+          <vbox>
+            <hbox class="indicators">
+              <image class="icon-status"/>
+              <image class="icon-pending"/>              
+            </hbox>            
+          </vbox>
+        </stack>
+        <vbox class="info" flex="1" >
+          <hbox align="start">
+            <label class="name" onclick="clickedContactName(event);"/>
+            <spacer flex="1"/>
+            <image class="service"/>
+          </hbox>
+          <vbox class="status" flex="1" onclick="clickedStatus(event);">
+            <description/>
+          </vbox>
+        </vbox>
+      </hbox>
+      <vbox class="extra" height="0" state="closed">
+        <label value="boo!"/>
+      </vbox>
+    </richlistitem>
+    <richlistitem display-name="" class="header">
+      <label class="title" value=""/>
+    </richlistitem>
+  </box>
+</page>
