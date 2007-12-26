@@ -20,19 +20,16 @@
  *  
  */
 
-window.addEventListener('load', function() {
-    $('#conversations').contentDocument.location.href = 'conversations.xul';
-}, false);
 
-window.addEventListener('contact/select', function(event) {
-    $('#conversations').contentWindow
-        .selectedContact(event.target.getAttribute('account'),
-                         event.target.getAttribute('address'));
+window.addEventListener(
+    'load', function(event) { conversations.init(); }, false);
+window.addEventListener(
+    'unload', function(event) { conversations.finish(); }, false);
 
-    $('#conversations').collapsed = false;
-}, false);
+var conversations = {};
 
-window.addEventListener('conversation/close', function(event) {
-    if($('#conversations').contentWindow.getCount() == 0)
-        $('#conversations').collapsed = true;
-}, false);
+Components
+    .classes['@mozilla.org/moz/jssubscript-loader;1']
+    .getService(Components.interfaces.mozIJSSubScriptLoader)
+    .loadSubScript('chrome://sameplace/content/contacts/conversations-overlay_impl.js',
+                   conversations);

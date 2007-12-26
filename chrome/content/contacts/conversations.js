@@ -28,6 +28,7 @@ var Cc = Components.classes;
 var Ci = Components.interfaces;
 
 var DEFAULT_INTERACTION_URL = chromeToFileUrl('chrome://sameplace/content/app/chat.xhtml');
+var MAX_MESSAGE_CACHE = 10;
 
 
 // STATE
@@ -49,8 +50,11 @@ function init() {
         event     : 'message',
         direction : 'in',
         stanza    : function(s) {
-            return ((s.@type != 'error' && s.body.text() != undefined) ||
-                    (s.@type == 'error'))
+            // Allow non-error messages with readable body [1] or
+            // error messages in general [2] but not auth requests [3]
+            return (((s.@type != 'error' && s.body.text() != undefined) || // [1]
+                     (s.@type == 'error')) && // [2]
+                    (s.ns_http_auth::confirm == undefined)) // [3]
         }
     }, function(message) {
         cachePut(message);
@@ -61,40 +65,42 @@ function init() {
         event     : 'message',
         direction : 'out',
         stanza    : function(s) {
-            return s.body.text() != undefined && s.@type != 'groupchat';
+            // Allow messages with readable bodies [1], except if they
+            // belong to a groupchat [2] (we show those as they come
+            // back)
+            return (s.body.text() != undefined &&
+                    s.@type != 'groupchat');
         }
     }, function(message) {
         cachePut(message);
         seenDisplayableMessage(message);
     });
+
+    channel.on({
+        event     : 'message',
+        direction : 'out',
+        stanza    : function(s) {
+            return s.ns_chatstates::active != undefined;
+        }
+    }, function(message) {
+        sentChatActivation(message);
+    });
 }
+
+function finish() {
+    channel.release();
+}
+
 
 // GUI REACTIONS
 // ----------------------------------------------------------------------
 
 function selectedContact(account, address) {
-    var xulConversations = $('#deck');
     var xulPanel = get(account, address);
     if(xulPanel)
-        xulConversations.selectedTab = xulPanel.tab;
-    else {
-        var xulTab = xulConversations.addTab();
-        var xulPanel = xulConversations.getBrowserForTab(xulTab);
-        xulPanel.tab = xulTab;
-
-        afterLoad(xulPanel, function() {
-            XMPP.connectPanel(xulPanel, account, address);
-            xulPanel.contentWindow.addEventListener('unload', function(event) {
-                closed(xulPanel);
-            }, false);
-
-            opened(xulPanel);
-            focus(xulPanel);
-        });
-        xulPanel.setAttribute('account', account);
-        xulPanel.setAttribute('address', address);
-        xulPanel.setAttribute('src', DEFAULT_INTERACTION_URL);
-    }
+        focus(xulPanel);
+    else
+        open(account, address, function(xulPanel) { focus(xulPanel); });
 }
 
 function closed(xulPanel) {
@@ -116,8 +122,31 @@ function opened(xulPanel) {
     xulPanel.dispatchEvent(openEvent);
 }
 
+
 // GUI ACTIONS
 // ----------------------------------------------------------------------
+
+function open(account, address, nextAction) {
+    var xulConversations = $('#deck');
+    var xulTab = xulConversations.addTab();
+    var xulPanel = xulConversations.getBrowserForTab(xulTab);
+    xulPanel.tab = xulTab;
+
+    afterLoad(xulPanel, function() {
+        XMPP.connectPanel(xulPanel, account, address);
+        xulPanel.contentWindow.addEventListener('unload', function(event) {
+            closed(xulPanel);
+        }, false);
+
+        opened(xulPanel);
+
+        if(typeof(nextAction) == 'function')
+            nextAction(xulPanel);
+    });
+    xulPanel.setAttribute('account', account);
+    xulPanel.setAttribute('address', address);
+    xulPanel.setAttribute('src', DEFAULT_INTERACTION_URL);
+}
 
 function get(account, address) {
     return $('#deck > [account="' + account + '"][address="' + address + '"]');
@@ -137,40 +166,16 @@ function getCount() {
 // ----------------------------------------------------------------------
 
 function seenDisplayableMessage(message) {
-    if(message.stanza.ns_http_auth::confirm != undefined)
-        // Balk at auth requests since these are handled elsewhere.
-        // We have to do this since auth requests usually have a
-        // <body> and upstream channel listener will send them our
-        // way.
-        return;
-
     var account = message.account;
     var address = getContact(message).address;
     
-    var xulPanel = get(account, address);
-    if(!xulPanel) {
-        var xulConversations = $('#deck');
-        var xulTab = xulConversations.addTab();
-        xulPanel = xulConversations.getBrowserForTab(xulTab);
-        xulPanel.tab = xulTab;
-
-        afterLoad(xulPanel, function() {
-            XMPP.connectPanel(xulPanel, account, address);
-            xulPanel.contentWindow.addEventListener('unload', function(event) {
-                closed(xulPanel);
-            }, false);
-
-            opened(xulPanel);
-            // Not focusing here, as it's not the result of user's intention
-        });
-        xulPanel.setAttribute('account', account);
-        xulPanel.setAttribute('address', address);
-        xulPanel.setAttribute('src', DEFAULT_INTERACTION_URL);
-    }
+    if(!get(account, address))
+        open(account, address);
 }
 
 function sentChatActivation(message) {
-    
+    selectedContact(message.account,
+                    XMPP.JID(message.stanza.@to).address);
 }
 
 
@@ -191,7 +196,7 @@ function cacheFor(account, address) {
 
 function cachePut(message) {
     var cache = cacheFor(message.account, getContact(message).address);
-    if(cache.length > 10)
+    if(cache.length > MAX_MESSAGE_CACHE)
         cache.shift();
     cache.push(message);
 }
