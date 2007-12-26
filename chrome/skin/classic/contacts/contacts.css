@@ -153,7 +153,7 @@
 
 #contacts .contact .service {
     list-style-image: url("../services/server_im.png");
-    opacity: 0.15;
+    opacity: 0.25;
 }
 
 #contacts .contact .service:hover {

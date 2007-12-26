@@ -138,6 +138,10 @@ function finish() {
 // GUI ACTIONS
 // ----------------------------------------------------------------------
 
+function getBrowser() {
+    return top.getBrowser();
+}
+
 function setInsertionStrategy(strategyName) {
     var xulContacts = $('#contacts');
     var currentStrategyName = xulContacts.getAttribute('sort');
@@ -219,13 +223,6 @@ function incPending(address) {
     var xulContact = $('#contacts > .contact[address="' + address + '"]');
     var pending = parseInt(xulContact.getAttribute('pending'));
     xulContact.setAttribute('pending', pending+1);
-}
-
-function toggleToolbar() {
-    toggle($('#old-controls'), 'height', $('#old-controls').originalHeight, function() {
-        if($('#old-controls').height != 0)
-            $('#filter').focus();
-    });
 }
 
 function toggleConversations() {
@@ -319,6 +316,12 @@ function filterContacts(prefix) {
 // GUI REACTIONS
 // ----------------------------------------------------------------------
 
+function clickedContact(xulContact) {
+    var selectEvent = document.createEvent('Event');
+    selectEvent.initEvent('contact/select', true, false);
+    xulContact.dispatchEvent(selectEvent);
+}
+
 function showingPeopleMenu(event) {
     var xulPopup = event.target;
     var insertionStrategyName = $('#contacts').getAttribute('sort');
@@ -328,8 +331,10 @@ function showingPeopleMenu(event) {
 
 function clickedStatus(event) {
     var url = event.target.getAttribute('link');
-    if(url)
+    if(url) {
+        event.stopPropagation();
         openURL(url);
+    }
 }
 
 function contactsUpdated() {
@@ -389,8 +394,8 @@ function requestedSetContactAlias(element) {
 }
 
 function clickedContactName(event) {
-    if(event.button == 0)
-        toggle($(event.target, '^ .contact .extra'), 'height', 100);
+    // if(event.button == 0)
+    // toggle($(event.target, '^ .contact .extra'), 'height', 100);
 }
 
 function onContactDragEnter(event) {
@@ -412,10 +417,6 @@ function changedContactsOverflow(event) {
 
 // UTILITIES
 // ----------------------------------------------------------------------
-
-function getBrowser() {
-    return top.getBrowser();
-}
 
 function timedExec(actionGenerator, interval) {
     var interval = window.setInterval(function(){

@@ -179,6 +179,8 @@
                   orient="vertical" display-name=""
                   pending="0"
                   context="contact-popup"
+                  onclick="if(event.button == 0)
+                           clickedContact(this);"
                   ondragenter="onContactDragEnter(event);"
                   ondragexit="onContactDragExit(event);">
       <hbox>

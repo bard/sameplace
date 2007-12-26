@@ -24,3 +24,15 @@ window.addEventListener('load', function() {
     $('#conversations').contentDocument.location.href = 'conversations.xul';
 }, false);
 
+window.addEventListener('contact/select', function(event) {
+    $('#conversations').contentWindow
+        .selectedContact(event.target.getAttribute('account'),
+                         event.target.getAttribute('address'));
+
+    $('#conversations').collapsed = false;
+}, false);
+
+window.addEventListener('conversation/close', function(event) {
+    if($('#conversations').contentWindow.getCount() == 0)
+        $('#conversations').collapsed = true;
+}, false);
