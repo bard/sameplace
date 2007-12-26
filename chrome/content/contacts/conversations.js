@@ -21,19 +21,7 @@
  */
 
 
-@import url("conversations.css");
-
-#conversations {
-    padding-bottom: 12px;
-    padding-left: 12px;
-    background: url('bgshadow.png') transparent bottom left no-repeat;
-}
-
-#conversations tabs {
-    font-size: smaller;
-}
-
-#conversations #panels {
-    border-left: 1px solid lightgray;
-    border-bottom: 1px solid lightgray;    
+function init() {
+    $('#panels').firstChild.contentDocument.location.href = 
+        "file://localhost/tmp/w/sameplace/unstable/chrome/content/app/chat.xhtml"
 }

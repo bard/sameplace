@@ -20,9 +20,7 @@
  *  
  */
 
+window.addEventListener('load', function() {
+    $('#conversations').contentDocument.location.href = 'conversations.xul';
+}, false);
 
-@import url("conversations.css");
-
-#conversations {
-    border: 1px solid lightgray;
-}

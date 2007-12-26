@@ -22,18 +22,19 @@
 -->
 
 
-<?xml-stylesheet href="chrome://sameplace/skin/contacts/conversations-gecko1_8.css"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://sameplace/skin/contacts/conversations.css" type="text/css"?>
 
-<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-  <script type="application/x-javascript">
-    window.addEventListener('load', function() {
-        document.getElementById('conversations').contentDocument.location.href =
-            'conversations-gecko1_8-iframe.xul';
-    }, false);
-  </script>
-  <stack id="contacts-stack">
-    <vbox flex="1" mousethrough="always">
-      <iframe id="conversations" src="about:blank" flex="1" collapsed="true"/>
-    </vbox>
-  </stack>
-</overlay>
+<page xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+      onload="init();">
+  <script type="application/x-javascript;version=1.7" src="../lib/getElementsBySelector.js"/>
+  <script type="application/x-javascript;version=1.7" src="conversations.js"/>
+
+  <tabs style="background: #eee;">
+    <tab label="Betty"/>
+    <tab label="Sam"/>
+  </tabs>
+  <deck id="panels" flex="1">
+    <browser type="content" flex="1"/>
+  </deck>
+</page>

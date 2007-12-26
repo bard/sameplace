@@ -21,12 +21,10 @@
  */
 
 
-tabs {
-    font-size: smaller;
-    border-top: 1px solid lightgray;
+#conversations {
+    margin: 75px 0 85px 50px;
+    padding-bottom: 12px;
+    padding-left: 12px;
+    background: url('bgshadow.png') transparent bottom left no-repeat;
 }
 
-deck {
-    border-left: 1px solid lightgray;
-    border-bottom: 1px solid lightgray;    
-}

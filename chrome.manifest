@@ -13,5 +13,4 @@ overlay chrome://messenger/content/messenger.xul chrome://sameplace/content/over
 style chrome://global/content/customizeToolbar.xul chrome://sameplace/skin/toolbar-button.css
 
 overlay chrome://browser/content/browser.xul chrome://sameplace/content/contacts/overlay.xul
-override chrome://sameplace/content/contacts/conversations.xul chrome://sameplace/content/contacts/conversations-gecko1_8.xul
-#override chrome://sameplace/content/contacts/conversations.xul chrome://sameplace/content/contacts/conversations-gecko1_9.xul application={ec8030f7-c20a-464f-9b0e-13a3a9e97384} appversion>=3.0b1
+

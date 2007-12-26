@@ -22,20 +22,14 @@
 -->
 
 
-<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://sameplace/skin/contacts/conversations-overlay.css"?>
 
-<page xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-  <script type="application/x-javascript">
-    window.addEventListener('load', function() {
-    document.getElementById('panels').firstChild.contentDocument.location.href = 
-    "file://localhost/tmp/w/sameplace/unstable/chrome/content/app/chat.xhtml"
-    }, false);
-  </script>
-  <tabs style="background: #eee;">
-    <tab label="Betty"/>
-    <tab label="Sam"/>
-  </tabs>
-  <deck id="panels" flex="1">
-    <browser type="content" flex="1"/>
-  </deck>
-</page>
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script type="application/x-javascript;version=1.7" src="../lib/getElementsBySelector.js"/>
+  <script type="application/x-javascript;version=1.7" src="conversations-overlay.js"/>
+  <stack id="contacts-stack">
+    <vbox flex="1" mousethrough="always">
+      <iframe id="conversations" src="about:blank" flex="1" collapsed="true"/>
+    </vbox>
+  </stack>
+</overlay>

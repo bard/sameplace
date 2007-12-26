@@ -25,7 +25,7 @@
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://sameplace/skin/contacts/contacts.css" type="text/css"?>
 <?xul-overlay href="controls.xul"?>
-<?xul-overlay href="conversations.xul"?>
+<?xul-overlay href="conversations-overlay.xul"?>
 <?xul-overlay href="hintbar.xul"?>
 
 <!DOCTYPE page SYSTEM "chrome://sameplace/locale/toolbox.dtd">
