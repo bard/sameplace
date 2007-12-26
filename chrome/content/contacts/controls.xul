@@ -65,6 +65,8 @@
                    helptext="Sort Contacts"/>
             <image class="icon help" popup="help-popup"
                    helptext="Help"/>
+            <image class="icon tools" popup="tools-popup"
+                   helptext="Tools"/>
             <image class="icon conversations"
                    onclick="toggleConversations();"
                    helptext="Show/Hide Conversations"/>

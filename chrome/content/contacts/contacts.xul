@@ -28,7 +28,12 @@
 <?xul-overlay href="conversations-overlay.xul"?>
 <?xul-overlay href="hintbar.xul"?>
 
-<!DOCTYPE page SYSTEM "chrome://sameplace/locale/toolbox.dtd">
+<!DOCTYPE page [
+<!ENTITY % contactsDTD SYSTEM "chrome://sameplace/locale/contacts.dtd">
+%contactsDTD;
+<!ENTITY % toolboxDTD SYSTEM "chrome://sameplace/locale/toolbox.dtd">
+%toolboxDTD;
+]>
 
 <page xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
       xmlns:html="http://www.w3.org/1999/xhtml"
@@ -86,6 +91,9 @@
     <command id="read-latest-news" oncommand="readLatestNews();"
              label="&command.read_latest_news.label;"
              accesskey="&command.read_latest_news.accesskey;"/>    
+    <command id="open-preferences" oncommand="openPreferences();"
+             label="Accounts and Preferences..."
+             accesskey="A"/>
   </commandset>
 
   <stringbundleset>
@@ -93,8 +101,7 @@
   </stringbundleset>
 
   <popupset id="popups">
-    <popup id="people-popup" class="with-headers"
-           onpopupshowing="showingPeopleMenu(event);">
+    <popup id="people-popup" class="with-headers">
       <menuitem class="header" label="People" disabled="true"/>
       <menuseparator/>
       <menuitem class="menuitem-iconic" command="add-contact"/>
@@ -102,12 +109,6 @@
       <menuitem class="menuitem-iconic" command="open-conversation"/>
       <menuseparator/>
       <menuitem command="toggle-offline"/>
-      <menuseparator/>
-      <menuitem class="header" label="Sort by:" disabled="true"/>
-      <menuitem label="Name" value="display-name" name="sort" type="radio"
-                oncommand="setInsertionStrategy(this.value);"/>
-      <menuitem label="Recent activity" value="activity" name="sort" type="radio"
-                oncommand="setInsertionStrategy(this.value);"/>
     </popup>
 
     <popup id="status-popup" class="with-headers">
@@ -115,15 +116,22 @@
       <menuseparator/>
     </popup>
 
-    <popup id="sort-popup" class="with-headers">
+    <popup id="sort-popup" class="with-headers"
+           onpopupshowing="showingSortMenu(event);"
+           oncommand="requestedChangeSort(this)">
       <menuitem class="header" label="Sort" disabled="true"/>
       <menuseparator/>
-      <menuitem type="radio" name="sort" label="Group" value="group"/>
-      <menuitem type="radio" name="sort" label="Name" value="name" checked="true"/>
-      <menuitem type="radio" name="sort" label="Activity stream" value="activity"/>
-      <menuitem type="radio" name="sort" label="Most talked with" value="messages"/>
+      <menuitem type="radio" name="sort" label="Name"
+                value="display-name"/>
+      <menuitem type="radio" name="sort" label="Recent activity"
+                value="activity"/>
+      <menuitem type="radio" name="sort" label="Group"
+                value="group" disabled="true"/>      
+      <menuitem type="radio" name="sort" label="Most talked with"
+                value="messages" disabled="true"/>
       <menuseparator/>
-      <menuitem label="Custom criteria..." value="custom"/>
+      <menuitem label="Custom criteria..." value="custom"
+                disabled="true"/>
     </popup>
 
     <popup id="help-popup" class="with-headers">
@@ -136,6 +144,21 @@
       <menuitem class="menuitem-iconic" command="read-latest-news"/>      
     </popup>
     
+    <popup id="tools-popup" class="with-headers">
+      <menuitem class="header" label="Tools" disabled="true"/>
+      <menuseparator/>
+      <menuitem class="menuitem-iconic" command="open-preferences"/>
+      <menuseparator/>
+      <menu class="menuitem-iconic" label="&menu.scriptlets.label;">
+        <menupopup id="scriptlets-popup" onpopupshowing="requestedShowScriptletList(this);">
+          <menuseparator/>
+          <menuitem label="&menu.scriptlets.manage.label;"
+                    accesskey="&menu.scriptlets.manage.accesskey;"
+                    oncommand="requestedManageScriptlets();"/>
+        </menupopup>
+      </menu>
+    </popup>
+
     <popup id="contact-popup" class="with-headers">
       <menuitem label="Set Alias..."
                 oncommand="requestedSetContactAlias(document.popupNode);"/>
@@ -144,6 +167,38 @@
       <menuitem class="offset" label="Whiteboard"/>
       <menuitem class="offset" label="Chessboard"/>
     </popup>
+
+    <tooltip id="contact-tooltip" noautohide="true"
+             orient="vertical"
+             onpopupshowing="showingContactTooltip(document.tooltipNode);">
+      <hbox align="center" style="font-weight: bold;">
+        <label class="name"/>
+        <label value="(" style="margin-right: 0;"/>
+        <label class="address" style="margin-left: 0; margin-right: 0;"/>
+        <label value=")" style="margin-left: 0;"/>
+      </hbox>
+
+      <spacer height="5"/>
+      
+      <grid>
+        <columns>
+          <column flex="0"/>
+          <column flex="1"/>
+        </columns>
+
+        <rows>
+          <row>
+            <label value="&tooltip.contact_of.label;"/>
+            <label class="account"/>
+          </row>
+
+          <row>
+            <label value="&tooltip.presence_notification.label;"/>
+            <label class="subscription"/>
+          </row>
+        </rows>
+      </grid>
+    </tooltip>
   </popupset>
 
   <vbox id="main" flex="1">
@@ -179,6 +234,7 @@
                   orient="vertical" display-name=""
                   pending="0"
                   context="contact-popup"
+                  tooltip="contact-tooltip"
                   onclick="if(event.button == 0)
                            clickedContact(this);"
                   ondragenter="onContactDragEnter(event);"

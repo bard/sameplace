@@ -138,6 +138,33 @@ function finish() {
 // GUI ACTIONS
 // ----------------------------------------------------------------------
 
+function openPreferences(paneID) {
+    var instantApply;
+    try {
+        instantApply = pref.getBoolPref('browser.preferences.instantApply', false);
+    } catch(e) {
+        instantApply = false;
+    }
+        
+    var features = 'chrome,titlebar,toolbar,centerscreen' +
+        (instantApply ? ',dialog=no' : ',modal');
+    
+    var prefWindow = Cc['@mozilla.org/appshell/window-mediator;1']
+        .getService(Ci.nsIWindowMediator)
+        .getMostRecentWindow('SamePlace:Preferences');
+    
+    if(prefWindow) {
+        prefWindow.focus();
+        if(paneID) {
+            var pane = prefWindow.document.getElementById(paneID);
+            prefWindow.document.documentElement.showPane(pane);
+        }
+    } else {
+        window.openDialog('chrome://sameplace/content/preferences.xul',
+                          'sameplace-preferences', features, paneID);
+    }
+}
+
 function getBrowser() {
     return top.getBrowser();
 }
@@ -316,13 +343,35 @@ function filterContacts(prefix) {
 // GUI REACTIONS
 // ----------------------------------------------------------------------
 
+function requestedChangeSort(xulPopup) {
+    setInsertionStrategy($(xulPopup, '[checked="true"]').value);
+}
+
+function showingContactTooltip(xulElement) {
+    var xulContact = $(xulElement, '^ .contact');
+    var account = xulContact.getAttribute('account');
+    var address = xulContact.getAttribute('address');
+    var subscriptionState = xulContact.getAttribute('subscription');
+
+    $('#contact-tooltip .name').value = XMPP.nickFor(account, address);
+    $('#contact-tooltip .address').value = address;
+    $('#contact-tooltip .account').value = account;
+
+    if(subscriptionState) {
+        $('#contact-tooltip .subscription').value = $('#strings')
+            .getString('subscription.' + subscriptionState);
+        $('#contact-tooltip .subscription').parentNode.hidden = false;
+    } else
+        $('#contact-tooltip .subscription').parentNode.hidden = true;
+}
+
 function clickedContact(xulContact) {
     var selectEvent = document.createEvent('Event');
     selectEvent.initEvent('contact/select', true, false);
     xulContact.dispatchEvent(selectEvent);
 }
 
-function showingPeopleMenu(event) {
+function showingSortMenu(event) {
     var xulPopup = event.target;
     var insertionStrategyName = $('#contacts').getAttribute('sort');
     $(xulPopup, '[value="' + insertionStrategyName + '"]')
@@ -371,10 +420,8 @@ function requestedConnection() {
         runWizard(); // XXX not ported
 }
 
-function requestedSetContactAlias(element) {
-    var xulContact = (element.getAttribute('class') == 'contact' ?
-                      element :
-                      $(element, '^ .contact'));
+function requestedSetContactAlias(xulElement) {
+    var xulContact = $(xulElement, '^ .contact');
 
     var account = xulContact.getAttribute('account');
     var address = xulContact.getAttribute('address');

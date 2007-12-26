@@ -65,9 +65,7 @@
 
 #contacts .contact[selected="true"] {
     color: black;
-    border-top-color: rgb(210,210,210);
-    border-bottom-color: rgb(210,210,210);
-    background: rgb(232,232,232);
+    background: white;
 }
 
 #contacts .contact:hover {
