@@ -85,6 +85,19 @@ function init() {
     }, function(message) {
         sentChatActivation(message);
     });
+
+    channel.on({
+        event     : 'message',
+        direction : 'in',
+        stanza    : function(s) {
+            return (s.ns_event::x != undefined ||
+                    s.ns_chatstates::* != undefined);
+        }
+    }, function(message) {
+        receivedChatState(message);
+    });
+
+    $('#tabs').addEventListener('select', selectedTab, false);
 }
 
 function finish() {
@@ -101,6 +114,13 @@ function selectedContact(account, address) {
         focus(xulPanel);
     else
         open(account, address, function(xulPanel) { focus(xulPanel); });
+}
+
+function selectedTab(event) {
+    var xulTab = event.target.selectedItem;
+    var xulPanel = $('#deck').getBrowserForTab(xulTab);
+    xulPanel.contentWindow.focus();
+    removeClass(xulTab, 'unread');
 }
 
 function closed(xulPanel) {
@@ -146,6 +166,8 @@ function open(account, address, nextAction) {
     xulPanel.setAttribute('account', account);
     xulPanel.setAttribute('address', address);
     xulPanel.setAttribute('src', DEFAULT_INTERACTION_URL);
+
+    return xulPanel;
 }
 
 function get(account, address) {
@@ -154,23 +176,57 @@ function get(account, address) {
 
 function focus(xulPanel) {
     $('#deck').selectedTab = xulPanel.tab;
-    xulPanel.contentWindow.focus();
+//    xulPanel.contentWindow.focus();
+
+/*
+    var focusEvent = document.createEvent('Event');
+    focusEvent.initEvent('conversation/focus', true, false);
+    xulPanel.dispatchEvent(focusEvent);
+*/
 }
 
 function getCount() {
     return $('#deck').browsers.length;
 }
 
+function isCurrent(xulPanel) {
+    return $('#deck').selectedBrowser == xulPanel;
+/*
+    var xulPanel = $('#deck').selectedBrowser;
+    return xulPanel.getAttribute('account') == account &&
+        xulPanel.getAttribute('address') == address;
+*/
+}
+
 
 // NETWORK REACTIONS
 // ----------------------------------------------------------------------
 
+function receivedChatState(message) {
+    var xulPanel = get(message.account, XMPP.JID(message.stanza.@from).address);
+    if(!xulPanel)
+        return;
+    var xulTab = xulPanel.tab;
+
+    if(message.stanza.ns_chatstates::* != undefined)
+        xulTab.setAttribute(
+            'chatstate', message.stanza.ns_chatstates::*[0].localName());
+    else if(message.stanza.ns_event::x != undefined) {
+        if(message.stanza.ns_event::x.composing != undefined) // XXX shouldn't that be ns_event::composing?
+            xulTab.setAttribute('chatstate', 'composing');
+        else
+            xulTab.setAttribute('chatstate', 'active');
+    }
+}
+
 function seenDisplayableMessage(message) {
     var account = message.account;
     var address = getContact(message).address;
-    
-    if(!get(account, address))
-        open(account, address);
+
+    var xulPanel = get(account, address) || open(account, address);
+
+    if(!isCurrent(xulPanel))
+        addClass(xulPanel.tab, 'unread');
 }
 
 function sentChatActivation(message) {
@@ -240,3 +296,41 @@ function afterLoad(contentPanel, action) {
             contentPanel.removeEventListener('load', arguments.callee, true);
         }, true);
 }
+
+
+// UTILITIES
+// ----------------------------------------------------------------------
+
+function setClass(xulElement, aClass, state) {
+    if(state)
+        addClass(xulElement, aClass);
+    else
+        removeClass(xulElement, aClass);
+}
+
+function toggleClass(xulElement, aClass) {
+    if(hasClass(xulElement, aClass))
+        removeClass(xulElement, aClass);
+    else
+        addClass(xulElement, aClass);
+}
+
+function hasClass(xulElement, aClass) {
+    return xulElement.getAttribute('class').split(/\s+/).indexOf(aClass) != -1;
+}
+
+function addClass(xulElement, newClass) {
+    var classes = xulElement.getAttribute('class').split(/\s+/);
+    if(classes.indexOf(newClass) == -1)
+        xulElement.setAttribute('class', classes.concat(newClass).join(' '));
+}
+
+function removeClass(xulElement, oldClass) {
+    var classes = xulElement.getAttribute('class').split(/\s+/);
+    var oldClassIndex = classes.indexOf(oldClass);
+    if(oldClassIndex != -1) {
+        classes.splice(oldClassIndex, 1);
+        xulElement.setAttribute('class', classes.join(' '));
+    }
+}
+

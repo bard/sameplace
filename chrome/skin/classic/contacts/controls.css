@@ -124,14 +124,16 @@
 }
 
 #controls .dock .icon.people        { list-style-image: url('people.png');        }
-#controls .dock .icon.status        { list-style-image: url("status.png");        }
+#controls .dock .icon.status        { list-style-image: url("status16x64.png");   }
+#controls .dock .icon.status:hover  { list-style-image: url("status32x128.png");  }
 #controls .dock .icon.filter        { list-style-image: url('filter.png');        }
 #controls .dock .icon.sort          { list-style-image: url('sort.png');          }
 #controls .dock .icon.tools         { list-style-image: url('../tools.png');      }
 #controls .dock .icon.conversations { list-style-image: url('conversations.png'); }
 #controls .dock .icon.help          { list-style-image: url('help.png');          }
 
-#controls .dock .icon.status { -moz-image-region: rect(16px 16px 32px 0px); }
+#controls .dock .icon.status        { -moz-image-region: rect(16px 16px 32px 0px); }
+#controls .dock .icon.status:hover  { -moz-image-region: rect(32px 32px 64px 0px); }
 
 
 /* OFFLINE NOTICE */
