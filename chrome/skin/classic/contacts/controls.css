@@ -57,12 +57,10 @@
 
 /* ARROWS */
 
-#controls .scroll-arrow-up,
-#controls .scroll-arrow-down {
+#controls .scroll-arrow {
     height: 96px;
     display: none;
 }
-
 
 #controls .scroll-arrow[speed="0"] image { height: 21px; }
 #controls .scroll-arrow[speed="1"] image { height: 24px; }
@@ -161,7 +159,7 @@
 /* REACTION TO SCROLL */
 
 #controls.more-up .dock {
-    margin-right: 4px;
+    margin-right: 6px;
     -moz-border-radius-topright: 0;
     -moz-border-radius-bottomright: 0;
 }
@@ -179,47 +177,23 @@
 }
 
 
-
-
 /* REACTION TO RESIZE */
 
-#view.compact .control.dock {
+#view.compact .control.dock .icon:not(.status), 
+#view.compact .inline-tooltip {
     display: none;
 }
 
+#view.compact .control.dock {
+    -moz-border-radius: 10px;
+}
+
+#view.compact #controls.more-up .control.dock {
+    -moz-border-radius: 10px 10px 0 0;
+}
+
 #view.compact .scroll-arrow-up {
-    -moz-border-radius-topleft: 10px;
-    -moz-border-radius-bottomleft: 10px;
-    margin-left: 6px;
+    -moz-border-radius: 0 0 10px 10px;
+    margin: 0 6px;
 }
 
-
-
-
-
-/*
-#controls .dock .conversations {
-    margin: 0;
-    width: 32px;
-    height: 32px;
-    min-width: 16px;
-    min-height: 16px;
-    -moz-appearance: none;
-    list-style-image: url('conversations.png');
-}
-
-#controls .dock .conversations image {
-
-}
-
-#controls .dock .conversations:hover {
-    background: none;
-    padding: 0;
-}
-
-#controls .dock .conversations:hover image {
-    width: 32px;
-    height: 32px;
-}
-
-*/

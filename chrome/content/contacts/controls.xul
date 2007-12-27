@@ -37,14 +37,10 @@
 
   <stack id="contacts-stack">
     <vbox id="controls" flex="1" mousethrough="always">
-      <hbox align="start">
+      <box id="controls-upper">
         <vbox class="control dock" mousethrough="never" flex="1">
           <hbox class="dock-tools"
-                onmouseover="if(hasClass(event.target, 'icon')) {
-                             var tooltip = $(this, '^ .control .inline-tooltip');
-                             tooltip.firstChild.value = event.target.getAttribute('helptext');
-                             tooltip.hidden = false;
-                             }"
+                onmouseover="hoveredDockContent(event);"
                 onmouseout="$(this, '^ .control .inline-tooltip').hidden = true;">
             <image class="icon people" popup="people-popup"
                    helptext="Edit Contacts"/>
@@ -93,7 +89,7 @@
               flex="1">
           <image/>
         </vbox>
-      </hbox>
+      </box>
 
       <spacer flex="1" mousethrough="always"/>
 

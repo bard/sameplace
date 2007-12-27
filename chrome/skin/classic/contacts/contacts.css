@@ -190,10 +190,13 @@
     color: rgb(30,30,30);
 }
 
+/* XXX re-activate once clicking on contact does something */
+/*
 #contacts .contact .info label.name:hover {
     text-decoration: underline;
     color: blue;
 }
+*/
 
 #contacts .contact .status {
     font-size: 10px;
@@ -261,6 +264,16 @@ popup.with-headers menuitem.offset {
 #status-popup {
     max-width: 200px;
 }
+
+#contact-popup:not(.groupchat) .remove-room {
+    display: none;
+}
+
+#contact-popup.groupchat .set-contact-alias,
+#contact-popup.groupchat .remove-contact {
+    display: none;
+}
+
 
 
 /* BUTTONS */

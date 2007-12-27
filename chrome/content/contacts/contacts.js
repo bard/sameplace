@@ -103,9 +103,19 @@ function initNetworkReactions() {
         event     : 'presence',
         direction : 'in',
         stanza    : function(s) {
-            return s.@type == undefined || s.@type == 'unavailable'
+            return (s.@type == undefined || s.@type == 'unavailable') &&
+                s.ns_muc_user::x == undefined;
         }
-    }, receivedPresence);
+    }, receivedContactPresence);
+
+    channel.on({
+        event     : 'presence',
+        direction : 'in',
+        stanza    : function(s) {
+            return (s.@type == undefined || s.@type == 'unavailable') &&
+                s.ns_muc_user::x != undefined;
+        }
+    }, receivedRoomPresence);
 }
 
 function initState() {
@@ -126,7 +136,7 @@ function initState() {
             .all(XMPP.q()
                  .event('presence')
                  .direction('in'))
-            .forEach(receivedPresence);
+            .forEach(receivedContactPresence);
     }
 }
 
@@ -343,12 +353,65 @@ function filterContacts(prefix) {
 // GUI REACTIONS
 // ----------------------------------------------------------------------
 
+function requestedOpenConversation(type) {
+    switch(type) {
+    case 'chat':
+        window.openDialog(
+            'chrome://sameplace/content/open_conversation.xul',
+            'sameplace-open-conversation', 'centerscreen', null, 'contact@server.org');
+        break;
+    case 'groupchat':
+        window.openDialog(
+            'chrome://sameplace/content/join_room.xul',
+            'sameplace-join-room', 'centerscreen', null, 'users@places.sameplace.cc');
+        break;
+    default:
+        throw new Error('Unexpected. (' + type + ')');
+    }
+}
+
+function requestedRemoveRoom(xulPopupNode) {
+    var xulContact = $(xulPopupNode, '^ .contact');
+
+    /* XXX
+    var nick = XMPP.JID(getJoinPresence(account, address).stanza.@to).resource;
+
+    if(isMUCJoined(account, address))
+        XMPP.send(account,
+                  <presence to={address + '/' + nick} type="unavailable">
+                  <x xmlns={ns_muc}/>
+                  </presence>,
+                  function() { removeMUCBookmark(account, address); });
+    else
+        removeMUCBookmark(account, address);
+*/
+}
+
+function requestedRemoveContact(xulPopupNode) {
+    var xulContact = $(xulPopupNode, '^ .contact');
+
+/* XXX
+    if(getMUCBookmark(account, address) != undefined)
+        removeMUCBookmark(account, address);
+    else
+        removeContact(account, address);
+*/
+}
+
+function showingContactContextMenu(xulPopup, xulPopupNode) {
+    var xulContact = $(xulPopupNode, '^ .contact');
+    setClass(xulPopup, 'groupchat',
+             XMPP.isMUC(
+                 xulContact.getAttribute('account'),
+                 xulContact.getAttribute('address')));
+}
+
 function requestedChangeSort(xulPopup) {
     setInsertionStrategy($(xulPopup, '[checked="true"]').value);
 }
 
-function showingContactTooltip(xulElement) {
-    var xulContact = $(xulElement, '^ .contact');
+function showingContactTooltip(xulPopupNode) {
+    var xulContact = $(xulPopupNode, '^ .contact');
     var account = xulContact.getAttribute('account');
     var address = xulContact.getAttribute('address');
     var subscriptionState = xulContact.getAttribute('subscription');
@@ -391,7 +454,8 @@ function contactsUpdated() {
 }
 
 function resizedView(event) {
-    setClass($('#view'), 'compact', document.width == COMPACT_WIDTH);
+    setClass($('#view'), 'compact',
+             document.width == COMPACT_WIDTH);
 }
 
 function requestedAddContact() {
@@ -420,8 +484,8 @@ function requestedConnection() {
         runWizard(); // XXX not ported
 }
 
-function requestedSetContactAlias(xulElement) {
-    var xulContact = $(xulElement, '^ .contact');
+function requestedSetContactAlias(xulPopupNode) {
+    var xulContact = $(xulPopupNode, '^ .contact');
 
     var account = xulContact.getAttribute('account');
     var address = xulContact.getAttribute('address');
@@ -697,24 +761,40 @@ function receivedRoster(iq) {
 
 }
 
-function receivedPresence(presence) {
+function receivedRoomPresence(presence) {
     var account = presence.account;
     var address = XMPP.JID(presence.stanza.@from).address;
     var xulContact = getContact(account, address);
+    if(!xulContact) {
+        xulContact = createContact(account, address);
+        var displayName = address;
+        $(xulContact, '.name').setAttribute('value', displayName);
+        $(xulContact, '.small-name').setAttribute('value', displayName);
+        xulContact.setAttribute('availability', 'available');
+        xulContact.setAttribute('display-name', displayName.toLowerCase());
+        placeContact(xulContact);
+    }
+}
+
+function receivedContactPresence(presence) {
+    var account = presence.account;
+    var address = XMPP.JID(presence.stanza.@from).address;
+    var xulContact = getContact(account, address);
+
     if(!xulContact) // contact not in roster
         return;
 
 //    var summary = XMPP.presenceSummary(account, address);
 
     var availability = presence.stanza.@type.toString() || 'available';
-    var show = presence.stanza.show.toString();
-    var status = presence.stanza.status.text();
+    var show         = presence.stanza.show.toString();
+    var status       = presence.stanza.status.text();
 
     if(xulContact.getAttribute('status') == status &&
        xulContact.getAttribute('show') == show &&
        xulContact.getAttribute('availability') == availability)
         // Guard against mere re-assertions of status.  Google sends
-        // this them out a lot...
+        // these out a lot...
         return;
 
     xulContact.setAttribute('availability', availability);
@@ -816,7 +896,7 @@ function populateListFake() {
         'bard@sameplace.cc/SamePlace', 'betty@sameplace.cc', 'both', 'Betty');
 
     setTimeout(function(){
-    receivedPresence({
+    receivedContactPresence({
         event: 'presence',
         account: 'bard@sameplace.cc/SamePlace',
         direction: 'in',
@@ -828,7 +908,7 @@ function populateListFake() {
     },3000)
 
     setTimeout(function(){
-    receivedPresence({
+    receivedContactPresence({
         event: 'presence',
         account: 'bard@sameplace.cc/SamePlace',
         direction: 'in',
@@ -838,7 +918,7 @@ function populateListFake() {
     });
     },5000)
 
-    receivedPresence({
+    receivedContactPresence({
         event: 'presence',
         account: 'bard@sameplace.cc/SamePlace',
         direction: 'in',
@@ -847,7 +927,7 @@ function populateListFake() {
             </presence>
     });
 
-    receivedPresence({
+    receivedContactPresence({
         event: 'presence',
         account: 'bard@sameplace.cc/SamePlace',
         direction: 'in',
@@ -857,7 +937,7 @@ function populateListFake() {
             </presence>
     });
 
-    receivedPresence({
+    receivedContactPresence({
         event: 'presence',
         account: 'bard@sameplace.cc/SamePlace',
         direction: 'in',
@@ -866,7 +946,7 @@ function populateListFake() {
             </presence>
     });
 
-    receivedPresence({
+    receivedContactPresence({
         event: 'presence',
         account: 'bard@sameplace.cc/SamePlace',
         direction: 'in',
@@ -876,7 +956,7 @@ function populateListFake() {
             </presence>
     });
 
-    receivedPresence({
+    receivedContactPresence({
         event: 'presence',
         account: 'bard@sameplace.cc/SamePlace',
         direction: 'in',
@@ -885,7 +965,7 @@ function populateListFake() {
             </presence>
     });
 
-    receivedPresence({
+    receivedContactPresence({
         event: 'presence',
         account: 'bard@sameplace.cc/SamePlace',
         direction: 'in',
@@ -894,7 +974,7 @@ function populateListFake() {
             </presence>
     });
 
-    receivedPresence({
+    receivedContactPresence({
         event: 'presence',
         account: 'bard@sameplace.cc/SamePlace',
         direction: 'in',
@@ -903,7 +983,7 @@ function populateListFake() {
             </presence>
     });
 
-    receivedPresence({
+    receivedContactPresence({
         event: 'presence',
         account: 'bard@sameplace.cc/SamePlace',
         direction: 'in',
@@ -912,7 +992,7 @@ function populateListFake() {
             </presence>
     });
 
-    receivedPresence({
+    receivedContactPresence({
         event: 'presence',
         account: 'bard@sameplace.cc/SamePlace',
         direction: 'in',
@@ -921,12 +1001,22 @@ function populateListFake() {
             </presence>
     });
 
-    receivedPresence({
+    receivedContactPresence({
         event: 'presence',
         account: 'bard@sameplace.cc/SamePlace',
         direction: 'in',
         stanza: <presence from='sam@sameplace.cc/SamePlace'>
             <status>omg! is this real? http://youtube.com/watch?v=4CpmCbBquUI</status>
+            </presence>
+    });
+
+    receivedContactPresence({
+        event: 'presence',
+        account: 'bard@sameplace.cc/SamePlace',
+        direction: 'in',
+        stanza: <presence from='room@places.sameplace.cc/Bob'>
+            <x xmlns={ns_muc_user}/>
+            <show>away</show>
             </presence>
     });
 

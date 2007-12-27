@@ -159,11 +159,19 @@
       </menu>
     </popup>
 
-    <popup id="contact-popup" class="with-headers">
-      <menuitem label="Set Alias..."
+    <popup id="contact-popup" class="with-headers"
+           onpopupshowing="showingContactContextMenu(this, document.popupNode);">
+      <menuitem class="set-contact-alias"
+                label="&popup.set_alias.label;"
                 oncommand="requestedSetContactAlias(document.popupNode);"/>
+      <menuitem class="remove-contact"
+                label="&popup.remove.label;"
+                oncommand="requestedRemoveContact(document.popupNode);"/>
+      <menuitem class="remove-room"
+                label="Remove"
+                oncommand="requestedRemoveRoom(document.popupNode);"/>      
       <menuseparator/>
-      <menuitem class="header" label="Interact:" disabled="true"/>
+      <menuitem class="header" label="Interact:" disabled="true"/> <!-- XXX should be in overlay -->
       <menuitem class="offset" label="Whiteboard"/>
       <menuitem class="offset" label="Chessboard"/>
     </popup>

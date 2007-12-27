@@ -108,13 +108,31 @@ window.addEventListener('load', function(event) {
             break;
         }
     });
-
-
 }, false);
 
 
 // GUI REACTIONS
 // ----------------------------------------------------------------------
+
+window.addEventListener('resize', function(event) {
+    // These appear not to work if set via CSS
+    if(document.width == COMPACT_WIDTH) {
+        $('#controls-upper').setAttribute('orient', 'vertical');
+        $('#controls-upper').setAttribute('align', '');
+    } else {
+        removeClass($('#view'), 'compact');
+        $('#controls-upper').setAttribute('orient', 'horizontal');
+        $('#controls-upper').setAttribute('align', 'start');
+    }
+}, false);
+
+function hoveredDockContent(event) {
+    if(hasClass(event.target, 'icon')) {
+        var tooltip = $(event.target, '^ .control .inline-tooltip');
+        tooltip.firstChild.value = event.target.getAttribute('helptext');
+        tooltip.hidden = false;
+    }
+}
 
 function focusedFilterField(field) {
     field.select();
