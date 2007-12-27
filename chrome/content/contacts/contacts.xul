@@ -76,18 +76,14 @@
              label="&command.view_help_pages.label;"
              accesskey="&command.view_help_pages.accesskey;"
              tooltiptext="&command.view_help_pages.tooltip;"/>
-    <command id="visit-forum" oncommand="visitForum();"
-             label="&command.visit_forum.label;"
-             accesskey="&command.visit_forum.accesskey;"
-             tooltiptext="&command.visit_forum.tooltip;"/>
-    <command id="report-bug" oncommand="reportBug();"
-             label="&command.report_bug.label;"
-             accesskey="&command.report_bug.accesskey;"
-             tooltiptext="&command.report_bug.tooltip;"/>
-    <command id="visit-users-room" oncommand="visitUsersRoom();"
+    <command id="join-support-room" oncommand="joinSupportRoom();"
              label="&command.join_users_room.label;"
              accesskey="&command.join_users_room.accesskey;"
              tooltiptext="&command.join_users_room.tooltip;"/>
+    <command id="online-support" oncommand="onlineSupport();"
+             label="Access online support"
+             accesskey="S"
+             tooltiptext="Access online support"/>
     <command id="read-latest-news" oncommand="readLatestNews();"
              label="&command.read_latest_news.label;"
              accesskey="&command.read_latest_news.accesskey;"/>    
@@ -98,6 +94,7 @@
 
   <stringbundleset>
     <stringbundle id="strings" src="chrome://sameplace/locale/contacts.properties"/>
+    <stringbundle id="strings-toolbox" src="chrome://sameplace/locale/toolbox.properties"/>    
   </stringbundleset>
 
   <popupset id="popups">
@@ -137,11 +134,9 @@
     <popup id="help-popup" class="with-headers">
       <menuitem class="header" label="Help" disabled="true"/>
       <menuseparator/>
-      <menuitem class="menuitem-iconic" command="visit-users-room"/>
-      <menuitem class="menuitem-iconic" command="visit-forum"/>
+      <menuitem class="menuitem-iconic" command="join-support-room"/>
       <menuitem class="menuitem-iconic" command="view-help"/>
-      <menuitem class="menuitem-iconic" command="report-bug"/>
-      <menuitem class="menuitem-iconic" command="read-latest-news"/>      
+      <menuitem class="menuitem-iconic" command="online-support"/>
     </popup>
     
     <popup id="tools-popup" class="with-headers">
@@ -150,7 +145,7 @@
       <menuitem class="menuitem-iconic" command="open-preferences"/>
       <menuseparator/>
       <menu class="menuitem-iconic" label="&menu.scriptlets.label;">
-        <menupopup id="scriptlets-popup" onpopupshowing="requestedShowScriptletList(this);">
+        <menupopup id="scriptlets-popup" onpopupshowing="showingScriptletList(this);">
           <menuseparator/>
           <menuitem label="&menu.scriptlets.manage.label;"
                     accesskey="&menu.scriptlets.manage.accesskey;"
