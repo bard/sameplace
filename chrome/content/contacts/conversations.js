@@ -30,6 +30,8 @@ var Ci = Components.interfaces;
 var DEFAULT_INTERACTION_URL = chromeToFileUrl('chrome://sameplace/content/app/chat.xhtml');
 var MAX_MESSAGE_CACHE = 10;
 
+var dropObserver = {};
+
 
 // STATE
 // ----------------------------------------------------------------------
@@ -98,6 +100,10 @@ function init() {
     });
 
     $('#tabs').addEventListener('select', selectedTab, false);
+
+    $('#deck').addEventListener('click', clickedInConversation, true);
+
+    $('#deck').addEventListener('dragdrop', droppedElement, true);
 }
 
 function finish() {
@@ -108,12 +114,51 @@ function finish() {
 // GUI REACTIONS
 // ----------------------------------------------------------------------
 
+dropObserver.getSupportedFlavours = function() {
+    var flavours = new FlavourSet();
+    flavours.appendFlavour('text/html');
+    flavours.appendFlavour('text/unicode');
+    return flavours;
+};
+
+dropObserver.onDrop = function(event, dropdata, session) {
+    if(!dropdata.data)
+        return;
+
+    alert(event.currentTarget.contentDocument.location.href);
+    return;
+
+    var document = event.currentTarget.contentDocument;
+    var dropTarget = event.target;
+
+    document.getElementById('dnd-sink').textContent = (
+        <data content-type={dropdata.flavour.contentType}>
+        {dropdata.data}
+        </data>
+        ).toXMLString();
+
+    var synthEvent = document.createEvent('Event');
+    synthEvent.initEvent('hsDrop', true, false);
+    dropTarget.dispatchEvent(synthEvent);
+};
+
+function droppedElement(event) {
+    nsDragAndDrop.drop(event, dropObserver);
+    event.stopPropagation();
+}
+
+function clickedInConversation(event) {
+    event.preventDefault();
+}
+
 function selectedContact(account, address) {
     var xulPanel = get(account, address);
     if(xulPanel)
-        focus(xulPanel);
+        $('#deck').selectedTab = xulPanel.tab;
     else
-        open(account, address, function(xulPanel) { focus(xulPanel); });
+        open(account, address, function(xulPanel) {
+            $('#deck').selectedTab = xulPanel.tab;
+        });
 }
 
 function selectedTab(event) {
@@ -174,28 +219,12 @@ function get(account, address) {
     return $('#deck > [account="' + account + '"][address="' + address + '"]');
 }
 
-function focus(xulPanel) {
-    $('#deck').selectedTab = xulPanel.tab;
-//    xulPanel.contentWindow.focus();
-
-/*
-    var focusEvent = document.createEvent('Event');
-    focusEvent.initEvent('conversation/focus', true, false);
-    xulPanel.dispatchEvent(focusEvent);
-*/
-}
-
 function getCount() {
     return $('#deck').browsers.length;
 }
 
 function isCurrent(xulPanel) {
     return $('#deck').selectedBrowser == xulPanel;
-/*
-    var xulPanel = $('#deck').selectedBrowser;
-    return xulPanel.getAttribute('account') == account &&
-        xulPanel.getAttribute('address') == address;
-*/
 }
 
 

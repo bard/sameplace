@@ -33,6 +33,8 @@ var channel;
 function init() {
     window.addEventListener('contact/select', selectedContact, false);
     window.addEventListener('conversation/close', closedConversation, false);
+    
+    $('#conversations').addEventListener('click', clickedInConversation, false);
 
     channel = XMPP.createChannel();
 
@@ -66,6 +68,12 @@ function selectedContact(event) {
 function closedConversation(event) {
     if($('#conversations').contentWindow.getCount() == 0)
         $('#conversations').collapsed = true;
+}
+
+function clickedInConversation(event) {
+    if(event.target instanceof HTMLAnchorElement)
+        // XXX won't recognize <a><img/></a> since target is img
+        openURL(event.target.href);
 }
 
 
