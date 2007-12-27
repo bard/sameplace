@@ -40,7 +40,7 @@
       title="SamePlace"
       onload="init();"
       onunload="finish();"
-      orient="horizontal"
+      orient="vertical"
       id="view">
 
   <script type="application/x-javascript" src="chrome://global/content/nsDragAndDrop.js"/>

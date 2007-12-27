@@ -30,8 +30,6 @@ var Ci = Components.interfaces;
 var DEFAULT_INTERACTION_URL = chromeToFileUrl('chrome://sameplace/content/app/chat.xhtml');
 var MAX_MESSAGE_CACHE = 10;
 
-var dropObserver = {};
-
 
 // STATE
 // ----------------------------------------------------------------------
@@ -102,8 +100,6 @@ function init() {
     $('#tabs').addEventListener('select', selectedTab, false);
 
     $('#deck').addEventListener('click', clickedInConversation, true);
-
-    $('#deck').addEventListener('dragdrop', droppedElement, true);
 }
 
 function finish() {
@@ -113,39 +109,6 @@ function finish() {
 
 // GUI REACTIONS
 // ----------------------------------------------------------------------
-
-dropObserver.getSupportedFlavours = function() {
-    var flavours = new FlavourSet();
-    flavours.appendFlavour('text/html');
-    flavours.appendFlavour('text/unicode');
-    return flavours;
-};
-
-dropObserver.onDrop = function(event, dropdata, session) {
-    if(!dropdata.data)
-        return;
-
-    alert(event.currentTarget.contentDocument.location.href);
-    return;
-
-    var document = event.currentTarget.contentDocument;
-    var dropTarget = event.target;
-
-    document.getElementById('dnd-sink').textContent = (
-        <data content-type={dropdata.flavour.contentType}>
-        {dropdata.data}
-        </data>
-        ).toXMLString();
-
-    var synthEvent = document.createEvent('Event');
-    synthEvent.initEvent('hsDrop', true, false);
-    dropTarget.dispatchEvent(synthEvent);
-};
-
-function droppedElement(event) {
-    nsDragAndDrop.drop(event, dropObserver);
-    event.stopPropagation();
-}
 
 function clickedInConversation(event) {
     event.preventDefault();
@@ -190,6 +153,17 @@ function opened(xulPanel) {
 
 // GUI ACTIONS
 // ----------------------------------------------------------------------
+
+function simulateDrop(data, contentType) {
+    var xulPanel = $('#deck').selectedPanel;
+    xulPanel.contentDocument
+        .getElementById('dnd-sink')
+        .textContent = (<data content-type={contentType}>{data}</data>).toXMLString();
+
+    var dropEvent = document.createEvent('Event');
+    dropEvent.initEvent('hsDrop', true, false);
+    xulPanel.contentDocument.getElementById('dnd-sink').dispatchEvent(dropEvent);
+}
 
 function open(account, address, nextAction) {
     var xulConversations = $('#deck');
@@ -266,6 +240,7 @@ function sentChatActivation(message) {
 
 // NETWORK ACTIONS
 // ----------------------------------------------------------------------
+
 
 
 // OTHER ACTIONS

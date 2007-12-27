@@ -51,10 +51,10 @@ tabs .tabs-closebutton > .toolbarbutton-icon {
 }
 
 tabs tab[chatstate="active"]    { color: black;   }
-tabs tab[chatstate="composing"] { color: #E8871E; }
 tabs tab[chatstate="paused"]    { color: #C4823B; }
 tabs tab[chatstate="gone"]      { color: black;   }
 tabs tab.unread                 { color: #d00;    }
+tabs tab[chatstate="composing"] { color: #E8871E; }
 
 deck {
     border-left: 1px solid lightgray;

@@ -21,6 +21,12 @@
  */
 
 
+// DEFINITIONS
+// ----------------------------------------------------------------------
+
+var dropObserver = {};
+
+
 // STATE
 // ----------------------------------------------------------------------
 
@@ -32,9 +38,18 @@ var channel;
 
 function init() {
     window.addEventListener('contact/select', selectedContact, false);
+
     window.addEventListener('conversation/close', closedConversation, false);
     
     $('#conversations').addEventListener('click', clickedInConversation, false);
+
+    $('#conversations').addEventListener('dragdrop', function(event) {
+        nsDragAndDrop.drop(event, dropObserver);
+    }, false);
+
+    $('#conversations').addEventListener('dragover', function(event) {
+        nsDragAndDrop.dragOver(event, dropObserver);
+    }, false);
 
     channel = XMPP.createChannel();
 
@@ -57,6 +72,21 @@ function finish() {
 // GUI REACTIONS
 // ----------------------------------------------------------------------
 
+dropObserver.getSupportedFlavours = function() {
+    var flavours = new FlavourSet();
+    flavours.appendFlavour('text/html');
+    flavours.appendFlavour('text/unicode');
+    return flavours;
+};
+
+dropObserver.onDragOver = function(event, flavour, session) {};
+
+dropObserver.onDrop = function(event, dropdata, session) {
+    if(dropdata.data != '')
+        $('#conversations').contentWindow.simulateDrop(
+            dropdata.data, dropdata.flavour.contentType);
+};
+
 function selectedContact(event) {
     $('#conversations').contentWindow
         .selectedContact(event.target.getAttribute('account'),
@@ -71,9 +101,16 @@ function closedConversation(event) {
 }
 
 function clickedInConversation(event) {
-    if(event.target instanceof HTMLAnchorElement)
-        // XXX won't recognize <a><img/></a> since target is img
-        openURL(event.target.href);
+    var htmlAnchor =
+        event.target instanceof HTMLAnchorElement ?
+        event.target :
+        (event.target.parentNode instanceof HTMLAnchorElement ?
+         event.target.parentNode : null);
+
+    // XXX only recognizes <a href="...">link</a> and <a
+    // href="..."><img/></a>.
+    if(htmlAnchor)
+        openURL(htmlAnchor.href);
 }
 
 
