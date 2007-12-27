@@ -127,25 +127,30 @@
 }
 
 #contacts .contact .avatar-stack .icon-status {
-    list-style-image: url("chrome://xmpp4moz/skin/status/all-small.png");
-}
-
-#contacts .contact[availability="unavailable"] .avatar-stack .icon-status {
-    -moz-image-region: rect(48px 16px 64px 0px);
+    list-style-image: url("status16x64.png");
+    width: 16px;
+    height: 16px;
+    visibility: hidden;
 }
 
 #contacts .contact[availability="available"][show=""] .avatar-stack .icon-status,
 #contacts .contact[availability="available"][show="chat"] .avatar-stack .icon-status {
-    visibility: hidden;
     -moz-image-region: rect(16px 16px 32px 0px);
+}
+
+#contacts .contact[availability="unavailable"] .avatar-stack .icon-status {
+    visibility: visible;
+    -moz-image-region: rect(48px 16px 64px 0px);
 }
 
 #contacts .contact[availability="available"][show="away"] .avatar-stack .icon-status,
 #contacts .contact[availability="available"][show="xa"] .avatar-stack .icon-status {
+    visibility: visible;
     -moz-image-region: rect(32px 16px 48px 0px);
 }
 
 #contacts .contact[availability="available"][show="dnd"] .avatar-stack .icon-status {
+    visibility: visible;
     -moz-image-region: rect(0px 16px 16px 0px);
 }
 

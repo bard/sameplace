@@ -97,6 +97,15 @@ function init() {
         receivedChatState(message);
     });
 
+    channel.on({
+        event     : 'presence',
+        direction : 'in',
+        stanza    : function(s) {
+            return (s.@type == undefined || s.@type == 'unavailable') &&
+                s.ns_muc_user::x == undefined;
+        }
+    }, receivedContactPresence);
+
     $('#tabs').addEventListener('select', selectedTab, false);
 
     $('#deck').addEventListener('click', clickedInConversation, true);
@@ -145,6 +154,9 @@ function opened(xulPanel) {
              xulPanel.getAttribute('address'))
         .forEach(function(message) { xulPanel.xmppChannel.receive(message); });
 
+    updatePresenceIndicator(xulPanel.getAttribute('account'),
+                            xulPanel.getAttribute('address'));
+
     var openEvent = document.createEvent('Event');
     openEvent.initEvent('conversation/open', true, false);
     xulPanel.dispatchEvent(openEvent);
@@ -153,6 +165,27 @@ function opened(xulPanel) {
 
 // GUI ACTIONS
 // ----------------------------------------------------------------------
+
+function updatePresenceIndicator(account, address) {
+    var xulTab = $('#deck > [account="' + account + '"][address="' + address + '"]').tab;
+    
+    var presence = XMPP.presencesOf(account, address)[0];
+
+    var availability = presence.stanza.@type.toString() || 'available';
+    var show         = presence.stanza.show.toString();
+    var status       = presence.stanza.status.text();
+
+    if(xulTab.getAttribute('status') == status &&
+       xulTab.getAttribute('show') == show &&
+       xulTab.getAttribute('availability') == availability)
+        // Guard against mere re-assertions of status.  Google sends
+        // these out a lot...
+        return;
+
+    xulTab.setAttribute('availability', availability);
+    xulTab.setAttribute('show', show);
+    xulTab.setAttribute('status', status);
+}
 
 function simulateDrop(data, contentType) {
     var xulPanel = $('#deck').selectedPanel;
@@ -204,6 +237,12 @@ function isCurrent(xulPanel) {
 
 // NETWORK REACTIONS
 // ----------------------------------------------------------------------
+
+function receivedContactPresence(presence) {
+    var account = presence.account;
+    var address = XMPP.JID(presence.stanza.@from).address;
+    updatePresenceIndicator(account, address);
+}
 
 function receivedChatState(message) {
     var xulPanel = get(message.account, XMPP.JID(message.stanza.@from).address);
