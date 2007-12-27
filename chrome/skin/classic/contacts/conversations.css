@@ -20,11 +20,15 @@
  *  
  */
 
-
-tabs {
-    font-size: smaller;
+#tabs-container {
     border-top: 1px solid lightgray;
     border-left: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
+    border-right: none;
+}
+
+tabs {
+    font-size: 10px;
 }
 
 tabs .tabs-closebutton {
@@ -33,7 +37,6 @@ tabs .tabs-closebutton {
     -moz-image-region: rect(0px, 16px, 16px, 0px);
     padding: 4px 2px;
     border: none !important;
-
 }
 
 tabs .tabs-closebutton:hover {
@@ -48,6 +51,21 @@ tabs .tabs-closebutton > .toolbarbutton-icon {
     -moz-margin-end: 0px !important;
     -moz-padding-end: 2px !important;
     -moz-padding-start: 2px !important;
+}
+
+#collapse-button {
+    background: transparent;
+    -moz-appearance: none;
+    border: none;
+    margin: 0;
+    padding: 0;
+    width: 16px;
+    min-width: 16px;
+    -moz-border-bottom-colors: ThreeDHighlight;
+}
+
+#collapse-button:hover {
+    background-color: -moz-buttonhoverface;
 }
 
 tabs tab[chatstate="active"]    { color: black;   }

@@ -38,6 +38,12 @@
   <script type="application/x-javascript;version=1.7" src="../lib/tabbed_area.js"/>
   <script type="application/x-javascript;version=1.7" src="conversations.js"/>
 
-  <tabs id="tabs" style="background: #eee;" collapsed="true" closebutton="true"/>
+  <hbox id="tabs-container">
+    <tabs id="tabs" closebutton="true" flex="1"/>
+    <button id="collapse-button" label="»"
+            oncommand="window.frameElement.collapsed = true;"
+            flex="0"/>
+  </hbox>
+
   <deck id="deck" flex="1"/>
 </page>

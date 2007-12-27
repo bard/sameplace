@@ -167,7 +167,11 @@ function opened(xulPanel) {
 // ----------------------------------------------------------------------
 
 function updatePresenceIndicator(account, address) {
-    var xulTab = $('#deck > [account="' + account + '"][address="' + address + '"]').tab;
+    var xulPanel = $('#deck [account="' + account + '"][address="' + address + '"]');
+    if(!xulPanel)
+        return;
+
+    var xulTab = xulPanel.tab;
     
     var presence = XMPP.presencesOf(account, address)[0];
 
