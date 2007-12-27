@@ -80,6 +80,9 @@ function init(event) {
     });
 
 
+    $('#dnd-sink').bind('hsDrop', null, function() {
+        droppedDataInConversation(event);
+    });
 
     $('#chat-output').bind('hsDrop', null, function() {
         droppedDataInConversation(event);
