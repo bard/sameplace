@@ -91,12 +91,8 @@ var scroller = {
 };
 
 window.addEventListener('load', function(event) {
-    scroller.init($('#controls'), $('#contacts'));
-
-    $('.control.offline-notice').hidden = XMPP.accounts.some(XMPP.isUp);
-
     channel.on({
-        event     : 'connector'
+        event: 'connector'
     }, function(connector) {
         switch(connector.state) {
         case 'active':
@@ -108,7 +104,39 @@ window.addEventListener('load', function(event) {
             break;
         }
     });
+
+    channel.on({
+        event : 'connector',
+        state : 'disconnected'
+    }, updatePresenceIndicator);
+
+    channel.on({
+        event     : 'presence',
+        direction : 'out',
+        stanza    : function(s) {
+            return s.@type == undefined && s.ns_muc::x == undefined;
+        }
+    }, updatePresenceIndicator);
+
+    scroller.init($('#controls'), $('#contacts'));
+
+    $('.control.offline-notice').hidden = XMPP.accounts.some(XMPP.isUp);
+
+    updatePresenceIndicator();
 }, false);
+
+// GUI ACTIONS
+// ----------------------------------------------------------------------
+
+function updatePresenceIndicator() {
+    var xulStatus = $('.dock-tools .icon.presence-indicator');
+
+    var summary = XMPP.presenceSummary(); // XXX should be ported to presencesOf(account);
+    xulStatus.setAttribute('availability',
+                           summary.stanza.@type.toString() || 'available');
+    xulStatus.setAttribute('show',
+                           summary.stanza.show.toString());
+}
 
 
 // GUI REACTIONS

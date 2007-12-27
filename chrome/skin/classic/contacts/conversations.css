@@ -79,7 +79,7 @@ tabs tab .tab-icon {
     visibility: hidden;
     width: 8px;
     height: 8px;
-    margin-right: 2px;
+    margin-right: 3px;
     -moz-image-region: rect(8px 8px 16px 0px);
 }
 

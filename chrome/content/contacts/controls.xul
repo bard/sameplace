@@ -44,7 +44,7 @@
                 onmouseout="$(this, '^ .control .inline-tooltip').hidden = true;">
             <image class="icon people" popup="people-popup"
                    helptext="Edit Contacts"/>
-            <image class="icon status" popup="status-popup"
+            <image class="icon presence-indicator" popup="status-popup"
                    helptext="Change Status"/>
             <image class="icon filter"
                    onclick="this.nextSibling.collapsed = !this.nextSibling.collapsed;

@@ -246,6 +246,7 @@
 
 /* compact/expanded view */
 
+/*
 #view #contacts .contact .small-name {
     display: none;
 }
@@ -253,6 +254,7 @@
 #view.compact #contacts .small-name {
     display: -moz-box;
 }
+*/
 
 
 /* POPUPS */
