@@ -208,14 +208,16 @@
                       color: gray;"
                value="[Click or Ctrl+Alt+T to change status]"/>
     </vbox>
-    <stack flex="1" id="contacts-stack">
-      <richlistbox id="contacts"
-                   persist="sort"
-                   sort="activity"
-                   class="inset hide-scrollbar hide-unavailable"
-                   flex="1"
-                   onoverflow="changedContactsOverflow();"/>
-    </stack>
+    <notificationbox id="notify" flex="1">
+      <stack flex="1" id="contacts-stack">
+        <richlistbox id="contacts"
+                     persist="sort"
+                     sort="activity"
+                     class="inset hide-scrollbar hide-unavailable"
+                     flex="1"
+                     onoverflow="changedContactsOverflow();"/>
+      </stack>
+    </notificationbox>
   </vbox>
 
   <!-- BLUEPRINTS -->
@@ -234,7 +236,7 @@
                   orient="vertical" display-name=""
                   pending="0"
                   context="contact-popup"
-                  tooltip="contact-tooltip"
+                  tooltip="_contact-tooltip"
                   onclick="if(event.button == 0)
                            clickedContact(this);"
                   ondragenter="onContactDragEnter(event);"

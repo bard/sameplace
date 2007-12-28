@@ -45,7 +45,7 @@ function init() {
         addClass($('#contacts-stack'), 'hovering-contacts');
     }, false);
 
-    $('#conversations').addEventListener('mouseover', function(event) {
+    $('#conversations-box').addEventListener('mouseover', function(event) {
         removeClass($('#contacts-stack'), 'hovering-contacts');
     }, false);
 
@@ -100,12 +100,15 @@ function selectedContact(event) {
         .selectedContact(event.target.getAttribute('account'),
                          event.target.getAttribute('address'));
 
-    $('#conversations').collapsed = false;
+    addClass($('#conversations-box'), 'expanded');
+    addClass($('#conversations').contentDocument.documentElement, 'expanded');
 }
 
 function closedConversation(event) {
-    if($('#conversations').contentWindow.getCount() == 0)
-        $('#conversations').collapsed = true;
+    if($('#conversations').contentWindow.getCount() == 0) {
+        removeClass($('#conversations-box'), 'expanded');
+        removeClass($('#conversations').contentDocument.documentElement, 'expanded');
+    }
 }
 
 function clickedInConversation(event) {
@@ -126,5 +129,5 @@ function clickedInConversation(event) {
 // ----------------------------------------------------------------------
 
 function sentChatActivation(message) {
-    $('#conversations').collapsed = false;    
+    $('#conversations-box').collapsed = false;    
 }

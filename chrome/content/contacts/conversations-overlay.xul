@@ -28,8 +28,11 @@
   <script type="application/x-javascript;version=1.7" src="../lib/getElementsBySelector.js"/>
   <script type="application/x-javascript;version=1.7" src="conversations-overlay.js"/>
   <stack id="contacts-stack">
-    <vbox flex="1" mousethrough="always">
-      <iframe id="conversations" src="about:blank" flex="1" collapsed="true"/>
+    <vbox id="conversations-layer" mousethrough="always" flex="1">
+      <hbox id="conversations-box" flex="1">
+        <spacer/>
+        <iframe id="conversations" src="about:blank"/>
+      </hbox>
     </vbox>
   </stack>
 </overlay>

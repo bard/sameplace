@@ -166,6 +166,13 @@ function opened(xulPanel) {
 // GUI ACTIONS
 // ----------------------------------------------------------------------
 
+function toggle() {
+    toggleClass(document.documentElement, 'expanded')
+    // XXX we shouldn't peek into the outside world. instead, generate
+    // a "toggle" event and let the overlay react.
+    toggleClass(frameElement.parentNode, 'expanded');
+}
+
 function updatePresenceIndicator(account, address) {
     var xulPanel = $('#deck [account="' + account + '"][address="' + address + '"]');
     if(!xulPanel)

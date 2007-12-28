@@ -60,7 +60,7 @@ var Ci = Components.interfaces;
 var srvPrompt = Cc["@mozilla.org/embedcomp/prompt-service;1"]
     .getService(Ci.nsIPromptService);
 
-var COMPACT_WIDTH = 60;
+var COMPACT_WIDTH = 80;
 
 
 // STATE
@@ -263,7 +263,7 @@ function incPending(address) {
 }
 
 function toggleConversations() {
-    $('#conversations').collapsed = !$('#conversations').collapsed;
+    $('#conversations-box').collapsed = !$('#conversations-box').collapsed;
 }
 
 function createContact(account, address) {
@@ -495,7 +495,7 @@ function contactsUpdated() {
 
 function resizedView(event) {
     setClass($('#view'), 'compact',
-             document.width == COMPACT_WIDTH);
+             document.width <= COMPACT_WIDTH);
 }
 
 function requestedAddContact() {

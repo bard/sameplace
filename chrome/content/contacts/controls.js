@@ -144,7 +144,7 @@ function updatePresenceIndicator() {
 
 window.addEventListener('resize', function(event) {
     // These appear not to work if set via CSS
-    if(document.width == COMPACT_WIDTH) {
+    if(document.width <= COMPACT_WIDTH) {
         $('#controls-upper').setAttribute('orient', 'vertical');
         $('#controls-upper').setAttribute('align', '');
     } else {
@@ -185,7 +185,7 @@ function keypressInInputField(event) {
         event.preventDefault();
         requestedFilter('');
         field.value = 'Type part of nick…';
-        field.collapsed = true;
-        field.parentNode.focus();
+        field.parentNode.collapsed = true;
+/*        field.parentNode.focus();*/
     }
 }

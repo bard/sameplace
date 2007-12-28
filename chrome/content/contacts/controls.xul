@@ -29,15 +29,19 @@
   <script type="application/x-javascript" src="controls.js"/>
 
   <keyset id="keys">
-    <key modifiers="alt" key="c" oncommand="addClass($('#controls .dock-tools'), 'active');
-                                            var field = $('#controls .field.filter');
-                                            field.collapsed = false;
-                                            field.focus();"/>
+    <key modifiers="control" key=" "
+         oncommand="/*addClass($('#controls .dock-tools'), 'active');*/
+                    var fieldBox = $('#controls .field.filter');
+                    fieldBox.collapsed = !fieldBox.collapsed;
+                    if(!fieldBox.collapsed)
+                    fieldBox.firstChild.focus();"/>
   </keyset>
 
   <stack id="contacts-stack">
     <vbox id="controls" flex="1" mousethrough="always">
-      <box id="controls-upper">
+      <box id="controls-upper"
+           orient="horizontal"
+           align="start">
         <vbox class="control dock" mousethrough="never" flex="1">
           <hbox class="dock-tools"
                 onmouseover="hoveredDockContent(event);"
@@ -47,15 +51,18 @@
             <image class="icon people" popup="people-popup"
                    helptext="Edit Contacts"/>
             <image class="icon filter"
-                   onclick="this.nextSibling.collapsed = !this.nextSibling.collapsed;
-                            if(!this.nextSibling.collapsed) this.nextSibling.firstChild.focus();"
-                   helptext="Search Contacts"/>
+                   onclick="var field = $('#controls .field.filter');
+                            field.collapsed = !field.collapsed;
+                            if(!field.collapsed) field.focus;
+                            /*this.nextSibling.collapsed = !this.nextSibling.collapsed;
+                            if(!this.nextSibling.collapsed) this.nextSibling.firstChild.focus();*/"
+                   helptext="Search Contacts (Control+Space)"/>
             <vbox class="field filter" pack="center" collapsed="true">
               <textbox value="Type part of nick…"
                        onblur="blurredFilterField(this);"
-                       onfocus="focusedFilterField(this);"
                        oninput="inputInFilterField(this);"
-                       onkeypress="keypressInInputField(event);"/>              
+                       onkeypress="keypressInInputField(event);"
+                       onfocus="focusedFilterField(this);"/>
             </vbox>
             <image class="icon sort" popup="sort-popup"
                    helptext="Sort Contacts"/>
@@ -63,9 +70,6 @@
                    helptext="Help"/>
             <image class="icon tools" popup="tools-popup"
                    helptext="Tools"/>
-            <image class="icon conversations"
-                   onclick="toggleConversations();"
-                   helptext="Show/Hide Conversations"/>
           </hbox>
 
           <hbox class="inline-tooltip"

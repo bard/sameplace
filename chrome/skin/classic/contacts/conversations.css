@@ -20,11 +20,15 @@
  *  
  */
 
-#tabs-container {
-    border-top: 1px solid lightgray;
-    border-left: 1px solid lightgray;
-    border-bottom: 1px solid lightgray;
-    border-right: none;
+page #content {
+    visibility: collapse;
+}
+page.expanded #content {
+    visibility: visible;
+}
+
+#main {
+    border: 1px solid lightgray;
 }
 
 tabs {
@@ -51,21 +55,6 @@ tabs .tabs-closebutton > .toolbarbutton-icon {
     -moz-margin-end: 0px !important;
     -moz-padding-end: 2px !important;
     -moz-padding-start: 2px !important;
-}
-
-#collapse-button {
-    background: transparent;
-    -moz-appearance: none;
-    border: none;
-    margin: 0;
-    padding: 0;
-    width: 16px;
-    min-width: 16px;
-    -moz-border-bottom-colors: ThreeDHighlight;
-}
-
-#collapse-button:hover {
-    background-color: -moz-buttonhoverface;
 }
 
 tabs tab[chatstate="active"]    { color: black;   }
@@ -101,6 +90,20 @@ tabs tab[selected="true"][availability="available"][show="dnd"] .tab-icon {
 }
 
 deck {
-    border-left: 1px solid lightgray;
-    border-bottom: 1px solid lightgray;    
+    background: white;
+    border-right: 1px solid lightgray;
+}
+
+button#collapser {
+    min-width: 8px;
+    width: 10px;
+    -moz-appearance: none;
+    border: none;
+    background: white;
+    margin: 0;
+    list-style-image: url("chrome://global/skin/arrow/arrow-lft.gif");
+}
+
+button#collapser[checked="true"] {
+    list-style-image: url("chrome://global/skin/arrow/arrow-rit.gif");
 }
