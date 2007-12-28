@@ -843,10 +843,12 @@ function receivedContactPresence(presence) {
     var availability = presence.stanza.@type.toString() || 'available';
     var show         = presence.stanza.show.toString();
     var status       = presence.stanza.status.text();
+    var nickname     = presence.stanza..ns_vcard_update::nickname.toString();
 
-    if(xulContact.getAttribute('status') == status &&
-       xulContact.getAttribute('show') == show &&
-       xulContact.getAttribute('availability') == availability)
+    if(xulContact.getAttribute('status')       == status &&
+       xulContact.getAttribute('show')         == show &&
+       xulContact.getAttribute('availability') == availability &&
+       $(xulContact, '.name').value            == nickname)
         // Guard against mere re-assertions of status.  Google sends
         // these out a lot...
         return;
@@ -854,7 +856,12 @@ function receivedContactPresence(presence) {
     xulContact.setAttribute('availability', availability);
     xulContact.setAttribute('show', show);
     xulContact.setAttribute('status', status);
-    xulContact.setAttribute('activity', (new Date()).getTime());    
+    xulContact.setAttribute('activity', (new Date()).getTime());
+
+    if(nickname) {
+        $(xulContact, '.name').value = nickname;
+        xulContact.setAttribute('display-name', nickname.toLowerCase());
+    }
 
     var ns_xul = 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul';
     var xmlStatus = presence.stanza.status.text();

@@ -24,12 +24,12 @@
 /* CONTROLS - GENERAL */
 
 #controls .control {
-    opacity: 0.4;
+    opacity: 0.25;
     -moz-box-align: center;
     -moz-box-pack: center;
     min-width: 24px;
     border: none;
-    background: #ddd;
+    background: #c4c4c4;
     -moz-border-radius: 10px;
     margin: 6px;
 }

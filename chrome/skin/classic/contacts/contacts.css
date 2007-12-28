@@ -110,8 +110,13 @@
     width: 48px;
     height: 48px;
     -moz-border-radius: 3px;
-    list-style-image: url("avatar-default.png");
     border: 1px solid lightgray;
+    background: white;
+}
+
+#contacts .contact .avatar-stack .avatar:not(photo-hash) {
+    list-style-image: url("avatar-default.png");
+    background: transparent;
 }
 
 /* avatar area -> indicators (status etc.) */

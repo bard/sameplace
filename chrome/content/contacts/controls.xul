@@ -125,6 +125,7 @@
               flex="1">
           <image/>
         </vbox>
+        <spacer flex="1"/>        
       </hbox>
     </vbox>
   </stack>
