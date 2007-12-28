@@ -69,6 +69,7 @@ var COMPACT_WIDTH = 80;
 var channel;
 var simulation = false;
 var insertionStrategy;
+var subscriptionAccumulator;
 
 
 // INITIALIZATION/FINALIZATION
@@ -89,6 +90,9 @@ function initGUIReactions() {
 }
 
 function initNetworkReactions() {
+    subscriptionAccumulator = new TimedAccumulator(
+        receivedSubscriptionRequestSequence, 1500);
+    
     channel = XMPP.createChannel();
 
     channel.on({
@@ -116,6 +120,22 @@ function initNetworkReactions() {
                 s.ns_muc_user::x != undefined;
         }
     }, receivedRoomPresence);
+
+    channel.on({
+        event     : 'presence',
+        direction : 'in',
+        stanza    : function(s) {
+            return s.@type == 'subscribe';
+        }
+    }, receivedSubscriptionRequest);
+
+    channel.on({
+        event     : 'presence',
+        direction : 'out',
+        stanza    : function(s) {
+            return s.@type == 'subscribed';
+        }
+    }, sentSubscriptionConfirmation);
 }
 
 function initState() {
@@ -569,6 +589,40 @@ function changedContactsOverflow(event) {
 // UTILITIES
 // ----------------------------------------------------------------------
 
+function TimedAccumulator(onReceive, waitPeriod) {
+    this._queue = [];
+    this._checkInterval = 500;
+    this._waitPeriod = waitPeriod || 1500;
+    this._onReceive = onReceive;
+}
+
+TimedAccumulator.prototype = {
+    deleteIf: function(conditionFn) {
+        this._queue = this._queue.filter(function(item) { return !conditionFn(item); });
+    },
+
+    receive: function(stanza) {
+        if(!this._checker)
+            this._startChecker();
+
+        this._queue.push(stanza);
+        this._lastReceived = new Date();
+    },
+
+    _startChecker: function() {
+        var self = this;
+        this._checker = window.setInterval(function() {
+            if((new Date()) - self._lastReceived > self._waitPeriod) {
+                window.clearInterval(self._checker);
+                self._checker = null;
+                var queue = self._queue.splice(0);
+                if(queue.length != 0)
+                    self._onReceive(queue);
+            }
+        }, this._checkInterval);
+    },
+};
+
 function timedExec(actionGenerator, interval) {
     var interval = window.setInterval(function(){
         try {
@@ -578,22 +632,6 @@ function timedExec(actionGenerator, interval) {
         } catch(e) {
             window.clearInterval(interval);
             throw e;
-        }
-    }, interval);
-}
-
-function timedForEach(list, action, interval) {
-    var i=0;
-    var intervalId = window.setInterval(function() {
-        try {
-            if(list[i])
-                action(list[i++]);
-            else
-                window.clearInterval(intervalId);
-
-        } catch(e) {
-            Components.utils.reportError(e);
-            window.clearInterval(intervalId);
         }
     }, interval);
 }
@@ -745,6 +783,24 @@ function animate(object, property, steps, target, action) {
 // NETWORK ACTIONS
 // ----------------------------------------------------------------------
 
+function addContact(account, address, subscribe) {
+    XMPP.send(account,
+              <iq type='set' id='set1'>
+              <query xmlns='jabber:iq:roster'>
+              <item jid={address}/>
+              </query></iq>);
+
+    XMPP.send(account, <presence to={address} type="subscribe"/>);
+}
+
+function acceptSubscriptionRequest(account, address) {
+    XMPP.send(account, <presence to={address} type="subscribed"/>);
+}
+
+function denySubscriptionRequest(account, address) {
+    XMPP.send(account, <presence to={address} type="unsubscribed"/>);
+}
+
 function joinSupportRoom() {
     window.openDialog('chrome://sameplace/content/join_room.xul',
                       'sameplace-open-conversation', 'centerscreen',
@@ -790,6 +846,63 @@ function addContact(account, address, subscribe) {
 
 // NETWORK REACTIONS
 // ----------------------------------------------------------------------
+
+function receivedSubscriptionRequest(presence) {
+    subscriptionAccumulator.receive(presence);
+}
+
+function sentSubscriptionConfirmation(presence) {
+    subscriptionAccumulator.deleteIf(function(p) {
+        return (p.account == presence.account &&
+                p.stanza.@from == presence.stanza.@to);
+    });
+}
+
+function receivedSubscriptionRequestSequence(sequence) {
+    var xulNotify = $('#notify');
+    xulNotify.appendNotification(
+        sequence.length + ' request(s) pending',
+        'subscription-request', null, xulNotify.PRIORITY_INFO_HIGH,
+        [{label: 'View', accessKey: 'V', callback: viewRequest}]);
+
+    function viewRequest() {
+        var request = { };
+        request.choice = false;
+        request.contacts = sequence.map(function(presence) {
+            return [presence.account,
+                    XMPP.JID(presence.stanza.@from).address,
+                    true];
+        });
+        request.description =
+            'These contacts want to add you to their contact list. ' +
+            'Do you accept?';
+
+        window.openDialog(
+            'chrome://sameplace/content/contact_selection.xul',
+            'contact-selection',
+            'modal,centerscreen', request);
+
+        if(request.choice == true) {
+            for each(var [account, address, authorize] in request.contacts) {
+                if(authorize) {
+                    acceptSubscriptionRequest(account, address);
+                    if(getContact(account, address) == undefined ||
+                       getContact(account, address).getAttribute('subscription') == 'none') {
+                        // contact not yet in our contact list, request
+                        // auth to make things even ;-)
+                        addContact(account, address);
+                    }
+                } else {
+                    denySubscriptionRequest(account, address);
+                }
+            }
+        } else {
+            for each(var [account, address, authorize] in request.contacts) {
+                denySubscriptionRequest(account, address);
+            }
+        }
+    }
+}
 
 function receivedRoster(iq) {
     for each(var item in iq.stanza..ns_roster::item) {

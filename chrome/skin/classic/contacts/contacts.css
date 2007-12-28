@@ -27,7 +27,7 @@
 /* CONTACT LIST */
 
 #contacts {
-    background: white;
+    background: #f8f8f8;
     margin: 0px;
 }
 
@@ -60,7 +60,7 @@
 #contacts .contact {
     padding: 2px 4px 6px 4px;
     border-top: 1px solid transparent;
-    border-bottom: 1px solid rgb(237,237,237);
+    border-bottom: 1px solid rgb(227,227,227);
 }
 
 #contacts .contact[selected="true"] {
@@ -69,7 +69,7 @@
 }
 
 #contacts .contact:hover {
-    border-top-color: rgb(215,215,215);
+/*    border-top-color: rgb(215,215,215);*/
     border-bottom-color: rgb(215,215,215);
     background: rgb(241,241,241);
 }
@@ -85,6 +85,8 @@
 /* avatar area */
 
 #contacts .contact .avatar-stack {
+    margin-top: 4px;
+    margin-left: 4px;
     width: 52px;
     height: 58px;
 }
@@ -111,7 +113,7 @@
     height: 48px;
     -moz-border-radius: 3px;
     border: 1px solid lightgray;
-    background: white;
+    background: #fff;
 }
 
 #contacts .contact .avatar-stack .avatar:not(photo-hash) {
@@ -158,7 +160,7 @@
     visibility: visible;
     -moz-image-region: rect(0px 16px 16px 0px);
 }
-
+/*
 #contacts .contact .service {
     list-style-image: url("../services/server_im.png");
     opacity: 0.25;
@@ -180,7 +182,7 @@
 #contacts .contact[address$="@twitter.x4m.localhost"] .service {
     list-style-image: url("../services/server_x-turtle-twitter.png");
 }
-
+*/
 
 /*
 #contacts .contact:not([pending="0"]) .icon.icon-email {
@@ -197,7 +199,7 @@
 
 #contacts .contact .info label.name {
     font-size: 14px;
-    color: rgb(30,30,30);
+    color: rgb(20,20,20);
 }
 
 /* XXX re-activate once clicking on contact does something */
@@ -210,8 +212,8 @@
 
 #contacts .contact .status {
     font-size: 10px;
-    color: rgb(80,80,80);
-    padding-left: 4px;
+    color: rgb(60,60,60);
+/*    padding-left: 4px;*/
     overflow: hidden;
 }
 
