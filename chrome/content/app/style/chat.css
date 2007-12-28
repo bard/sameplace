@@ -282,7 +282,7 @@ ul#messages {
 
 
 /* MESSAGE - TIME */
-
+/*
 .message:hover > .time {
     display: block;
 }
@@ -303,7 +303,7 @@ ul#messages {
     -moz-border-radius-bottomleft: 8px;
     -moz-border-radius-bottomright: 8px;
 }
-
+*/
 
 /* MESSAGE - CONTENT */
 

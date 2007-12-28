@@ -211,8 +211,8 @@ function displayMessage(stanza) {
     .css(senderStyle)
     .text(sender)
     .end()
-    .find('.time')
-    .text(formatTime(txtTimeSent));
+    //.find('.time')
+    //.text(formatTime(txtTimeSent));
     
     // Without this, applyTextProcessors will add whitespace
     // and indentation.  Wo don't want that, especially with a
