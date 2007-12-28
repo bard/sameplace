@@ -51,13 +51,67 @@ window.addEventListener('load', function(event) {
             var item = feed.items.queryElementAt(i, Ci.nsIFeedEntry);
             
             var menuItem = document.createElement('menuitem');
+            menuItem.setAttribute('class', 'shared-app');
             menuItem.setAttribute('label', item.fields.getProperty('title'));
             menuItem.setAttribute('value', item.fields.getProperty('link'));
             menuItem.setAttribute('tooltiptext', item.fields.getProperty('description'));
             menuFor(item.fields.getProperty('dc:subject')).appendChild(menuItem);
         }
+
+        xulContactPopup.addEventListener('command', function(event) {
+            if(event.target.getAttribute('class') != 'shared-app')
+                return;
+
+            var url = event.target.value;
+            var xulContact = $(document.popupNode, '^ .contact');
+            var account = xulContact.getAttribute('account');
+            var address = xulContact.getAttribute('address');
+
+            interact(account, address, url);
+        }, false);
+
     });
 }, false);
+
+
+// OTHER ACTIONS
+// ----------------------------------------------------------------------
+
+function interact(account, address, url) {
+    if(!(url.match(/^javascript:/) ||
+         getBrowser().currentURI.spec == 'about:blank' ||
+         url == undefined))
+        getBrowser().selectedTab = getBrowser().addTab();
+
+    var xulPanel = getBrowser().selectedBrowser;
+
+    function activate() {
+        XMPP.connectPanel(xulPanel, account, address, /^javascript:/.test(url));
+    }
+
+    function notifyContact() {
+        XMPP.send(account,
+                  <message to={address}>
+                  <share xmlns={ns_x4m_ext} url={xulPanel.currentURI.spec}/>
+                  </message>);
+    }
+
+    if(!url) {
+        activate();
+        notifyContact();
+    }
+    else if(url.match(/^javascript:/)) {
+        xulPanel.loadURI(url);
+        activate();
+    }
+    else {
+        afterLoad(xulPanel, function(panel) {
+            activate();
+            notifyContact();
+        });
+        xulPanel.loadURI(url);
+    }
+}
 
 
 // NETWORK UTILITIES

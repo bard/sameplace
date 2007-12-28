@@ -449,13 +449,15 @@ function requestedRemoveRoom(xulPopupNode) {
 
 function requestedRemoveContact(xulPopupNode) {
     var xulContact = $(xulPopupNode, '^ .contact');
+    var account = xulContact.getAttribute('account');
+    var address = xulContact.getAttribute('address');
 
 /* XXX
     if(getMUCBookmark(account, address) != undefined)
         removeMUCBookmark(account, address);
     else
-        removeContact(account, address);
 */
+    removeContact(account, address);
 }
 
 function showingContactContextMenu(xulPopup, xulPopupNode) {
@@ -588,6 +590,24 @@ function changedContactsOverflow(event) {
 
 // UTILITIES
 // ----------------------------------------------------------------------
+
+function afterLoad(xulPanel, action) {
+    xulPanel.addEventListener(
+        'load', function(event) {
+            if(event.target != xulPanel.contentDocument)
+                return;
+
+            // The following appears not to work if reference to
+            // xulPanel is not the one carried by event object.
+            xulPanel = event.currentTarget;
+            xulPanel.contentWindow.addEventListener(
+                'load', function(event) {
+                    action(xulPanel);
+                }, false);
+
+            xulPanel.removeEventListener('load', arguments.callee, true);
+        }, true);
+}
 
 function TimedAccumulator(onReceive, waitPeriod) {
     this._queue = [];
@@ -782,6 +802,13 @@ function animate(object, property, steps, target, action) {
 
 // NETWORK ACTIONS
 // ----------------------------------------------------------------------
+
+function removeContact(account, address) {
+    XMPP.send(account,
+              <iq type="set"><query xmlns={ns_roster}>
+              <item jid={address} subscription="remove"/>
+              </query></iq>);
+}
 
 function addContact(account, address, subscribe) {
     XMPP.send(account,
