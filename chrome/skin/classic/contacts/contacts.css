@@ -264,7 +264,7 @@ popup.with-headers menuitem.header {
     color: black;
 }
 
-popup.with-headers menuitem.offset {
+popup.with-headers .offset {
     padding-left: 1em;
 }
 

@@ -74,34 +74,29 @@ tabs tab[chatstate="gone"]      { color: black;   }
 tabs tab.unread                 { color: #d00;    }
 tabs tab[chatstate="composing"] { color: #E8871E; }
 
-tabs tab .tab-icon {
+tabs tab[selected="true"] .tab-icon {
     list-style-image: url("status8x32.png");
-    visibility: hidden;
     width: 8px;
     height: 8px;
     margin-right: 3px;
     -moz-image-region: rect(8px 8px 16px 0px);
 }
 
-tabs tab[availability="available"][show=""] .tab-icon,
-tabs tab[availability="available"][show="chat"] .tab-icon {
-    visibility: visible;
+tabs tab[selected="true"][availability="available"][show=""] .tab-icon,
+tabs tab[selected="true"][availability="available"][show="chat"] .tab-icon {
     -moz-image-region: rect(8px 8px 16px 0px);
 }
 
-tabs tab[availability="unavailable"] .tab-icon {
-    visibility: visible;
+tabs tab[selected="true"][availability="unavailable"] .tab-icon {
     -moz-image-region: rect(24px 8px 32px 0px);
 }
 
-tabs tab[availability="available"][show="away"] .tab-icon,
-tabs tab[availability="available"][show="xa"] .tab-icon {
-    visibility: visible;
+tabs tab[selected="true"][availability="available"][show="away"] .tab-icon,
+tabs tab[selected="true"][availability="available"][show="xa"] .tab-icon {
     -moz-image-region: rect(16px 8px 24px 0px);
 }
 
-tabs tab[availability="available"][show="dnd"] .tab-icon {
-    visibility: visible;
+tabs tab[selected="true"][availability="available"][show="dnd"] .tab-icon {
     -moz-image-region: rect(0px 8px 8px 0px);
 }
 
