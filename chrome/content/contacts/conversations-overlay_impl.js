@@ -40,7 +40,15 @@ function init() {
     window.addEventListener('contact/select', selectedContact, false);
 
     window.addEventListener('conversation/close', closedConversation, false);
-    
+
+    $('#contacts').addEventListener('mouseover', function(event) {
+        addClass($('#contacts-stack'), 'hovering-contacts');
+    }, false);
+
+    $('#conversations').addEventListener('mouseover', function(event) {
+        removeClass($('#contacts-stack'), 'hovering-contacts');
+    }, false);
+
     $('#conversations').addEventListener('click', clickedInConversation, false);
 
     $('#conversations').addEventListener('dragdrop', function(event) {

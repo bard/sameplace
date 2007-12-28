@@ -22,9 +22,15 @@
 
 
 #conversations {
-    margin: 75px 0 85px 50px;
+    margin: 50px 0 85px 50px;
     padding-bottom: 12px;
     padding-left: 12px;
+    padding-top: 15px;
     background: url('bgshadow.png') transparent bottom left no-repeat;
+}
+
+#contacts-stack.hovering-contacts #conversations {
+    margin-left: 115px;
+    margin-right: -65px;
 }
 
