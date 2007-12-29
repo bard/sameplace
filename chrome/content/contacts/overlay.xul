@@ -43,11 +43,11 @@
                                   box.collapsed = false;
                                   if(box.__restore_width)
                                       box.width = box.__restore_width;
-                              } else if(box.width == 60) {
+                              } else if(box.width == box.getAttribute('minwidth')) {
                                   box.collapsed = true;
                               } else {
                                   box.__restore_width = box.width;
-                                  box.width = 60;
+                                  box.width = box.getAttribute('minwidth');
                               }">
     </toolbarbutton>
   </toolbarpalette>
@@ -63,7 +63,7 @@
     <vbox id="sameplace-box"
           insertafter="sidebar-splitter"
           width="300"
-          minwidth="70"
+          minwidth="65"
           collapsed="true">
       <iframe id="sameplace-frame" flex="1"/>
     </vbox>

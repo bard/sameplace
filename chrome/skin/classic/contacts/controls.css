@@ -123,12 +123,17 @@
     width: 32px;
 }
 
-#controls .dock .icon.people        { list-style-image: url("people.png");        }
-#controls .dock .icon.filter        { list-style-image: url("filter.png");        }
-#controls .dock .icon.sort          { list-style-image: url("sort.png");          }
-#controls .dock .icon.tools         { list-style-image: url("../tools.png");      }
-#controls .dock .icon.help          { list-style-image: url("help.png");          }
-/*#controls .dock .icon.conversations { list-style-image: url("conversations.png"); } XXX remove*/
+#controls .dock .icon.people        { list-style-image: url("people16x16.png"); }
+#controls .dock .icon.people:hover  { list-style-image: url("people32x32.png"); }
+#controls .dock .icon.filter        { list-style-image: url("filter16x16.png"); }
+#controls .dock .icon.filter:hover  { list-style-image: url("filter32x32.png"); }
+#controls .dock .icon.sort          { list-style-image: url("sort16x16.png");   }
+#controls .dock .icon.sort:hover    { list-style-image: url("sort32x32.png");   }
+#controls .dock .icon.tools         { list-style-image: url("tools16x16.png");  }
+#controls .dock .icon.tools:hover   { list-style-image: url("tools32x32.png");  }
+#controls .dock .icon.help          { list-style-image: url("help16x16.png");   }
+#controls .dock .icon.help:hover    { list-style-image: url("help32x32.png");   }
+
 
 /* #controls .doc .icon.status is taken care by .presence-indicator */
 

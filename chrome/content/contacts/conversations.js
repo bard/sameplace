@@ -232,6 +232,7 @@ function open(account, address, nextAction) {
     var xulConversations = $('#deck');
     var xulTab = xulConversations.addTab();
     var xulPanel = xulConversations.getBrowserForTab(xulTab);
+    xulTab.setAttribute('tooltiptext', address);
     xulPanel.tab = xulTab;
 
     afterLoad(xulPanel, function() {

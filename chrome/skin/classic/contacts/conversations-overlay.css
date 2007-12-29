@@ -45,7 +45,7 @@
 }
 
 #conversations-box.expanded spacer {
-    min-width: 50px;
+    min-width: 52px;
     -moz-box-flex: 0;
 }
 
@@ -57,12 +57,17 @@
 
 #contacts-stack.hovering-contacts #conversations-box.expanded {
     /* when mouse hovers contacts, conversation will slide 65 pixels to the right */
-    margin-left: 65px;
-    margin-right: -65px;
+/*    margin-left: 65px;
+    margin-right: -65px;*/
 }
+
 
 #contacts-stack {
     /* negative margin of conversations when under hovering-contacts
        would cause scrollbars to appear otherwise */
     overflow: hidden;
+}
+
+#view.compact #conversations {
+    visibility: collapse;
 }

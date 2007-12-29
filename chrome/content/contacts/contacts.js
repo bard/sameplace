@@ -60,7 +60,7 @@ var Ci = Components.interfaces;
 var srvPrompt = Cc["@mozilla.org/embedcomp/prompt-service;1"]
     .getService(Ci.nsIPromptService);
 
-var COMPACT_WIDTH = 80;
+var COMPACT_WIDTH = 65;
 
 
 // STATE
@@ -1044,8 +1044,6 @@ function receivedRoster(iq) {
     if(!simulation)
         timedExec(makeUpdateActions(), 500);
 */
-
-
 }
 
 function receivedRoomPresence(presence) {
@@ -1074,12 +1072,13 @@ function receivedContactPresence(presence) {
     if(!xulContact) // contact not in roster
         return;
 
-//    var summary = XMPP.presenceSummary(account, address);
-
+    // var summary = XMPP.presenceSummary(account, address);
     var availability = presence.stanza.@type.toString() || 'available';
     var show         = presence.stanza.show.toString();
     var status       = presence.stanza.status.text();
-    var nickname     = presence.stanza..ns_vcard_update::nickname.toString();
+    var nickname     = undefined;
+    // XXX don't support MSN nicks until special formatting is supported
+    // nickname = presence.stanza..ns_vcard_update::nickname.toString();
 
     if(xulContact.getAttribute('status')       == status &&
        xulContact.getAttribute('show')         == show &&

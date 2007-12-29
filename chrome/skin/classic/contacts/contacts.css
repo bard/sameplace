@@ -252,6 +252,11 @@
 
 /* compact/expanded view */
 
+#view.compact #contacts .contact .info,
+#view.compact #contacts .header {
+    display: none;
+}
+
 /*
 #view #contacts .contact .small-name {
     display: none;
