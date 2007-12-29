@@ -136,6 +136,15 @@ function initNetworkReactions() {
             return s.@type == 'subscribed';
         }
     }, sentSubscriptionConfirmation);
+
+    channel.on({
+        event     : 'message',
+        direction : 'in',
+        stanza    : function(s) {
+            return s.@type == 'groupchat' &&
+                s.subject != undefined;
+        }
+    }, receivedRoomSubject);
 }
 
 function initState() {
@@ -567,8 +576,10 @@ function requestedSetContactAlias(xulPopupNode) {
 }
 
 function clickedContactName(event) {
-    // if(event.button == 0)
-    // toggle($(event.target, '^ .contact .extra'), 'height', 100);
+    if(event.button == 0) {
+        event.stopPropagation();
+        toggle($(event.target, '^ .contact .extra'), 'height', 100);
+    }
 }
 
 function onContactDragEnter(event) {
@@ -590,6 +601,15 @@ function changedContactsOverflow(event) {
 
 // UTILITIES
 // ----------------------------------------------------------------------
+
+function textToXULDesc(text) {
+    var ns_xul = 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul';
+    return document.importNode(
+        asDOM(filter.applyTextProcessors(
+                <description flex="1" xmlns={ns_xul}>{text}</description>,
+            [processURLs])),
+        true);
+}
 
 function afterLoad(xulPanel, action) {
     xulPanel.addEventListener(
@@ -799,6 +819,69 @@ function animate(object, property, steps, target, action) {
     step();
 }
 
+// got (and slightly simplified) from rubyonrails
+
+function timeDistanceInWords(from, to) {
+    function within(value, start, end) {
+        return value > start && value <= end;
+    }
+    
+    minutes = Math.round(Math.abs(to/1000 - from/1000)/60);
+
+    if(minutes <= 1)
+        return 'less than a minute';
+    else if(within(minutes, 2, 44))
+        return minutes + ' minutes';
+    else if(within(minutes, 45, 89))
+        return 'about 1 hour';
+    else if(within(minutes, 90, 1439))
+        return 'about ' + Math.round(minutes / 60) + ' hours';
+    else if(within(minutes, 1440, 2879))
+        return '1 day';
+    else if(within(minutes, 2880, 42199))
+        return Math.round(minutes / 1440) + ' days';
+    else if(within(minutes, 43200, 86399))
+        return 'about 1 month';
+    else if(within(minutes, 86400, 525599))
+        return Math.round(minutes / 43200) + ' months';
+    else if(within(minutes, 525600, 1051199))
+        return 'about 1 year';
+    else
+        return 'over ' + Math.round(minutes / 525600) + ' years';
+}
+
+function stampToDate(stamp) {
+    // XXX not compliant with XEP-0082 datetime profile, will assume UTC
+
+    var [_, year, month, day, hours, minutes, seconds, milliseconds, zone] = 
+        stamp.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(\.?\d{3})?(Z)?$/);
+
+    return Date.UTC(year, month-1, day, hours, minutes, seconds, milliseconds || 0);
+}
+
+function timeAgoInWords(date) {
+    return timeDistanceInWords(date, new Date());
+}
+
+function processURLs(xmlMessageBody) {
+    var regexp = /(https?:\/\/|xmpp:|www\.)[^ \t\n\f\r"<>|()]*[^ \t\n\f\r"<>|,.!?(){}]/g;
+
+    return xml.mapTextNodes(xmlMessageBody, function(textNode) {
+        return text.mapMatch(
+            textNode.toString(), regexp, function(url, protocol) {
+                switch(protocol) {
+                case 'http://':
+                case 'https://':
+                case 'xmpp:':
+                    return <label crop="end" class="text-link" link={url} value={url}/>
+                    break;
+                default:
+                    return <label crop="end" class="text-link" link={'http://' + url} value={url}/>
+                }
+            });
+    });
+}
+
 
 // NETWORK ACTIONS
 // ----------------------------------------------------------------------
@@ -873,6 +956,16 @@ function addContact(account, address, subscribe) {
 
 // NETWORK REACTIONS
 // ----------------------------------------------------------------------
+
+function receivedRoomSubject(message) {
+    var xulContact = getContact(message.account, message.stanza.@from);
+    if(!xulContact) // XXX issue warning here
+        return;
+
+    $(xulContact, '.status').replaceChild(
+        textToXULDesc(message.stanza.subject.text()),
+        $(xulContact, '.status').firstChild);
+}
 
 function receivedSubscriptionRequest(presence) {
     subscriptionAccumulator.receive(presence);
@@ -964,10 +1057,13 @@ function receivedRoomPresence(presence) {
         var displayName = address;
         $(xulContact, '.name').setAttribute('value', displayName);
         $(xulContact, '.small-name').setAttribute('value', displayName);
-        xulContact.setAttribute('availability', 'available');
         xulContact.setAttribute('display-name', displayName.toLowerCase());
-        placeContact(xulContact);
-    }
+    } 
+
+    xulContact.setAttribute('availability',
+                            (XMPP.presencesOf(account, address).length > 0) ?
+                            'available' : 'unavailable');
+    placeContact(xulContact);
 }
 
 function receivedContactPresence(presence) {
@@ -1003,18 +1099,15 @@ function receivedContactPresence(presence) {
         xulContact.setAttribute('display-name', nickname.toLowerCase());
     }
 
-    var ns_xul = 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul';
-    var xmlStatus = presence.stanza.status.text();
-    var xulStatus =
-        document.importNode(
-            asDOM(filter.applyTextProcessors(
-                    <description flex="1" xmlns={ns_xul}>{xmlStatus}</description>,
-                [processURLs])),
-            true);
-
     $(xulContact, '.status').replaceChild(
-        xulStatus,
+        textToXULDesc(presence.stanza.status.text()),
         $(xulContact, '.status').firstChild);
+
+    
+    var ns_delay = 'urn:xmpp:delay'; // XXX overrides ns_delay from namespaces.sj
+    if(presence.stanza.ns_delay::delay != undefined)
+        $(xulContact, '.delay').textContent = timeAgoInWords(
+            stampToDate(presence.stanza.ns_delay::delay.@stamp)) + ' ago';
 
     if(presence.stanza.@type == 'unavailable')
         xulContact.setAttribute('chatstate', '');
@@ -1298,23 +1391,3 @@ function singleExec(action, wait) {
 
     singleExec(action, wait);
 }
-
-function processURLs(xmlMessageBody) {
-    var regexp = /(https?:\/\/|xmpp:|www\.)[^ \t\n\f\r"<>|()]*[^ \t\n\f\r"<>|,.!?(){}]/g;
-
-    return xml.mapTextNodes(xmlMessageBody, function(textNode) {
-        return text.mapMatch(
-            textNode.toString(), regexp, function(url, protocol) {
-                switch(protocol) {
-                case 'http://':
-                case 'https://':
-                case 'xmpp:':
-                    return <label crop="end" class="text-link" link={url} value={url}/>
-                    break;
-                default:
-                    return <label crop="end" class="text-link" link={'http://' + url} value={url}/>
-                }
-            });
-    });
-}
-

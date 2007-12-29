@@ -53,7 +53,7 @@
     -moz-box-pack: center;
     font-size: 9px;
     font-weight: bold;
-    border-bottom: 1px solid rgb(227,227,227);
+    border-bottom: 1px solid rgb(237,237,237);
 }
 
 #contacts .header:not(.active) {
@@ -64,7 +64,7 @@
 /* CONTACT */
 
 #contacts .contact {
-    padding: 2px 4px 6px 4px;
+    padding: 2px 4px 2px 4px;
 /*    border-top: 1px solid transparent;*/
     border-bottom: 1px solid rgb(227,227,227);
 }
@@ -196,7 +196,7 @@
 /* contact content area */
 
 #contacts .contact vbox.info {
-    overflow: hidden
+/*    overflow-x: hidden*/ /* XXX not working, why? */
 }
 
 #contacts .contact .info label.name {
@@ -204,19 +204,16 @@
     color: rgb(20,20,20);
 }
 
-/* XXX re-activate once clicking on contact does something */
-/*
 #contacts .contact .info label.name:hover {
     text-decoration: underline;
     color: blue;
 }
-*/
 
 #contacts .contact .status {
     font-size: 10px;
     color: rgb(60,60,60);
 /*    padding-left: 4px;*/
-    overflow: hidden;
+/*    overflow: hidden;*/
 }
 
 #contacts .contact .status label.text-link {
@@ -291,23 +288,6 @@ popup.with-headers .offset {
 }
 
 
-
-/* BUTTONS */
-
-button#collapse-conversations {
-    -moz-appearance: none !important;
-    border: none;
-    margin: 0;
-    padding: 0;
-    min-width: 7px;
-    list-style-image: url("chrome://global/skin/arrow/arrow-lft.gif");
-}
-
-button#collapse-conversations[checked="true"] {
-    list-style-image: url("chrome://global/skin/arrow/arrow-rit.gif");
-}
-
-
 /* experiments ... */
 
 
@@ -319,3 +299,22 @@ button#collapse-conversations[checked="true"] {
     opacity: 1;
 }
 
+
+.delay {
+    font-style: italic;
+    color: gray;
+    font-size: smaller;
+}
+
+
+.status {
+    margin: 0;
+    padding: 0;
+}
+
+/* debug */
+/*
+.info:hover { background: red; padding: 0; margin: 0;}
+.status:hover { background: lightgreen; }
+.delay:hover { background: lightblue; padding: 0; margin: 0; line-height: 100;}
+*/

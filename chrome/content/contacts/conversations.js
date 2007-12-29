@@ -170,8 +170,9 @@ function opened(xulPanel) {
              xulPanel.getAttribute('address'))
         .forEach(function(message) { xulPanel.xmppChannel.receive(message); });
 
-    updatePresenceIndicator(xulPanel.getAttribute('account'),
-                            xulPanel.getAttribute('address'));
+    if(!XMPP.isMUC(account, address))
+        updatePresenceIndicator(xulPanel.getAttribute('account'),
+                                xulPanel.getAttribute('address'));
 
     var openEvent = document.createEvent('Event');
     openEvent.initEvent('conversation/open', true, false);
@@ -188,6 +189,8 @@ function toggle() {
     // a "toggle" event and let the overlay react.
     toggleClass(frameElement.parentNode, 'expanded');
 }
+
+// XXX make it clear that this is not to be called for MUCs
 
 function updatePresenceIndicator(account, address) {
     var xulPanel = $('#deck [account="' + account + '"][address="' + address + '"]');

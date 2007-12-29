@@ -256,7 +256,7 @@
             </hbox>            
           </vbox>
         </stack>
-        <vbox class="info" flex="1" >
+        <vbox class="info" flex="1">
           <hbox align="start">
             <label class="name" onclick="clickedContactName(event);"/>
             <spacer flex="1"/>
@@ -265,6 +265,7 @@
           <vbox class="status" flex="1" onclick="clickedStatus(event);">
             <description/>
           </vbox>
+          <description class="delay"/>
         </vbox>
       </hbox>
       <vbox class="extra" height="0" state="closed">
