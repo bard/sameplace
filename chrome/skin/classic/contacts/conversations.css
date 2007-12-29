@@ -28,7 +28,8 @@ page.expanded #content {
 }
 
 #main {
-    border: 1px solid lightgray;
+    border-left: 1px solid #e2e2e2;
+    border-top: 1px solid #e2e2e2;
 }
 
 tabs {
@@ -91,7 +92,7 @@ tabs tab[selected="true"][availability="available"][show="dnd"] .tab-icon {
 
 deck {
     background: white;
-    border-right: 1px solid lightgray;
+    border-right: 1px solid #e2e2e2;
 }
 
 button#collapser {

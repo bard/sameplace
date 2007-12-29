@@ -63,8 +63,8 @@
     <vbox id="sameplace-box"
           insertafter="sidebar-splitter"
           width="300"
-          minwidth="60"
-          collapsed="true">
+          minwidth="70"
+          collapsed="false">
       <iframe id="sameplace-frame" flex="1"/>
     </vbox>
   </hbox>

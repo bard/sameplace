@@ -39,6 +39,8 @@ var channel;
 function init() {
     window.addEventListener('contact/select', selectedContact, false);
 
+    window.addEventListener('conversation/open', openedConversation, false);
+    
     window.addEventListener('conversation/close', closedConversation, false);
 
     $('#contacts').addEventListener('mouseover', function(event) {
@@ -100,6 +102,11 @@ function selectedContact(event) {
         .selectedContact(event.target.getAttribute('account'),
                          event.target.getAttribute('address'));
 
+    addClass($('#conversations-box'), 'expanded');
+    addClass($('#conversations').contentDocument.documentElement, 'expanded');
+}
+
+function openedConversation(event) {
     addClass($('#conversations-box'), 'expanded');
     addClass($('#conversations').contentDocument.documentElement, 'expanded');
 }

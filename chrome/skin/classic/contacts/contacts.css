@@ -41,6 +41,11 @@
     margin-top: 56px;
 }
 
+#contacts richlistitem[selected="true"] {
+    color: black;
+    background: white;
+}
+
 
 /* HEADERS */
 
@@ -48,6 +53,7 @@
     -moz-box-pack: center;
     font-size: 9px;
     font-weight: bold;
+    border-bottom: 1px solid rgb(227,227,227);
 }
 
 #contacts .header:not(.active) {
@@ -59,18 +65,13 @@
 
 #contacts .contact {
     padding: 2px 4px 6px 4px;
-    border-top: 1px solid transparent;
+/*    border-top: 1px solid transparent;*/
     border-bottom: 1px solid rgb(227,227,227);
-}
-
-#contacts .contact[selected="true"] {
-    color: black;
-    background: white;
 }
 
 #contacts .contact:hover {
 /*    border-top-color: rgb(215,215,215);*/
-    border-bottom-color: rgb(215,215,215);
+/*    border-bottom-color: rgb(215,215,215);*/
     background: rgb(241,241,241);
 }
 
@@ -116,10 +117,11 @@
     background: #fff;
 }
 
-#contacts .contact .avatar-stack .avatar:not(photo-hash) {
+#contacts .contact .avatar-stack .avatar:not([photo-hash]) {
     list-style-image: url("avatar-default.png");
     background: transparent;
 }
+
 
 /* avatar area -> indicators (status etc.) */
 

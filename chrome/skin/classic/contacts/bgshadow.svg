@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.45.1"
+   sodipodi:docbase="/tmp/w/sameplace/unstable/chrome/skin/classic/contacts"
+   sodipodi:docname="bgshadow.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+  <defs
+     id="defs4">
+    <filter
+       inkscape:collect="always"
+       id="filter14968">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="1.6103924"
+         id="feGaussianBlur14970" />
+    </filter>
+    <filter
+       inkscape:collect="always"
+       id="filter14972">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="3.19"
+         id="feGaussianBlur14974" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     gridtolerance="10000"
+     guidetolerance="10"
+     objecttolerance="10"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.7608469"
+     inkscape:cx="315.10495"
+     inkscape:cy="690"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:object-bbox="false"
+     inkscape:grid-points="true"
+     inkscape:window-width="1022"
+     inkscape:window-height="748"
+     inkscape:window-x="0"
+     inkscape:window-y="19" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="opacity:0.58;color:#000000;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;filter:url(#filter14968);enable-background:accumulate"
+       d="M 271.62122,279.86218 L 552.5,559.86218 L 267.77274,564.06218 L 271.62122,279.86218 z "
+       id="rect8040"
+       sodipodi:nodetypes="cccc"
+       inkscape:export-filename="/tmp/w/sameplace/unstable/chrome/skin/classic/contacts/bgshadow2.png"
+       inkscape:export-xdpi="90.000008"
+       inkscape:export-ydpi="90.000008"
+       transform="matrix(2.2758621,0,0,1.7241379,-577.4138,-370.1588)" />
+    <rect
+       style="opacity:0.58;color:#000000;fill:none;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;filter:url(#filter14972)"
+       id="rect13012"
+       width="660"
+       height="500"
+       x="20"
+       y="112.36218"
+       inkscape:export-filename="/tmp/w/sameplace/unstable/chrome/skin/classic/contacts/bgshadow2.png"
+       inkscape:export-xdpi="90.000008"
+       inkscape:export-ydpi="90.000008" />
+  </g>
+</svg>

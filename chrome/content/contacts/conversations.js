@@ -99,6 +99,14 @@ function init() {
 
     channel.on({
         event     : 'presence',
+        direction : 'out',
+        stanza    : function(s) {
+            return s.ns_muc::x != undefined && s.@type != 'unavailable'; 
+       }
+    }, function(presence) { sentMUCJoinPresence(presence) });
+
+    channel.on({
+        event     : 'presence',
         direction : 'in',
         stanza    : function(s) {
             return (s.@type == undefined || s.@type == 'unavailable') &&
@@ -109,6 +117,14 @@ function init() {
     $('#tabs').addEventListener('select', selectedTab, false);
 
     $('#deck').addEventListener('click', clickedInConversation, true);
+
+    $('#deck').addEventListener('conversation/close', function(event) {
+        var account = event.target.getAttribute('account');
+        var address = event.target.getAttribute('address');
+        if(XMPP.isMUC(account, address))
+            exitRoom(account, address,
+                     XMPP.JID(getJoinPresence(account, address).stanza.@to).resource);
+    }, false);
 }
 
 function finish() {
@@ -249,6 +265,17 @@ function isCurrent(xulPanel) {
 // NETWORK REACTIONS
 // ----------------------------------------------------------------------
 
+function sentMUCJoinPresence(presence) {
+    var room = XMPP.JID(presence.stanza.@to);
+    var account = presence.session.name;
+    var address = room.address;
+
+    if(!get(account, address))
+        open(account, address, function(xulPanel) {
+            $('#deck').selectedTab = xulPanel.tab;
+        });
+}
+
 function receivedContactPresence(presence) {
     var account = presence.account;
     var address = XMPP.JID(presence.stanza.@from).address;
@@ -291,6 +318,21 @@ function sentChatActivation(message) {
 // NETWORK ACTIONS
 // ----------------------------------------------------------------------
 
+function getJoinPresence(account, address) {
+    return XMPP.cache.first(XMPP.q()
+                            .event('presence')
+                            .account(account)
+                            .direction('out')
+                            .to(address)
+                            .child(ns_muc, 'x'));
+}
+                           
+function exitRoom(account, roomAddress, roomNick) {
+    XMPP.send(account,
+              <presence to={roomAddress + '/' + roomNick} type="unavailable">
+              <x xmlns={ns_muc}/>
+              </presence>);
+}
 
 
 // OTHER ACTIONS
