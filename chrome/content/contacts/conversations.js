@@ -166,13 +166,14 @@ function opened(xulPanel) {
     if($('#deck').childNodes.length == 1)
         $('#deck').selectedTab = xulPanel.tab;
 
-    cacheFor(xulPanel.getAttribute('account'),
-             xulPanel.getAttribute('address'))
+    var account = xulPanel.getAttribute('account');
+    var address = xulPanel.getAttribute('address');
+    
+    cacheFor(account, address)
         .forEach(function(message) { xulPanel.xmppChannel.receive(message); });
 
     if(!XMPP.isMUC(account, address))
-        updatePresenceIndicator(xulPanel.getAttribute('account'),
-                                xulPanel.getAttribute('address'));
+        updatePresenceIndicator(account, address);
 
     var openEvent = document.createEvent('Event');
     openEvent.initEvent('conversation/open', true, false);

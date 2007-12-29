@@ -345,6 +345,10 @@ function updateHeaders() {
 
 function requestedFilter(namePart) {
     filterContacts(namePart);
+    
+    if(!namePart.match(/^\s*$/))
+        $('#contacts').selectedItem =
+        $('#contacts .contact[candidate="true"][availability="available"]');
 }
 
 function filterContacts(prefix) {
@@ -364,14 +368,14 @@ function filterContacts(prefix) {
     });
     
     if(prefix.match(EMPTY)) {
-        $('#contacts').removeAttribute('filtering');
+        removeClass($('#contacts'), 'filtering');
     } else {
-        $('#contacts').setAttribute('filtering', 'true');
+        addClass($('#contacts'), 'filtering');
 
         var newCandidates =
             '//*[@id = "contacts"]/*[contains(@class, "contact")' +
             ' and contains(@display-name, "' + prefix.toLowerCase() + '")]';
-    
+
         $$(newCandidates).forEach(function(xulContact) {
             xulContact.setAttribute('candidate', 'true');
         });

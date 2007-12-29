@@ -162,30 +162,65 @@ function hoveredDockContent(event) {
     }
 }
 
-function focusedFilterField(field) {
-    field.select();
-    addClass($(field, '^ .control'), 'active');
+function requestedToggleFilter() {
+    var xulFieldBox = $('#controls .field.filter');
+    if(xulFieldBox.collapsed) {
+        xulFieldBox.collapsed = false;
+        xulFieldBox.firstChild.focus();        
+    } else {
+        xulFieldBox.collapsed = true;
+        xulFieldBox.focus();
+    }
 }
 
-function blurredFilterField(field) {
-    removeClass($(field, '^ .control'), 'active');
+function focusedFilterField(xulTextbox) {
+    xulTextbox.select();
+    addClass($('#contacts-stack'), 'attention-on-contacts');
+    addClass($(xulTextbox, '^ .control'), 'active');
+}
+
+
+function blurredFilterField(xulTextbox) {
+//    xulTextbox.value = 'Type part of nick…';
+/*    xulTextbox.parentNode.collapsed = true;*/
+    removeClass($(xulTextbox, '^ .control'), 'active');
 }
 
 function inputInFilterField(field) {
     requestedFilter(field.value);
-    if(field.value == '') {
-        field.value = 'Type part of nick…';
-        field.select();
-    }
 }
 
 function keypressInInputField(event) {
     if(event.keyCode == KeyEvent.DOM_VK_ESCAPE) {
-        var field = event.target;
+        var xulTextbox = event.target;
         event.preventDefault();
         requestedFilter('');
-        field.value = 'Type part of nick…';
-        field.parentNode.collapsed = true;
-/*        field.parentNode.focus();*/
+        xulTextbox.value = 'Type part of nick…';
+        xulTextbox.parentNode.focus();
+        xulTextbox.parentNode.collapsed = true;
+        removeClass($('#contacts-stack'), 'attention-on-contacts');
+    } else if(event.keyCode == KeyEvent.DOM_VK_DOWN) {
+        $('#contacts').selectedItem = 
+            $('#contacts .contact[selected="true"] + [candidate="true"][availability="available"]');
+    } else if(event.keyCode == KeyEvent.DOM_VK_UP) {
+        $('#contacts').selectedItem = 
+            $('#contacts .contact[selected="true"] - [candidate="true"][availability="available"]');
+    } else if(event.keyCode == KeyEvent.DOM_VK_RETURN) {
+        var xulContact = $('#contacts').selectedItem;
+        if(xulContact) {
+            var xulTextbox = event.target;
+            event.preventDefault();
+            requestedFilter('');
+            xulTextbox.value = 'Type part of nick…';
+            xulTextbox.parentNode.focus();
+            xulTextbox.parentNode.collapsed = true;
+
+            removeClass($('#contacts-stack'), 'attention-on-contacts');
+            $('#contacts').selectedIndex = -1;
+
+            var selectEvent = document.createEvent('Event');
+            selectEvent.initEvent('contact/select', true, false);
+            xulContact.dispatchEvent(selectEvent); // XXX duplicated from clickedContact
+        }
     }
 }

@@ -43,8 +43,6 @@
       <tabs id="tabs" closebutton="true"/>
       <deck id="deck" flex="1"/>
     </vbox>
-    <button id="collapser" 
-            type="checkbox"
-            oncommand="toggle();"/>
+    <button id="collapser" oncommand="toggle();"/>
   </hbox>
 </page>

@@ -105,6 +105,10 @@ button#collapser {
     list-style-image: url("chrome://global/skin/arrow/arrow-lft.gif");
 }
 
-button#collapser[checked="true"] {
+button#collapser:hover {
+    background: #e4e4e4;
+}
+
+page.expanded button#collapser {
     list-style-image: url("chrome://global/skin/arrow/arrow-rit.gif");
 }

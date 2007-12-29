@@ -30,11 +30,7 @@
 
   <keyset id="keys">
     <key modifiers="control" key=" "
-         oncommand="/*addClass($('#controls .dock-tools'), 'active');*/
-                    var fieldBox = $('#controls .field.filter');
-                    fieldBox.collapsed = !fieldBox.collapsed;
-                    if(!fieldBox.collapsed)
-                    fieldBox.firstChild.focus();"/>
+         oncommand="requestedToggleFilter()"/>
   </keyset>
 
   <stack id="contacts-stack">
@@ -51,11 +47,7 @@
             <image class="icon people" popup="people-popup"
                    helptext="Edit Contacts"/>
             <image class="icon filter"
-                   onclick="var field = $('#controls .field.filter');
-                            field.collapsed = !field.collapsed;
-                            if(!field.collapsed) field.focus;
-                            /*this.nextSibling.collapsed = !this.nextSibling.collapsed;
-                            if(!this.nextSibling.collapsed) this.nextSibling.firstChild.focus();*/"
+                   onclick="requestedToggleFilter();"
                    helptext="Search Contacts (Control+Space)"/>
             <vbox class="field filter" pack="center" collapsed="true">
               <textbox value="Type part of nick…"

@@ -24,7 +24,7 @@
 /* CONTROLS - GENERAL */
 
 #controls .control {
-    opacity: 0.25;
+    opacity: 0.35;
     -moz-box-align: center;
     -moz-box-pack: center;
     min-width: 24px;
@@ -36,7 +36,7 @@
 
 #controls .control:hover,
 #controls .control.active {
-    opacity: 0.85;
+    opacity: 0.90;
 }
 
 #controls .control.dock {

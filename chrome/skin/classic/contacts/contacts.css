@@ -41,11 +41,6 @@
     margin-top: 56px;
 }
 
-#contacts richlistitem[selected="true"] {
-    color: black;
-    background: white;
-}
-
 
 /* HEADERS */
 
@@ -65,13 +60,16 @@
 
 #contacts .contact {
     padding: 2px 4px 2px 4px;
-/*    border-top: 1px solid transparent;*/
     border-bottom: 1px solid rgb(227,227,227);
 }
 
-#contacts .contact:hover {
-/*    border-top-color: rgb(215,215,215);*/
-/*    border-bottom-color: rgb(215,215,215);*/
+#contacts .contact[current="true"] {
+    background: white;
+    color: black;
+}
+
+#contacts .contact:hover,
+#contacts .contact[selected="true"] {
     background: rgb(241,241,241);
 }
 
@@ -122,7 +120,6 @@
     background: transparent;
 }
 
-
 /* avatar area -> indicators (status etc.) */
 
 #contacts .contact .avatar-stack .indicators {
@@ -141,6 +138,8 @@
     height: 16px;
     visibility: hidden;
 }
+
+/* presence indicator */
 
 #contacts .contact[availability="available"][show=""] .avatar-stack .icon-status,
 #contacts .contact[availability="available"][show="chat"] .avatar-stack .icon-status {
@@ -162,10 +161,13 @@
     visibility: visible;
     -moz-image-region: rect(0px 16px 16px 0px);
 }
-/*
+
+/* contact's service icon */
+
 #contacts .contact .service {
     list-style-image: url("../services/server_im.png");
     opacity: 0.25;
+    display: none; /* disabled until further experiments */
 }
 
 #contacts .contact .service:hover {
@@ -177,14 +179,15 @@
 }
 
 #contacts .contact[address$="@gmail.com"] .service,
-#contacts .contact[address$="@googlemail.com"] .service {
+# contacts .contact[address$="@googlemail.com"] .service {
     list-style-image: url("../services/server_im_gtalk.png");
 }
 
 #contacts .contact[address$="@twitter.x4m.localhost"] .service {
     list-style-image: url("../services/server_x-turtle-twitter.png");
 }
-*/
+
+/* unread messages indicator */
 
 /*
 #contacts .contact:not([pending="0"]) .icon.icon-email {
@@ -196,7 +199,7 @@
 /* contact content area */
 
 #contacts .contact vbox.info {
-/*    overflow-x: hidden*/ /* XXX not working, why? */
+    /* overflow-x: hidden; */ /* XXX not working, why? */ 
 }
 
 #contacts .contact .info label.name {
@@ -212,12 +215,16 @@
 #contacts .contact .status {
     font-size: 10px;
     color: rgb(60,60,60);
-/*    padding-left: 4px;*/
-/*    overflow: hidden;*/
 }
 
 #contacts .contact .status label.text-link {
     margin: 0;
+}
+
+#contacts .contact .delay {
+    font-style: italic;
+    color: gray;
+    font-size: smaller;
 }
 
 #contacts .contact vbox.extra {
@@ -236,11 +243,8 @@
 
 /* filtering */
 
-#contacts[filtering="true"] .contact:not([candidate="true"]) {
-    display: none;
-}
-
-#contacts[filtering="true"] .header {
+#contacts.filtering .contact:not([candidate="true"]),
+#contacts.filtering .header {
     display: none;
 }
 
@@ -256,16 +260,6 @@
 #view.compact #contacts .header {
     display: none;
 }
-
-/*
-#view #contacts .contact .small-name {
-    display: none;
-}
-
-#view.compact #contacts .small-name {
-    display: -moz-box;
-}
-*/
 
 
 /* POPUPS */
@@ -293,29 +287,6 @@ popup.with-headers .offset {
 }
 
 
-/* experiments ... */
-
-
-.contact {
-    opacity: 0.9;
-}
-
-.contact:hover {
-    opacity: 1;
-}
-
-
-.delay {
-    font-style: italic;
-    color: gray;
-    font-size: smaller;
-}
-
-
-.status {
-    margin: 0;
-    padding: 0;
-}
 
 /* debug */
 /*

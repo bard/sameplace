@@ -22,9 +22,6 @@
 
 
 #conversations-box {
-    /* make it so upper border is right next to dock's lower border, so
-    that mouse going from conversation to dock won't risk passing on
-    contact and set "hovering-contacts" class */
     margin-top: 70px;
     margin-bottom: 85px;
 }
@@ -55,12 +52,10 @@
 
 /* REACTIONS */
 
-#contacts-stack.hovering-contacts #conversations-box.expanded {
-    /* when mouse hovers contacts, conversation will slide 65 pixels to the right */
-/*    margin-left: 65px;
-    margin-right: -65px;*/
+#contacts-stack.attention-on-contacts #conversations-box.expanded #conversations {
+    margin-left: 115px;
+    margin-right: -115px;
 }
-
 
 #contacts-stack {
     /* negative margin of conversations when under hovering-contacts

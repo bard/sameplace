@@ -42,14 +42,18 @@ function init() {
     window.addEventListener('conversation/open', openedConversation, false);
     
     window.addEventListener('conversation/close', closedConversation, false);
+    
+    delayedMouseOver($('.scroll-arrow-down'), function() {
+        addClass($('#contacts-stack'), 'attention-on-contacts');
+    });
 
-    $('#contacts').addEventListener('mouseover', function(event) {
-        addClass($('#contacts-stack'), 'hovering-contacts');
-    }, false);
+    delayedMouseOver($('.scroll-arrow-up'), function() {
+        addClass($('#contacts-stack'), 'attention-on-contacts');
+    });
 
-    $('#conversations-box').addEventListener('mouseover', function(event) {
-        removeClass($('#contacts-stack'), 'hovering-contacts');
-    }, false);
+    delayedMouseOver($('#conversations'), function() {
+        removeClass($('#contacts-stack'), 'attention-on-contacts');
+    });
 
     $('#conversations').addEventListener('click', clickedInConversation, false);
 
@@ -137,4 +141,25 @@ function clickedInConversation(event) {
 
 function sentChatActivation(message) {
     $('#conversations-box').collapsed = false;    
+}
+
+
+// UTILITIES
+// ----------------------------------------------------------------------
+
+function delayedMouseOver(xulElement, listener, delay) {
+    delay = delay || 750;
+
+    var timeout;
+    xulElement.addEventListener('mouseover', function(event) {
+        if(event.target != xulElement)
+            return;
+        timeout = setTimeout(listener, delay);
+    }, false);
+
+    xulElement.addEventListener('mouseout', function(event) {
+        if(event.target != xulElement)
+            return;
+        clearTimeout(timeout);
+    }, false);
 }
