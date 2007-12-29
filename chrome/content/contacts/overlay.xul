@@ -64,7 +64,7 @@
           insertafter="sidebar-splitter"
           width="300"
           minwidth="70"
-          collapsed="false">
+          collapsed="true">
       <iframe id="sameplace-frame" flex="1"/>
     </vbox>
   </hbox>
