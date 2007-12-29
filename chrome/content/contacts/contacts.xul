@@ -53,6 +53,7 @@
   <script type="application/x-javascript;version=1.7" src="../app/lib/text.js"/>
   <script type="application/x-javascript;version=1.7" src="../app/lib/xml.js"/>
   <script type="application/x-javascript;version=1.7" src="gecko1.9-scrollbar.js"/>
+  <script type="application/x-javascript;version=1.7" src="gecko1.8-richlistbox.js"/>
   <script type="application/x-javascript;version=1.7" src="contacts.js"/>
 
   <keyset id="keys"/>

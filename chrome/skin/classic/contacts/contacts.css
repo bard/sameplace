@@ -63,13 +63,13 @@
     border-bottom: 1px solid rgb(227,227,227);
 }
 
-#contacts .contact[current="true"] {
+#contacts .contact[current="true"],
+#contacts .contact[selected="true"] {
     background: white;
     color: black;
 }
 
-#contacts .contact:hover,
-#contacts .contact[selected="true"] {
+#contacts .contact:hover {
     background: rgb(241,241,241);
 }
 
@@ -246,6 +246,10 @@
 #contacts.filtering .contact:not([candidate="true"]),
 #contacts.filtering .header {
     display: none;
+}
+
+#contacts.filtering .contact[selected="true"] {
+    background: rgb(231,231,231);
 }
 
 /* show/hide unavailable contacts */
