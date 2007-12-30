@@ -1,14 +1,14 @@
 /*
  * Copyright 2006-2007 by Massimiliano Mirra
  * 
- * This file is part of xmpp4moz.
+ * This file is part of SamePlace.
  * 
- * xmpp4moz is free software; you can redistribute it and/or modify it
+ * SamePlace is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
  * Free Software Foundation; either version 3 of the License, or (at your
  * option) any later version.
  * 
- * xmpp4moz is distributed in the hope that it will be useful, but
+ * SamePlace is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
@@ -32,7 +32,15 @@ var pref = Cc['@mozilla.org/preferences-service;1']
     .getService(Ci.nsIPrefService)
     .getBranch('extensions.sameplace.');
 
+var ns_http_auth  = 'http://jabber.org/protocol/http-auth';
+
 var xulBox, xulFrame;
+
+
+// STATE
+// ----------------------------------------------------------------------
+
+var channel;
 
 
 // INITIALIZATION
@@ -43,6 +51,21 @@ function init() {
     try { exp = pref.getBoolPref('experimental'); } catch(e) {}
     if(!exp)
         return;
+
+    channel = XMPP.createChannel();
+    channel.on({
+        event     : 'message',
+        direction : 'in',
+        stanza    : function(s) {
+            // Allow non-error messages with readable body [1] or
+            // error messages in general [2] but not auth requests [3]
+            return (((s.@type != 'error' && s.body.text() != undefined) || // [1]
+                     (s.@type == 'error')) && // [2]
+                    (s.ns_http_auth::confirm == undefined)) // [3]
+        }
+    }, function(message) {
+        seenDisplayableMessage(message);
+    });
 
     addToolbarButton('sameplace-button');
 
@@ -58,8 +81,24 @@ function init() {
     }, false);
 }
 
+function finish() {
+    channel.release();
+}
+
+
+// GUI ACTIONS
+// ----------------------------------------------------------------------
+
+function getButton() {
+    return document.getElementById('sameplace-button');
+}
+
 function isCompact() {
     return xulBox.width == xulBox.getAttribute('minwidth');
+}
+
+function isCollapsed() {
+    return xulBox.collapsed;
 }
 
 function expand() {
@@ -71,11 +110,13 @@ function toggle() {
         xulBox.collapsed = false;
         if(xulBox.__restore_width)
             expand();
+        getButton().removeAttribute('pending-messages');
     } else if(isCompact()) {
         xulBox.collapsed = true;
     } else {
         xulBox.__restore_width = xulBox.width;
         xulBox.width = xulBox.getAttribute('minwidth');
+        getButton().removeAttribute('pending-messages');
     }     
 }
 
@@ -99,4 +140,13 @@ function addToolbarButton(buttonId) {
         toolbar.ownerDocument.persist(toolbar.id, 'currentset');
         try { BrowserToolboxCustomizeDone(true); } catch (e) {}
     }
+}
+
+
+// NETWORK REACTIONS
+// ----------------------------------------------------------------------
+
+function seenDisplayableMessage(message) {
+    if(isCompact() || isCollapsed())
+        getButton().setAttribute('pending-messages', 'true');
 }

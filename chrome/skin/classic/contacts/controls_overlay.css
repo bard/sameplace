@@ -24,7 +24,7 @@
 /* CONTROLS - GENERAL */
 
 #controls .control {
-    opacity: 0.35;
+    opacity: 0.45;
     -moz-box-align: center;
     -moz-box-pack: center;
     min-width: 24px;
@@ -60,6 +60,8 @@
 #controls .scroll-arrow {
     height: 96px;
     display: none;
+    width: 52px;
+    max-width: 52px;
 }
 
 #controls .scroll-arrow[speed="0"] image { height: 21px; }
@@ -81,7 +83,6 @@
     background: url("arrow-down-bg.png");
     list-style-image: url('arrow-down.png');
     -moz-outline-radius: 10px;
-    -moz-background-clip: padding!important;
 }
 
 
@@ -109,7 +110,7 @@
 
 #controls .dock .icon {
     padding: 8px 4px;
-    opacity: 0.5;
+    opacity: 0.5; /* XXX buggy on gecko 1.8 */
 }
 
 #controls .dock:hover .icon {
@@ -162,6 +163,10 @@
 
 /* OFFLINE NOTICE */
 
+#view.compact #controls .control.offline-notice {
+    display: none;
+}
+
 #controls .control.offline-notice {
     opacity: 0.9;
     color: #eee; 
@@ -188,7 +193,6 @@
 #controls.more-up .scroll-arrow-up,
 #controls.more-down .scroll-arrow-down {
     display: -moz-box;
-    width: 52px;
 }
 
 #controls:not(.more-up) .control.dock,

@@ -73,7 +73,6 @@
     <command id="toggle-offline"
              label="&popup.toggle_offline.label;"
              oncommand="toggleOfflineContacts();"/>
-    
     <command id="view-help" oncommand="viewHelp();"
              label="&command.view_help_pages.label;"
              accesskey="&command.view_help_pages.accesskey;"
@@ -82,10 +81,6 @@
              label="&command.join_users_room.label;"
              accesskey="&command.join_users_room.accesskey;"
              tooltiptext="&command.join_users_room.tooltip;"/>
-    <command id="online-support" oncommand="onlineSupport();"
-             label="Access online support"
-             accesskey="S"
-             tooltiptext="Access online support"/>
     <command id="read-latest-news" oncommand="readLatestNews();"
              label="&command.read_latest_news.label;"
              accesskey="&command.read_latest_news.accesskey;"/>    
@@ -151,7 +146,6 @@
       <menuseparator/>
       <menuitem class="menuitem-iconic" command="join-support-room"/>
       <menuitem class="menuitem-iconic" command="view-help"/>
-      <menuitem class="menuitem-iconic" command="online-support"/>
     </popup>
     
     <popup id="tools-popup" class="with-headers">

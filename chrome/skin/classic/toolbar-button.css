@@ -20,11 +20,19 @@
  *  
  */
 
-#sameplace-button[availability="unavailable"] { 
+#sameplace-button { 
     list-style-image: url("logo24x24.png");
+}
+
+#sameplace-button[pending-messages] {
+    list-style-image: url("logo24x24-pending.png");
 }
 
 toolbar[iconsize="small"] #sameplace-button {
     list-style-image: url("logo16x16.png");
+}
+
+toolbar[iconsize="small"] #sameplace-button[pending-messages] {
+    list-style-image: url("logo16x16-pending.png");
 }
 

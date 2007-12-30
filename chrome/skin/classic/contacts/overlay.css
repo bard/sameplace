@@ -20,7 +20,6 @@
  *  
  */
 
-
 #sameplace-box[collapsed="true"] + splitter {
     display: none;
 }

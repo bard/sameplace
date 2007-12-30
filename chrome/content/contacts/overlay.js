@@ -23,6 +23,8 @@
 
 window.addEventListener(
     'load', function(event) { sameplace2.init(); }, false);
+window.addEventListener(
+    'unload', function(event) { sameplace2.finish(); }, false);
 
 var sameplace2 = {};
 

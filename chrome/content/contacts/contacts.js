@@ -966,10 +966,6 @@ function viewHelp() {
     openURL('http://help.sameplace.cc', true);    
 }
 
-function onlineSupport() {
-    openURL('http://sameplace.cc/support', true);    
-}
-
 function requestRoster(account) {
     XMPP.send(account,
               <iq type='get'>
