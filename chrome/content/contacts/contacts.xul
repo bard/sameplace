@@ -52,6 +52,7 @@
   <script type="application/x-javascript;version=1.7" src="../app/lib/filter.js"/>
   <script type="application/x-javascript;version=1.7" src="../app/lib/text.js"/>
   <script type="application/x-javascript;version=1.7" src="../app/lib/xml.js"/>
+  <script type="application/x-javascript;version=1.7" src="../app/lib/conv.js"/>
   <script type="application/x-javascript;version=1.7" src="gecko1.9-scrollbar.js"/>
   <script type="application/x-javascript;version=1.7" src="gecko1.8-richlistbox.js"/>
   <script type="application/x-javascript;version=1.7" src="contacts.js"/>
@@ -230,6 +231,12 @@
     </vbox>
   </vbox>
 
+  <!-- UTILITIES -->
+
+  <box hidden="true" id="utilities">
+    <html:iframe id="html-conversion-area" src="about:blank"/>    
+  </box>
+
   <!-- BLUEPRINTS -->
 
   <box hidden="true" id="blueprints">
@@ -247,10 +254,10 @@
                   pending="0"
                   context="contact-popup"
                   tooltip="_contact-tooltip"
-                  onclick="if(event.button == 0)
-                           clickedContact(this);"
-                  ondragenter="onContactDragEnter(event);"
-                  ondragexit="onContactDragExit(event);">
+                  onclick="if(event.button == 0) clickedContact(this);"
+                  ondragexit="nsDragAndDrop.dragExit(event, dndObserver)"
+                  ondragover="nsDragAndDrop.dragOver(event, dndObserver);"
+                  ondragdrop="nsDragAndDrop.drop(event, dndObserver);">
       <hbox>
         <stack class="avatar-stack">
           <vbox>

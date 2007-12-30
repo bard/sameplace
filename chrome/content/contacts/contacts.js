@@ -62,6 +62,8 @@ var srvPrompt = Cc["@mozilla.org/embedcomp/prompt-service;1"]
 
 var COMPACT_WIDTH = 65;
 
+var dndObserver = {};
+
 
 // STATE
 // ----------------------------------------------------------------------
@@ -395,6 +397,32 @@ function filterContacts(prefix) {
 // GUI REACTIONS
 // ----------------------------------------------------------------------
 
+dndObserver.getSupportedFlavours = function() {
+    var flavours = new FlavourSet();
+    flavours.appendFlavour('text/html');
+    flavours.appendFlavour('text/unicode');
+    return flavours;
+};
+
+dndObserver.onDragOver = function(event, flavour, session) {
+    addClass(event.currentTarget, 'dragover');
+};
+
+dndObserver.onDragExit = function(event, session) {
+    removeClass(event.currentTarget, 'dragover');    
+};
+
+dndObserver.onDrop = function(event, dropdata, session) {
+    if(dropdata.data != '') {
+        var xulContact = event.currentTarget;
+        var account = xulContact.getAttribute('account');
+        var address = xulContact.getAttribute('address');
+        var message = dataToMessage(dropdata.data, dropdata.flavour.contentType);
+        message.@to = address;
+        XMPP.send(account, message);
+    }
+};
+
 function requestedChangeStatusMessage(event) {
     if(event.keyCode != KeyEvent.DOM_VK_RETURN)
         return;
@@ -608,14 +636,6 @@ function clickedContactName(event) {
 */
 }
 
-function onContactDragEnter(event) {
-    addClass(event.currentTarget, 'dragover');
-}
-
-function onContactDragExit(event) {
-    removeClass(event.currentTarget, 'dragover');
-}
-
 function scrolledContacts(event) {
     scroller.update();
 }
@@ -627,6 +647,42 @@ function changedContactsOverflow(event) {
 
 // UTILITIES
 // ----------------------------------------------------------------------
+
+function html2xhtml(htmlString) {
+    // XXX safe, because content written with innerHTML won't interpret
+    // <script> elements
+    $('#html-conversion-area').contentDocument.body.innerHTML = htmlString;
+    return conv.htmlDOMToXHTML($('#html-conversion-area').contentDocument.body);
+}
+
+function dataToMessage(data, contentType) {
+    // Should not be needed, but apparently is.
+    XML.prettyPrinting = false;
+    XML.ignoreWhitespace = false;
+
+    var message =
+        <message><x xmlns={ns_event}><composing/></x><active xmlns={ns_chatstates}/></message>;
+
+    switch(contentType) {
+    case 'text/unicode':
+        message.body = <body>{data}</body>;
+        message.ns_xhtml_im::html.body = <body xmlns={ns_xhtml}>{data}</body>
+        break;
+    case 'application/xhtml+xml':
+        message.body = <body>{filter.htmlEntitiesToCodes(
+            conv.xhtmlToText(data))}</body>;
+        
+        message.ns_xhtml_im::html.body = filter.xhtmlIM.keepRecommended(data);
+        break;
+    case 'text/html':
+        message = dataToMessage(html2xhtml(data), 'application/xhtml+xml');
+        break;
+    default:
+        throw new Error('Unknown content type. (' + contentType + ')');
+    }
+
+    return message;
+}
 
 function textToXULDesc(text) {
     var ns_xul = 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul';
