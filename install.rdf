@@ -40,6 +40,7 @@
    
     <em:name>SamePlace (unstable branch)</em:name>
     <em:description>Extensible, multi-network instant messenger</em:description>
+    <em:iconURL>chrome://sameplace/skin/logo.png</em:iconURL>
     <em:creator>Massimiliano Mirra</em:creator>
     <em:updateURL/>
     <em:homepageURL>http://sameplace.cc</em:homepageURL>
