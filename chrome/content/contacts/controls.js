@@ -175,14 +175,10 @@ function requestedToggleFilter() {
 
 function focusedFilterField(xulTextbox) {
     xulTextbox.select();
-    addClass($('#contacts-stack'), 'attention-on-contacts');
     addClass($(xulTextbox, '^ .control'), 'active');
 }
 
-
 function blurredFilterField(xulTextbox) {
-//    xulTextbox.value = 'Type part of nick…';
-/*    xulTextbox.parentNode.collapsed = true;*/
     removeClass($(xulTextbox, '^ .control'), 'active');
 }
 
@@ -198,7 +194,6 @@ function keypressInInputField(event) {
         xulTextbox.value = 'Type part of nick…';
         xulTextbox.parentNode.focus();
         xulTextbox.parentNode.collapsed = true;
-        removeClass($('#contacts-stack'), 'attention-on-contacts');
     } else if(event.keyCode == KeyEvent.DOM_VK_DOWN) {
         $('#contacts').selectedItem = 
             $('#contacts .contact[selected="true"] + [candidate="true"][availability="available"]');
@@ -215,7 +210,6 @@ function keypressInInputField(event) {
             xulTextbox.parentNode.focus();
             xulTextbox.parentNode.collapsed = true;
 
-            removeClass($('#contacts-stack'), 'attention-on-contacts');
             $('#contacts').selectedIndex = -1;
 
             var selectEvent = document.createEvent('Event');

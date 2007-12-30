@@ -243,12 +243,12 @@
 
 /* filtering */
 
-#contacts.filtering .contact:not([candidate="true"]),
-#contacts.filtering .header {
+#contacts-stack.filtering .contact:not([candidate="true"]),
+#contacts-stack.filtering .header {
     display: none;
 }
 
-#contacts.filtering .contact[selected="true"] {
+#contacts-stack.filtering .contact[selected="true"] {
     background: rgb(231,231,231);
 }
 

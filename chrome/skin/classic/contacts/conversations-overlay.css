@@ -52,9 +52,10 @@
 
 /* REACTIONS */
 
-#contacts-stack.attention-on-contacts #conversations-box.expanded #conversations {
-    margin-left: 115px;
-    margin-right: -115px;
+#contacts-stack.attention-on-contacts #conversations-box.expanded #conversations,
+#contacts-stack.filtering #conversations-box.expanded #conversations {
+    margin-left: 135px;
+    margin-right: -135px;
 }
 
 #contacts-stack {

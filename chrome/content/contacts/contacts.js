@@ -368,9 +368,9 @@ function filterContacts(prefix) {
     });
     
     if(prefix.match(EMPTY)) {
-        removeClass($('#contacts'), 'filtering');
+        removeClass($('#contacts-stack'), 'filtering');
     } else {
-        addClass($('#contacts'), 'filtering');
+        addClass($('#contacts-stack'), 'filtering');
 
         var newCandidates =
             '//*[@id = "contacts"]/*[contains(@class, "contact")' +
