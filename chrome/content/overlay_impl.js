@@ -48,7 +48,10 @@ var sendTo = load('chrome://sameplace/contact/send_to.js', {});
 
 function initOverlay(event) {
     initNetworkReactions();
-    initDisplayRules();
+    if(experimentalMode())
+        initDisplayRulesExperimental();
+    else
+        initDisplayRules();
     initHotkeys();
     initScriptlets();
 
@@ -58,28 +61,25 @@ function initOverlay(event) {
     if(!isActiveSomewhere() && !isPopupWindow())
         loadAreas();
 
-    // Depending on whether this is a first installation or an
-    // upgrade, and on whether this is the devel branch or not, run
-    // wizard or show changelog.  (devel branch is updated too often.)
-
-    if(pref.getCharPref('branch') != 'devel')
-        upgradeCheck(
-            'sameplace@hyperstruct.net',
-            'extensions.sameplace.version', {
-                onFirstInstall: function() {
-                    openURL('http://sameplace.cc/get-started');
-                    checkNoScript();
-                    runWizard();
-                },
-                onUpgrade: function() {
+    upgradeCheck(
+        'sameplace@hyperstruct.net',
+        'extensions.sameplace.version', {
+            onFirstInstall: function() {
+                openURL('http://sameplace.cc/get-started');
+                checkNoScript();
+                runWizard();
+                addToolbarButton('sameplace-button');
+            },
+            onUpgrade: function() {
+                if(pref.getCharPref('branch') != 'devel')
                     openURL('http://sameplace.cc/changelog');
-                }
-            });
+            }
+        });
 }
 
 function initNetworkReactions() {
     channel = XMPP.createChannel();
-    
+
     channel.on({
         event     : 'transport',
         direction : 'out',
@@ -119,11 +119,31 @@ function initNetworkReactions() {
         if(window == getMostRecentWindow())
             receivedAuthConfirmRequest(message);
     });
+
+    if(experimentalMode())
+        channel.on({
+            event     : 'message',
+            direction : 'in',
+            stanza    : function(s) {
+                // Allow non-error messages with readable body [1] or
+                // error messages in general [2] but not auth requests [3]
+                return (((s.@type != 'error' && s.body.text() != undefined) || // [1]
+                         (s.@type == 'error')) && // [2]
+                        (s.ns_http_auth::confirm == undefined)) // [3]
+            }
+        }, function(message) {
+            seenDisplayableMessage(message);
+        });
 }
 
+function initDisplayRulesExperimental() {
+    _('frame').addEventListener('contact/select', function(event) {
+        if(isCompact())
+            expand();
+    }, false);
+}
 
 function initDisplayRules() {
-
     // Adapt toolbox frame to toolbox content.  This is done once here
     // and once in toolbox.xul onload handler.  Doing it only here
     // doesn't work for default theme; doing it only there doesn't
@@ -230,17 +250,6 @@ function initDisplayRules() {
                     collapse(frameFor('conversations'));
             }, false);
     }
-
-    // If XMPP button is visible, attach to it and use to toggle
-    // whatever area contacts are displayed in.
-
-    var button = document.getElementById('xmpp-button');
-    if(button)
-        button.addEventListener(
-            'command', function(event) {
-                if(event.target == button)
-                    toggle();
-            }, false);
 
     // When conversations are collapsed:
     //
@@ -638,16 +647,54 @@ function fireSimpleEvent(element, eventName) {
     element.dispatchEvent(event);
 }
 
-function toggle(event) {
-    if(areaFor('contacts').collapsed)
-        uncollapse(areaFor('contacts'));
-    else
-        collapse(areaFor('contacts'));
-    
-    if(!areaFor('contacts').collapsed) {
-        uncollapse(frameFor('contacts'));
-        uncollapse(frameFor('toolbox'));
+if(experimentalMode()) {
+    function seenDisplayableMessage(message) {
+        if(!_('button'))
+            return;
+        if(isCompact() || isCollapsed())
+            _('button').setAttribute('pending-messages', 'true');
     }
+
+    function isCompact() {
+        return _('box').width == _('box').getAttribute('minwidth');
+    }
+
+    function isCollapsed() {
+        return _('box').collapsed;
+    }
+
+    function expand() {
+        _('box').width = _('box').__restore_width;
+    }
+
+    function toggle() {
+        if(_('box').collapsed) {
+            _('box').collapsed = false;
+            if(_('box').__restore_width)
+                expand();
+            if(_('button'))
+                _('button').removeAttribute('pending-messages');
+        } else if(isCompact()) {
+            _('box').collapsed = true;
+        } else {
+            _('box').__restore_width = _('box').width;
+            _('box').width = _('box').getAttribute('minwidth');
+            if(_('button'))
+                _('button').removeAttribute('pending-messages');
+        }     
+    }
+} else {
+    function toggle(event) {
+        if(areaFor('contacts').collapsed)
+            uncollapse(areaFor('contacts'));
+        else
+            collapse(areaFor('contacts'));
+
+        if(!areaFor('contacts').collapsed) {
+            uncollapse(frameFor('contacts'));
+            uncollapse(frameFor('toolbox'));
+        }
+    }    
 }
 
 function runWizard() {
@@ -657,14 +704,30 @@ function runWizard() {
 }
 
 function loadAreas(force) {
-    // XXX this does not handle "appcontent" setting as a conversation area
+    if(experimentalMode()) {
+        if(force || _('frame').contentDocument.location.href != 'chrome://sameplace/content/experimental/contacts.xul')
+            _('frame').contentDocument.location.href = 'chrome://sameplace/content/experimental/contacts.xul';
+    } else {
+        // XXX this does not handle "appcontent" setting as a conversation area
+        if(force || viewFor('conversations').location.href != 'chrome://sameplace/content/sameplace.xul')
+            viewFor('conversations').location.href = 'chrome://sameplace/content/sameplace.xul';
+        if(force || viewFor('contacts').location.href != 'chrome://sameplace/content/contacts.xul') 
+            viewFor('contacts').location.href = 'chrome://sameplace/content/contacts.xul';
+        if(force || viewFor('toolbox').location.href != 'chrome://sameplace/content/toolbox.xul') 
+            viewFor('toolbox').location.href = 'chrome://sameplace/content/toolbox.xul';
+    }
+}
 
-    if(force || viewFor('conversations').location.href != 'chrome://sameplace/content/sameplace.xul')
-        viewFor('conversations').location.href = 'chrome://sameplace/content/sameplace.xul';
-    if(force || viewFor('contacts').location.href != 'chrome://sameplace/content/contacts.xul') 
-        viewFor('contacts').location.href = 'chrome://sameplace/content/contacts.xul';
-    if(force || viewFor('toolbox').location.href != 'chrome://sameplace/content/toolbox.xul') 
-        viewFor('toolbox').location.href = 'chrome://sameplace/content/toolbox.xul';
+
+// OTHER ACTIONS
+// ----------------------------------------------------------------------
+
+function experimentalMode() {
+    try {
+        return pref.getBoolPref('experimental');
+    } catch(e) {
+        return false;
+    }
 }
 
 

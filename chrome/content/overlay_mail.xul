@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://sameplace/skin/overlay.css" type="text/css"?>
 <?xml-stylesheet href="chrome://sameplace/skin/overlay_mail.css" type="text/css"?>
+<?xml-stylesheet href="chrome://sameplace/skin/experimental/toolbar-button.css" type="text/css"?>
 
 <!--
   Copyright 2006-2007 by Massimiliano Mirra
@@ -65,6 +66,21 @@
     <key id="sameplace-key-toggle"/>
     <key keycode="VK_F12" modifiers="control" command="sameplace-command-load-sidebar-force"/>
   </keyset>
+
+  <!-- TOOLBAR -->
+ 
+  <toolbox id="mail-toolbox"/>
+
+  <toolbarpalette id="MailToolbarPalette">
+    <toolbarbutton id="sameplace-button"
+                   class="toolbarbutton-1 chromeclass-toolbar-additional"
+                   label="SP"
+                   tooltiptext="SamePlace"
+                   availability="unavailable"
+                   oncommand="sameplace.toggle();">
+    </toolbarbutton>
+  </toolbarpalette>
+  
 
   <!-- MENUS -->
 
