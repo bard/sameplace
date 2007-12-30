@@ -116,7 +116,7 @@ function init(event) {
     });
 
     $('#chat-input').bind('accept', null, function(event) {
-        send(wrapAs(event.target.xhtml, 'application/xhtml+xml'));        
+        send(dataToMessage(event.target.xhtml, 'application/xhtml+xml'));        
     });
 
     $('#chat-input').bind('resizing', null, function(event) {
@@ -293,10 +293,10 @@ function droppedDataInConversation(event) {
 
     switch(contentType) {
     case 'text/unicode':
-        send(wrapAs(dataPayload, 'text/unicode'));
+        send(dataToMessage(dataPayload, 'text/unicode'));
         break;
     case 'text/html':
-        send(wrapAs(html2xhtml(dataPayload), 'application/xhtml+xml'));
+        send(dataToMessage(html2xhtml(dataPayload), 'application/xhtml+xml'));
         break;
     default:
         throw new Error('Unexpected. (' + contentType + ')');
@@ -336,6 +336,9 @@ function send(stanza) {
 
     if(!stanza)
         return;
+
+    if(contactResource)
+        stanza.@to = '/' + contactResource;
     
     $('#xmpp-outgoing').text(stanza.toXMLString());
 }
@@ -441,14 +444,13 @@ function seenIq(stanza) {
 // UTILITIES
 // ----------------------------------------------------------------------
 
-function wrapAs(data, contentType) {
-    var message =
-        <message><x xmlns={ns_event}><composing/></x><active xmlns={ns_chatstates}/></message>;
-    if(contactResource)
-        message.@to = '/' + contactResource;
+function dataToMessage(data, contentType) {
     // Should not be needed, but apparently is.
     XML.prettyPrinting = false;
     XML.ignoreWhitespace = false;
+
+    var message =
+        <message><x xmlns={ns_event}><composing/></x><active xmlns={ns_chatstates}/></message>;
 
     switch(contentType) {
     case 'text/unicode':
@@ -464,6 +466,7 @@ function wrapAs(data, contentType) {
     default:
         throw new Error('Unknown content type. (' + contentType + ')');
     }
+
     return message;
 }
 
