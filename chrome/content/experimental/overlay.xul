@@ -21,8 +21,8 @@
   Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
 -->
 
-<?xml-stylesheet href="chrome://sameplace/skin/contacts/overlay.css" type="text/css"?>
-<?xml-stylesheet href="chrome://sameplace/skin/toolbar-button.css" type="text/css"?>
+<?xml-stylesheet href="chrome://sameplace/skin/experimental/overlay.css" type="text/css"?>
+<?xml-stylesheet href="chrome://sameplace/skin/experimental/toolbar-button.css" type="text/css"?>
 
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 

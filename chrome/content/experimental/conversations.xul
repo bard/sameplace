@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+
+<!--
+  Copyright 2006-2007 by Massimiliano Mirra
+  
+  This file is part of SamePlace.
+  
+  SamePlace is free software; you can redistribute it and/or modify it
+  under the terms of the GNU General Public License as published by the
+  Free Software Foundation; either version 3 of the License, or (at your
+  option) any later version.
+  
+  SamePlace is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  
+  Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
+-->
+
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://sameplace/skin/experimental/conversations.css" type="text/css"?>
+
+<page xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+      onload="init();"
+      onunload="finish();">
+
+  <script type="application/x-javascript;version=1.7" src="chrome://xmpp4moz/content/xmpp.js"/>
+  <script type="application/x-javascript;version=1.7" src="../lib/getElementsBySelector.js"/>
+  <script type="application/x-javascript;version=1.7" src="../lib/namespaces.js"/>
+  <script type="application/x-javascript;version=1.7" src="../lib/tabbed_area.js"/>
+  <script type="application/x-javascript;version=1.7" src="conversations.js"/>
+
+  <hbox flex="1" id="main">
+    <vbox flex="1" id="content" >
+      <tabs id="tabs" closebutton="true"/>
+      <deck id="deck" flex="1"/>
+    </vbox>
+    <button id="collapser" oncommand="toggle();"/>
+  </hbox>
+</page>

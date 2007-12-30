@@ -36,7 +36,7 @@ window.addEventListener('load', function() {
         .getService(Ci.nsIStyleSheetService)
     var uri = Cc['@mozilla.org/network/io-service;1']
         .getService(Ci.nsIIOService)
-        .newURI('chrome://sameplace/skin/contacts/hide-scrollbar.css', null, null);
+        .newURI('chrome://sameplace/skin/experimental/hide-scrollbar.css', null, null);
 
     if(!srvStyleSheet.sheetRegistered(uri, srvStyleSheet.AGENT_SHEET))
         srvStyleSheet.loadAndRegisterSheet(uri, srvStyleSheet.AGENT_SHEET);

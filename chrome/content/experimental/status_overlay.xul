@@ -22,7 +22,7 @@
 -->
 
 
-<?xml-stylesheet href="chrome://sameplace/skin/contacts/status_overlay.css"?>
+<?xml-stylesheet href="chrome://sameplace/skin/experimental/status_overlay.css"?>
 
 <!DOCTYPE overlay SYSTEM "chrome://sameplace/locale/toolbox.dtd">
 

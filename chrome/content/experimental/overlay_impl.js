@@ -73,7 +73,7 @@ function init() {
     xulBox = document.getElementById('sameplace-box');
 
     xulFrame.contentDocument.location.href =
-        'chrome://sameplace/content/contacts/contacts.xul';
+        'chrome://sameplace/content/experimental/contacts.xul';
 
     xulFrame.addEventListener('contact/select', function(event) {
         if(isCompact())

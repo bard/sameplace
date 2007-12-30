@@ -22,19 +22,20 @@
 -->
 
 
-<?xml-stylesheet href="chrome://sameplace/skin/contacts/conversations_overlay.css"?>
+<?xml-stylesheet href="chrome://sameplace/skin/experimental/hintbar.css"?>
 
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-  <script type="application/x-javascript;version=1.7" src="../lib/getElementsBySelector.js"/>
-  <script type="application/x-javascript;version=1.7" src="conversations_overlay.js"/>
-  <stack id="contacts-stack">
-    <vbox id="conversations-layer" mousethrough="always" flex="1">
-      <hbox id="conversations-box" flex="1">
-        <spacer/>
-        <iframe id="conversations" src="about:blank"
-                ondragdrop="nsDragAndDrop.drop(event, conversations.dropObserver);"
-                ondragover="nsDragAndDrop.dragOver(event, conversations.dropObserver);"/>
-      </hbox>
-    </vbox>
-  </stack>
+  <script type="application/x-javascript" src="hintbar_overlay.js"/>
+
+  <popupset id="popups">
+    <popup id="hintbar-popup">
+      <menuitem label="Hide hints"/>
+    </popup>
+  </popupset>
+  
+  <vbox id="main">
+    <statusbar id="hintbar" context="hintbar-popup" style="font-size:smaller;">
+      <statusbarpanel class="hints" flex="1"/>
+    </statusbar>    
+  </vbox>
 </overlay>

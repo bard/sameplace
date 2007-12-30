@@ -22,14 +22,14 @@
 
 
 window.addEventListener(
-    'load', function(event) { conversations.init(); }, false);
+    'load', function(event) { sameplace2.init(); }, false);
 window.addEventListener(
-    'unload', function(event) { conversations.finish(); }, false);
+    'unload', function(event) { sameplace2.finish(); }, false);
 
-var conversations = {};
+var sameplace2 = {};
 
 Components
     .classes['@mozilla.org/moz/jssubscript-loader;1']
     .getService(Components.interfaces.mozIJSSubScriptLoader)
-    .loadSubScript('chrome://sameplace/content/contacts/conversations_overlay_impl.js',
-                   conversations);
+    .loadSubScript('chrome://sameplace/content/experimental/overlay_impl.js',
+                   sameplace2);

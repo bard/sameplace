@@ -23,7 +23,7 @@
 
 
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-<?xml-stylesheet href="chrome://sameplace/skin/contacts/contacts.css" type="text/css"?>
+<?xml-stylesheet href="chrome://sameplace/skin/experimental/contacts.css" type="text/css"?>
 <?xul-overlay href="shared_apps_overlay.xul"?>
 <?xul-overlay href="controls_overlay.xul"?>
 <?xul-overlay href="conversations_overlay.xul"?>

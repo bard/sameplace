@@ -22,24 +22,19 @@
 -->
 
 
-<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-<?xml-stylesheet href="chrome://sameplace/skin/contacts/conversations.css" type="text/css"?>
+<?xml-stylesheet href="chrome://sameplace/skin/experimental/conversations_overlay.css"?>
 
-<page xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-      onload="init();"
-      onunload="finish();">
-
-  <script type="application/x-javascript;version=1.7" src="chrome://xmpp4moz/content/xmpp.js"/>
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script type="application/x-javascript;version=1.7" src="../lib/getElementsBySelector.js"/>
-  <script type="application/x-javascript;version=1.7" src="../lib/namespaces.js"/>
-  <script type="application/x-javascript;version=1.7" src="../lib/tabbed_area.js"/>
-  <script type="application/x-javascript;version=1.7" src="conversations.js"/>
-
-  <hbox flex="1" id="main">
-    <vbox flex="1" id="content" >
-      <tabs id="tabs" closebutton="true"/>
-      <deck id="deck" flex="1"/>
+  <script type="application/x-javascript;version=1.7" src="conversations_overlay.js"/>
+  <stack id="contacts-stack">
+    <vbox id="conversations-layer" mousethrough="always" flex="1">
+      <hbox id="conversations-box" flex="1">
+        <spacer/>
+        <iframe id="conversations" src="about:blank"
+                ondragdrop="nsDragAndDrop.drop(event, conversations.dropObserver);"
+                ondragover="nsDragAndDrop.dragOver(event, conversations.dropObserver);"/>
+      </hbox>
     </vbox>
-    <button id="collapser" oncommand="toggle();"/>
-  </hbox>
-</page>
+  </stack>
+</overlay>
