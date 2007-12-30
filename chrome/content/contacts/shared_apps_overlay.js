@@ -59,7 +59,7 @@ window.addEventListener('load', function(event) {
         }
 
         xulContactPopup.addEventListener('command', function(event) {
-            if(event.target.getAttribute('class') != 'shared-app')
+            if(!hasClass(event.target, 'shared-app'))
                 return;
 
             var url = event.target.value;
@@ -80,7 +80,7 @@ window.addEventListener('load', function(event) {
 function interact(account, address, url) {
     if(!(url.match(/^javascript:/) ||
          getBrowser().currentURI.spec == 'about:blank' ||
-         url == undefined))
+         url == ''))
         getBrowser().selectedTab = getBrowser().addTab();
 
     var xulPanel = getBrowser().selectedBrowser;

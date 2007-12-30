@@ -116,9 +116,15 @@
 }
 
 #contacts .contact .avatar-stack .avatar:not([photo-hash]) {
-    list-style-image: url("avatar-default.png");
+    list-style-image: url("avatar-default-contact.png");
     background: transparent;
 }
+
+#contacts .contact.groupchat .avatar-stack .avatar {
+    list-style-image: url("avatar-default-chatroom.png");
+    background: transparent;
+}
+
 
 /* avatar area -> indicators (status etc.) */
 
@@ -291,6 +297,7 @@ popup.with-headers .offset {
 #contact-popup.groupchat .remove-contact {
     display: none;
 }
+
 
 
 

@@ -90,7 +90,7 @@
              label="&command.read_latest_news.label;"
              accesskey="&command.read_latest_news.accesskey;"/>    
     <command id="open-preferences" oncommand="openPreferences();"
-             label="Accounts and Preferences..."
+             label="Accounts and Prefs..."
              accesskey="A"/>
   </commandset>
 
@@ -100,7 +100,8 @@
   </stringbundleset>
 
   <popupset id="popups">
-    <popup id="people-popup" class="with-headers">
+    <popup id="people-popup" class="with-headers"
+           onpopupshowing="showingSortMenu(event);">
       <menuitem class="header" label="People" disabled="true"/>
       <menuseparator/>
       <menuitem class="menuitem-iconic" command="add-contact"/>
@@ -108,6 +109,19 @@
       <menuitem class="menuitem-iconic" command="open-conversation"/>
       <menuseparator/>
       <menuitem command="toggle-offline"/>
+      <menuseparator/>
+      <menuitem type="radio" name="sort" label="Sort by name"
+                value="display-name"
+                oncommand="setInsertionStrategy(this.value);"/>
+      <menuitem type="radio" name="sort" label="Sort by recent activity"
+                value="activity"
+                oncommand="setInsertionStrategy(this.value);"/>
+      <menuitem type="radio" name="sort" label="Sort by group"
+                value="group" disabled="true"
+                oncommand="setInsertionStrategy(this.value);"/>
+      <menuitem type="radio" name="sort" label="Sort by popularity"
+                value="popularity" disabled="true"
+                oncommand="setInsertionStrategy(this.value);"/>
     </popup>
 
     <popup id="status-popup" class="with-headers">
@@ -121,16 +135,15 @@
       <menuitem class="header" label="Sort" disabled="true"/>
       <menuseparator/>
       <menuitem type="radio" name="sort" label="Name"
-                value="display-name"/>
+                value="display-name"
+                oncommand="setInsertionStrategy(this.value);"/>
       <menuitem type="radio" name="sort" label="Recent activity"
-                value="activity"/>
+                value="activity"
+                oncommand="setInsertionStrategy(this.value);"/>
       <menuitem type="radio" name="sort" label="Group"
                 value="group" disabled="true"/>      
       <menuitem type="radio" name="sort" label="Most talked with"
                 value="messages" disabled="true"/>
-      <menuseparator/>
-      <menuitem label="Custom criteria..." value="custom"
-                disabled="true"/>
     </popup>
 
     <popup id="help-popup" class="with-headers">

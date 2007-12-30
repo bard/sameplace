@@ -1008,7 +1008,7 @@ function sentPresence(presence) {
         $('#status-message').value = status;
         removeClass($('#status-message'), 'draft');
     } else {
-        $('#status-message').value = $('status-message').getAttribute('placeholder');
+        $('#status-message').value = $('#status-message').getAttribute('placeholder');
         addClass($('#status-message'), 'draft');
     }
 }
@@ -1112,6 +1112,7 @@ function receivedRoomPresence(presence) {
         $(xulContact, '.name').setAttribute('value', displayName);
         $(xulContact, '.small-name').setAttribute('value', displayName);
         xulContact.setAttribute('display-name', displayName.toLowerCase());
+        addClass(xulContact, 'groupchat');
     } 
 
     xulContact.setAttribute('availability',

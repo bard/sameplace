@@ -28,6 +28,9 @@
   <popup id="contact-popup">
     <menuseparator/>
     <menuitem class="header" label="Interact:" disabled="true"/>
+    
     <menuseparator class="shared-app-separator" hidden="true"/>
+    <menuitem class="offset shared-app" label="Current page"
+              value=""/>
   </popup>
 </overlay>

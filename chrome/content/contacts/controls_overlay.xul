@@ -45,7 +45,7 @@
             <image class="icon presence-indicator" popup="status-popup"
                    helptext="Change Status"/>
             <image class="icon people" popup="people-popup"
-                   helptext="Edit Contacts"/>
+                   helptext="People"/>
             <image class="icon filter"
                    onclick="requestedToggleFilter();"
                    helptext="Search Contacts (Control+Space)"/>
@@ -56,8 +56,8 @@
                        onkeypress="keypressInInputField(event);"
                        onfocus="focusedFilterField(this);"/>
             </vbox>
-            <image class="icon sort" popup="sort-popup"
-                   helptext="Sort Contacts"/>
+            <!--<image class="icon sort" popup="sort-popup"
+                   helptext="Sort Contacts"/>--> <!-- XXX testing the one in people menu -->
             <image class="icon help" popup="help-popup"
                    helptext="Help"/>
             <image class="icon tools" popup="tools-popup"
