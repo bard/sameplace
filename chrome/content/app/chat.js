@@ -37,6 +37,8 @@ var isGroupchat = false;
 var userAddress;
 var contactResource;
 var contactName;
+var tooltipTimeout;
+
 
 XML.prettyPrinting = false;
 XML.ignoreWhitespace = false;
@@ -204,18 +206,19 @@ function displayMessage(stanza) {
                        {color: 'rgb(' + textToRGB(JID(stanza.@from).nick).join(',') + ')'} : {});
     
     $(domMessage)
-    .addClass(stanza.@type.toString() || 'normal')
-    .addClass(stanza.@type != 'groupchat' ?
-              (stanza.@from == undefined ? 'user' : 'contact') : '')
-    .find('.sender')
-    .css(senderStyle)
-    .text(sender)
-    .end()
-    //.find('.time')
-    //.text(formatTime(txtTimeSent));
+        .addClass(stanza.@type.toString() || 'normal')
+        .addClass(stanza.@type != 'groupchat' ?
+                  (stanza.@from == undefined ? 'user' : 'contact') : '')
+        .find('.sender')
+        .css(senderStyle)
+        .text(sender)
+        .end()
+        .find('.time')
+        .text(formatTime(txtTimeSent))
+        .end();
     
     // Without this, applyTextProcessors will add whitespace
-    // and indentation.  Wo don't want that, especially with a
+    // and indentation.  We don't want that, especially with a
     // -moz-pre-wrap around the corner.
     XML.prettyPrinting = false;
     XML.ignoreWhitespace = false;
@@ -248,6 +251,17 @@ function displayEvent(eventClass, text) {
 
 // GUI REACTIONS
 // ----------------------------------------------------------------------
+
+function hoveringMessage(htmlMessage) {
+    tooltipTimeout = setTimeout(function() {
+        $(htmlMessage).find('.time').show();
+    }, 500);
+}
+
+function leftMessage(htmlMessage) {
+    $(htmlMessage).find('.time').hide();
+    clearTimeout(tooltipTimeout);
+}
 
 function droppedDataInInput(event) {
     var data = new XML(_('dnd-sink').textContent);
