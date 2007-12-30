@@ -38,6 +38,21 @@
       <box id="controls-upper"
            orient="horizontal"
            align="start">
+
+        <vbox class="control scroll-arrow scroll-arrow-up"
+              onmouseover="scroller.mouseMovedOnScrollUp(event);"
+              onmouseout="scroller.mouseLeftScroller(event);
+                          this.setAttribute('speed', '0');"
+              onmousemove="var distance = Math.abs(
+                               this.boxObject.height -
+                               (event.clientY-this.boxObject.y));
+                           scroller.increment = -Math.floor(distance/2);
+                           this.setAttribute('speed',
+                                             Math.floor(distance*8/this.boxObject.height));"
+              mousethrough="never">
+          <image/>
+        </vbox>
+
         <vbox class="control dock" mousethrough="never" flex="1">
           <hbox class="dock-tools"
                 onmouseover="hoveredDockContent(event);"
@@ -71,20 +86,6 @@
           </hbox>
         </vbox>
 
-        <vbox class="control scroll-arrow scroll-arrow-up"
-              onmouseover="scroller.mouseMovedOnScrollUp(event);"
-              onmouseout="scroller.mouseLeftScroller(event);
-                          this.setAttribute('speed', '0');"
-              onmousemove="var distance = Math.abs(
-                               this.boxObject.height -
-                               (event.clientY-this.boxObject.y));
-                           scroller.increment = -Math.floor(distance/2);
-                           this.setAttribute('speed',
-                                             Math.floor(distance*8/this.boxObject.height));"
-              mousethrough="never"
-              flex="1">
-          <image/>
-        </vbox>
       </box>
 
       <spacer flex="1" mousethrough="always"/>
@@ -103,7 +104,7 @@
       <spacer flex="2" mousethrough="always"/>
 
       <hbox>
-        <spacer flex="1"/>
+<!--        <spacer flex="1"/>-->
         <vbox class="control scroll-arrow scroll-arrow-down"
               onmouseover="scroller.mouseMovedOnScrollDown(event);"
               onmouseout="scroller.mouseLeftScroller(event);
@@ -113,8 +114,7 @@
                            this.setAttribute(
                                'speed',
                                Math.floor(distance*8/this.boxObject.height));"
-              mousethrough="never"
-              flex="1">
+              mousethrough="never">
           <image/>
         </vbox>
         <spacer flex="1"/>        

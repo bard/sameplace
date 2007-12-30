@@ -73,16 +73,15 @@
 #controls .scroll-arrow[speed="8"] image { height: 45px; }
 
 #controls .scroll-arrow-up {
-    -moz-border-radius-topleft: 0;
-    margin-left: 0;
-}
-
-#controls .scroll-arrow-up image {
+    background: url("arrow-up-bg.png");
     list-style-image: url('arrow-up.png');
 }
 
-#controls .scroll-arrow-down image {
+#controls .scroll-arrow-down {
+    background: url("arrow-down-bg.png");
     list-style-image: url('arrow-down.png');
+    -moz-outline-radius: 10px;
+    -moz-background-clip: padding!important;
 }
 
 
@@ -186,17 +185,10 @@
 
 /* REACTION TO SCROLL */
 
-#controls.more-up .dock {
-    margin-right: 6px;
-    -moz-border-radius-topright: 0;
-    -moz-border-radius-bottomright: 0;
-}
-
 #controls.more-up .scroll-arrow-up,
 #controls.more-down .scroll-arrow-down {
     display: -moz-box;
-    min-width: 48px;
-    max-width: 64px;
+    width: 52px;
 }
 
 #controls:not(.more-up) .control.dock,
@@ -207,24 +199,23 @@
 
 /* REACTION TO RESIZE */
 
+#view:not(.compact) #controls .scroll-arrow-up {
+    margin-right: 0;
+    -moz-border-radius-topright: 0;
+}
+
 #view.compact .control.dock .icon:not(.presence-indicator), 
 #view.compact .inline-tooltip {
     display: none;
 }
 
 #view.compact .control.dock {
-    -moz-border-radius: 10px;
+    width: 52px
 }
 
 #view.compact #controls.more-up .control.dock {
-    -moz-border-radius: 10px 10px 0 0;
+    margin-bottom: 0;
 }
-
-#view.compact .scroll-arrow-up {
-    -moz-border-radius: 0 0 10px 10px;
-    margin: 0 6px;
-}
-
 
 
 /* PRESENCE INDICATOR */

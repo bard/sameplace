@@ -57,14 +57,6 @@ function init() {
 
     $('#conversations').addEventListener('click', clickedInConversation, false);
 
-    $('#conversations').addEventListener('dragdrop', function(event) {
-        nsDragAndDrop.drop(event, dropObserver);
-    }, false);
-
-    $('#conversations').addEventListener('dragover', function(event) {
-        nsDragAndDrop.dragOver(event, dropObserver);
-    }, false);
-
     channel = XMPP.createChannel();
 
     channel.on({
@@ -94,6 +86,8 @@ dropObserver.getSupportedFlavours = function() {
 };
 
 dropObserver.onDragOver = function(event, flavour, session) {};
+
+dropObserver.onDragExit = function(event, session) {};
 
 dropObserver.onDrop = function(event, dropdata, session) {
     if(dropdata.data != '')

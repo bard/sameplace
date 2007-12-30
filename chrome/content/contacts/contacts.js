@@ -609,11 +609,11 @@ function clickedContactName(event) {
 }
 
 function onContactDragEnter(event) {
-    event.currentTarget.setAttribute('dragover', 'true');    
+    addClass(event.currentTarget, 'dragover');
 }
 
 function onContactDragExit(event) {
-    event.currentTarget.removeAttribute('dragover');    
+    removeClass(event.currentTarget, 'dragover');
 }
 
 function scrolledContacts(event) {
@@ -1131,7 +1131,7 @@ function receivedContactPresence(presence) {
 
     // XXX grab most relevant presence. '|| presence' needed because
     // presences form transport seem to not get cached. investigate!
-    var presence = XMPP.presencesOf(account, address)[0] || presence;
+    presence = XMPP.presencesOf(account, address)[0] || presence;
 
     var availability = presence.stanza.@type.toString() || 'available';
     var show         = presence.stanza.show.toString();

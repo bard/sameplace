@@ -147,14 +147,16 @@ function updatePresenceIndicator() {
 // ----------------------------------------------------------------------
 
 window.addEventListener('resize', function(event) {
-    // These appear not to work if set via CSS
+    // XXX These appear not to work if set via CSS. Verify
     if(document.width <= COMPACT_WIDTH) {
         $('#controls-upper').setAttribute('orient', 'vertical');
         $('#controls-upper').setAttribute('align', '');
+        $('#controls-upper').setAttribute('dir', 'reverse');
     } else {
         removeClass($('#view'), 'compact');
         $('#controls-upper').setAttribute('orient', 'horizontal');
         $('#controls-upper').setAttribute('align', 'start');
+        $('#controls-upper').setAttribute('dir', '');
     }
 }, false);
 

@@ -31,7 +31,9 @@
     <vbox id="conversations-layer" mousethrough="always" flex="1">
       <hbox id="conversations-box" flex="1">
         <spacer/>
-        <iframe id="conversations" src="about:blank"/>
+        <iframe id="conversations" src="about:blank"
+                ondragdrop="nsDragAndDrop.drop(event, conversations.dropObserver);"
+                ondragover="nsDragAndDrop.dragOver(event, conversations.dropObserver);"/>
       </hbox>
     </vbox>
   </stack>

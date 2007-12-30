@@ -52,6 +52,10 @@
 
 /* REACTIONS */
 
+#conversations:-moz-drag-over {
+
+}
+
 #contacts-stack.attention-on-contacts #conversations-box.expanded #conversations,
 #contacts-stack.filtering #conversations-box.expanded #conversations {
     margin-left: 135px;

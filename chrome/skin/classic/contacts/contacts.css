@@ -60,6 +60,7 @@
 
 #contacts .contact {
     padding: 2px 4px 2px 4px;
+    border-top: 1px solid transparent;
     border-bottom: 1px solid rgb(227,227,227);
 }
 
@@ -73,9 +74,8 @@
     background: rgb(241,241,241);
 }
 
-#contacts .contact[dragover="true"] {
-    border-top: 1px solid lightblue;
-    border-bottom: 1px solid lightblue;
+#contacts .contact.dragover {
+    border-color: #aaa;
 }
 
 
