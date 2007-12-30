@@ -291,16 +291,7 @@ function droppedDataInConversation(event) {
     var dataPayload = dataPacket.text().toString();
     var contentType = dataPacket['@content-type'].toString();
 
-    switch(contentType) {
-    case 'text/unicode':
-        send(dataToMessage(dataPayload, 'text/unicode'));
-        break;
-    case 'text/html':
-        send(dataToMessage(html2xhtml(dataPayload), 'application/xhtml+xml'));
-        break;
-    default:
-        throw new Error('Unexpected. (' + contentType + ')');
-    }
+    send(dataToMessage(dataPayload), contentType);
 }
 
 function scrolledWindow(event) {
@@ -462,6 +453,9 @@ function dataToMessage(data, contentType) {
             conv.xhtmlToText(data))}</body>;
         
         message.ns_xhtml_im::html.body = filter.xhtmlIM.keepRecommended(data);
+        break;
+    case 'text/html':
+        message = dataToMessage(html2xhtml(data), 'application/xhtml+xml');
         break;
     default:
         throw new Error('Unknown content type. (' + contentType + ')');
