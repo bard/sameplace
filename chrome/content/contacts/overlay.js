@@ -21,41 +21,13 @@
  */
 
 
-window.addEventListener('load', function(event) {
-    function addToolbarButton(buttonId) {
-        var toolbar =
-            document.getElementById('nav-bar') ||
-            document.getElementById('mail-bar') ||
-            document.getElementById('mail-bar2');
+window.addEventListener(
+    'load', function(event) { sameplace2.init(); }, false);
 
-        if(!toolbar)
-            return;
+var sameplace2 = {};
 
-        if(toolbar &&
-           toolbar.currentSet.indexOf(buttonId) == -1 &&
-           toolbar.getAttribute('customizable') == 'true') {
-
-            toolbar.currentSet = toolbar.currentSet.replace(
-                /(urlbar-container|separator)/,
-                buttonId + ',$1');
-            toolbar.setAttribute('currentset', toolbar.currentSet);
-            toolbar.ownerDocument.persist(toolbar.id, 'currentset');
-            try { BrowserToolboxCustomizeDone(true); } catch (e) {}
-        }
-    }
-
-    const pref = Cc['@mozilla.org/preferences-service;1']
-        .getService(Ci.nsIPrefService)
-        .getBranch('extensions.sameplace.');
-
-    
-    var exp = false;
-    try { exp = pref.getBoolPref('experimental'); } catch(e) {}
-    if(!exp)
-        return;
-
-    addToolbarButton('sameplace-button');
-
-    document.getElementById('sameplace-frame').contentDocument.location.href =
-        'chrome://sameplace/content/contacts/contacts.xul';
-}, false);
+Components
+    .classes['@mozilla.org/moz/jssubscript-loader;1']
+    .getService(Components.interfaces.mozIJSSubScriptLoader)
+    .loadSubScript('chrome://sameplace/content/contacts/overlay_impl.js',
+                   sameplace2);

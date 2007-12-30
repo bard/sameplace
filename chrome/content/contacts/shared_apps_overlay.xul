@@ -23,7 +23,7 @@
 
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   
-  <script type="application/x-javascript;version=1.7" src="shared_apps.js"/>  
+  <script type="application/x-javascript;version=1.7" src="shared_apps_overlay.js"/>  
 
   <popup id="contact-popup">
     <menuseparator/>

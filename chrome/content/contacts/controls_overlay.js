@@ -123,6 +123,10 @@ window.addEventListener('load', function(event) {
     $('.control.offline-notice').hidden = XMPP.accounts.some(XMPP.isUp);
 
     updatePresenceIndicator();
+
+    window.addEventListener('contact/select', function(event) {
+        quitFilter();
+    }, false);
 }, false);
 
 // GUI ACTIONS
@@ -186,35 +190,35 @@ function inputInFilterField(field) {
     requestedFilter(field.value);
 }
 
+function quitFilter() {
+    removeClass($('#contacts-stack'), 'filtering');
+    requestedFilter('');
+
+    var xulTextbox = $('#controls .field.filter').firstChild;
+    xulTextbox.value = 'Type part of nick…';
+    xulTextbox.parentNode.focus();
+    xulTextbox.parentNode.collapsed = true;
+
+    $('#contacts').selectedIndex = -1;
+}
+
 function keypressInInputField(event) {
     if(event.keyCode == KeyEvent.DOM_VK_ESCAPE) {
-        var xulTextbox = event.target;
         event.preventDefault();
-        requestedFilter('');
-        xulTextbox.value = 'Type part of nick…';
-        xulTextbox.parentNode.focus();
-        xulTextbox.parentNode.collapsed = true;
+        quitFilter();
     } else if(event.keyCode == KeyEvent.DOM_VK_DOWN) {
         $('#contacts').selectedItem = 
-            $('#contacts .contact[selected="true"] + [candidate="true"][availability="available"]');
+            $('#contacts .contact[selected="true"] + ' +
+              '[candidate="true"][availability="available"]'); // XXX will ignore unavailable contacts
     } else if(event.keyCode == KeyEvent.DOM_VK_UP) {
         $('#contacts').selectedItem = 
-            $('#contacts .contact[selected="true"] - [candidate="true"][availability="available"]');
+            $('#contacts .contact[selected="true"] - ' +
+              '[candidate="true"][availability="available"]');
     } else if(event.keyCode == KeyEvent.DOM_VK_RETURN) {
         var xulContact = $('#contacts').selectedItem;
         if(xulContact) {
-            var xulTextbox = event.target;
             event.preventDefault();
-            requestedFilter('');
-            xulTextbox.value = 'Type part of nick…';
-            xulTextbox.parentNode.focus();
-            xulTextbox.parentNode.collapsed = true;
-
-            $('#contacts').selectedIndex = -1;
-
-            var selectEvent = document.createEvent('Event');
-            selectEvent.initEvent('contact/select', true, false);
-            xulContact.dispatchEvent(selectEvent); // XXX duplicated from clickedContact
+            clickedContact(xulContact);
         }
     }
 }

@@ -22,11 +22,11 @@
 -->
 
 
-<?xml-stylesheet href="chrome://sameplace/skin/contacts/conversations-overlay.css"?>
+<?xml-stylesheet href="chrome://sameplace/skin/contacts/conversations_overlay.css"?>
 
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script type="application/x-javascript;version=1.7" src="../lib/getElementsBySelector.js"/>
-  <script type="application/x-javascript;version=1.7" src="conversations-overlay.js"/>
+  <script type="application/x-javascript;version=1.7" src="conversations_overlay.js"/>
   <stack id="contacts-stack">
     <vbox id="conversations-layer" mousethrough="always" flex="1">
       <hbox id="conversations-box" flex="1">

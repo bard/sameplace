@@ -145,6 +145,15 @@ function initNetworkReactions() {
                 s.subject != undefined;
         }
     }, receivedRoomSubject);
+
+    channel.on({
+        event     : 'presence',
+        direction : 'out',
+        stanza    : function(s) {
+            return (s.@type == undefined || s.@type == 'unavailable') &&
+                s.ns_muc::x == undefined && s.@to == undefined;
+        }
+    }, sentPresence);
 }
 
 function initState() {
@@ -386,6 +395,17 @@ function filterContacts(prefix) {
 // GUI REACTIONS
 // ----------------------------------------------------------------------
 
+function requestedChangeStatusMessage(event) {
+    if(event.keyCode != KeyEvent.DOM_VK_RETURN)
+        return;
+
+    var xulTextbox = event.target;
+    if(xulTextbox.value != xulTextbox.getAttribute('placeholder'))
+        changeStatusMessage(xulTextbox.value);
+    
+    $('#contacts').focus();
+}
+
 function requestedManageScriptlets() {
     window.openDialog('chrome://sameplace/content/scriptlet_manager.xul',
                       'SamePlace:ScriptletManager', 'chrome', getScriptlets());
@@ -580,10 +600,12 @@ function requestedSetContactAlias(xulPopupNode) {
 }
 
 function clickedContactName(event) {
+/*
     if(event.button == 0) {
         event.stopPropagation();
         toggle($(event.target, '^ .contact .extra'), 'height', 100);
     }
+*/
 }
 
 function onContactDragEnter(event) {
@@ -890,6 +912,25 @@ function processURLs(xmlMessageBody) {
 // NETWORK ACTIONS
 // ----------------------------------------------------------------------
 
+function changeStatusMessage(message) {
+    XMPP.accounts.filter(XMPP.isUp).forEach(function(account) {
+        var stanza = XMPP.cache
+            .all(XMPP.q().event('presence')
+                 .account(account.jid)
+                 .direction('out'))
+            .filter(function(presence) {
+                return presence.stanza.ns_muc::x == undefined;
+            })[0].stanza.copy();
+        
+        if(message)
+            stanza.status = message;
+        else
+            delete stanza.status;
+        
+        XMPP.send(account, stanza);
+    });
+}
+
 function removeContact(account, address) {
     XMPP.send(account,
               <iq type="set"><query xmlns={ns_roster}>
@@ -960,6 +1001,17 @@ function addContact(account, address, subscribe) {
 
 // NETWORK REACTIONS
 // ----------------------------------------------------------------------
+
+function sentPresence(presence) {
+    var status = presence.stanza.status.toString();
+    if(status) {
+        $('#status-message').value = status;
+        removeClass($('#status-message'), 'draft');
+    } else {
+        $('#status-message').value = $('status-message').getAttribute('placeholder');
+        addClass($('#status-message'), 'draft');
+    }
+}
 
 function receivedRoomSubject(message) {
     var xulContact = getContact(message.account, message.stanza.@from);
@@ -1076,7 +1128,10 @@ function receivedContactPresence(presence) {
     if(!xulContact) // contact not in roster
         return;
 
-    // var summary = XMPP.presenceSummary(account, address);
+    // XXX grab most relevant presence. '|| presence' needed because
+    // presences form transport seem to not get cached. investigate!
+    var presence = XMPP.presencesOf(account, address)[0] || presence;
+
     var availability = presence.stanza.@type.toString() || 'available';
     var show         = presence.stanza.show.toString();
     var status       = presence.stanza.status.text();

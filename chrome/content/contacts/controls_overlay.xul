@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<?xml-stylesheet href="chrome://sameplace/skin/contacts/controls.css"?>
-<?xul-overlay href="status.xul"?>
+<?xml-stylesheet href="chrome://sameplace/skin/contacts/controls_overlay.css"?>
+<?xul-overlay href="status_overlay.xul"?>
 
 <!--
   Copyright 2006-2007 by Massimiliano Mirra
@@ -26,7 +26,7 @@
 
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
-  <script type="application/x-javascript" src="controls.js"/>
+  <script type="application/x-javascript" src="controls_overlay.js"/>
 
   <keyset id="keys">
     <key modifiers="control" key=" "

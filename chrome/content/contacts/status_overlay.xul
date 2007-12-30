@@ -22,12 +22,12 @@
 -->
 
 
-<?xml-stylesheet href="chrome://sameplace/skin/contacts/status.css"?>
+<?xml-stylesheet href="chrome://sameplace/skin/contacts/status_overlay.css"?>
 
 <!DOCTYPE overlay SYSTEM "chrome://sameplace/locale/toolbox.dtd">
 
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-  <script type="application/x-javascript" src="status.js"/>
+  <script type="application/x-javascript" src="status_overlay.js"/>
 
   <popupset id="popups">
     <popup id="status-popup"

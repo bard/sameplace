@@ -207,10 +207,12 @@
     color: rgb(20,20,20);
 }
 
+/*
 #contacts .contact .info label.name:hover {
     text-decoration: underline;
     color: blue;
 }
+*/
 
 #contacts .contact .status {
     font-size: 10px;
@@ -298,3 +300,14 @@ popup.with-headers .offset {
 .status:hover { background: lightgreen; }
 .delay:hover { background: lightblue; padding: 0; margin: 0; line-height: 100;}
 */
+
+#status-message {
+    padding: 3px 5px 6px 5px !important;
+    font-size: 11px;
+    color: rgb(60,60,60);
+}
+
+#status-message.draft {
+    color: graytext;
+}
+
