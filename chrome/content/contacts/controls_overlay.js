@@ -174,8 +174,7 @@ function requestedToggleFilter() {
         xulFieldBox.collapsed = false;
         xulFieldBox.firstChild.focus();        
     } else {
-        xulFieldBox.collapsed = true;
-        xulFieldBox.focus();
+        quitFilter();
     }
 }
 

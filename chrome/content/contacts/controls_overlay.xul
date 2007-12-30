@@ -58,7 +58,7 @@
                 onmouseover="hoveredDockContent(event);"
                 onmouseout="$(this, '^ .control .inline-tooltip').hidden = true;">
             <image class="icon presence-indicator" popup="status-popup"
-                   helptext="Change Status"/>
+                   helptext="Status"/>
             <image class="icon people" popup="people-popup"
                    helptext="People"/>
             <image class="icon filter"
@@ -71,8 +71,6 @@
                        onkeypress="keypressInInputField(event);"
                        onfocus="focusedFilterField(this);"/>
             </vbox>
-            <!--<image class="icon sort" popup="sort-popup"
-                   helptext="Sort Contacts"/>--> <!-- XXX testing the one in people menu -->
             <image class="icon tools" popup="tools-popup"
                    helptext="Tools"/>
             <image class="icon help" popup="help-popup"
