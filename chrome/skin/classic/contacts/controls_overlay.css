@@ -82,7 +82,7 @@
 #controls .scroll-arrow-down {
     background: url("arrow-down-bg.png");
     list-style-image: url('arrow-down.png');
-    -moz-outline-radius: 10px;
+    opacity: 0.9;
 }
 
 
