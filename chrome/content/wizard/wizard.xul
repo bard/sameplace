@@ -44,9 +44,8 @@
     </description>
 
     <description id="services"
-                 style="text-align: center;"
-                 onmouseover="var service = $(event.target, '^ .service');
-                              if(service) hoveredService(service);"
+                 onmouseover="if(event.target == this) return;
+                              hoveredService($(event.target, '^ .service'));"
                  onmouseout="$('#service-infos').selectedIndex = -1;"
                  onclick="var service = $(event.target, '^ .service');
                           if(service) selectedService(service);">
@@ -60,104 +59,101 @@
     
     <deck id="service-infos" selectedIndex="-1">
       <vbox class="service-info" id="service-info-gtalk">
-        <hbox>
-          <vbox class="service-ok">
-            <image/>
-          </vbox>
-          <vbox flex="1">
-            <description>
-              GMail [Description]
-            </description>
-
-            <description style="font-style: italic;">
-              [Notices]
-            </description>
-          </vbox>
+        <description>
+          Google's Jabber service.
+        </description>
+        
+        <spacer flex="1"/>
+        
+        <hbox flex="1" align="start">
+          <image class="service-ok"/>
+          <description style="font-style: italic;" flex="1">
+            Jabber is an open, decentralized network.  Connection to
+            servers is encrypted.
+          </description>              
         </hbox>
       </vbox>
 
       <vbox class="service-info" id="service-info-jabber">
-        <hbox>
-          <vbox class="service-ok">
-            <image/>
-          </vbox>
-          <vbox flex="1">
-            <description>
-              Jabber [Description]
-            </description>
-
-            <description style="font-style: italic;">
-              [Notices]
-            </description>
-          </vbox>
+        <description>
+          Choose this if you have a Jabber account on a service
+          other than SamePlace.cc or GMail.com.
+        </description>
+        
+        <spacer flex="1"/>
+        
+        <hbox flex="1" align="start">
+          <image class="service-ok"/>
+          <description style="font-style: italic;" flex="1">
+            Jabber is an open, decentralized network.  Connection to
+            servers is encrypted.
+          </description>              
         </hbox>
       </vbox>
 
       <vbox class="service-info" id="service-info-sameplace">
-        <hbox>
-          <vbox class="service-ok">
-            <image/>
-          </vbox>
-          <vbox flex="1">
-            <description>
-              SamePlace [Description]
-            </description>
-
-            <description style="font-style: italic;">
-              [Notices]
-            </description>
-          </vbox>
+        <description>
+          SamePlace's Jabber service.  It also hosts gateways to
+          other networks, such as AIM and MSN.
+        </description>
+        
+        <spacer flex="1"/>
+        
+        <hbox flex="1" align="start">
+          <image class="service-ok"/>
+          <description style="font-style: italic;" flex="1">
+            Jabber is an open, decentralized network.  Connection to
+            servers is encrypted.
+          </description>              
         </hbox>
       </vbox>
 
       <vbox class="service-info" id="service-info-twitter">
-        <hbox>
-          <vbox class="service-external">
-            <image/>
-          </vbox>
-          <vbox flex="1">
-            <description>
-              Twitter [Description]
-            </description>
+        <description>
+          Twitter lets you broadcast short status messages to your
+          friends and follow their status messages in turn.
+        </description>
 
-            <description style="font-style: italic;">
-              [Notices]
-            </description>
-          </vbox>
+        <spacer flex="1"/>
+
+        <hbox flex="1" align="start">
+          <image class="service-warning"/>
+          <description style="font-style: italic;" flex="1">
+            This is equivalent to using Twitter from the web, so
+            connection is not encrypted.
+          </description>              
         </hbox>
       </vbox>
 
       <vbox class="service-info" id="service-info-msn">
-        <hbox>
-          <vbox class="service-warning">
-            <image/>
-          </vbox>
-          <vbox flex="1">
-            <description>
-              MSN [Description]
-            </description>
+        <description>
+          Microsoft instant messaging service.
+        </description>
 
-            <description style="font-style: italic;">
-              [Notices]
-            </description>
-          </vbox>
+        <spacer flex="1"/>
+
+        <hbox flex="1" align="start">
+          <image class="service-warning"/>
+          <description style="font-style: italic;" flex="1">
+            MSN is a proprietary, closed network.  MSN does not
+            provide encrypted connections.
+          </description>              
         </hbox>
       </vbox>
 
       <vbox class="service-info" id="service-info-aim">
-        <hbox>
-          <vbox class="service-warning">
-            <image/>
-          </vbox>
-          <vbox flex="1">
-            <description>
-              AIM [Description]
-            </description>
+        <description>
+          AOL instant messaging service.
+        </description>
 
-            <description style="font-style: italic;">
-              [Notices]
-            </description>
-          </vbox>
+        <spacer flex="1"/>
+
+        <hbox flex="1" align="start">
+          <image class="service-warning"/>
+          <description style="font-style: italic;" flex="1">
+            AIM is a proprietary, closed network.  AIM does not
+            provide encrypted connections.
+          </description>              
         </hbox>
       </vbox>
     </deck>

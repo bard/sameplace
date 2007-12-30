@@ -83,9 +83,12 @@ wizardpage[state="failure"] .progress-failure {
     -moz-box-align: center; /* not working, why? */
 }
 
+[pageid="selections"] #services {
+    text-align: center;
+}
+
 [pageid="selection"] .service {
     width: 72px; height: 72px;
-    border: 1px solid transparent;
     -moz-appearance: none;
     -moz-border-radius: 15px;
     -moz-box-align: center;
@@ -113,7 +116,7 @@ wizardpage[state="failure"] .progress-failure {
 [pageid="selection"] .service-info .service-warning { list-style-image: url("icon_info.png"); }
 [pageid="selection"] .service-info .service-ok      { list-style-image: url("icon_ok.png");   }
 
-[pageid="selection"] #service-infos > vbox {
+[pageid="selection"] #service-infos .service-info {
     width: 300px;
     -moz-border-radius: 15px;
     border: 1px solid #b4b4b4;
