@@ -291,7 +291,7 @@ function droppedDataInConversation(event) {
     var dataPayload = dataPacket.text().toString();
     var contentType = dataPacket['@content-type'].toString();
 
-    send(dataToMessage(dataPayload), contentType);
+    send(dataToMessage(dataPayload, contentType));
 }
 
 function scrolledWindow(event) {
