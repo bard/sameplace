@@ -188,6 +188,11 @@ function finish() {
 // GUI ACTIONS
 // ----------------------------------------------------------------------
 
+function openAboutDialog() {
+    window.openDialog('chrome://sameplace/content/experimental/about.xul',
+                      'About', 'centerscreen,chrome,resizable=no');
+}
+
 function openPreferences(paneID) {
     var instantApply;
     try {

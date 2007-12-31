@@ -88,6 +88,9 @@
     <command id="open-preferences" oncommand="openPreferences();"
              label="Accounts and Prefs..."
              accesskey="A"/>
+    <command id="about" oncommand="openAboutDialog();"
+             label="About"
+             accesskey="b"/>
   </commandset>
 
   <stringbundleset>
@@ -147,6 +150,7 @@
       <menuseparator/>
       <menuitem class="menuitem-iconic" command="join-support-room"/>
       <menuitem class="menuitem-iconic" command="view-help"/>
+      <menuitem class="menuitem-iconic" command="about"/>
     </popup>
     
     <popup id="tools-popup" class="with-headers">
