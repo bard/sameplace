@@ -818,10 +818,10 @@ var insertionStrategies = {};
 
 insertionStrategies['activity'] = function(activity) {
     return function(xulContact1, xulContact2) {
-        if(activity < xulContact1.getAttribute('activity'))
-            return 1;
-        else if(activity > xulContact2.getAttribute('activity'))
+        if(activity > xulContact1.getAttribute('activity'))
             return -1;
+        else if(activity < xulContact2.getAttribute('activity'))
+            return 1;
         else
             return 0;
     }
@@ -1203,7 +1203,6 @@ function receivedContactPresence(presence) {
     xulContact.setAttribute('availability', availability);
     xulContact.setAttribute('show', show);
     xulContact.setAttribute('status', status);
-    xulContact.setAttribute('activity', (new Date()).getTime());
 
     if(nickname) {
         $(xulContact, '.name').value = nickname;
@@ -1213,12 +1212,15 @@ function receivedContactPresence(presence) {
     $(xulContact, '.status').replaceChild(
         textToXULDesc(presence.stanza.status.text()),
         $(xulContact, '.status').firstChild);
-
     
     var ns_delay = 'urn:xmpp:delay'; // XXX overrides ns_delay from namespaces.sj
-    if(presence.stanza.ns_delay::delay != undefined)
-        $(xulContact, '.delay').textContent = timeAgoInWords(
-            stampToDate(presence.stanza.ns_delay::delay.@stamp)) + ' ago';
+    if(presence.stanza.ns_delay::delay != undefined) {
+        var date = stampToDate(presence.stanza.ns_delay::delay.@stamp);
+        $(xulContact, '.delay').textContent = timeAgoInWords(date) + ' ago';
+        xulContact.setAttribute('activity', date);
+    } else {
+        xulContact.setAttribute('activity', (new Date()).getTime());
+    }
 
     if(presence.stanza.@type == 'unavailable')
         xulContact.setAttribute('chatstate', '');
@@ -1458,6 +1460,10 @@ function singleExec(action, wait) {
     // Checker will happily keep track of multiple actions, but if
     // many actions are going to be executed in the same go, and first
     // one throws an error, subsequent ones won't be executed.
+    //
+    // XXX A periodic interval timer isn't probably the best way to do
+    // this.  Try instead a simple timeout that clears itself upon
+    // incoming actions.
 
     function startChecker() {
         var interval = window.setInterval(function() {
