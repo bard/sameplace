@@ -20,19 +20,27 @@
  *  
  */
 
-#sameplace-button { 
+#sameplace-button[availability="available"] { 
     list-style-image: url("logo24x24.png");
 }
 
-#sameplace-button[pending-messages] {
+#sameplace-button[availability="unavailable"] {
+    list-style-image: url("logo24x24-unavailable.png");    
+}
+
+#sameplace-button[availability="available"][pending-messages] {
     list-style-image: url("logo24x24-pending.png");
 }
 
-toolbar[iconsize="small"] #sameplace-button {
+toolbar[iconsize="small"] #sameplace-button[availability="available"] {
     list-style-image: url("logo16x16.png");
 }
 
-toolbar[iconsize="small"] #sameplace-button[pending-messages] {
+toolbar[iconsize="small"] #sameplace-button[availability="unavailable"] {
+    list-style-image: url("logo16x16-unavailable.png");
+}
+
+toolbar[iconsize="small"] #sameplace-button[availability="available"][pending-messages] {
     list-style-image: url("logo16x16-pending.png");
 }
 

@@ -81,7 +81,24 @@ function initNetworkReactions() {
     channel = XMPP.createChannel();
 
     channel.on({
-        event     : 'transport',
+        event     : 'connector',
+    }, function(connector) {
+        switch(connector.state) {
+        case 'disconnected':
+            _('button').setAttribute('availability',
+                                     XMPP.accounts.some(XMPP.isUp) ?
+                                     'available' : 'unavailable');
+            break;
+        case 'active':
+            _('button').setAttribute('availability', 'available');
+            if(experimentalMode() && isCollapsed())
+                toCompact();
+            break;
+        }
+    });
+
+    channel.on({
+        event     : 'transport', // XXX legacy
         direction : 'out',
         state     : 'start'
     }, function() {
@@ -711,6 +728,9 @@ if(experimentalMode()) {
         _('box').collapsed = false;
         if(_('box').__restore_width)
             _('box').width = _('box').__restore_width;
+        else
+            _('box').width = 300;
+        
         if(_('button'))
             _('button').removeAttribute('pending-messages');
     }
@@ -720,7 +740,10 @@ if(experimentalMode()) {
     }
 
     function toCompact() {
-        _('box').__restore_width = _('box').width;
+        if(_('box').collapsed)
+            _('box').collapsed = false;
+        else
+            _('box').__restore_width = _('box').width;
         _('box').width = _('box').getAttribute('minwidth');
         if(_('button'))
             _('button').removeAttribute('pending-messages');
