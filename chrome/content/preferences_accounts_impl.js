@@ -104,7 +104,7 @@ function requestedDeleteAccount() {
 }
 
 function requestedAddAccount() {
-    var wizard = window.openDialog(
+    window.openDialog(
         'chrome://sameplace/content/wizard/wizard.xul',
         'sameplace-wizard', 'chrome,centerscreen,width=600,height=480');
     refresh();
