@@ -586,6 +586,42 @@ function requestedInstallScriptlet(domElement) {
 // GUI ACTIONS
 // ----------------------------------------------------------------------
 
+function modifyToolbarButtons(modifier) {
+    var toolbar =
+        document.getElementById('nav-bar') ||
+        document.getElementById('mail-bar') ||
+        document.getElementById('mail-bar2');
+
+    if(!toolbar)
+        return;
+
+    if(toolbar.getAttribute('customizable') == 'true') {
+        var newSet = modifier(toolbar.currentSet);
+        if(!newSet)
+            return;
+
+        toolbar.currentSet = newSet;
+        toolbar.setAttribute('currentset', toolbar.currentSet);
+        toolbar.ownerDocument.persist(toolbar.id, 'currentset');
+        try { BrowserToolboxCustomizeDone(true); } catch (e) {}
+    }
+}
+
+function removeToolbarButton(buttonId) {
+    modifyToolbarButtons(function(set) {
+        if(set.indexOf(buttonId) != -1)
+            return set.replace(buttonId, '');
+    });
+}
+
+function addToolbarButton(buttonId) {
+    modifyToolbarButtons(function(set) {
+        if(set.indexOf(buttonId) == -1)
+            return set.replace(/(urlbar-container|separator)/,
+                               buttonId + ',$1');
+    });
+}
+
 function checkNoScript() {
     var noScriptUpdateItem = Cc['@mozilla.org/extensions/manager;1']
         .getService(Ci.nsIExtensionManager)
