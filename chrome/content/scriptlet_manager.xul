@@ -82,6 +82,7 @@
       </hbox>
       <description class="description"/>
       <hbox class="actions">
+        <checkbox class="enabled" label="Enabled" checked="false" oncommand="requestedToggleScriptletActivation(this);"/>
         <button class="reload" label="Reload" accesskey="R" oncommand="reload(this);"/>
         <button class="edit" label="Edit" accesskey="E" oncommand="requestedEditScriptlet(this);"/>
         <spacer flex="1"/>

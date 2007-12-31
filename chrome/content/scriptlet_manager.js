@@ -87,6 +87,7 @@ function updateScriptlet(xulScriptlet, scriptlet) {
         $(xulScriptlet).$('.title')._.value = scriptlet.info.name;
         $(xulScriptlet).$('.version')._.value = scriptlet.info.version;
         $(xulScriptlet).$('.description')._.value = scriptlet.info.description;
+        $(xulScriptlet).$('.enabled')._.checked = scriptlet.enabled;
     } catch(e) {
         $(xulScriptlet).$('.title')._.value = scriptlet.fileName;
         $(xulScriptlet).$('.description')._.value = 'Error while reading.';
@@ -120,6 +121,15 @@ var dndObserver = {
     }
 };
 
+function requestedToggleScriptletActivation(xulCheckbox) {
+    var fileName = $(xulCheckbox).$('^ .scriptlet .filename')._.value;
+    var scriptlet = scriptlets.get(fileName);
+    if(scriptlet.enabled)
+        scriptlet.disable();
+    else
+        scriptlet.enable();
+}
+
 function requestedEditScriptlet(xulEdit) {
     edit($(xulEdit).$('^ .scriptlet .filename')._.value);
 }
@@ -148,7 +158,8 @@ function installRemoteScriptlet(url) {
     var process = {
         start       : { ok: 'requestData' },
         requestData : { ok: 'saveData', error: 'alertUser' },
-        saveData    : { ok: 'refreshScriptlets', error: 'alertUser' }
+        saveData    : { ok: 'enableScriptlet', error: 'alertUser'},
+        enableScriptlet: { ok: 'refreshScriptlets', error: 'alertUser' }
     };
     // XXX use let() here
     var parts = url.split('/');
@@ -193,11 +204,20 @@ function installRemoteScriptlet(url) {
             window.alert(message);
         },
 
+        enableScriptlet: function(next) {
+            try {
+                scriptlets.get(name).enable();
+                next('ok');
+            } catch(e) {
+                next('error', 'Error while enabling scriptlet. (' + e + ')');
+            }
+        },
+
         refreshScriptlets: function(next) {
             refreshScriptlets();
             $('#scriptlets')._.selectedItem =
                 $('#scriptlets .filename[value="' + name + '"] ^ .scriptlet')._;
-       } 
+        }
     };
 
     execute(process, steps, url, name);
