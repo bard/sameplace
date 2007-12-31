@@ -221,14 +221,19 @@
                      onoverflow="changedContactsOverflow();"/>
       </stack>
     </notificationbox>
-    <vbox style="border-top: 1px solid gray;">
-      <textbox flex="1" id="status-message"
+    <hbox style="border-top: 1px solid gray;">
+      <textbox id="status-message" flex="1"
                class="plain draft"
-               onkeypress="requestedChangeStatusMessage(event);"
+               onkeypress="if(event.keyCode != KeyEvent.DOM_VK_RETURN) return;
+                           requestedChangeStatusMessage(event);
+                           this.nextSibling.hidden = true;"
+               oninput="this.nextSibling.hidden = false;
+                        this.nextSibling.value = '[' + this.textLength + ']';"
                placeholder="[ your status message here ]"
                onfocus="this.select();"
                value="[ your status message here ]"/>
-    </vbox>
+      <textbox id="status-message-counter" flex="1" class="plain"/>
+    </hbox>
   </vbox>
 
   <!-- UTILITIES -->

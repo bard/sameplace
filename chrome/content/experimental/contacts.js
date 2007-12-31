@@ -424,9 +424,6 @@ dndObserver.onDrop = function(event, dropdata, session) {
 };
 
 function requestedChangeStatusMessage(event) {
-    if(event.keyCode != KeyEvent.DOM_VK_RETURN)
-        return;
-
     var xulTextbox = event.target;
     if(xulTextbox.value != xulTextbox.getAttribute('placeholder'))
         changeStatusMessage(xulTextbox.value);
