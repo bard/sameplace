@@ -382,9 +382,13 @@
     </hbox>
   </wizardpage>
 
-  <wizardpage pageid="finish" pack="center" align="center">
+  <wizardpage pageid="finish" pack="center" align="center"
+              onpageshow="shownPageFinish();"
+              onpageadvanced="advancedPageFinish();">
     <description style="font-size: 30px;">
       Done!
     </description>
+
+    <checkbox id="connect-account" checked="true" hidden="true"/>
   </wizardpage>
 </wizard>

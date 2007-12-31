@@ -36,6 +36,7 @@ var pref = Cc['@mozilla.org/preferences-service;1']
 // ----------------------------------------------------------------------
 
 var channel;
+var account;
 
 
 // INITIALIZATION/FINALIZATION
@@ -190,7 +191,7 @@ function advancedPageJabber(page) {
     if(page.getAttribute('state') == 'verified')
         return true;
 
-    var account = {
+    account = {
         address            : ($(page, '.username').value +
                               '@' +
                               $(page, '.domain-' + page.getAttribute('service')).value),
@@ -205,7 +206,11 @@ function advancedPageJabber(page) {
 
         connectionSecurity : $(page, '.connection-security').value,
         
-        autoLogin          : $(page, '.auto-login').checked
+        autoLogin          : $(page, '.auto-login').checked,
+
+        get jid() {
+            return this.address + '/' + this.resource;
+        }
     };
 
     page.setAttribute('state', 'verifying');
@@ -294,6 +299,22 @@ function advancedPageTransport(page) {
     });
 
     return false;
+}
+
+
+// FINAL PAGE
+// ----------------------------------------------------------------------
+
+function shownPageFinish() {
+    if(account) {
+        $('#connect-account').hidden = false;
+        $('#connect-account').label = 'Connect ' + account.address;
+    }
+}
+
+function advancedPageFinish() {
+    if(account && $('#connect-account').checked)
+        XMPP.up(account);
 }
 
 
