@@ -24,6 +24,12 @@
 <?xml-stylesheet href="chrome://sameplace/skin/experimental/overlay.css" type="text/css"?>
 
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+  <keyset id="mainKeyset">
+    <key modifiers="control" key=" "
+         oncommand="sameplace.findContact();"/>
+  </keyset>
+
   <hbox id="browser">
     <splitter insertafter="sidebar-splitter"
               state="open"

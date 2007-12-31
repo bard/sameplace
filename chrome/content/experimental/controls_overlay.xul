@@ -28,10 +28,7 @@
 
   <script type="application/x-javascript" src="controls_overlay.js"/>
 
-  <keyset id="keys">
-    <key modifiers="control" key=" "
-         oncommand="requestedToggleFilter()"/>
-  </keyset>
+  <keyset id="keys"/>
 
   <stack id="contacts-stack">
     <vbox id="controls" flex="1" mousethrough="always">

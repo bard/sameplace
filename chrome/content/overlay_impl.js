@@ -139,7 +139,7 @@ function initNetworkReactions() {
 function initDisplayRulesExperimental() {
     _('frame').addEventListener('contact/select', function(event) {
         if(isCompact())
-            expand();
+            toExpanded();
     }, false);
 }
 
@@ -586,6 +586,14 @@ function requestedInstallScriptlet(domElement) {
 // GUI ACTIONS
 // ----------------------------------------------------------------------
 
+function findContact() {
+    if(!sameplace.experimentalMode())
+        return;
+
+    toExpanded();
+    _('frame').contentWindow.requestedToggleFilter();
+}
+
 function modifyToolbarButtons(modifier) {
     var toolbar =
         document.getElementById('nav-bar') ||
@@ -699,25 +707,32 @@ if(experimentalMode()) {
         return _('box').collapsed;
     }
 
-    function expand() {
-        _('box').width = _('box').__restore_width;
+    function toExpanded() {
+        _('box').collapsed = false;
+        if(_('box').__restore_width)
+            _('box').width = _('box').__restore_width;
+        if(_('button'))
+            _('button').removeAttribute('pending-messages');
+    }
+
+    function toCollapsed() {
+        _('box').collapsed = true;
+    }
+
+    function toCompact() {
+        _('box').__restore_width = _('box').width;
+        _('box').width = _('box').getAttribute('minwidth');
+        if(_('button'))
+            _('button').removeAttribute('pending-messages');
     }
 
     function toggle() {
-        if(_('box').collapsed) {
-            _('box').collapsed = false;
-            if(_('box').__restore_width)
-                expand();
-            if(_('button'))
-                _('button').removeAttribute('pending-messages');
-        } else if(isCompact()) {
-            _('box').collapsed = true;
-        } else {
-            _('box').__restore_width = _('box').width;
-            _('box').width = _('box').getAttribute('minwidth');
-            if(_('button'))
-                _('button').removeAttribute('pending-messages');
-        }     
+        if(isCollapsed())
+            toExpanded();
+        else if(isCompact())
+            toCollapsed();
+        else
+            toCompact();
     }
 } else {
     function toggle(event) {
