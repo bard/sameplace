@@ -735,8 +735,8 @@ if(experimentalMode()) {
 
 function runWizard() {
     window.openDialog(
-        'chrome://sameplace/content/wizard.xul',
-        'sameplace-wizard', 'chrome')
+        'chrome://sameplace/content/wizard/wizard.xul',
+        'sameplace-wizard', 'chrome,centerscreen,width=600,height=480');
 }
 
 function loadAreas(force) {
