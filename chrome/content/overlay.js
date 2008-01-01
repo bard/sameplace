@@ -31,7 +31,9 @@
 
 
 window.addEventListener(
-    'load', function(event) { sameplace.initOverlay(); }, false);
+    'load', function(event) { sameplace.init(); }, false);
+window.addEventListener(
+    'unload', function(event) { sameplace.finish(); }, false);
 
 var sameplace = {};
 

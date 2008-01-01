@@ -55,7 +55,7 @@ var sendTo = load('chrome://sameplace/contact/send_to.js', {});
 // INITIALIZATION
 // ----------------------------------------------------------------------
 
-function initOverlay(event) {
+function init(event) {
     initNetworkReactions();
     if(experimentalMode())
         initDisplayRulesExperimental();
@@ -84,6 +84,10 @@ function initOverlay(event) {
                     openURL('http://sameplace.cc/changelog');
             }
         });
+}
+
+function finish() {
+    channel.release();
 }
 
 function initNetworkReactions() {
