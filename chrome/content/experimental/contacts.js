@@ -104,7 +104,13 @@ function initNetworkReactions() {
     subscriptionAccumulator = new TimedAccumulator(
         receivedSubscriptionRequestSequence, 1500);
     
-    channel = XMPP.createChannel();
+    channel = XMPP.createChannel(
+            <query xmlns="http://jabber.org/protocol/disco#info">
+            <feature var="http://jabber.org/protocol/muc"/>
+            <feature var="http://jabber.org/protocol/muc#user"/>
+            <feature var="http://jabber.org/protocol/xhtml-im"/>
+            <feature var="http://jabber.org/protocol/chatstates"/>
+            </query>);
 
     channel.on({
         event     : 'iq',
