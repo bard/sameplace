@@ -77,6 +77,11 @@
                 oncommand="requestedRemoveContact(document.popupNode);"/>
       <menuitem role="remove-room" label="Remove"
                 oncommand="requestedRemoveRoom(document.popupNode);"/>
+      <menuseparator/>
+      <menuitem class="header" style="color: black;" label="Interact:" disabled="true"/>
+      <menuseparator class="shared-app-separator" hidden="true"/>
+      <menuitem class="shared-app" label="Current page"
+                value="current"/>
     </popup>
 
     <tooltip id="contact-tooltip" noautohide="true"

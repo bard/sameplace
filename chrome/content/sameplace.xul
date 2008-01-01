@@ -103,18 +103,6 @@
           <textbox id="contact" flex="1" onfocus="this.select();"
                    onkeypress="pressedKeyInContactField(event);"/>
         </toolbaritem>
-        <toolbarbutton role="attach"
-                       hidden="true"
-                       tooltiptext="&attach.tooltip;"
-                       type="menu"
-                       class="small-margin">
-          <menupopup id="menu-applications"
-                     oncommand="requestedAdditionalInteraction(event);">
-            <menuseparator/>
-            <menuitem label="&attach.menu.current_page.label;" value="current"
-                      tooltiptext="&attach.menu.current_page.tooltip;"/>
-          </menupopup>
-        </toolbarbutton>
         <toolbarbutton command="hide" hidden="true"/>
       </toolbar>
     </toolbox>

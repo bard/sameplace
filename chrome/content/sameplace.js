@@ -58,7 +58,6 @@ function init(event) {
     initNetworkReactions();
     initConversations();
     initCustomWidgets();
-    initApplicationMenu();
 
     XMPP.accounts.filter(XMPP.isUp).forEach(function(account) {
         autojoinRooms(account.jid);
@@ -142,12 +141,6 @@ function initConversations() {
     default:
         break;
     }
-
-    conversations.ui.addEventListener(
-        'conversation/open', function(event) {
-            if(getBrowser() && typeof(getBrowser().addTab) == 'function')
-                _('contact-toolbox', {role: 'attach'}).hidden = false;
-        }, false);
 
     conversations.ui.addEventListener(
         'conversation/focus', function(event) {
@@ -282,38 +275,6 @@ function isReceivingInput() {
 
 function hide() {
     top.sameplace.frameFor('conversations').collapsed = true;
-}
-
-function initApplicationMenu() {
-    var menuPopup = _('menu-applications');
-    fetchFeed('http://apps.sameplace.cc/feed.xml', function(feed, e) {
-        if(!feed) throw e;
-        
-        var menus = {};
-        function menuFor(category) {
-            if(!menus[category]) {
-                var menu = document.createElement('menu');
-                menu.setAttribute('label', category);
-                menu.setAttribute('tooltiptext', category);
-                menuPopup.insertBefore(menu, menuPopup.getElementsByTagName('menuseparator')[0]);
-                
-                var popup = document.createElement('menupopup');
-                menu.appendChild(popup);
-                menus[category] = popup;
-            }
-            return menus[category];
-        }
-        
-        for(var i=0; i<feed.items.length; i++) {
-            var item = feed.items.queryElementAt(i, Ci.nsIFeedEntry);
-            
-            var menuItem = document.createElement('menuitem');
-            menuItem.setAttribute('label', item.fields.getProperty('title'));
-            menuItem.setAttribute('value', item.fields.getProperty('link'));
-            menuItem.setAttribute('tooltiptext', item.fields.getProperty('description'));
-            menuFor(item.fields.getProperty('dc:subject')).appendChild(menuItem);
-        }
-    });
 }
 
 function buildContactCompletions(xulCompletions) {
@@ -476,13 +437,12 @@ function shown() {
                               conversations.current.getAttribute('address'));
 }
 
-function requestedAdditionalInteraction(event) {
+function requestedAdditionalInteraction(account, address, url) {
     var conversation = conversations.current;
-    var account = attr(conversation, 'account');
-    var address = attr(conversation, 'address');
-    var url = event.target.value;
 
-    if(!(url.match(/^javascript:/) || getBrowser().currentURI.spec == 'about:blank' || url == 'current'))
+    if(!(url.match(/^javascript:/) ||
+         getBrowser().currentURI.spec == 'about:blank' ||
+         url == 'current'))
         getBrowser().selectedTab = getBrowser().addTab();
     
     var panel = getBrowser().selectedBrowser;

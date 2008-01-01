@@ -136,6 +136,8 @@ function init() {
         event     : 'presence',
         direction : 'in',
     }).forEach(receivedPresence);
+
+    initApplicationMenu();    
 }
 
 function finish() {
@@ -485,6 +487,51 @@ function receivedMUCPresence(presence) {
 // GUI ACTIONS
 // ----------------------------------------------------------------------
 
+function initApplicationMenu() {
+    var xulContactPopup = _('contact-menu');
+    fetchFeed('http://apps.sameplace.cc/feed.xml', function(feed, e) {
+        if(!feed) throw e;
+        
+        var menus = {};
+        var xulSeparator = xulContactPopup.getElementsByAttribute('class', 'shared-app-separator')[0];
+        function menuFor(category) {
+            if(!menus[category]) {
+                var xulMenu = document.createElement('menu');
+                xulMenu.setAttribute('label', category);
+                xulMenu.setAttribute('tooltiptext', category);
+                xulContactPopup.insertBefore(xulMenu, xulSeparator);
+                
+                var xulPopup = document.createElement('menupopup');
+                xulMenu.appendChild(xulPopup);
+                menus[category] = xulPopup;
+            }
+            return menus[category];
+        }
+        
+        for(var i=0; i<feed.items.length; i++) {
+            var item = feed.items.queryElementAt(i, Ci.nsIFeedEntry);
+            
+            var menuItem = document.createElement('menuitem');
+            menuItem.setAttribute('class', 'shared-app');            
+            menuItem.setAttribute('label', item.fields.getProperty('title'));
+            menuItem.setAttribute('value', item.fields.getProperty('link'));
+            menuItem.setAttribute('tooltiptext', item.fields.getProperty('description'));
+            menuFor(item.fields.getProperty('dc:subject')).appendChild(menuItem);
+        }
+
+        xulContactPopup.addEventListener('command', function(event) {
+            if(event.target.getAttribute('class') != 'shared-app')
+                return;
+            
+            top.sameplace.viewFor('conversations')
+                .requestedAdditionalInteraction(
+                    attr(document.popupNode, 'account'),
+                    attr(document.popupNode, 'address'),
+                    event.target.value);
+        }, false);
+    });
+}
+
 function toggleOfflineContacts() {
     if(_('contacts').getAttribute('class') == 'show-offline')
         _('contacts').removeAttribute('class')
@@ -589,6 +636,45 @@ function clickedContact(contact) {
 // UTILITIES
 // ----------------------------------------------------------------------
 
+function fetchFeed(feedUrl, continuation) {
+    if(!Ci.nsIFeed) {
+        continuation(null);
+        return;
+    }
+    
+    var req = new XMLHttpRequest();
+
+    req.onload = function() {
+        var data = req.responseText;
+
+        var ioService = Cc['@mozilla.org/network/io-service;1']
+        .getService(Ci.nsIIOService);
+        var uri = ioService.newURI(feedUrl, null, null);
+
+        if(data.length) {
+            var parser = Cc['@mozilla.org/feed-processor;1']
+                .createInstance(Ci.nsIFeedProcessor);
+            try {
+                parser.listener = {
+                    handleResult: function(result) {
+                        continuation(result.doc.QueryInterface(Ci.nsIFeed));
+                    }
+                };
+                parser.parseFromString(data, uri);
+            }
+            catch(e) {
+                continuation(null, e);
+            }
+        }
+    };
+
+    req.open('GET', feedUrl, true);
+    try {
+        req.send(null);
+    } catch(e) {
+        continuation(null, e);
+    }
+}
 
 function TimedAccumulator(onReceive, waitPeriod) {
     this._queue = [];
