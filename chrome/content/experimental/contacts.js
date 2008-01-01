@@ -1132,10 +1132,11 @@ function receivedSubscriptionRequestSequence(sequence) {
                 if(authorize) {
                     acceptSubscriptionRequest(account, address);
                     if(getContact(account, address) == undefined ||
-                       getContact(account, address).getAttribute('subscription') == 'none') {
+                       getContact(account, address).getAttribute('subscription') == 'none' ||
+                       getContact(account, address).getAttribute('subscription') == 'from') {
                         // contact not yet in our contact list, request
                         // auth to make things even ;-)
-                        addContact(account, address);
+                        XMPP.send(account, <presence to={address} type="subscribe"/>);
                     }
                 } else {
                     denySubscriptionRequest(account, address);
