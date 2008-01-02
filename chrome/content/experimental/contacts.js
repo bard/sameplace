@@ -443,6 +443,23 @@ dndObserver.onDrop = function(event, dropdata, session) {
     }
 };
 
+function requestedServiceRegistration() {
+    var request = {title: 'Service Registration'};
+    window.openDialog('chrome://sameplace/content/prompt_address.xul',
+                      'register',
+                      'modal,centerscreen',
+                      request);
+    
+    if(!request.confirm)
+        return;
+    
+    registerToService(request.account, request.address, {
+        onSuccess: function() { window.alert(_('strings').getString('transportRegistrationSuccess')); },
+        onError: function(info) { window.alert(_('strings').getFormattedString('transportRegistrationError', [info])); },
+        onCancel: function() {}
+    });
+}
+
 function requestedChangeStatusMessage(event) {
     var xulTextbox = event.target;
     if(xulTextbox.value != xulTextbox.getAttribute('placeholder'))
@@ -984,6 +1001,85 @@ function processURLs(xmlMessageBody) {
 
 // NETWORK ACTIONS
 // ----------------------------------------------------------------------
+
+function registerToService(account, address, callbacks) {
+    function start() {
+        discoverSupport();
+    }
+    
+    function discoverSupport() {
+        XMPP.send(account,
+                  <iq type="get" to={address}>
+                  <query xmlns="http://jabber.org/protocol/disco#info"/>
+                  </iq>,
+                  function(reply) {
+                      if(reply.stanza.@type == 'result')
+                          queryRegistration();
+                      else
+                          error(reply.stanza.error.@code);
+                  });
+    }
+
+    function queryRegistration() {
+        XMPP.send(account,
+                  <iq type="get" to={address}>
+                  <query xmlns={ns_register}/>
+                  </iq>,
+                  function(reply) {
+                      if(reply.stanza.@type == 'result')
+                          displayForm(reply.stanza.ns_register::query)
+                      else
+                          error(reply.stanza.error.@code);
+                  });
+    }
+
+    function displayForm(serverQuery) {
+        var request = {
+            confirm: false,
+            query: serverQuery
+        };
+
+        window.openDialog(
+            'chrome://xmpp4moz/content/ui/registration.xul',
+            'xmpp4moz-registration', 'modal,centerscreen',
+            request);
+
+        if(request.confirm)
+            acceptForm(request.query)
+        else
+            cancel();
+    }
+
+    function acceptForm(form) {
+        XMPP.send(account,
+                  <iq to={address} type="set">
+                  {form}
+                  </iq>,
+                  function(reply) {
+                      if(reply.stanza.@type == 'result')
+                          success();
+                      else
+                          error(reply.stanza.error.@code);
+                  });
+    }
+
+    function cancel() {
+        if(callbacks.onCancel)
+            callbacks.onCancel();
+    }
+    
+    function success() {
+        if(callbacks.onSuccess)
+            callbacks.onSuccess();
+    }
+
+    function error(info) {
+        if(callbacks.onError)
+            callbacks.onError(info);
+    }
+
+    start();
+}
 
 function changeStatusMessage(message) {
     XMPP.accounts.filter(XMPP.isUp).forEach(function(account) {
