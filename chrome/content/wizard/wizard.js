@@ -53,7 +53,7 @@ var account;
 
 function init() {
     channel = XMPP.createChannel();
-    if(Cc['@hyperstruct.net/xmpp4moz/connector;1?type=twitter'])
+    if(!Cc['@hyperstruct.net/xmpp4moz/connector;1?type=twitter'])
         $('#services .service.twitter').style.display = 'none';
 }
 
