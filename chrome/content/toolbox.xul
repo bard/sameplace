@@ -79,12 +79,6 @@
     <command id="switch-to-next" oncommand="conversations.switchToNext();"
              label="&command.switch_to_next.label;"
              tooltiptext="&command.switch_to_next.tooltip;"/>
-    <command id="run-wizard" oncommand="runWizard();"
-             label="&command.run_wizard.label;"
-             accesskey="&command.run_wizard.accesskey;"/>
-    <command id="run-new-wizard" oncommand="runNewWizard();"
-             label="&command.run_wizard.label; (NEW)"
-             accesskey="&command.run_wizard.accesskey;"/>
     <command id="view-help" oncommand="viewHelp();"
              label="&command.view_help_pages.label;"
              accesskey="&command.view_help_pages.accesskey;"
@@ -119,7 +113,10 @@
                         'SamePlace:Contacts', 'chrome,titlebar=no,toolbar=no');"/>
     <command id="toggle-offline"
              label="&popup.toggle_offline.label;"
-             oncommand="toggleOfflineContacts();"/>    
+             oncommand="toggleOfflineContacts();"/>
+    <command id="open-preferences" oncommand="openPreferences();"
+             label="Accounts and Prefs..."
+             accesskey="A"/>    
   </commandset>
 
   
@@ -178,8 +175,7 @@
 
         <toolbarbutton label="Tools" type="menu">
           <menupopup>
-            <menuitem class="menuitem-iconic" command="run-wizard"/>
-            <menuitem class="menuitem-iconic" command="run-new-wizard"/>
+            <menuitem class="menuitem-iconic" command="open-preferences"/>
             <menu class="menuitem-iconic" label="&menu.scriptlets.label;">
               <menupopup id="scriptlets-popup" onpopupshowing="requestedShowScriptletList(this);">
                 <menuseparator/>
