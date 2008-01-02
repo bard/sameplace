@@ -1,0 +1,5 @@
+<!ENTITY default_title "Enter Address">
+<!ENTITY address.label "Address:">
+<!ENTITY address.accesskey "A">
+<!ENTITY account.label "Account:">
+<!ENTITY account.accesskey "c">

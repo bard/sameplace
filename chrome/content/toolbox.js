@@ -182,22 +182,16 @@ function runNewWizard() {
 }
 
 function importContacts() {
-    var input = { value: 'msn.jabber.sameplace.cc' };
+    var request = {title: _('strings').getString('transportRegistrationTitle')};
+    window.openDialog('chrome://sameplace/content/prompt_address.xul',
+                      'register',
+                      'modal,centerscreen',
+                      request);
     
-    var result = srvPrompt.prompt(
-        null,
-        _('strings').getString('transportRegistrationTitle'),
-        _('strings').getString('transportRegistrationMessage'),
-        input, null, {});
-    var transportAddress = input.value;
-    
-    if(!result)
+    if(!request.confirm)
         return;
     
-    var onlineAccounts = XMPP.accounts.filter(XMPP.isUp);
-    var account = onlineAccounts.length > 1 ? {} : onlineAccounts[0];
-    
-    registerToTransport(account, transportAddress, {
+    registerToTransport(request.account, request.address, {
         onSuccess: function() { alert(_('strings').getString('transportRegistrationSuccess')); },
         onError: function(info) { alert(_('strings').getFormattedString('transportRegistrationError', [info])); },
         onCancel: function() {}
