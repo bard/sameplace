@@ -38,6 +38,7 @@
 #contacts {
     background: #f8f8f8;
     margin: 0px;
+    padding-right: 8px;
 }
 
 #contacts scrollbar {
@@ -183,12 +184,11 @@
 
 #contacts .contact .service {
     list-style-image: url("../services/server_im.png");
-    opacity: 0.25;
-    display: none; /* disabled until further experiments */
+    opacity: 0.5;
 }
 
 #contacts .contact .service:hover {
-    opacity: 0.8;
+    opacity: 0.9;
 }
 
 #contacts .contact[address$="@sameplace.cc"] .service {
