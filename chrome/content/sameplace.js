@@ -160,7 +160,6 @@ function initConversations() {
                          XMPP.JID(getJoinPresence(account, address).stanza.@to).resource);
 
             if(conversations.count == 1) {
-                _('contact-toolbox', {role: 'attach'}).hidden = true;
                 _('contact').value = '';
             }
         }, false);
