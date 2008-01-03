@@ -443,8 +443,8 @@ dndObserver.onDrop = function(event, dropdata, session) {
     }
 };
 
-function requestedServiceRegistration() {
-    var request = {title: 'Service Registration'};
+function requestedImportContacts() {
+    var request = {title: 'Enter transport address'};
     window.openDialog('chrome://sameplace/content/prompt_address.xul',
                       'register',
                       'modal,centerscreen',

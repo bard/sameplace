@@ -97,8 +97,8 @@
     <command id="open-preferences" oncommand="openPreferences();"
              label="Accounts and Prefs..."
              accesskey="A"/>
-    <command id="register-to-service" oncommand="requestedServiceRegistration();"
-             label="Register to Service..."
+    <command id="import-contacts" oncommand="requestedImportContacts();"
+             label="Import Contacts..."
              accesskey="R"/>
     <command id="about" oncommand="openAboutDialog();"
              label="About"
@@ -169,7 +169,7 @@
       <menuitem class="header" label="Tools" disabled="true"/>
       <menuseparator/>
       <menuitem class="menuitem-iconic" command="open-preferences"/>
-      <menuitem class="menuitem-iconic" command="register-to-service"/>
+      <menuitem class="menuitem-iconic" command="import-contacts"/>
       <menuseparator/>
       <menu class="menuitem-iconic" label="&menu.scriptlets.label;">
         <menupopup id="scriptlets-popup" onpopupshowing="showingScriptletList(this);">
