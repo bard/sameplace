@@ -38,7 +38,6 @@
 #contacts {
     background: #f8f8f8;
     margin: 0px;
-    padding-right: 8px;
 }
 
 #contacts scrollbar {
@@ -183,8 +182,9 @@
 /* contact's service icon */
 
 #contacts .contact .service {
+    margin-right: 5px;
     list-style-image: url("../services/server_im.png");
-    opacity: 0.5;
+    opacity: 0.4;
 }
 
 #contacts .contact .service:hover {
@@ -196,7 +196,7 @@
 }
 
 #contacts .contact[address$="@gmail.com"] .service,
-# contacts .contact[address$="@googlemail.com"] .service {
+#contacts .contact[address$="@googlemail.com"] .service {
     list-style-image: url("../services/server_im_gtalk.png");
 }
 
