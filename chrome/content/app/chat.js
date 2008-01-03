@@ -201,9 +201,12 @@ function displayMessage(stanza) {
             new Date(Date.UTC(year, month, day, hour, min, sec));
 
     var sender;
-    if(stanza.@type == 'groupchat' ||
-      (stanza.@type == 'chat' && isGroupchat))
+    if(stanza.@type == 'groupchat')
         sender = JID(stanza.@from).nick;
+    else if(stanza.@type == 'chat' && isGroupchat)
+        sender = (stanza.@from == undefined ?
+                  ('→ ' + JID(stanza.@to).nick) :
+                  JID(stanza.@from).nick);
     else if(stanza.@from == undefined)
         sender = JID(userAddress).username;
     else
