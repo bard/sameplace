@@ -80,10 +80,8 @@ function init(event) {
                 addToolbarButton('sameplace-button');
             },
             onUpgrade: function() {
-                if(document.getElementById('xmpp-button')) {
-                    removeToolbarButton('xmpp-button');
-                    addToolbarButton('sameplace-button');
-                }
+                removeToolbarButton('xmpp-button');
+                addToolbarButton('sameplace-button');
                 if(pref.getCharPref('branch') != 'devel')
                     openURL('http://sameplace.cc/changelog');
             }
