@@ -469,6 +469,15 @@ function dataToMessage(data, contentType) {
             conv.xhtmlToText(data))}</body>;
         
         message.ns_xhtml_im::html.body = filter.xhtmlIM.keepRecommended(data);
+
+        // work around
+        // https://bugzilla.mozilla.org/show_bug.cgi?id=294674 and
+        // protect from information leakage
+        for each(anchor in message..ns_xhtml::a) {
+            if(anchor.@href.match(/^chrome:\/\//))
+                anchor.@href = '';
+        }
+        
         break;
     case 'text/html':
         message = dataToMessage(html2xhtml(data), 'application/xhtml+xml');
