@@ -132,7 +132,6 @@
         <toolbarbutton class="button-people" label="&toolbar.people.label;" type="menu">
           <menupopup>
             <menuitem class="menuitem-iconic" command="add-contact"/>
-            <menuitem class="menuitem-iconic" command="import-contacts"/>
             <menuitem class="menuitem-iconic" command="join-room"/>
             <menuitem class="menuitem-iconic" command="open-conversation"/>
             <menuseparator/>
@@ -170,6 +169,7 @@
         <toolbarbutton label="Tools" type="menu">
           <menupopup>
             <menuitem class="menuitem-iconic" command="open-preferences"/>
+            <menuitem class="menuitem-iconic" command="import-contacts"/>
             <menu class="menuitem-iconic" label="&menu.scriptlets.label;">
               <menupopup id="scriptlets-popup" onpopupshowing="requestedShowScriptletList(this);">
                 <menuseparator/>
