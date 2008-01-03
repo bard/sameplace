@@ -105,12 +105,6 @@
              label="&command.import_contacts.label;"
              accesskey="&command.import_contacts.accesskey;"
              oncommand="importContacts();"/>
-    <command id="open-standalone"
-             label="&command.open_standalon.label;"
-             accesskey="&command.open_standalon.accesskey;"
-             oncommand="window.open(
-                        'chrome://sameplace/content/standalone/contacts.xul',
-                        'SamePlace:Contacts', 'chrome,titlebar=no,toolbar=no');"/>
     <command id="toggle-offline"
              label="&popup.toggle_offline.label;"
              oncommand="toggleOfflineContacts();"/>
