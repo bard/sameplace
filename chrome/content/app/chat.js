@@ -200,13 +200,20 @@ function displayMessage(stanza) {
             stanza.ns_delay::x.@stamp.toString().match(DATE_RX))
             new Date(Date.UTC(year, month, day, hour, min, sec));
 
-    var sender;
-    if(stanza.@type == 'groupchat')
+    var sender, color;
+    if(stanza.@type == 'groupchat') {
         sender = JID(stanza.@from).nick;
-    else if(stanza.@type == 'chat' && isGroupchat)
-        sender = (stanza.@from == undefined ?
-                  ('→ ' + JID(stanza.@to).nick) :
-                  JID(stanza.@from).nick);
+        color = textToRGB(JID(stanza.@from).nick);
+    }
+    else if(stanza.@type == 'chat' && isGroupchat) {
+        if(stanza.@from == undefined) {
+            sender = '→ ' + JID(stanza.@to).nick;
+            color = textToRGB(JID(stanza.@to).nick);
+        } else {
+            sender = JID(stanza.@from).nick;
+            color = textToRGB(JID(stanza.@from).nick);
+        }
+    }
     else if(stanza.@from == undefined)
         sender = JID(userAddress).username;
     else
@@ -214,15 +221,12 @@ function displayMessage(stanza) {
                   JID(stanza.@from).username ||
                   stanza.@from).toString();
     
-    var senderStyle = (stanza.@type == 'groupchat' ?
-                       {color: 'rgb(' + textToRGB(JID(stanza.@from).nick).join(',') + ')'} : {});
-    
     $(domMessage)
         .addClass(stanza.@type.toString() || 'normal')
         .addClass(stanza.@type != 'groupchat' ?
                   (stanza.@from == undefined ? 'user' : 'contact') : '')
         .find('.sender')
-        .css(senderStyle)
+        .css(color ? {color: 'rgb(' + color + ')'} : {})
         .text(sender)
         .end()
         .find('.time')
