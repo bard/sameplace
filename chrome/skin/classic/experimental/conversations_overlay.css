@@ -106,3 +106,8 @@
 #view.compact #conversations {
     visibility: collapse;
 }
+
+box.vertical-border {
+    width: 1px;
+    background: #d8d8d8;
+}

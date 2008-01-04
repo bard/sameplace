@@ -29,7 +29,6 @@
  *  
  */
 
-
 window.addEventListener('load', function(event) {
     var pref = Cc['@mozilla.org/preferences-service;1']
         .getService(Ci.nsIPrefService)
@@ -42,8 +41,11 @@ window.addEventListener('load', function(event) {
 
     document.loadOverlay(
         'chrome://sameplace/content/experimental/' + overlays[pref.getCharPref('chatArea')], {
-            observe: function() {
-                conversations.init();
+            observe: function(subject, topic, data) {
+                // On Firefox3, when overlay observer is called,
+                // overlay content isn't there yet.  So let's give it 
+                // some time... and hope for the best.
+                setTimeout(function(){ conversations.init(); }, 1000);
             }
         });
 }, false);

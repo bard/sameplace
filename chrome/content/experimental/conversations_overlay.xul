@@ -41,6 +41,7 @@
       <hbox id="conversations-area" flex="1">
         <spacer/>
         <hbox id="conversations-box">
+          <box class="vertical-border"/>
           <button id="conversations-collapser"
                   style="opacity:0.999;"
                   oncommand="toggleClass($('#conversations-area'), 'expanded');"/>
