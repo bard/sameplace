@@ -30,34 +30,60 @@
  */
 
 
-#conversations-box {
+#conversations-area {
     margin-top: 70px;
     margin-bottom: 85px;
 }
 
-#conversations {
+#conversations-area spacer {
+    -moz-box-flex: 1;
+}
+
+#conversations-area #conversations-box {
     padding-left: 12px;
     padding-bottom: 12px;
     background: url('bgshadow.png') transparent bottom left no-repeat;
 }
 
-#conversations-box spacer {
+#conversations-area #conversations-box #conversations-collapser {
+    min-width: 8px;
+    width: 10px;
+    -moz-appearance: none;
+    border: none;
+    background: #f2f2f2;
+    margin: 0;
+    list-style-image: url("chrome://global/skin/arrow/arrow-lft.gif");
+    opacity: 0.999; /* force compositing in firefox 2. take this away and expect hell */
+}
+
+#conversations-area #conversations-box #conversations-collapser:hover {
+    background: #e4e4e4;    
+}
+
+#conversations-area #conversations-box #conversations {
     -moz-box-flex: 1;
+    visibility: collapse;
+    border-left: 1px solid  #e2e2e2;
 }
 
-#conversations-box #conversations {
-    -moz-box-flex: 0;
-    width: 22px;
-}
 
-#conversations-box.expanded spacer {
+#conversations-area.expanded spacer {
     min-width: 52px;
     -moz-box-flex: 0;
 }
 
-#conversations-box.expanded #conversations {
+#conversations-area.expanded #conversations-box {
     -moz-box-flex: 1;
 }
+
+#conversations-area.expanded #conversations-box #conversations-collapser {
+    list-style-image: url("chrome://global/skin/arrow/arrow-rit.gif");
+}
+
+#conversations-area.expanded #conversations-box #conversations {
+    visibility: visible;
+}
+
 
 /* REACTIONS */
 
@@ -65,8 +91,8 @@
 
 }
 
-#contacts-stack.attention-on-contacts #conversations-box.expanded #conversations,
-#contacts-stack.filtering #conversations-box.expanded #conversations {
+#contacts-stack.attention-on-contacts #conversations-area.expanded #conversations-box,
+#contacts-stack.filtering #conversations-area.expanded #conversations-box {
     margin-left: 135px;
     margin-right: -135px;
 }

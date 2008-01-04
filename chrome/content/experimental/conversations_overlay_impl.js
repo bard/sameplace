@@ -109,18 +109,18 @@ function selectedContact(event) {
         .selectedContact(event.target.getAttribute('account'),
                          event.target.getAttribute('address'));
 
-    addClass($('#conversations-box'), 'expanded');
+    addClass($('#conversations-area'), 'expanded');
     addClass($('#conversations').contentDocument.documentElement, 'expanded');
 }
 
 function openedConversation(event) {
-    addClass($('#conversations-box'), 'expanded');
+    addClass($('#conversations-area'), 'expanded');
     addClass($('#conversations').contentDocument.documentElement, 'expanded');
 }
 
 function closedConversation(event) {
     if($('#conversations').contentWindow.getCount() == 0) {
-        removeClass($('#conversations-box'), 'expanded');
+        removeClass($('#conversations-area'), 'expanded');
         removeClass($('#conversations').contentDocument.documentElement, 'expanded');
     }
 }
@@ -143,7 +143,7 @@ function clickedInConversation(event) {
 // ----------------------------------------------------------------------
 
 function sentChatActivation(message) {
-    $('#conversations-box').collapsed = false;    
+    addClass($('#conversations-area'), 'expanded');
 }
 
 

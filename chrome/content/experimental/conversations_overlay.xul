@@ -38,11 +38,16 @@
   <script type="application/x-javascript;version=1.7" src="conversations_overlay.js"/>
   <stack id="contacts-stack">
     <vbox id="conversations-layer" mousethrough="always" flex="1">
-      <hbox id="conversations-box" flex="1">
+      <hbox id="conversations-area" flex="1">
         <spacer/>
-        <iframe id="conversations" src="about:blank"
-                ondragdrop="nsDragAndDrop.drop(event, conversations.dropObserver);"
-                ondragover="nsDragAndDrop.dragOver(event, conversations.dropObserver);"/>
+        <hbox id="conversations-box">
+          <button id="conversations-collapser"
+                  style="opacity:0.999;"
+                  oncommand="toggleClass($('#conversations-area'), 'expanded');"/>
+          <iframe id="conversations" src="about:blank"
+                  ondragdrop="nsDragAndDrop.drop(event, conversations.dropObserver);"
+                  ondragover="nsDragAndDrop.dragOver(event, conversations.dropObserver);"/>
+        </hbox>
       </hbox>
     </vbox>
   </stack>

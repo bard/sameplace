@@ -44,11 +44,6 @@
   <script type="application/x-javascript;version=1.7" src="../lib/tabbed_area.js"/>
   <script type="application/x-javascript;version=1.7" src="conversations.js"/>
 
-  <hbox flex="1" id="main">
-    <vbox flex="1" id="content" >
-      <tabs id="tabs" closebutton="true"/>
-      <deck id="deck" flex="1"/>
-    </vbox>
-    <button id="collapser" oncommand="toggle();"/>
-  </hbox>
+  <tabs id="tabs" closebutton="true"/>
+  <deck id="deck" flex="1"/>
 </page>

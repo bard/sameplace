@@ -29,18 +29,6 @@
  *  
  */
 
-page #content {
-    visibility: collapse;
-}
-page.expanded #content {
-    visibility: visible;
-}
-
-#main {
-    border-left: 1px solid #e2e2e2;
-    border-top: 1px solid #e2e2e2;
-}
-
 tabs {
     font-size: 10px;
 }
@@ -107,22 +95,4 @@ tabs tab[selected="true"][availability="available"][show="dnd"] .tab-icon {
 deck {
     background: white;
     border-right: 1px solid #e2e2e2;
-}
-
-button#collapser {
-    min-width: 8px;
-    width: 10px;
-    -moz-appearance: none;
-    border: none;
-    background: white;
-    margin: 0;
-    list-style-image: url("chrome://global/skin/arrow/arrow-lft.gif");
-}
-
-button#collapser:hover {
-    background: #e4e4e4;
-}
-
-page.expanded button#collapser {
-    list-style-image: url("chrome://global/skin/arrow/arrow-rit.gif");
 }
