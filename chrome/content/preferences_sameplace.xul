@@ -42,6 +42,9 @@
       <preference id="sameplace-default-app-url"
                   name="extensions.sameplace.defaultAppUrl"
                   type="string"/>
+      <preference id="sameplace-chat-area"
+                  name="extensions.sameplace.chatArea"
+                  type="string"/>
     </preferences>
 
     <groupbox>
@@ -80,6 +83,20 @@
             </vbox>
           </row>
   
+          <row>
+            <label value="Open chats in:"/>
+            <vbox>
+              <radiogroup orient="horizontal"
+                          preference="sameplace-chat-area">
+                <radio label="Sidebar" value="sidebar"/>
+                <radio label="External window" value="external"/>
+              </radiogroup>
+              <description style="font-size: smaller;">
+                (Becomes effective after restart.)
+              </description>
+            </vbox>
+          </row>
+
           <row>
             <spacer/>
             <checkbox label="&sameplace.prefs.flash_taskbar.label;"
