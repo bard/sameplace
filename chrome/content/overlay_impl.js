@@ -173,8 +173,6 @@ function initDisplayRulesExperimental() {
         if(isCompact())
             toExpanded();
     }, false);
-
-    _('menu').hidden = true;
 }
 
 function initDisplayRules() {

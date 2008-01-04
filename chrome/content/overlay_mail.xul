@@ -99,7 +99,6 @@
         <menuitem command="sameplace-command-toggle"
                   key="sameplace-key-toggle"
                   class="menuitem-iconic"/>
-        <menuitem command="sameplace-edit-accounts"/>
       </menupopup>
     </menu>    
   </menubar>

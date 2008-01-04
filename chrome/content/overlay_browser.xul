@@ -78,12 +78,11 @@
   <!-- MENUS -->
 
   <menubar id="main-menubar">
-    <menu id="sameplace-menu" label="SamePlace" accesskey="P" insertbefore="helpMenu">
-      <menupopup id="sameplace-menu" onpopupshowing="sameplace.showingMainMenu(event);">
+    <menu label="SamePlace" accesskey="P" insertbefore="helpMenu">
+      <menupopup onpopupshowing="sameplace.showingMainMenu(event);">
         <menuitem command="sameplace-command-toggle"
                   key="sameplace-key-toggle"
                   class="menuitem-iconic"/>
-        <menuitem command="sameplace-edit-accounts"/>
       </menupopup>
     </menu>
   </menubar>
