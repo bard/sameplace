@@ -83,7 +83,9 @@ function init(event) {
                 removeToolbarButton('xmpp-button');
                 addToolbarButton('sameplace-button');
                 if(pref.getCharPref('branch') != 'devel')
-                    openURL('http://sameplace.cc/changelog');
+                    openURL('http://sameplace.cc/changelog/' +
+                            getExtensionVersion('sameplace@hyperstruct.net')
+                            .split('.').slice(0,3).join('.'));
             }
         });
 }
@@ -987,15 +989,15 @@ function isPopupWindow() {
     return !window.toolbar.visible;
 }
 
+function getExtensionVersion(id) {
+    return Cc['@mozilla.org/extensions/manager;1']
+        .getService(Ci.nsIExtensionManager)
+        .getItemForID(id).version;
+}
+
 function upgradeCheck(id, versionPref, actions, ignoreTrailingParts) {
     const pref = Cc['@mozilla.org/preferences-service;1']
     .getService(Ci.nsIPrefService);
-
-    function getExtensionVersion(id) {
-        return Cc['@mozilla.org/extensions/manager;1']
-        .getService(Ci.nsIExtensionManager)
-        .getItemForID(id).version;
-    }
 
     function compareVersions(a, b) {
         return Cc['@mozilla.org/xpcom/version-comparator;1']
