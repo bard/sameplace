@@ -103,7 +103,7 @@
     overflow: hidden;
 }
 
-#view.compact #conversations {
+#view.compact #conversations-box {
     visibility: collapse;
 }
 
