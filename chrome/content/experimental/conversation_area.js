@@ -30,13 +30,27 @@
  */
 
 
-window.addEventListener(
-    'unload', function(event) { conversations.finish(); }, false);
+window.addEventListener('load', function(event) {
+    var pref = Cc['@mozilla.org/preferences-service;1']
+        .getService(Ci.nsIPrefService)
+        .getBranch('extensions.sameplace.');
 
-var conversations = {};
+    var area;
+    try {
+        area = pref.getCharPref('conversationArea');
+    } catch(e) {
+        area = 'sidebar';
+    }
 
-Components
-    .classes['@mozilla.org/moz/jssubscript-loader;1']
-    .getService(Components.interfaces.mozIJSSubScriptLoader)
-    .loadSubScript('chrome://sameplace/content/experimental/conversations_overlay_impl.js',
-                   conversations);
+    var overlays = {
+        'external': 'conversations_overlay_outer.xul',
+        'sidebar': 'conversations_overlay.xul'
+    };
+
+    document.loadOverlay(
+        'chrome://sameplace/content/experimental/' + overlays[area], {
+            observe: function() {
+                conversations.init();
+            }
+        });
+}, false);

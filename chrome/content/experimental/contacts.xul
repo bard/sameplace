@@ -35,7 +35,6 @@
 <?xml-stylesheet href="chrome://sameplace/skin/experimental/contacts.css" type="text/css"?>
 <?xul-overlay href="shared_apps_overlay.xul"?>
 <?xul-overlay href="controls_overlay.xul"?>
-<?xul-overlay href="conversations_overlay.xul"?>
 <!--<?xul-overlay href="hintbar_overlay.xul"?>-->
 
 <!DOCTYPE page [
@@ -64,6 +63,7 @@
   <script type="application/x-javascript;version=1.7" src="../app/lib/conv.js"/>
   <script type="application/x-javascript;version=1.7" src="gecko1.9-scrollbar.js"/>
   <script type="application/x-javascript;version=1.7" src="gecko1.8-richlistbox.js"/>
+  <script type="application/x-javascript;version=1.7" src="conversation_area.js"/>
   <script type="application/x-javascript;version=1.7" src="contacts.js"/>
 
   <keyset id="keys"/>

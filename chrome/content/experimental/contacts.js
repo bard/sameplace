@@ -68,6 +68,9 @@ var Cc = Components.classes;
 var Ci = Components.interfaces;
 var srvPrompt = Cc["@mozilla.org/embedcomp/prompt-service;1"]
     .getService(Ci.nsIPromptService);
+var pref = Cc['@mozilla.org/preferences-service;1']
+    .getService(Ci.nsIPrefService)
+    .getBranch('extensions.sameplace.');
 
 var COMPACT_WIDTH = 65;
 
@@ -454,8 +457,8 @@ function requestedImportContacts() {
         return;
     
     registerToService(request.account, request.address, {
-        onSuccess: function() { window.alert(_('strings').getString('transportRegistrationSuccess')); },
-        onError: function(info) { window.alert(_('strings').getFormattedString('transportRegistrationError', [info])); },
+        onSuccess: function() { window.alert($('#strings-toolbox').getString('transportRegistrationSuccess')); },
+        onError: function(info) { window.alert($('#strings-toolbox').getFormattedString('transportRegistrationError', [info])); },
         onCancel: function() {}
     });
 }

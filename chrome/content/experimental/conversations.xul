@@ -35,8 +35,7 @@
 <?xml-stylesheet href="chrome://sameplace/skin/experimental/conversations.css" type="text/css"?>
 
 <page xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-      onload="init();"
-      onunload="finish();">
+      windowtype="SamePlace:Conversations">
 
   <script type="application/x-javascript;version=1.7" src="chrome://xmpp4moz/content/xmpp.js"/>
   <script type="application/x-javascript;version=1.7" src="../lib/getElementsBySelector.js"/>

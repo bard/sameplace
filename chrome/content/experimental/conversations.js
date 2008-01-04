@@ -50,6 +50,9 @@ var messageCache = {};
 // INITIALIZATION/FINALIZATION
 // ----------------------------------------------------------------------
 
+window.addEventListener('DOMContentLoaded', init, false);
+window.addEventListener('unload', finish, false);
+
 function init() {
     channel = XMPP.createChannel();
 
@@ -165,12 +168,6 @@ function selectedTab(event) {
     removeClass(xulTab, 'unread');
 }
 
-function closed(xulPanel) {
-    var closeEvent = document.createEvent('Event');
-    closeEvent.initEvent('conversation/close', true, false);
-    xulPanel.dispatchEvent(closeEvent);
-}
-
 function opened(xulPanel) {
     if($('#deck').childNodes.length == 1)
         $('#deck').selectedTab = xulPanel.tab;
@@ -209,7 +206,7 @@ function updatePresenceIndicator(account, address) {
 
     var xulTab = xulPanel.tab;
     
-    var presence = XMPP.presencesOf(account, address)[0];
+    var presence = XMPP.presencesOf(account, address)[0]; // XXX won't handle conversation with offline contact!
 
     var availability = presence.stanza.@type.toString() || 'available';
     var show         = presence.stanza.show.toString();
@@ -248,7 +245,9 @@ function open(account, address, nextAction) {
     afterLoad(xulPanel, function() {
         XMPP.connectPanel(xulPanel, account, address);
         xulPanel.contentWindow.addEventListener('unload', function(event) {
-            closed(xulPanel);
+            var closeEvent = document.createEvent('Event');
+            closeEvent.initEvent('conversation/close', true, false);
+            xulPanel.dispatchEvent(closeEvent);
         }, false);
 
         opened(xulPanel);

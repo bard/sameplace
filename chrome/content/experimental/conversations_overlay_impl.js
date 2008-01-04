@@ -76,7 +76,8 @@ function init() {
         }
     }, sentChatActivation);
 
-    $('#conversations').contentDocument.location.href = 'conversations.xul';
+    $('#conversations').contentDocument.location.href =
+        'chrome://sameplace/content/experimental/conversations.xul';
 }
 
 function finish() {
@@ -110,19 +111,15 @@ function selectedContact(event) {
                          event.target.getAttribute('address'));
 
     addClass($('#conversations-area'), 'expanded');
-    addClass($('#conversations').contentDocument.documentElement, 'expanded');
 }
 
 function openedConversation(event) {
     addClass($('#conversations-area'), 'expanded');
-    addClass($('#conversations').contentDocument.documentElement, 'expanded');
 }
 
 function closedConversation(event) {
-    if($('#conversations').contentWindow.getCount() == 0) {
+    if($('#conversations').contentWindow.getCount() == 0)
         removeClass($('#conversations-area'), 'expanded');
-        removeClass($('#conversations').contentDocument.documentElement, 'expanded');
-    }
 }
 
 function clickedInConversation(event) {
