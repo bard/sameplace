@@ -35,20 +35,13 @@ window.addEventListener('load', function(event) {
         .getService(Ci.nsIPrefService)
         .getBranch('extensions.sameplace.');
 
-    var area;
-    try {
-        area = pref.getCharPref('conversationArea');
-    } catch(e) {
-        area = 'sidebar';
-    }
-
     var overlays = {
         'external': 'conversations_overlay_outer.xul',
         'sidebar': 'conversations_overlay.xul'
     };
 
     document.loadOverlay(
-        'chrome://sameplace/content/experimental/' + overlays[area], {
+        'chrome://sameplace/content/experimental/' + overlays[pref.getCharPref('chatArea')], {
             observe: function() {
                 conversations.init();
             }

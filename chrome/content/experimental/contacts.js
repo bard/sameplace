@@ -255,10 +255,25 @@ function setInsertionStrategy(strategyName) {
 }
 
 function openURL(url) {
-    if(typeof(getBrowser) == 'function' &&
-       'addTab' in getBrowser() &&
-       url.match(/^((https?|ftp|file):\/\/|(xmpp|mailto):)/))
-        getBrowser().selectedTab = getBrowser().addTab(url);
+    if(!url.match(/^((https?|ftp|file):\/\/|(xmpp|mailto):)/))
+        return;
+    
+    function canLoadPages(w) {
+        return (w && 
+                typeof(w.getBrowser) == 'function' &&
+                'addTab' in w.getBrowser());
+    }
+
+    var candidates = [
+        top, 
+        Cc['@mozilla.org/appshell/window-mediator;1']
+            .getService(Ci.nsIWindowMediator)
+            .getMostRecentWindow('navigator:browser')]
+        .filter(canLoadPages);
+
+    if(candidates.length > 0)
+        candidates[0].getBrowser().selectedTab =
+        candidates[0].getBrowser().addTab(url);
     else
         Cc['@mozilla.org/uriloader/external-protocol-service;1']
         .getService(Ci.nsIExternalProtocolService)
