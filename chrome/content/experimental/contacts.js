@@ -957,7 +957,7 @@ function animate(object, property, steps, target, action) {
 
 function timeDistanceInWords(from, to) {
     function within(value, start, end) {
-        return value > start && value <= end;
+        return value >= start && value <= end;
     }
     
     minutes = Math.round(Math.abs(to/1000 - from/1000)/60);
