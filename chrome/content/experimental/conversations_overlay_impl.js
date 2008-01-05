@@ -64,8 +64,6 @@ function init() {
         removeClass($('#contacts-stack'), 'attention-on-contacts');
     });
 
-    $('#conversations').addEventListener('click', clickedInConversation, false);
-
     channel = XMPP.createChannel();
 
     channel.on({
@@ -120,19 +118,6 @@ function openedConversation(event) {
 function closedConversation(event) {
     if($('#conversations').contentWindow.getCount() == 0)
         removeClass($('#conversations-area'), 'expanded');
-}
-
-function clickedInConversation(event) {
-    var htmlAnchor =
-        event.target instanceof HTMLAnchorElement ?
-        event.target :
-        (event.target.parentNode instanceof HTMLAnchorElement ?
-         event.target.parentNode : null);
-
-    // XXX only recognizes <a href="...">link</a> and <a
-    // href="..."><img/></a>.
-    if(htmlAnchor)
-        openURL(htmlAnchor.href);
 }
 
 
