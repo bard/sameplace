@@ -50,7 +50,10 @@ var messageCache = {};
 // INITIALIZATION/FINALIZATION
 // ----------------------------------------------------------------------
 
-window.addEventListener('DOMContentLoaded', function() { init(); }, false);
+window.addEventListener('DOMContentLoaded', function(event) {
+    if(event.target == document)
+        init();
+}, false);
 window.addEventListener('unload', function() { finish(); }, false)
 
 function init() {
