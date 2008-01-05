@@ -154,20 +154,19 @@ function initNetworkReactions() {
             receivedAuthConfirmRequest(message);
     });
 
-    if(experimentalMode())
-        channel.on({
-            event     : 'message',
-            direction : 'in',
-            stanza    : function(s) {
-                // Allow non-error messages with readable body [1] or
-                // error messages in general [2] but not auth requests [3]
-                return (((s.@type != 'error' && s.body.text() != undefined) || // [1]
-                         (s.@type == 'error')) && // [2]
-                        (s.ns_http_auth::confirm == undefined)) // [3]
+    channel.on({
+        event     : 'message',
+        direction : 'in',
+        stanza    : function(s) {
+            // Allow non-error messages with readable body [1] or
+            // error messages in general [2] but not auth requests [3]
+            return (((s.@type != 'error' && s.body.text() != undefined) || // [1]
+                     (s.@type == 'error')) && // [2]
+                    (s.ns_http_auth::confirm == undefined)) // [3]
             }
-        }, function(message) {
-            seenDisplayableMessage(message);
-        });
+    }, function(message) {
+        seenDisplayableMessage(message);
+    });
 }
 
 function initDisplayRulesExperimental() {
@@ -775,10 +774,17 @@ if(experimentalMode()) {
             toCompact();
     }
 } else {
-    function toggle(event) {
+    function seenDisplayableMessage(message) {
         if(areaFor('contacts').collapsed)
+            _('button').setAttribute('pending-messages', 'true');
+    }
+
+    function toggle(event) {
+        if(areaFor('contacts').collapsed) {
+            _('button').removeAttribute('pending-messages');
             uncollapse(areaFor('contacts'));
-        else
+        }
+        else 
             collapse(areaFor('contacts'));
 
         if(!areaFor('contacts').collapsed) {
