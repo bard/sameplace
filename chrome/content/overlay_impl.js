@@ -35,6 +35,7 @@
 
 const Cc = Components.classes;
 const Ci = Components.interfaces;
+const Cu = Components.utils;
 const pref = Cc['@mozilla.org/preferences-service;1']
 .getService(Ci.nsIPrefService)
 .getBranch('extensions.sameplace.');
@@ -686,6 +687,7 @@ function openPreferences(paneID) {
             .getBoolPref('browser.preferences.instantApply', false);
     } catch(e) {
         instantApply = false;
+        Cu.reportError(e);
     }
         
     var features = 'chrome,titlebar,toolbar,centerscreen' +
