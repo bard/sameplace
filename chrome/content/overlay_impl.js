@@ -681,7 +681,9 @@ function checkNoScript() {
 function openPreferences(paneID) {
     var instantApply;
     try {
-        instantApply = pref.getBoolPref('browser.preferences.instantApply', false);
+        instantApply = Cc['@mozilla.org/preferences-service;1']
+            .getService(Ci.nsIPrefService)
+            .getBoolPref('browser.preferences.instantApply', false);
     } catch(e) {
         instantApply = false;
     }
