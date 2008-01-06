@@ -408,10 +408,14 @@ function initHotkeys() {
 }
 
 function initScriptlets() {
-    scriptlets.init(['sameplace', 'scriptlets'],
-                    'extensions.sameplace.',
-                    'chrome://sameplace/content/scriptlet_sample.js');
-    scriptlets.start();
+    try {
+        scriptlets.init(['sameplace', 'scriptlets'],
+                        'extensions.sameplace.',
+                        'chrome://sameplace/content/scriptlet_sample.js');
+        scriptlets.start();
+    } catch(e) {
+        Cu.reportError(e);
+    }
 }
 
 
