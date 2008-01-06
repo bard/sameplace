@@ -109,5 +109,6 @@
 
 box.vertical-border {
     width: 1px;
+    opacity: 0.99;
     background: #d8d8d8;
 }
