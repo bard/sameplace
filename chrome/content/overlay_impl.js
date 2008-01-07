@@ -679,37 +679,6 @@ function checkNoScript() {
         window.alert("Warning: you are using NoScript.  You'll be able to configure\nSamePlace, but chats will be blocked.\n\nTo fix this, remember to allow scripts from file:// URLs to run."); // localize
 }
 
-function openPreferences(paneID) {
-    var instantApply;
-    try {
-        instantApply = Cc['@mozilla.org/preferences-service;1']
-            .getService(Ci.nsIPrefService)
-            .getBoolPref('browser.preferences.instantApply', false);
-    } catch(e) {
-        instantApply = false;
-        Cu.reportError(e);
-    }
-        
-    var features = 'chrome,titlebar,toolbar,centerscreen' +
-        (instantApply ? ',dialog=no' : ',modal');
-    
-    var wm = Cc['@mozilla.org/appshell/window-mediator;1']
-        .getService(Ci.nsIWindowMediator);
-
-    var win = wm.getMostRecentWindow('SamePlace:Preferences');
-    
-    if(win) {
-        win.focus();
-        if(paneID) {
-            var pane = win.document.getElementById(paneID);
-            win.document.documentElement.showPane(pane);
-        }
-    } else {
-        window.openDialog('chrome://sameplace/content/preferences.xul',
-                          'SamePlace Preferences', features, paneID);
-    }
-}
-
 function collapse(element) {
     if(element.collapsed)
         return;

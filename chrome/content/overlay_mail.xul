@@ -48,10 +48,6 @@
   <!-- COMMANDS -->
 
   <commandset id="mailCommands">
-    <command id="sameplace-edit-accounts"
-             label="&command.show-accounts;"
-             accesskey="A"
-             oncommand="sameplace.openPreferences();"/>
     <command id="sameplace-command-toggle"
              label="&command.hide-show; (F12)"
              oncommand="sameplace.toggle();"
