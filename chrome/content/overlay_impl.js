@@ -75,10 +75,12 @@ function init(event) {
         'sameplace@hyperstruct.net',
         'extensions.sameplace.version', {
             onFirstInstall: function() {
-                openURL('http://sameplace.cc/get-started');
-                checkNoScript();
-                runWizard();
+                openURL('http://sameplace.cc/get-started-experimental');
                 addToolbarButton('sameplace-button');
+                setTimeout(function() {
+                    runWizard();
+                    checkNoScript();
+                }, 2000);
             },
             onUpgrade: function() {
                 removeToolbarButton('xmpp-button');
@@ -774,7 +776,7 @@ if(experimentalMode()) {
 function runWizard() {
     window.openDialog(
         'chrome://sameplace/content/wizard/wizard.xul',
-        'sameplace-wizard', 'chrome,centerscreen,width=600,height=480');
+        'sameplace-wizard', 'chrome,modal,centerscreen,width=600,height=480');
 }
 
 function loadAreas(force) {
