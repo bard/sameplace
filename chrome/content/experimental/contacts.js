@@ -214,13 +214,16 @@ function openAboutDialog() {
 function openPreferences(paneID) {
     var instantApply;
     try {
-        instantApply = pref.getBoolPref('browser.preferences.instantApply', false);
+        instantApply = Cc['@mozilla.org/preferences-service;1']
+            .getService(Ci.nsIPrefBranch)
+            .getBoolPref('browser.preferences.instantApply', false);
     } catch(e) {
         instantApply = false;
+        Cu.reportError(e);
     }
         
     var features = 'chrome,titlebar,toolbar,centerscreen' +
-        (instantApply ? ',dialog=no' : ',modal');
+        (instantApply ? ',dialog=no' : '');
     
     var prefWindow = Cc['@mozilla.org/appshell/window-mediator;1']
         .getService(Ci.nsIWindowMediator)
@@ -234,7 +237,7 @@ function openPreferences(paneID) {
         }
     } else {
         window.openDialog('chrome://sameplace/content/preferences.xul',
-                          'sameplace-preferences', features, paneID);
+                          'SamePlace:Preferences', features, paneID);
     }
 }
 
