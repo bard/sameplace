@@ -162,7 +162,7 @@ window.addEventListener('resize', function(event) {
         $('#controls-upper').setAttribute('align', '');
         $('#controls-upper').setAttribute('dir', 'reverse');
     } else {
-        removeClass($('#view'), 'compact');
+        removeClass($('#view'), 'compact'); // XXX why here and not in contacts.js?
         $('#controls-upper').setAttribute('orient', 'horizontal');
         $('#controls-upper').setAttribute('align', 'start');
         $('#controls-upper').setAttribute('dir', '');

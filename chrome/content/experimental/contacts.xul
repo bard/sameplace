@@ -44,13 +44,17 @@
 %toolboxDTD;
 ]>
 
-<page xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+<page id="view"
+      xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
       xmlns:html="http://www.w3.org/1999/xhtml"
       title="SamePlace"
+      windowtype="SamePlace:Contacts"
       onload="init();"
       onunload="finish();"
       orient="vertical"
-      id="view">
+      width="320"
+      height="640"
+      persist="width height">
 
   <script type="application/x-javascript" src="chrome://global/content/nsDragAndDrop.js"/>
   <script type="application/x-javascript" src="chrome://global/content/nsTransferable.js"/>
@@ -102,6 +106,9 @@
              accesskey="R"/>
     <command id="about" oncommand="openAboutDialog();"
              label="About"
+             accesskey="b"/>
+    <command id="detach-sidebar" oncommand="detachSidebar();"
+             label="Detach sidebar"
              accesskey="b"/>
   </commandset>
 
@@ -170,6 +177,7 @@
       <menuseparator/>
       <menuitem class="menuitem-iconic" command="open-preferences"/>
       <menuitem class="menuitem-iconic" command="import-contacts"/>
+      <menuitem class="menuitem-iconic" command="detach-sidebar"/>
       <menuseparator/>
       <menu class="menuitem-iconic" label="&menu.scriptlets.label;">
         <menupopup id="scriptlets-popup" onpopupshowing="showingScriptletList(this);">

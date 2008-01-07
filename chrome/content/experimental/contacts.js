@@ -207,6 +207,13 @@ function finish() {
 // GUI ACTIONS
 // ----------------------------------------------------------------------
 
+function detachSidebar() {
+    var wndContacts = window.open(
+        'chrome://sameplace/content/experimental/contacts.xul',
+        'SamePlace:Contacts', 'chrome');
+    document.location.href = 'about:blank';
+}
+
 function openAboutDialog() {
     window.openDialog('chrome://sameplace/content/experimental/about.xul',
                       'About', 'centerscreen,chrome,resizable=no');
