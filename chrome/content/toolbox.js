@@ -180,7 +180,7 @@ function openPreferences(paneID) {
     var instantApply;
     try {
         instantApply = Cc['@mozilla.org/preferences-service;1']
-            .getService(Ci.nsIPrefService)
+            .getService(Ci.nsIPrefBranch)
             .getBoolPref('browser.preferences.instantApply', false);
     } catch(e) {
         instantApply = false;
