@@ -74,7 +74,7 @@ function init(event) {
         'sameplace@hyperstruct.net',
         'extensions.sameplace.version', {
             onFirstInstall: function() {
-                openURL('http://sameplace.cc/get-started-experimental');
+                openURL('http://sameplace.cc/get-started');
                 addToolbarButton('sameplace-button');
                 setTimeout(function() {
                     runWizard();
