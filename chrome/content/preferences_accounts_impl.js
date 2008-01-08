@@ -113,10 +113,12 @@ function requestedDeleteAccount() {
 }
 
 function requestedAddAccount() {
-    window.openDialog(
+    var wndWizard = window.openDialog(
         'chrome://sameplace/content/wizard/wizard.xul',
         'sameplace-wizard', 'chrome,centerscreen,width=600,height=480');
-    refresh();
+    wndWizard.addEventListener('unload', function() {
+        refresh();
+    }, false);
 }
 
 function selectedAccount(event) {
