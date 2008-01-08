@@ -91,6 +91,7 @@ function init(event) {
             }
         });
 
+    updateStatusIndicator();
     initScriptlets();
 }
 
@@ -106,12 +107,10 @@ function initNetworkReactions() {
     }, function(connector) {
         switch(connector.state) {
         case 'disconnected':
-            _('button').setAttribute('availability',
-                                     XMPP.accounts.some(XMPP.isUp) ?
-                                     'available' : 'unavailable');
+            updateStatusIndicator();
             break;
         case 'active':
-            _('button').setAttribute('availability', 'available');
+            updateStatusIndicator();
             if(experimentalMode() && isCollapsed())
                 toCompact();
             break;
@@ -626,6 +625,15 @@ function requestedInstallScriptlet(domElement) {
 
 // GUI ACTIONS
 // ----------------------------------------------------------------------
+
+function updateStatusIndicator() {
+    if(!_('button'))
+        return;
+
+    _('button').setAttribute('availability',
+                             XMPP.accounts.some(XMPP.isUp) ?
+                             'available' : 'unavailable');
+}
 
 function findContact() {
     if(!sameplace.experimentalMode())
