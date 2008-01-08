@@ -374,10 +374,21 @@ function registerAccount(account, callbacks) {
     var resource = account.resource;
     var password = account.password;
 
-    function start() {
-        XMPP.open(service, {}, tryRegistering);
-    }
+    var regChannel = XMPP.createChannel();
+    channel.on({
+        event: 'http://etherx.jabber.org/streams::error'
+    }, function(event) {
+        registrationFailed();
+    });
     
+    function start() {
+        XMPP.open(service, {
+            connectionHost: account.connectionHost,
+            connectionPort: account.connectionPort,
+            connectionSecurity: account.connectionSecurity
+        }, tryRegistering);
+    }
+
     function tryRegistering() {
         XMPP.send(service,
                   <iq type='set'>
@@ -402,11 +413,14 @@ function registerAccount(account, callbacks) {
 
     function registrationFailed(reply) {
         stop();
-        var [condition, type] = XMPP.getError(reply.stanza);
+        var condition, type;
+        if(reply)
+            [condition, type] = XMPP.getError(reply.stanza);
         callbacks.onFailure(condition);
     }
 
     function stop() {
+        regChannel.release();
         XMPP.close(service);
     }
 
