@@ -63,7 +63,6 @@ function init(event) {
     else
         initDisplayRules();
     initHotkeys();
-    initScriptlets();
 
     // Only preload SamePlace if there's no other window around with
     // an active SamePlace instance, and if this isn't a popup.'
@@ -91,6 +90,8 @@ function init(event) {
                             .split('.').slice(0,3).join('.'));
             }
         });
+
+    initScriptlets();
 }
 
 function finish() {
