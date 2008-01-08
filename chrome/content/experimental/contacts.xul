@@ -108,8 +108,8 @@
              label="About"
              accesskey="b"/>
     <command id="detach-sidebar" oncommand="detachSidebar();"
-             label="Detach sidebar"
-             accesskey="b"/>
+             label="Detach Sidebar"
+             accesskey="D"/>
   </commandset>
 
   <stringbundleset>

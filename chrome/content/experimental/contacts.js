@@ -207,6 +207,24 @@ function finish() {
 // GUI ACTIONS
 // ----------------------------------------------------------------------
 
+function isMUCJoined(account, address) {
+    var presence = XMPP.cache.first(XMPP.q()
+                                    .event('presence')
+                                    .account(account)
+                                    .direction('out')
+                                    .to(address));
+
+    if(presence)
+        if(presence.stanza.@type == undefined)
+            return true;
+        else if(presence.stanza.@type == 'unavailable')
+            return false;
+        else
+            throw new Error('Unexpected. (' + presence.stanza.toXMLString() + ')');
+    else
+        return false;
+}
+
 function detachSidebar() {
     var wndContacts = window.open(
         'chrome://sameplace/content/experimental/contacts.xul',
@@ -556,32 +574,25 @@ function requestedOpenConversation(type) {
 
 function requestedRemoveRoom(xulPopupNode) {
     var xulContact = $(xulPopupNode, '^ .contact');
+    var account = xulContact.getAttribute('account');
+    var address = xulContact.getAttribute('address');
 
-    /* XXX
-    var nick = XMPP.JID(getJoinPresence(account, address).stanza.@to).resource;
-
-    if(isMUCJoined(account, address))
+    if(isMUCJoined(account, address)) {
+        var nick = XMPP.JID(getJoinPresence(account, address).stanza.@to).resource;
         XMPP.send(account,
                   <presence to={address + '/' + nick} type="unavailable">
                   <x xmlns={ns_muc}/>
-                  </presence>,
-                  function() { removeMUCBookmark(account, address); });
-    else
-        removeMUCBookmark(account, address);
-*/
+                  </presence>);
+    }
+
+    // removeMUCBookmark(account, address);
 }
 
 function requestedRemoveContact(xulPopupNode) {
     var xulContact = $(xulPopupNode, '^ .contact');
-    var account = xulContact.getAttribute('account');
-    var address = xulContact.getAttribute('address');
 
-/* XXX
-    if(getMUCBookmark(account, address) != undefined)
-        removeMUCBookmark(account, address);
-    else
-*/
-    removeContact(account, address);
+    removeContact(xulContact.getAttribute('account'),
+                  xulContact.getAttribute('address'));
 }
 
 function showingContactContextMenu(xulPopup, xulPopupNode) {
@@ -1030,6 +1041,15 @@ function processURLs(xmlMessageBody) {
 
 // NETWORK ACTIONS
 // ----------------------------------------------------------------------
+
+function getJoinPresence(account, address) {
+    return XMPP.cache.first(XMPP.q()
+                            .event('presence')
+                            .account(account)
+                            .direction('out')
+                            .to(address)
+                            .child(ns_muc, 'x'));
+}
 
 function registerToService(account, address, callbacks) {
     function start() {
