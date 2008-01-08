@@ -32,8 +32,8 @@
 
 /* ACCOUNTS */
 
-#accounts > menu[role="account"],
-#accounts > menu > menupopup > menuitem {
+#accounts > menu[role="account"][availability],
+#accounts > menu > menupopup > menuitem[availability] {
     list-style-image: url("chrome://xmpp4moz/skin/status/all-small.png");
 }
 
