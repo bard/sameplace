@@ -397,15 +397,10 @@ function initDisplayRules() {
 
 function initHotkeys() {
     var toggleContactsKey = eval(pref.getCharPref('toggleContactsKey'))
-    var toggleConversationsKey = eval(pref.getCharPref('toggleConversationsKey'))
 
     window.addEventListener('keypress', function(event) {
         if(matchKeyEvent(event, toggleContactsKey))
             toggle();
-        
-        if(matchKeyEvent(event, toggleConversationsKey))
-            if(!frameFor('conversations').collapsed)
-                collapse(frameFor('conversations'));
     }, true);
 
     pref.QueryInterface(Ci.nsIPrefBranch2)
@@ -415,9 +410,6 @@ function initHotkeys() {
                 switch(data) {
                 case 'toggleContactsKey':
                     toggleContactsKey = eval(pref.getCharPref('toggleContactsKey'));
-                    break;
-                case 'toggleConversationsKey':
-                    toggleConversationsKey = eval(pref.getCharPref('toggleConversationsKey'));
                     break;
                 }
             }
