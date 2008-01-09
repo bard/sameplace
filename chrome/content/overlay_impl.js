@@ -763,13 +763,14 @@ if(experimentalMode()) {
     }
 } else {
     function seenDisplayableMessage(message) {
-        if(areaFor('contacts').collapsed)
+        if(areaFor('contacts').collapsed && _('button'))
             _('button').setAttribute('pending-messages', 'true');
     }
 
     function toggle(event) {
         if(areaFor('contacts').collapsed) {
-            _('button').removeAttribute('pending-messages');
+            if(_('button'))
+                _('button').removeAttribute('pending-messages');
             uncollapse(areaFor('contacts'));
         }
         else 
