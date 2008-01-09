@@ -287,7 +287,10 @@ function open(account, address, nextAction) {
 
     afterLoad(xulPanel, function() {
         XMPP.connectPanel(xulPanel, account, address);
-        xulPanel.contentWindow.addEventListener('unload', function(event) {
+        // Using beforeunload because sometimes, by the time 'unload'
+        // fired, xulPanel would already have lost account/address
+        // attributes.
+        xulPanel.contentWindow.addEventListener('beforeunload', function(event) {
             var closeEvent = document.createEvent('Event');
             closeEvent.initEvent('conversation/close', true, false);
             xulPanel.dispatchEvent(closeEvent);
