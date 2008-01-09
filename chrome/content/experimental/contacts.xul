@@ -246,7 +246,7 @@
                      onoverflow="changedContactsOverflow();"/>
       </stack>
     </notificationbox>
-    <hbox style="border-top: 1px solid gray;">
+    <hbox id="status-box" style="border-top: 1px solid gray;">
       <textbox id="status-message" flex="1"
                class="plain draft"
                onkeypress="if(event.keyCode != KeyEvent.DOM_VK_RETURN) return;

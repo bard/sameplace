@@ -178,6 +178,9 @@ function initNetworkReactions() {
 }
 
 function initState() {
+    if(!window.frameElement)
+        addClass($('#view'), 'standalone');
+
     resizedView()
     regenerateGroups();
 
@@ -226,10 +229,9 @@ function isMUCJoined(account, address) {
 }
 
 function detachSidebar() {
-    var wndContacts = window.open(
-        'chrome://sameplace/content/experimental/contacts.xul',
-        'SamePlace:Contacts', 'chrome');
-    document.location.href = 'about:blank';
+    var detachEvent = document.createEvent('Event');
+    detachEvent.initEvent('detach', true, false);
+    window.dispatchEvent(detachEvent);
 }
 
 function openAboutDialog() {

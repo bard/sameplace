@@ -280,7 +280,14 @@
 /* compact/expanded view */
 
 #view.compact #contacts .contact .info,
-#view.compact #contacts .header {
+#view.compact #contacts .header,
+#view.compact #status-box {
+    display: none;
+}
+
+/* standalone view */
+
+#view.standalone [command="detach-sidebar"] {
     display: none;
 }
 
