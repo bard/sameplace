@@ -177,6 +177,10 @@ function initDisplayRulesExperimental() {
         if(isCompact())
             toExpanded();
     }, false);
+
+    _('frame').addEventListener('detach', function(event) {
+        toCollapsed();
+    }, false);
 }
 
 function initDisplayRules() {
@@ -729,6 +733,7 @@ if(experimentalMode()) {
     }
 
     function toExpanded() {
+        loadAreas();
         _('box').collapsed = false;
         if(_('box').__restore_width)
             _('box').width = _('box').__restore_width;
