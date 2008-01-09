@@ -179,6 +179,17 @@ function initDisplayRulesExperimental() {
     }, false);
 
     _('frame').addEventListener('detach', function(event) {
+        var wndContacts = window.open(
+            'chrome://sameplace/content/experimental/contacts.xul',
+            'SamePlace:Contacts', 'chrome');
+        wndContacts.addEventListener('unload', function(event) {
+            if(event.target == wndContacts.document &&
+               event.target.location.href != 'about:blank') {
+                loadAreas();
+                toCompact();
+            }
+        }, false);
+        _('frame').contentDocument.location.href = 'about:blank';
         toCollapsed();
     }, false);
 }
@@ -733,7 +744,6 @@ if(experimentalMode()) {
     }
 
     function toExpanded() {
-        loadAreas();
         _('box').collapsed = false;
         if(_('box').__restore_width)
             _('box').width = _('box').__restore_width;
