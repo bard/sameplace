@@ -744,6 +744,7 @@ if(experimentalMode()) {
     }
 
     function toExpanded() {
+        loadAreas();
         _('box').collapsed = false;
         if(_('box').__restore_width)
             _('box').width = _('box').__restore_width;
@@ -978,8 +979,16 @@ function getMostRecentWindow() {
     .getMostRecentWindow('');
 }
 
-function isActive() {
-    return viewFor('contacts').document.location.href == 'chrome://sameplace/content/contacts.xul';
+if(experimentalMode()) {
+    function isActive() {
+        return _('frame').contentDocument.location.href ==
+            'chrome://sameplace/content/experimental/contacts.xul';
+    }
+} else {
+    function isActive() {
+        return viewFor('contacts').document.location.href ==
+            'chrome://sameplace/content/contacts.xul';
+    }
 }
 
 function isActiveSomewhere() {
