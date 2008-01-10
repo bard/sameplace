@@ -116,7 +116,7 @@ function openedConversation(event) {
 }
 
 function closedConversation(event) {
-    if($('#conversations').contentWindow.getCount() == 0)
+    if($('#conversations').contentWindow.getCount() == 1)
         removeClass($('#conversations-area'), 'expanded');
 }
 

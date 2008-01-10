@@ -43,9 +43,11 @@
     padding-left: 12px;
     padding-bottom: 12px;
     background: url('bgshadow.png') transparent bottom left no-repeat;
+//*    opacity: 0.999; /* force compositing in firefox 2. take this away and expect hell */
 }
 
 #conversations-area #conversations-box #conversations-collapser {
+    opacity:0.999;
     min-width: 8px;
     width: 10px;
     -moz-appearance: none;
@@ -53,7 +55,7 @@
     background: #f2f2f2;
     margin: 0;
     list-style-image: url("chrome://global/skin/arrow/arrow-lft.gif");
-    opacity: 0.999; /* force compositing in firefox 2. take this away and expect hell */
+    opacity: 0.99; /* force compositing in firefox 2. take this away and expect hell */
 }
 
 #conversations-area #conversations-box #conversations-collapser:hover {

@@ -31,11 +31,11 @@
 -->
 
 
-<?xml-stylesheet href="chrome://sameplace/skin/experimental/conversations_overlay.css"?>
+<?xml-stylesheet href="chrome://sameplace/skin/experimental/conversations_overlay_sidebar.css"?>
 
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script type="application/x-javascript;version=1.7" src="../lib/getElementsBySelector.js"/>
-  <script type="application/x-javascript;version=1.7" src="conversations_overlay.js"/>
+  <script type="application/x-javascript;version=1.7" src="conversations_overlay_sidebar.js"/>
   <stack id="contacts-stack">
     <vbox id="conversations-layer" mousethrough="always" flex="1">
       <hbox id="conversations-area" flex="1">
@@ -43,7 +43,6 @@
         <hbox id="conversations-box">
           <box class="vertical-border"/>
           <button id="conversations-collapser"
-                  style="opacity:0.999;"
                   oncommand="toggleClass($('#conversations-area'), 'expanded');"/>
           <iframe id="conversations" src="about:blank"
                   ondragdrop="nsDragAndDrop.drop(event, conversations.dropObserver);"

@@ -35,8 +35,9 @@ window.addEventListener('load', function(event) {
         .getBranch('extensions.sameplace.');
 
     var overlays = {
-        'external': 'conversations_overlay_outer.xul',
-        'sidebar': 'conversations_overlay.xul'
+        'external'    : 'conversations_overlay_external.xul',
+        'sidebar'     : 'conversations_overlay_sidebar.xul',
+        'messagepane' : 'conversations_overlay_messagepane.xul'
     };
 
     document.loadOverlay(
