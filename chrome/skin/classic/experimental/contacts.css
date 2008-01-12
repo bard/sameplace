@@ -208,6 +208,10 @@
     list-style-image: url("../services/gateway_msn.png");
 }
 
+#contacts .contact[address*="@aim."] .service {
+    list-style-image: url("../services/gateway_aim.png");
+}
+
 /* unread messages indicator */
 
 /*
