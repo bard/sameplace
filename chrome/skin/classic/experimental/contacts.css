@@ -204,6 +204,10 @@
     list-style-image: url("../services/server_x-turtle-twitter.png");
 }
 
+#contacts .contact[address*="@msn."] .service {
+    list-style-image: url("../services/gateway_msn.png");
+}
+
 /* unread messages indicator */
 
 /*
