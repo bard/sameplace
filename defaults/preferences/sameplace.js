@@ -8,4 +8,4 @@ pref("extensions.sameplace.contactsArea", "left");
 pref("extensions.sameplace.conversationsArea", "left");
 pref("extensions.sameplace@hyperstruct.net.description", "chrome://sameplace/locale/sameplace.properties");
 pref("extensions.sameplace.branch", "devel");
-pref("extensions.sameplace.chatArea", "sidebar");
+pref("extensions.sameplace.chatArea", "");
