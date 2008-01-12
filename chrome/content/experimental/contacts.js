@@ -179,7 +179,7 @@ function initNetworkReactions() {
 
 function initState() {
     if(!window.frameElement)
-        addClass($('#view'), 'standalone');
+        util.addClass($('#view'), 'standalone');
 
     resizedView()
     regenerateGroups();
@@ -285,36 +285,8 @@ function setInsertionStrategy(strategyName) {
     }
 }
 
-function openURL(url) {
-    if(!url.match(/^((https?|ftp|file):\/\/|(xmpp|mailto):)/))
-        return;
-    
-    function canLoadPages(w) {
-        return (w && 
-                typeof(w.getBrowser) == 'function' &&
-                'addTab' in w.getBrowser());
-    }
-
-    var candidates = [
-        top, 
-        Cc['@mozilla.org/appshell/window-mediator;1']
-            .getService(Ci.nsIWindowMediator)
-            .getMostRecentWindow('navigator:browser')]
-        .filter(canLoadPages);
-
-    if(candidates.length > 0)
-        candidates[0].getBrowser().selectedTab =
-        candidates[0].getBrowser().addTab(url);
-    else
-        Cc['@mozilla.org/uriloader/external-protocol-service;1']
-        .getService(Ci.nsIExternalProtocolService)
-        .loadUrl(Cc['@mozilla.org/network/io-service;1']
-                 .getService(Ci.nsIIOService)
-                 .newURI(url, null, null));
-}
-
 function toggleOfflineContacts() {
-    toggleClass($('#contacts'), 'hide-unavailable');
+    util.toggleClass($('#contacts'), 'hide-unavailable');
     contactsUpdated();
 }
 
@@ -402,7 +374,7 @@ function updateHeaders() {
     var xulHeadersWithContacts =
         $$('//*[@id = "contacts"]' +
            '//*[contains(@class, "contact") ' +
-           (hasClass(xulContacts, 'hide-unavailable') ?
+           (util.hasClass(xulContacts, 'hide-unavailable') ?
             'and @availability = "available"]' : ']') +
            '/preceding-sibling::*[contains(@class, "header")][1]')
         .toArray();
@@ -415,10 +387,10 @@ function updateHeaders() {
 
     xulAllHeaders.forEach(function(xulHeader) {
         if(xulHeader == xulHeadersWithContacts[0]) {
-            addClass(xulHeader, 'active');
+            util.addClass(xulHeader, 'active');
             xulHeadersWithContacts.shift();
         } else {
-            removeClass(xulHeader, 'active');
+            util.removeClass(xulHeader, 'active');
         }
     });
 }
@@ -448,9 +420,9 @@ function filterContacts(prefix) {
     });
     
     if(prefix.match(EMPTY)) {
-        removeClass($('#contacts-stack'), 'filtering');
+        util.removeClass($('#contacts-stack'), 'filtering');
     } else {
-        addClass($('#contacts-stack'), 'filtering');
+        util.addClass($('#contacts-stack'), 'filtering');
 
         var newCandidates =
             '//*[@id = "contacts"]/*[contains(@class, "contact")' +
@@ -474,11 +446,11 @@ dndObserver.getSupportedFlavours = function() {
 };
 
 dndObserver.onDragOver = function(event, flavour, session) {
-    addClass(event.currentTarget, 'dragover');
+    util.addClass(event.currentTarget, 'dragover');
 };
 
 dndObserver.onDragExit = function(event, session) {
-    removeClass(event.currentTarget, 'dragover');    
+    util.removeClass(event.currentTarget, 'dragover');    
 };
 
 dndObserver.onDrop = function(event, dropdata, session) {
@@ -580,7 +552,7 @@ function requestedRemoveRoom(xulPopupNode) {
     var address = xulContact.getAttribute('address');
 
     if(isMUCJoined(account, address)) {
-        var nick = XMPP.JID(getJoinPresence(account, address).stanza.@to).resource;
+        var nick = XMPP.JID(util.getJoinPresence(account, address).stanza.@to).resource;
         XMPP.send(account,
                   <presence to={address + '/' + nick} type="unavailable">
                   <x xmlns={ns_muc}/>
@@ -599,10 +571,10 @@ function requestedRemoveContact(xulPopupNode) {
 
 function showingContactContextMenu(xulPopup, xulPopupNode) {
     var xulContact = $(xulPopupNode, '^ .contact');
-    setClass(xulPopup, 'groupchat',
-             XMPP.isMUC(
-                 xulContact.getAttribute('account'),
-                 xulContact.getAttribute('address')));
+    util.setClass(xulPopup, 'groupchat',
+                  XMPP.isMUC(
+                      xulContact.getAttribute('account'),
+                      xulContact.getAttribute('address')));
 }
 
 function requestedChangeSort(xulPopup) {
@@ -644,7 +616,7 @@ function clickedStatus(event) {
     var url = event.target.getAttribute('link');
     if(url) {
         event.stopPropagation();
-        openURL(url);
+        util.openURL(url);
     }
 }
 
@@ -653,8 +625,8 @@ function contactsUpdated() {
 }
 
 function resizedView(event) {
-    setClass($('#view'), 'compact',
-             document.width <= COMPACT_WIDTH);
+    util.setClass($('#view'), 'compact',
+                  document.width <= COMPACT_WIDTH);
 }
 
 function requestedAddContact() {
@@ -896,39 +868,6 @@ insertionStrategies['display-name'] = function(name) {
     }
 }
 
-function setClass(xulElement, aClass, state) {
-    if(state)
-        addClass(xulElement, aClass);
-    else
-        removeClass(xulElement, aClass);
-}
-
-function toggleClass(xulElement, aClass) {
-    if(hasClass(xulElement, aClass))
-        removeClass(xulElement, aClass);
-    else
-        addClass(xulElement, aClass);
-}
-
-function hasClass(xulElement, aClass) {
-    return xulElement.getAttribute('class').split(/\s+/).indexOf(aClass) != -1;
-}
-
-function addClass(xulElement, newClass) {
-    var classes = xulElement.getAttribute('class').split(/\s+/);
-    if(classes.indexOf(newClass) == -1)
-        xulElement.setAttribute('class', classes.concat(newClass).join(' '));
-}
-
-function removeClass(xulElement, oldClass) {
-    var classes = xulElement.getAttribute('class').split(/\s+/);
-    var oldClassIndex = classes.indexOf(oldClass);
-    if(oldClassIndex != -1) {
-        classes.splice(oldClassIndex, 1);
-        xulElement.setAttribute('class', classes.join(' '));
-    }
-}
-
 function toggle(object, property, limit, afterAction) {
     if(object[property] == 0)
         animate(object, property, 6, limit, afterAction);
@@ -1025,15 +964,6 @@ function processURLs(xmlMessageBody) {
 
 // NETWORK ACTIONS
 // ----------------------------------------------------------------------
-
-function getJoinPresence(account, address) {
-    return XMPP.cache.first(XMPP.q()
-                            .event('presence')
-                            .account(account)
-                            .direction('out')
-                            .to(address)
-                            .child(ns_muc, 'x'));
-}
 
 function registerToService(account, address, callbacks) {
     function start() {
@@ -1204,10 +1134,10 @@ function sentPresence(presence) {
     var status = presence.stanza.status.toString();
     if(status) {
         $('#status-message').value = status;
-        removeClass($('#status-message'), 'draft');
+        util.removeClass($('#status-message'), 'draft');
     } else {
         $('#status-message').value = $('#status-message').getAttribute('placeholder');
-        addClass($('#status-message'), 'draft');
+        util.addClass($('#status-message'), 'draft');
     }
 }
 
@@ -1311,7 +1241,7 @@ function receivedRoomPresence(presence) {
         $(xulContact, '.name').setAttribute('value', displayName);
         $(xulContact, '.small-name').setAttribute('value', displayName);
         xulContact.setAttribute('display-name', displayName.toLowerCase());
-        addClass(xulContact, 'groupchat');
+        util.addClass(xulContact, 'groupchat');
     } 
 
     xulContact.setAttribute('availability',

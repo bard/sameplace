@@ -147,7 +147,7 @@ function init(xulPanels, xulTabs) {
         var address = event.target.getAttribute('address');
         if(XMPP.isMUC(account, address))
             exitRoom(account, address,
-                     XMPP.JID(getJoinPresence(account, address).stanza.@to).resource);
+                     XMPP.JID(util.getJoinPresence(account, address).stanza.@to).resource);
     }, false);
 }
 
@@ -171,7 +171,7 @@ function clickedInConversation(event) {
     // XXX only recognizes <a href="...">link</a> and <a
     // href="..."><img/></a>.
     if(htmlAnchor)
-        openURL(htmlAnchor.href);
+        util.openURL(htmlAnchor.href);
     
 }
 
@@ -189,7 +189,7 @@ function selectedTab(event) {
     var xulTab = event.target.selectedItem;
     var xulPanel = getPanels().getBrowserForTab(xulTab);
     xulPanel.contentWindow.focus();
-    removeClass(xulTab, 'unread');
+    util.removeClass(xulTab, 'unread');
 }
 
 function opened(xulPanel) {
@@ -214,39 +214,11 @@ function opened(xulPanel) {
 // GUI ACTIONS
 // ----------------------------------------------------------------------
 
-function openURL(url) {
-    if(!url.match(/^((https?|ftp|file):\/\/|(xmpp|mailto):)/))
-        return;
-    
-    function canLoadPages(w) {
-        return (w && 
-                typeof(w.getBrowser) == 'function' &&
-                'addTab' in w.getBrowser());
-    }
-
-    var candidates = [
-        top, 
-        Cc['@mozilla.org/appshell/window-mediator;1']
-            .getService(Ci.nsIWindowMediator)
-            .getMostRecentWindow('navigator:browser')]
-        .filter(canLoadPages);
-
-    if(candidates.length > 0)
-        candidates[0].getBrowser().selectedTab =
-        candidates[0].getBrowser().addTab(url);
-    else
-        Cc['@mozilla.org/uriloader/external-protocol-service;1']
-        .getService(Ci.nsIExternalProtocolService)
-        .loadUrl(Cc['@mozilla.org/network/io-service;1']
-                 .getService(Ci.nsIIOService)
-                 .newURI(url, null, null));
-}
-
 function toggle() {
-    toggleClass(document.documentElement, 'expanded')
+    util.toggleClass(document.documentElement, 'expanded')
     // XXX we shouldn't peek into the outside world. instead, generate
     // a "toggle" event and let the overlay react.
-    toggleClass(frameElement.parentNode, 'expanded');
+    util.toggleClass(frameElement.parentNode, 'expanded');
 }
 
 // XXX make it clear that this is not to be called for MUCs
@@ -315,7 +287,7 @@ function open(account, address, nextAction) {
     });
     xulPanel.setAttribute('account', account);
     xulPanel.setAttribute('address', address);
-    xulPanel.setAttribute('src', getDefaultAppUrl());
+    xulPanel.setAttribute('src', util.getDefaultAppUrl());
 
     return xulPanel;
 }
@@ -384,7 +356,7 @@ function seenDisplayableMessage(message) {
     var xulPanel = get(account, address) || open(account, address);
 
     if(!isCurrent(xulPanel))
-        addClass(xulPanel.tab, 'unread');
+        util.addClass(xulPanel.tab, 'unread');
 }
 
 function sentChatActivation(message) {
@@ -396,15 +368,6 @@ function sentChatActivation(message) {
 // NETWORK ACTIONS
 // ----------------------------------------------------------------------
 
-function getJoinPresence(account, address) {
-    return XMPP.cache.first(XMPP.q()
-                            .event('presence')
-                            .account(account)
-                            .direction('out')
-                            .to(address)
-                            .child(ns_muc, 'x'));
-}
-                           
 function exitRoom(account, roomAddress, roomNick) {
     XMPP.send(account,
               <presence to={roomAddress + '/' + roomNick} type="unavailable">
@@ -415,23 +378,6 @@ function exitRoom(account, roomAddress, roomNick) {
 
 // OTHER ACTIONS
 // ----------------------------------------------------------------------
-
-function getDefaultAppUrl() {
-    var url = pref.getCharPref('defaultAppUrl');
-    if(/^chrome:\/\//.test(url) && !hostAppIsMail())
-        // Thunderbird's content policy won't allow applications
-        // served from file://.  For all others, we turn security up a
-        // notch and convert chrome:// URLs to file://.
-        return chromeToFileUrl(url);
-    else
-        return url;
-}
-
-function hostAppIsMail() {
-    return (Components.classes['@mozilla.org/xre/app-info;1']
-            .getService(Components.interfaces.nsIXULAppInfo)
-            .ID == '{3550f703-e582-4d05-9a08-453d09bdfdc6}');
-}
 
 function cacheFor(account, address) {
     if(!messageCache[account])
@@ -452,15 +398,6 @@ function cachePut(message) {
 // UTILITIES
 // ----------------------------------------------------------------------
 
-function chromeToFileUrl(url) {
-    return Cc['@mozilla.org/chrome/chrome-registry;1']
-    .getService(Ci.nsIChromeRegistry)
-    .convertChromeURL(
-        Cc['@mozilla.org/network/io-service;1']
-        .getService(Ci.nsIIOService)
-        .newURI(url, null, null)).spec;
-}
-
 function getContact(message) {
     // XXX should probably use 'direction' field here
     //var address = message.direction == 'in' ?
@@ -473,39 +410,6 @@ function getContact(message) {
 
 // GUI UTILITIES
 // ----------------------------------------------------------------------
-
-function setClass(xulElement, aClass, state) {
-    if(state)
-        addClass(xulElement, aClass);
-    else
-        removeClass(xulElement, aClass);
-}
-
-function toggleClass(xulElement, aClass) {
-    if(hasClass(xulElement, aClass))
-        removeClass(xulElement, aClass);
-    else
-        addClass(xulElement, aClass);
-}
-
-function hasClass(xulElement, aClass) {
-    return xulElement.getAttribute('class').split(/\s+/).indexOf(aClass) != -1;
-}
-
-function addClass(xulElement, newClass) {
-    var classes = xulElement.getAttribute('class').split(/\s+/);
-    if(classes.indexOf(newClass) == -1)
-        xulElement.setAttribute('class', classes.concat(newClass).join(' '));
-}
-
-function removeClass(xulElement, oldClass) {
-    var classes = xulElement.getAttribute('class').split(/\s+/);
-    var oldClassIndex = classes.indexOf(oldClass);
-    if(oldClassIndex != -1) {
-        classes.splice(oldClassIndex, 1);
-        xulElement.setAttribute('class', classes.join(' '));
-    }
-}
 
 
 // UTILITIES

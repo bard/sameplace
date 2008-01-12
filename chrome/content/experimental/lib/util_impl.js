@@ -44,6 +44,15 @@ var pref = Cc['@mozilla.org/preferences-service;1']
 // UTILITIES - GENERIC - NON-GUI
 // ----------------------------------------------------------------------
 
+function chromeToFileUrl(url) {
+    return Cc['@mozilla.org/chrome/chrome-registry;1']
+    .getService(Ci.nsIChromeRegistry)
+    .convertChromeURL(
+        Cc['@mozilla.org/network/io-service;1']
+        .getService(Ci.nsIIOService)
+        .newURI(url, null, null)).spec;
+}
+
 function hostAppIsMail() {
     return (Components.classes['@mozilla.org/xre/app-info;1']
             .getService(Components.interfaces.nsIXULAppInfo)
@@ -52,6 +61,17 @@ function hostAppIsMail() {
 
 // UTILITIES - SPECIFIC - NON-GUI
 // ----------------------------------------------------------------------
+
+function getDefaultAppUrl() {
+    var url = pref.getCharPref('defaultAppUrl');
+    if(/^chrome:\/\//.test(url) && !hostAppIsMail())
+        // Thunderbird's content policy won't allow applications
+        // served from file://.  For all others, we turn security up a
+        // notch and convert chrome:// URLs to file://.
+        return chromeToFileUrl(url);
+    else
+        return url;
+}
 
 function getChatOverlayName() {
     var overlayName =
@@ -66,6 +86,67 @@ function getChatOverlayName() {
 
 // UTILITIES - GENERIC - GUI
 // ----------------------------------------------------------------------
+
+function openURL(url) {
+    if(!url.match(/^((https?|ftp|file):\/\/|(xmpp|mailto):)/))
+        return;
+    
+    function canLoadPages(w) {
+        return (w && 
+                typeof(w.getBrowser) == 'function' &&
+                'addTab' in w.getBrowser());
+    }
+
+    var candidates = [
+        top, 
+        Cc['@mozilla.org/appshell/window-mediator;1']
+            .getService(Ci.nsIWindowMediator)
+            .getMostRecentWindow('navigator:browser')]
+        .filter(canLoadPages);
+
+    if(candidates.length > 0)
+        candidates[0].getBrowser().selectedTab =
+        candidates[0].getBrowser().addTab(url);
+    else
+        Cc['@mozilla.org/uriloader/external-protocol-service;1']
+        .getService(Ci.nsIExternalProtocolService)
+        .loadUrl(Cc['@mozilla.org/network/io-service;1']
+                 .getService(Ci.nsIIOService)
+                 .newURI(url, null, null));
+}
+
+function setClass(xulElement, aClass, state) {
+    if(state)
+        addClass(xulElement, aClass);
+    else
+        removeClass(xulElement, aClass);
+}
+
+function toggleClass(xulElement, aClass) {
+    if(hasClass(xulElement, aClass))
+        removeClass(xulElement, aClass);
+    else
+        addClass(xulElement, aClass);
+}
+
+function hasClass(xulElement, aClass) {
+    return xulElement.getAttribute('class').split(/\s+/).indexOf(aClass) != -1;
+}
+
+function addClass(xulElement, newClass) {
+    var classes = xulElement.getAttribute('class').split(/\s+/);
+    if(classes.indexOf(newClass) == -1)
+        xulElement.setAttribute('class', classes.concat(newClass).join(' '));
+}
+
+function removeClass(xulElement, oldClass) {
+    var classes = xulElement.getAttribute('class').split(/\s+/);
+    var oldClassIndex = classes.indexOf(oldClass);
+    if(oldClassIndex != -1) {
+        classes.splice(oldClassIndex, 1);
+        xulElement.setAttribute('class', classes.join(' '));
+    }
+}
 
 function afterLoad(xulPanel, action) {
     xulPanel.addEventListener(
@@ -85,3 +166,15 @@ function afterLoad(xulPanel, action) {
         }, true);
 }
 
+
+// UTILITIES - XMPP
+// ----------------------------------------------------------------------
+
+function getJoinPresence(account, address) {
+    return XMPP.cache.first(XMPP.q()
+                            .event('presence')
+                            .account(account)
+                            .direction('out')
+                            .to(address)
+                            .child(ns_muc, 'x'));
+}

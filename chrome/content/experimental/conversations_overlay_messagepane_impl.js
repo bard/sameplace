@@ -121,7 +121,7 @@ function open(account, address, nextAction) {
     });
     xulPanel.setAttribute('account', account);
     xulPanel.setAttribute('address', address);
-    xulPanel.setAttribute('src', getDefaultAppUrl());
+    xulPanel.setAttribute('src', util.getDefaultAppUrl());
 
     return xulPanel;
 }
@@ -151,10 +151,6 @@ function opened(xulPanel) {
 
 // OTHER ACTIONS
 // ----------------------------------------------------------------------
-
-function getDefaultAppUrl() {
-    return pref.getCharPref('defaultAppUrl');
-}
 
 function cacheFor(account, address) {
     if(!messageCache[account])

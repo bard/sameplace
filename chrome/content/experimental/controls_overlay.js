@@ -86,14 +86,14 @@ var scroller = {
         xulContacts.scrollBoxObject.getScrolledSize({}, scrollHeight);
 
         if(scrollPosY.value == 0)
-            removeClass(xulScroller, 'more-up');
+            util.removeClass(xulScroller, 'more-up');
         else
-            addClass(xulScroller, 'more-up');
+            util.addClass(xulScroller, 'more-up');
 
         if(scrollHeight.value <= scrollPosY.value + xulContacts.boxObject.height) 
-            removeClass(xulScroller, 'more-down');
+            util.removeClass(xulScroller, 'more-down');
         else
-            addClass(xulScroller, 'more-down');
+            util.addClass(xulScroller, 'more-down');
     },
 
     _scrolling: false,
@@ -162,7 +162,7 @@ window.addEventListener('resize', function(event) {
         $('#controls-upper').setAttribute('align', '');
         $('#controls-upper').setAttribute('dir', 'reverse');
     } else {
-        removeClass($('#view'), 'compact'); // XXX why here and not in contacts.js?
+        util.removeClass($('#view'), 'compact'); // XXX why here and not in contacts.js?
         $('#controls-upper').setAttribute('orient', 'horizontal');
         $('#controls-upper').setAttribute('align', 'start');
         $('#controls-upper').setAttribute('dir', '');
@@ -170,7 +170,7 @@ window.addEventListener('resize', function(event) {
 }, false);
 
 function hoveredDockContent(event) {
-    if(hasClass(event.target, 'icon')) {
+    if(util.hasClass(event.target, 'icon')) {
         var tooltip = $(event.target, '^ .control .inline-tooltip');
         tooltip.firstChild.value = event.target.getAttribute('helptext');
         tooltip.hidden = false;
@@ -189,11 +189,11 @@ function requestedToggleFilter() {
 
 function focusedFilterField(xulTextbox) {
     xulTextbox.select();
-    addClass($(xulTextbox, '^ .control'), 'active');
+    util.addClass($(xulTextbox, '^ .control'), 'active');
 }
 
 function blurredFilterField(xulTextbox) {
-    removeClass($(xulTextbox, '^ .control'), 'active');
+    util.removeClass($(xulTextbox, '^ .control'), 'active');
 }
 
 function inputInFilterField(field) {
@@ -201,7 +201,7 @@ function inputInFilterField(field) {
 }
 
 function quitFilter() {
-    removeClass($('#contacts-stack'), 'filtering');
+    util.removeClass($('#contacts-stack'), 'filtering');
     requestedFilter('');
 
     var xulTextbox = $('#controls .field.filter').firstChild;

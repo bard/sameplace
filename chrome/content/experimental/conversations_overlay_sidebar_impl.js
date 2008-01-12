@@ -53,15 +53,15 @@ function init() {
     window.addEventListener('conversation/close', closedConversation, false);
     
     delayedMouseOver($('.scroll-arrow-down'), function() {
-        addClass($('#contacts-stack'), 'attention-on-contacts');
+        util.addClass($('#contacts-stack'), 'attention-on-contacts');
     });
 
     delayedMouseOver($('.scroll-arrow-up'), function() {
-        addClass($('#contacts-stack'), 'attention-on-contacts');
+        util.addClass($('#contacts-stack'), 'attention-on-contacts');
     });
 
     delayedMouseOver($('#conversations'), function() {
-        removeClass($('#contacts-stack'), 'attention-on-contacts');
+        util.removeClass($('#contacts-stack'), 'attention-on-contacts');
     });
 
     channel = XMPP.createChannel();
@@ -108,16 +108,16 @@ function selectedContact(event) {
         .selectedContact(event.target.getAttribute('account'),
                          event.target.getAttribute('address'));
 
-    addClass($('#conversations-area'), 'expanded');
+    util.addClass($('#conversations-area'), 'expanded');
 }
 
 function openedConversation(event) {
-    addClass($('#conversations-area'), 'expanded');
+    util.addClass($('#conversations-area'), 'expanded');
 }
 
 function closedConversation(event) {
     if($('#conversations').contentWindow.getCount() == 1)
-        removeClass($('#conversations-area'), 'expanded');
+        util.removeClass($('#conversations-area'), 'expanded');
 }
 
 
@@ -125,7 +125,7 @@ function closedConversation(event) {
 // ----------------------------------------------------------------------
 
 function sentChatActivation(message) {
-    addClass($('#conversations-area'), 'expanded');
+    util.addClass($('#conversations-area'), 'expanded');
 }
 
 

@@ -45,38 +45,7 @@ var channel;
 
 function init() {
     window.addEventListener('contact/select', selectedContact, false);
-
-    /*
-    window.addEventListener('conversation/open', openedConversation, false);
-    
-    window.addEventListener('conversation/close', closedConversation, false);
-    
-    delayedMouseOver($('.scroll-arrow-down'), function() {
-        addClass($('#contacts-stack'), 'attention-on-contacts');
-    });
-
-    delayedMouseOver($('.scroll-arrow-up'), function() {
-        addClass($('#contacts-stack'), 'attention-on-contacts');
-    });
-
-    delayedMouseOver($('#conversations'), function() {
-        removeClass($('#contacts-stack'), 'attention-on-contacts');
-    });
-
-    $('#conversations').addEventListener('click', clickedInConversation, false);
-*/
     channel = XMPP.createChannel();
-/*
-    channel.on({
-        event     : 'message',
-        direction : 'out',
-        stanza    : function(s) {
-            return s.ns_chatstates::active != undefined;
-        }
-    }, sentChatActivation);
-
-    $('#conversations').contentDocument.location.href = 'conversations.xul';
-*/
 }
 
 function finish() {
@@ -105,56 +74,3 @@ function selectedContact(event) {
         convWindow.selectedContact(account, address);
 }
 
-// function openedConversation(event) {
-//     addClass($('#conversations-box'), 'expanded');
-//     addClass($('#conversations').contentDocument.documentElement, 'expanded');
-// }
-
-// function closedConversation(event) {
-//     if($('#conversations').contentWindow.getCount() == 0) {
-//         removeClass($('#conversations-box'), 'expanded');
-//         removeClass($('#conversations').contentDocument.documentElement, 'expanded');
-//     }
-// }
-
-// function clickedInConversation(event) {
-//     var htmlAnchor =
-//         event.target instanceof HTMLAnchorElement ?
-//         event.target :
-//         (event.target.parentNode instanceof HTMLAnchorElement ?
-//          event.target.parentNode : null);
-
-//     // XXX only recognizes <a href="...">link</a> and <a
-//     // href="..."><img/></a>.
-//     if(htmlAnchor)
-//         openURL(htmlAnchor.href);
-// }
-
-
-// NETWORK REACTIONS
-// ----------------------------------------------------------------------
-
-// function sentChatActivation(message) {
-//     $('#conversations-box').collapsed = false;    
-// }
-
-
-// UTILITIES
-// ----------------------------------------------------------------------
-
-// function delayedMouseOver(xulElement, listener, delay) {
-//     delay = delay || 750;
-
-//     var timeout;
-//     xulElement.addEventListener('mouseover', function(event) {
-//         if(event.target != xulElement)
-//             return;
-//         timeout = setTimeout(listener, delay);
-//     }, false);
-
-//     xulElement.addEventListener('mouseout', function(event) {
-//         if(event.target != xulElement)
-//             return;
-//         clearTimeout(timeout);
-//     }, false);
-// }

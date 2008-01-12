@@ -43,7 +43,7 @@
         <hbox id="conversations-box">
           <box class="vertical-border"/>
           <button id="conversations-collapser"
-                  oncommand="toggleClass($('#conversations-area'), 'expanded');"/>
+                  oncommand="util.toggleClass($('#conversations-area'), 'expanded');"/>
           <iframe id="conversations" src="about:blank"
                   ondragdrop="nsDragAndDrop.drop(event, conversations.dropObserver);"
                   ondragover="nsDragAndDrop.dragOver(event, conversations.dropObserver);"/>
