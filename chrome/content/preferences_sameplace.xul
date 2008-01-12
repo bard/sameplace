@@ -70,13 +70,6 @@
                 <button label="&sameplace.prefs.capture.label;"
                         oncommand="sameplacePrefs.captureKey('contacts');"/>
               </hbox>
-              <hbox align="center" flex="0" hidden="true">
-                <textbox flex="1" id="sameplace-toggle-conversations-key"
-                         readonly="true" style="text-align: center"/>
-                <button label="&sameplace.prefs.capture.label;"
-                        oncommand="sameplacePrefs.captureKey('conversations');"
-                        flex="1"/>
-              </hbox>
               <description style="font-size: smaller;">
                 &sameplace.prefs.hotkey_help_text.label;
               </description>
@@ -86,16 +79,21 @@
           <row>
             <label value="Open chats in:"/>
             <vbox>
-              <radiogroup orient="horizontal"
-                          preference="sameplace-chat-area">
-                <radio label="Sidebar" value="sidebar"/>
-                <radio label="External window" value="external"/>
-              </radiogroup>
+              <menulist preference="sameplace-chat-area">
+                <menupopup>
+                  <menuitem label="(default)" value=""/>
+                  <menuitem label="Sidebar" value="sidebar"/>
+                  <menuitem label="External Window" value="external"/>
+                  <menuitem label="Message Pane (Thunderbird only)" value="messagepane"/>
+                </menupopup>
+              </menulist>
+
               <description style="font-size: smaller;">
                 (Becomes effective after restart.)
               </description>
             </vbox>
           </row>
+
 
           <row>
             <spacer/>
