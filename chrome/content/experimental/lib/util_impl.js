@@ -29,26 +29,30 @@
  *  
  */
 
-window.addEventListener('load', function(event) {
-    var overlayName = util.getChatOverlayName();
 
-    var overlays = {
-        'external'    : 'conversations_overlay_external.xul',
-        'sidebar'     : 'conversations_overlay_sidebar.xul',
-        'messagepane' : 'conversations_overlay_messagepane.xul'
-    };
-    
-    if(overlayName == 'external' || overlayName == 'sidebar')
-        document.loadOverlay(
-            'chrome://sameplace/content/experimental/' + overlays[overlayName], {
-                observe: function(subject, topic, data) {
-                    // On Firefox3, when overlay observer is called,
-                    // overlay content isn't there yet.  So let's give it 
-                    // some time... and hope for the best.
-                    //
-                    // The "conversations" object will be brought in
-                    // by the overlay itself.
-                    setTimeout(function(){ conversations.init(); }, 1000);
-                }
-            });
-}, false);
+// DEFINITIONS
+// ----------------------------------------------------------------------
+
+var pref = Cc['@mozilla.org/preferences-service;1']
+    .getService(Ci.nsIPrefService)
+    .getBranch('extensions.sameplace.');
+
+
+// UTILITIES
+// ----------------------------------------------------------------------
+
+function hostAppIsMail() {
+    return (Components.classes['@mozilla.org/xre/app-info;1']
+            .getService(Components.interfaces.nsIXULAppInfo)
+            .ID == '{3550f703-e582-4d05-9a08-453d09bdfdc6}');
+}
+
+function getChatOverlayName() {
+    var overlayName =
+        pref.getCharPref('chatArea') ||
+        hostAppIsMail() ?
+        'messagepane' :
+        'sidebar';
+
+    return overlayName;
+}
