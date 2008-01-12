@@ -40,6 +40,10 @@ var pref = Cc['@mozilla.org/preferences-service;1']
     .getBranch('extensions.sameplace.');
 
 var MAX_MESSAGE_CACHE = 10;
+if(typeof(ns_muc) == 'undefined')
+    var ns_muc      = 'http://jabber.org/protocol/muc';
+if(typeof(ns_muc_user) == 'undefined')
+    var ns_muc_user = 'http://jabber.org/protocol/muc#user';
 
 
 // STATE
@@ -127,7 +131,12 @@ function init(xulPanels, xulTabs) {
         }
     }, receivedContactPresence);
 
-    getTabs().addEventListener('select', selectedTab, false);
+    getTabs().addEventListener('select', function(event) {
+        // It's important that this be a call-by-name rather than a
+        // call-by-reference since other places (e.g. overlay_mail.js)
+        // will advice selectedTab()
+        selectedTab(event)
+    }, false);
 
     getPanels().addEventListener('click', clickedInConversation, true);
 
@@ -241,13 +250,16 @@ function toggle() {
 // XXX make it clear that this is not to be called for MUCs
 
 function updatePresenceIndicator(account, address) {
-    var xulPanel = $(getPanels(), '> [account="' + account + '"][address="' + address + '"]');
+    var xulPanel = get(account, address);
     if(!xulPanel)
         return;
 
     var xulTab = xulPanel.tab;
     
     var presence = XMPP.presencesOf(account, address)[0]; // XXX won't handle conversation with offline contact!
+
+    if(!presence)
+        return;
 
     var availability = presence.stanza.@type.toString() || 'available';
     var show         = presence.stanza.show.toString();
@@ -307,7 +319,14 @@ function open(account, address, nextAction) {
 }
 
 function get(account, address) {
-    return $(getPanels(), '> [account="' + account + '"][address="' + address + '"]');
+    var xulPanel = getPanels().firstChild;
+    while(xulPanel) {
+        if(xulPanel.getAttribute('address') == address &&
+           xulPanel.getAttribute('account') == account)
+            return xulPanel;
+        xulPanel = xulPanel.nextSibling;
+    }
+    return null;
 }
 
 function getCount() {

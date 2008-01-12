@@ -29,29 +29,14 @@
  *  
  */
 
-window.addEventListener('load', function(event) {
-    var pref = Cc['@mozilla.org/preferences-service;1']
-        .getService(Ci.nsIPrefService)
-        .getBranch('extensions.sameplace.');
 
-    var overlays = {
-        'external'    : 'conversations_overlay_external.xul',
-        'sidebar'     : 'conversations_overlay_sidebar.xul',
-//        'messagepane' : 'conversations_overlay_messagepane.xul'
-    };
+window.addEventListener(
+    'unload', function(event) { conversations.finish(); }, false);
 
-    var overlayName = pref.getCharPref('chatArea');
-    if(!(overlayName in overlays))
-        return;
-    
-    document.loadOverlay(
-        'chrome://sameplace/content/experimental/' + overlays[overlayName], {
-            observe: function(subject, topic, data) {
-                // On Firefox3, when overlay observer is called,
-                // overlay content isn't there yet.  So let's give it 
-                // some time... and hope for the best.
-                setTimeout(function(){ conversations.init(); }, 1000);
-            }
-        });
+var conversations = {};
 
-}, false);
+Components
+    .classes['@mozilla.org/moz/jssubscript-loader;1']
+    .getService(Components.interfaces.mozIJSSubScriptLoader)
+    .loadSubScript('chrome://sameplace/content/experimental/conversations_overlay_messagepage_impl.js',
+                   conversations);
