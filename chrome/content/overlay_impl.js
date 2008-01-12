@@ -735,6 +735,10 @@ if(experimentalMode()) {
             'chrome://sameplace/content/experimental/contacts.xul';
     }
 } else {
+    function initModeSpecific() {
+        
+    }
+
     function isReceivingInput() {
         return (viewFor('conversations').isReceivingInput() ||
                 (document.commandDispatcher.focusedElement &&
