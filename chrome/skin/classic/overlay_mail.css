@@ -99,4 +99,6 @@
     -moz-image-region: rect(16px 16px 32px 0px);
 }
 
-
+#sameplace-fake-mail-tab .tabs-right {
+    display: none;
+}

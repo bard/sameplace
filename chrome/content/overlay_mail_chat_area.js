@@ -29,89 +29,80 @@
  *  
  */
 
+if(sameplace.experimentalMode()) {
+window.addEventListener('load', function(event) {
+    var xulPanels = document.getElementById('sameplace-conversations');
+    var xulTabs = document.getElementById('sameplace-conversation-tabs');
+    var xulMsgBox = document.getElementById('messagepanebox');
+    conversations = {};
+    Components
+        .classes['@mozilla.org/moz/jssubscript-loader;1']
+        .getService(Components.interfaces.mozIJSSubScriptLoader)
+        .loadSubScript('chrome://sameplace/content/experimental/conversations_impl.js',
+                       conversations);
 
-window.addEventListener(
-    'load', function(event) {
-        gMessageListeners.push({
-            onStartHeaders: function() { sameplace.onStartHeaders(); },
-            onEndHeaders:   function() { sameplace.onEndHeaders(); }
-        });
+    tabbedArea(xulPanels, xulTabs);
+    conversations.init(xulPanels, xulTabs);
+
+    xulPanels.addEventListener('conversation/close', function(event) {
+        if(xulTabs.childNodes.length == 2) {
+            xulPanels.collapsed = true;
+            xulTabs.collapsed = true;            
+        }
     }, false);
 
-sameplace.onStartHeaders = function() {
-    var xulPresenceField = document.getElementById('expandedPresence');
-    xulPresenceField.headerValue = null;
-    xulPresenceField.collapsed = true;
-}
-
-sameplace.onEndHeaders = function() {
-    const Cc = Components.classes;
-    const Ci = Components.interfaces;
-
-    function getCard(primaryEmail) {
-        var uri = 'moz-abmdbdirectory://abook.mab';
-        var addressBook = Cc['@mozilla.org/addressbook;1'].getService(Ci.nsIAddressBook);
-        var abDatabase = addressBook.getAbDatabaseFromURI(uri);
-        var rdf = Cc['@mozilla.org/rdf/rdf-service;1'].getService(Ci.nsIRDFService);
-        var abDirectory = rdf.GetResource(uri).QueryInterface(Ci.nsIAbDirectory);
-        return abDatabase.getCardFromAttribute(abDirectory, 'PrimaryEmail', primaryEmail, true);
+    function switchToIM() {
+        xulPanels.height = xulMsgBox.height;
+        xulPanels.collapsed = false;
+        xulMsgBox.collapsed = true;
     }
 
-    var m = currentHeaderData.from.headerValue.match(/^([^ ]+)/)
-    var mailAddress = m[1];
-    var card = getCard(mailAddress);
-    if(card && card.aimScreenName) {
-        var jabberAddress = card.aimScreenName;
-        var xulPresenceField = document.getElementById('expandedPresence');
-        xulPresenceField.emailAddressNode.setAttribute('label', card.aimScreenName);
-        xulPresenceField.collapsed = false;
-
-        var presence =
-            XMPP.cache.fetch({
-                event     :'presence',
-                direction : 'in',
-                from      : { address: jabberAddress }})[0] ||
-            { stanza: <presence from={jabberAddress} type="unavailable"/> };
-
-        xulPresenceField.setAttribute('availability',
-                                      presence.stanza.@type.toString() || 'available');
-        xulPresenceField.setAttribute('show',
-                                      presence.stanza.show.toString());
+    function switchToMail() {
+        xulMsgBox.height = xulPanels.height;
+        xulPanels.collapsed = true;
+        xulMsgBox.collapsed = false;
     }
-}
 
-
-window.addEventListener(
-    'load', function(event) {
-        // May I be forgiven for coercing <mail-emailheaderfield/>
-        // into something it was never meant to be...
-
-        var xulPresenceField = document.getElementById('expandedPresence');
-
-        // Get rid of the popup menu.
-        xulPresenceField.emailAddressNode.removeAttribute('context');
-        xulPresenceField.emailAddressNode.removeAttribute('popup');
-
-        // Without this, -moz-image-rect won't work.
-        document.getAnonymousElementByAttribute(
-            xulPresenceField.emailAddressNode,
-            'anonid', 'emailImage')
-        .style.MozPaddingStart = 0
-
-        // Do something meaningful when jid is clicked.
-        xulPresenceField.emailAddressNode.addEventListener(
-            'click', function(event) {
-                setTimeout(function() {
-                    if(event.target.tagName == 'xul:label')
-                        window.openDialog(
-                            'chrome://sameplace/content/open_conversation.xul',
-                            'sameplace-open-conversation', 'centerscreen', null, event.target.value);
-                }, 0);
-            }, false);
+    xulTabs.addEventListener('select', function(event) {
+        if(xulTabs.selectedIndex == 0 && !xulPanels.collapsed)
+            switchToMail();
+        else if(xulTabs.selectedIndex > 0 && xulPanels.collapsed)
+            switchToIM();
     }, false);
 
+    xulPanels.addEventListener('conversation/open', function(event) {
+        xulTabs.parentNode.collapsed = false;
+    }, false);
 
+    window.addEventListener('contact/select', function(event) {
+        conversations.selectedContact(event.target.getAttribute('account'),
+                                      event.target.getAttribute('address'));
+    }, false);
 
+    // Hot-patch Thunderbird to switch to mail view when thread pane
+    // selection changes
+
+    let(__ThreadPaneSelectionChanged = ThreadPaneSelectionChanged)
+        ThreadPaneSelectionChanged = function() {
+            xulTabs.selectedIndex = 0;
+            return __ThreadPaneSelectionChanged.apply(null, arguments);
+        };
+
+    // Hot-patch tabbed area to make room for fake mail tab
+
+    conversations.__selectedTab = conversations.selectedTab;
+    conversations.selectedTab = function(event) {
+        if(event.target.selectedIndex != 0)
+            this.__selectedTab(event);
+    };
+
+    xulPanels.__removeTab = xulPanels.removeTab;
+    xulPanels.removeTab = function(tab) {
+        if(tab != xulTabs.firstChild)
+            this.__removeTab(tab);
+    };
+}, false);
+} else {
 window.addEventListener('load', function(event) {
     var deck = document.getElementById('sameplace-conversations');
     var tabs = document.getElementById('sameplace-conversation-tabs');
@@ -170,3 +161,6 @@ window.addEventListener('load', function(event) {
             tabs.collapsed = (tabs.childNodes.length == 2);
     }, false);
 }, false);
+}
+
+

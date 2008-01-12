@@ -42,8 +42,11 @@
 
   <script type="application/x-javascript;version=1.7" src="chrome://xmpp4moz/content/xmpp.js"/>
   <script type="application/x-javascript;version=1.7" src="overlay.js"/>
-  <script type="application/x-javascript;version=1.7" src="lib/tabbed_area.js"/>  
+  <script type="application/x-javascript;version=1.7" src="lib/tabbed_area.js"/>
   <script type="application/x-javascript;version=1.7" src="overlay_mail.js"/>
+  <script type="application/x-javascript;version=1.7" src="overlay_mail_message_headers.js"/>
+  <script type="application/x-javascript;version=1.7" src="overlay_mail_chat_area.js"/>
+  <script type="application/x-javascript;version=1.7" src="overlay_mail_sidebar.js"/>  
 
   <!-- COMMANDS -->
 
@@ -105,7 +108,15 @@
 
     <!-- SIDEBAR -->
     
-    <vbox id="folderPaneBox"> 	
+    <vbox id="folderPaneBox">
+
+      <!-- SIDEBAR -->
+      
+      <iframe id="sameplace-frame"
+              flex="1"
+              insertafter="folderTree"
+              collapsed="true"/>
+      
       <splitter id="sameplace-splitter-left"
                 class="sameplace-splitter"
                 persist="state"
@@ -213,12 +224,16 @@
   </vbox>
 
   <box id="messagesBox">
-    <tabs id="sameplace-conversation-tabs" insertafter="messagepanebox" collapsed="true"
-          closebutton="true" mode="fake">
+    <tabs id="sameplace-conversation-tabs" insertafter="messagepanebox"
+          closebutton="true"
+          mode="fake"
+          collapsed="true">
       <tab label="Mail" class="mail"/>
     </tabs>
-
-    <deck id="sameplace-conversations" insertafter="messagepanebox" collapsed="true">
+    <deck id="sameplace-conversations" insertafter="messagepanebox" flex="1"
+          collapsed="true"
+          class="inset"
+          style="margin: 0;padding:0;">
       <spacer/>
     </deck>
   </box>
