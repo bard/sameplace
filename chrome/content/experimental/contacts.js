@@ -769,24 +769,6 @@ function textToXULDesc(text) {
         true);
 }
 
-function afterLoad(xulPanel, action) {
-    xulPanel.addEventListener(
-        'load', function(event) {
-            if(event.target != xulPanel.contentDocument)
-                return;
-
-            // The following appears not to work if reference to
-            // xulPanel is not the one carried by event object.
-            xulPanel = event.currentTarget;
-            xulPanel.contentWindow.addEventListener(
-                'load', function(event) {
-                    action(xulPanel);
-                }, false);
-
-            xulPanel.removeEventListener('load', arguments.callee, true);
-        }, true);
-}
-
 function TimedAccumulator(onReceive, waitPeriod) {
     this._queue = [];
     this._checkInterval = 500;

@@ -33,12 +33,15 @@
 // DEFINITIONS
 // ----------------------------------------------------------------------
 
+var Cc = Components.classes;
+var Ci = Components.interfaces;
+var Cu = Components.utils;
 var pref = Cc['@mozilla.org/preferences-service;1']
     .getService(Ci.nsIPrefService)
     .getBranch('extensions.sameplace.');
 
 
-// UTILITIES
+// UTILITIES - GENERIC - NON-GUI
 // ----------------------------------------------------------------------
 
 function hostAppIsMail() {
@@ -46,6 +49,9 @@ function hostAppIsMail() {
             .getService(Components.interfaces.nsIXULAppInfo)
             .ID == '{3550f703-e582-4d05-9a08-453d09bdfdc6}');
 }
+
+// UTILITIES - SPECIFIC - NON-GUI
+// ----------------------------------------------------------------------
 
 function getChatOverlayName() {
     var overlayName =
@@ -56,3 +62,26 @@ function getChatOverlayName() {
 
     return overlayName;
 }
+
+
+// UTILITIES - GENERIC - GUI
+// ----------------------------------------------------------------------
+
+function afterLoad(xulPanel, action) {
+    xulPanel.addEventListener(
+        'load', function(event) {
+            if(event.target != xulPanel.contentDocument)
+                return;
+
+            // The following appears not to work if reference to
+            // xulPanel is not the one carried by event object.
+            xulPanel = event.currentTarget;
+            xulPanel.contentWindow.addEventListener(
+                'load', function(event) {
+                    action(xulPanel);
+                }, false);
+
+            xulPanel.removeEventListener('load', arguments.callee, true);
+        }, true);
+}
+

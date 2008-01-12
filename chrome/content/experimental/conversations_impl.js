@@ -45,6 +45,8 @@ if(typeof(ns_muc) == 'undefined')
 if(typeof(ns_muc_user) == 'undefined')
     var ns_muc_user = 'http://jabber.org/protocol/muc#user';
 
+var util = load('chrome://sameplace/content/experimental/lib/util_impl.js', {});
+
 
 // STATE
 // ----------------------------------------------------------------------
@@ -295,7 +297,7 @@ function open(account, address, nextAction) {
     xulTab.setAttribute('tooltiptext', address);
     xulPanel.tab = xulTab;
 
-    afterLoad(xulPanel, function() {
+    util.afterLoad(xulPanel, function() {
         XMPP.connectPanel(xulPanel, account, address);
         // Using beforeunload because sometimes, by the time 'unload'
         // fired, xulPanel would already have lost account/address
@@ -468,26 +470,8 @@ function getContact(message) {
                     message.stanza.@from : message.stanza.@to);
 }
 
-function afterLoad(contentPanel, action) {
-    contentPanel.addEventListener(
-        'load', function(event) {
-            if(event.target != contentPanel.contentDocument)
-                return;
 
-            // The following appears not to work if reference to
-            // contentPanel is not the one carried by event object.
-            contentPanel = event.currentTarget;
-            contentPanel.contentWindow.addEventListener(
-                'load', function(event) {
-                    action(contentPanel);
-                }, false);
-
-            contentPanel.removeEventListener('load', arguments.callee, true);
-        }, true);
-}
-
-
-// UTILITIES
+// GUI UTILITIES
 // ----------------------------------------------------------------------
 
 function setClass(xulElement, aClass, state) {
@@ -523,3 +507,29 @@ function removeClass(xulElement, oldClass) {
     }
 }
 
+
+// UTILITIES
+// ----------------------------------------------------------------------
+
+function load(url, context) {
+    var loader = Cc['@mozilla.org/moz/jssubscript-loader;1']
+        .getService(Ci.mozIJSSubScriptLoader);
+
+    if(!context)
+        // load everything in current context
+        loader.loadSubScript(url);
+    else if(arguments.length == 2) {
+        // load everything in specified context and also return it
+        loader.loadSubScript(url, context);
+        return context;
+    } else {
+        // load some things in current or specified context
+        context = context || this;
+        var tmpContext = {};
+        loader.loadSubScript(url, tmpContext);
+        for each(var name in Array.slice(arguments, 2)) {
+            this[name] = tmpContext[name];
+        }
+        return context;
+    }
+}
