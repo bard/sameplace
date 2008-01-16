@@ -375,7 +375,7 @@ function showingMainMenu(event) {
 }
 
 function requestedInstallScriptlet(domElement) {
-    if(!isPossibleScriptletLink(domElement))
+    if(!isJavaScriptLink(domElement))
         return;
 
     var scriptletManager = window.openDialog(
@@ -482,13 +482,9 @@ function _(id) {
     return document.getElementById('sameplace-' + id);
 }
 
-function isPossibleScriptletLink(domElement) {
-    if(!('href' in domElement))
-        return false;
-    if(!domElement.href.match(/\.js$/))
-        return false;
-
-    return true;
+function isJavaScriptLink(domElement) {
+    return (('href' in domElement) &&
+            domElement.href.match(/\.js$/));
 }
 
 
@@ -668,6 +664,16 @@ if(experimentalMode()) {
             _('frame').contentDocument.location.href = 'about:blank';
             toCollapsed();
         }, false);
+
+        // In page context menu (if available), only display the "install
+        // scriptlet" option if user clicked on what could be a scriptlet.
+
+        var pageMenu = document.getElementById('contentAreaContextMenu');
+        if(pageMenu) {
+            pageMenu.addEventListener('popupshowing', function(event) {
+                _('install-scriptlet').hidden = !isJavaScriptLink(document.popupNode);
+            }, false);
+        }
     }
 
     function findContact() { // EXPERIMENTAL
@@ -986,7 +992,7 @@ if(experimentalMode()) {
         var pageMenu = document.getElementById('contentAreaContextMenu');
         if(pageMenu) {
             pageMenu.addEventListener('popupshowing', function(event) {
-                _('install-scriptlet').hidden = !isPossibleScriptletLink(document.popupNode);
+                _('install-scriptlet').hidden = !isJavaScriptLink(document.popupNode);
             }, false);
         }
     }
