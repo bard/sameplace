@@ -69,6 +69,8 @@
     <deck id="service-infos" selectedIndex="-1">
       <vbox class="service-info" id="service-info-gtalk">
         <description>
+          <label style="font-weight: bold;" class="small-margin"
+                 value="GMail/GTalk."/>
           Google's Jabber service.
         </description>
         
@@ -102,7 +104,9 @@
 
       <vbox class="service-info" id="service-info-sameplace">
         <description>
-          SamePlace's Jabber service.  It also hosts gateways to
+          <label style="font-weight: bold;"
+                 class="small-margin"
+                 value="SamePlace"/>'s Jabber service.  It also hosts gateways to
           other networks, such as AIM and MSN.
         </description>
         
@@ -119,8 +123,9 @@
 
       <vbox class="service-info" id="service-info-twitter">
         <description>
-          Twitter lets you broadcast short status messages to your
-          friends and follow their status messages in turn.
+          <label style="font-weight: bold;" class="small-margin"
+          value="Twitter"/> lets you broadcast short status messages
+          to your friends and follow their status messages in turn.
         </description>
 
         <spacer flex="1"/>
