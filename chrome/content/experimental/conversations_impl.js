@@ -160,6 +160,10 @@ function finish() {
 // ----------------------------------------------------------------------
 
 function clickedInConversation(event) {
+    if(event.button != 1 &&
+       event.button != 2)
+        return;
+
     event.preventDefault();
 
     var htmlAnchor =
@@ -309,6 +313,10 @@ function getCount() {
 
 function isCurrent(xulPanel) {
     return getPanels().selectedBrowser == xulPanel;
+}
+
+function getCurrent() {
+    return getPanels().selectedBrowser;
 }
 
 
