@@ -210,6 +210,12 @@ function finish() {
 // GUI ACTIONS
 // ----------------------------------------------------------------------
 
+function runWizard() {
+    window.openDialog(
+        'chrome://sameplace/content/wizard/wizard.xul',
+        'sameplace-wizard', 'chrome,modal,centerscreen,width=600,height=480');
+}
+
 function isMUCJoined(account, address) {
     var presence = XMPP.cache.first(XMPP.q()
                                     .event('presence')
