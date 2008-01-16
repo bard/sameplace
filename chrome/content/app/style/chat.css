@@ -203,7 +203,7 @@ a:hover {
     background: white;
     position: absolute;
     top: 0;
-    left: 16px;
+    left: 0;
     right: 0;
     bottom: 51px;
     padding-right: 5px;
@@ -460,10 +460,10 @@ body.icons-on .smiley-cool       { background: url(../emoticons/cool.png); }
 
 /* POPUPS */
 
-.sidestrip.left {
+.sidestrip {
     position: fixed;
     top: 0;
-    left: 0;
+    right: 0;
     width: 16px;
     height: 100%;
     background: #eef;
@@ -476,7 +476,7 @@ body.icons-on .smiley-cool       { background: url(../emoticons/cool.png); }
     position: absolute;
     z-index: 1000;
     top: 5%;
-    left: 16px;
+    right: 0;
     max-height: 50%;
     background-color: transparent;
     -moz-border-radius-topright: 12px;
@@ -504,14 +504,14 @@ body.icons-on .smiley-cool       { background: url(../emoticons/cool.png); }
 .popup .toggle {
     position: absolute;
     top: 8px;
-    right: -16px;
+    left: -16px;
     width: 16px;
     color: black;
     font-size: larger;
     font-weight: bold;
     cursor: pointer;
-    -moz-border-radius-topright: 12px;
-    -moz-border-radius-bottomright: 12px;
+    -moz-border-radius-topleft: 12px;
+    -moz-border-radius-bottomleft: 12px;
     height: 40px;
 }
 
@@ -521,11 +521,15 @@ body.icons-on .smiley-cool       { background: url(../emoticons/cool.png); }
 }
 
 .popup .toggle:after {
-    content: "»"
+    content: "«"
 }
 
 .popup.visible .toggle:after {
-    content: "«"
+    content: "»"
+}
+
+.popup .toggle:hover {
+    color: blue;
 }
 
 .popup + .popup .toggle {

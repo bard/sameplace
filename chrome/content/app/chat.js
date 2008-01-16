@@ -154,29 +154,21 @@ function init(event) {
 
     // Wiring popups
 
-    $('.popup').css('left', -$('.popup').width());
-
-    $('.popup ul.resources').css('max-height', $(window).height()*0.3);
-    $(window).resize(function() {
-        $('.popup ul').css('max-height', $(window).height()*0.3);    
+    $('.popup').each(function(element) {
+        $(this).css('right', -$('.popup').width());
     });
-    
+
     $('.popup .toggle').click(function(event) {
         var popup = $(this).parent('.popup');
-
-        if(popup.offset().left == 16) {
+        if(popup.offset().left + popup.width() == $(window).width()) {
             popup.removeClass('visible');
-            popup.animate({opacity: 0.3, left: -popup.width()});
+            popup.animate({opacity: 0.3, right: -popup.width()});
         } else {
-            $('.popup.visible').each(function() {
-                $(this).removeClass('visible');
-                $(this).animate({opacity: 0.3, left: -$(this).width()});
-            });
-
             popup.addClass('visible');
-            popup.animate({opacity: 1, left: 16});
+            popup.animate({opacity: 1, right: 0});
         }
     });
+
 }
 
 
