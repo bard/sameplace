@@ -396,6 +396,12 @@ function requestedInstallScriptlet(domElement) {
 // GUI ACTIONS
 // ----------------------------------------------------------------------
 
+function runWizard() {
+    window.openDialog(
+        'chrome://sameplace/content/wizard/wizard.xul',
+        'sameplace-wizard', 'chrome,modal,centerscreen,width=600,height=480');
+}
+
 function updateStatusIndicator() {
     if(!_('button'))
         return;
