@@ -48,7 +48,7 @@ var pref = Cc['@mozilla.org/preferences-service;1']
 function init() {
     window.sizeToContent();
     displayKey('contacts', eval(pref.getCharPref('toggleContactsKey')));
-    displayKey('conversations', eval(pref.getCharPref('toggleConversationsKey')));
+    _('experimental').checked = pref.getBoolPref('experimental');
 }
 
 

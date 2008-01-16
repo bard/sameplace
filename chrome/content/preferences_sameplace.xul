@@ -30,6 +30,7 @@
   Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
 -->
 
+<?xml-stylesheet href="chrome://sameplace/skin/preferences_sameplace.css"?>
 
 <!DOCTYPE overlay SYSTEM "chrome://sameplace/locale/preferences.dtd">
 
@@ -63,17 +64,12 @@
   
           <row>
             <label value="&sameplace.prefs.toggle_sidebar_hotkey;"/>
-            <vbox flex="1">
-              <hbox flex="0" align="center">
-                <textbox flex="1" id="sameplace-toggle-contacts-key"
-                         readonly="true" style="text-align: center"/>
-                <button label="&sameplace.prefs.capture.label;"
-                        oncommand="sameplacePrefs.captureKey('contacts');"/>
-              </hbox>
-              <description style="font-size: smaller;">
-                &sameplace.prefs.hotkey_help_text.label;
-              </description>
-            </vbox>
+            <hbox flex="0" align="center">
+              <textbox flex="1" id="sameplace-toggle-contacts-key"
+                       readonly="true" style="text-align: center"/>
+              <button label="&sameplace.prefs.capture.label;"
+                      oncommand="sameplacePrefs.captureKey('contacts');"/>
+            </hbox>
           </row>
   
           <row>
@@ -94,13 +90,23 @@
             </vbox>
           </row>
 
-
-          <row>
-            <spacer/>
-            <checkbox label="&sameplace.prefs.flash_taskbar.label;"
-                      accesskey="&sameplace.prefs.flash_taskbar.accesskey;"
-                      preference="sameplace-get-attention-on-message"/>
-          </row>
+          <row align="center">
+            <label value="Experimental Mode:"/>
+            <vbox align="center">
+              <button type="checkbox"
+                      id="sameplace-experimental"
+                      oncommand="sameplacePrefs.pref.setBoolPref(
+                                 'experimental', !this.checked);
+                                 setTimeout(function() {
+                                 window.alert('Experimental mode ' +
+                                 (sameplacePrefs.pref.getBoolPref('experimental') ?
+                                 'enabled' : 'disabled') +
+                                 '. Will become effective after restart.');
+                                 });"/>
+              <label style="font-size: smaller;"
+                     value="(DO NOT PRESS)"/>
+            </vbox>
+          </row>          
         </rows>
       </grid>
     </groupbox>
