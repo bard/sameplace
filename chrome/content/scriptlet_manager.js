@@ -91,15 +91,15 @@ function createScriptlet(name) {
 }
 
 function updateScriptlet(xulScriptlet, scriptlet) {
-    $(xulScriptlet).$('.filename')._.value = scriptlet.fileName;
+    $(xulScriptlet).$('.filename')._.setAttribute('value', scriptlet.fileName);
     try {
-        $(xulScriptlet).$('.title')._.value = scriptlet.info.name;
-        $(xulScriptlet).$('.version')._.value = scriptlet.info.version;
-        $(xulScriptlet).$('.description')._.value = scriptlet.info.description;
-        $(xulScriptlet).$('.enabled')._.checked = scriptlet.enabled;
+        $(xulScriptlet).$('.title')._.setAttribute('value',  scriptlet.info.name);
+        $(xulScriptlet).$('.version')._.setAttribute('value', scriptlet.info.version);
+        $(xulScriptlet).$('.description')._.setAttribute('value', scriptlet.info.description);
+        $(xulScriptlet).$('.enabled')._.setAttribute('checked', scriptlet.enabled);
     } catch(e) {
-        $(xulScriptlet).$('.title')._.value = scriptlet.fileName;
-        $(xulScriptlet).$('.description')._.value = 'Error while reading.';
+        $(xulScriptlet).$('.title')._.setAttribute('value', scriptlet.fileName);
+        $(xulScriptlet).$('.description')._.setAttribute('value', 'Error while reading.');
     }
 }
 
