@@ -108,7 +108,7 @@
     <command id="about" oncommand="openAboutDialog();"
              label="About"
              accesskey="b"/>
-    <command id="detach-sidebar" oncommand="detachSidebar();"
+    <command id="detach-sidebar" oncommand="requestedDetachSidebar();"
              label="Detach Sidebar"
              accesskey="D"/>
   </commandset>

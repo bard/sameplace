@@ -470,6 +470,11 @@ dndObserver.onDrop = function(event, dropdata, session) {
     }
 };
 
+function requestedDetachSidebar() {
+    if(window.confirm('Detaching will close any conversation opened in the sidebar. Proceed?'))
+        detachSidebar();
+}
+
 function requestedImportContacts() {
     var request = {title: 'Enter transport address'};
     window.openDialog('chrome://sameplace/content/prompt_address.xul',
