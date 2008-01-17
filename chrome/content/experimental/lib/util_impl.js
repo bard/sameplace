@@ -74,13 +74,13 @@ function getDefaultAppUrl() {
 }
 
 function getChatOverlayName() {
-    var overlayName =
-        pref.getCharPref('chatArea') ||
-        hostAppIsMail() ?
-        'messagepane' :
-        'sidebar';
-
-    return overlayName;
+    var overlayName = pref.getCharPref('chatArea');
+    if(overlayName)
+        return overlayName;
+    else if(hostAppIsMail())
+        return 'messagepane';
+    else
+        return 'sidebar';
 }
 
 
