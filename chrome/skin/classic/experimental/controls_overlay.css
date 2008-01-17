@@ -200,7 +200,7 @@
 }
 
 #controls .control.offline-notice .logo {
-    -moz-box-pack: end;
+    -moz-box-pack: center;
     margin-top: -96px;
     opacity: 0.6;
     list-style-image: url("chrome://sameplace/skin/experimental/logo96x96.png");
