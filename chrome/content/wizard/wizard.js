@@ -506,7 +506,7 @@ function saveAccount(account) {
         pref.setCharPref(key + '.address', account.address);
         pref.setCharPref(key + '.resource', account.resource);
         if(account.password)
-            pref.setCharPref(key + '.password', account.password);
+            XMPP.setPassword(account.address, account.password);
         pref.setBoolPref(key + '.autoLogin', account.autoLogin);
         pref.setCharPref(key + '.connectionHost', account.connectionHost);
         pref.setIntPref(key + '.connectionPort', account.connectionPort);
@@ -520,6 +520,7 @@ function saveAccount(account) {
                   'autoLogin', 'connectionHost', 'connectionPort', 'connectionSecurity']) {
             pref.clearUserPref(key + '.' + prefName);
         }
+        XMPP.delPassword(account.address);
 
         throw e;
     }
