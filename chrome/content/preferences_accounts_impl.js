@@ -247,6 +247,10 @@ function convertAccount(source) {
             return source.resource;
         },
 
+        get address() {
+            return source.address;
+        },
+
         set address(val) {
             pref.setCharPref(this.id + '.address', val);
         },
@@ -256,7 +260,7 @@ function convertAccount(source) {
         },
 
         set password(val) {
-            pref.setCharPref(this.id + '.password', val);
+            XMPP.setPassword(this.address, val);
         },
 
         set autoLogin(val) {
