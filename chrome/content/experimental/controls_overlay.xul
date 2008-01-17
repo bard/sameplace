@@ -93,8 +93,12 @@
       </box>
 
       <spacer flex="1" mousethrough="always"/>
-
+      
       <vbox class="control offline-notice" hidden="true">
+        <hbox class="logo">
+          <image/>
+        </hbox>
+
         <description class="notice">
           You're offline.
         </description>
