@@ -177,7 +177,7 @@
 }
 
 #controls .control.offline-notice {
-    opacity: 0.9;
+    opacity: 0.99;
     color: #eee; 
     background: #999;
     padding: 5px;
@@ -202,7 +202,6 @@
 #controls .control.offline-notice .logo {
     -moz-box-pack: center;
     margin-top: -96px;
-    opacity: 0.6;
     list-style-image: url("chrome://sameplace/skin/experimental/logo96x96.png");
 }
 
