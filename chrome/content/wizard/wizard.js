@@ -67,7 +67,11 @@ function finish() {
 
 // JABBER PAGE
 
-function updateJabberConfig() {
+function updateJabberConfig(event) {
+    if(event &&
+       event.target.getAttribute('class') == 'connection-server')
+        return;
+
     var page            = $('[pageid="jabber"]');
     var service         = page.getAttribute('service');
     var username        = $(page, '.username').value;

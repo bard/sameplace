@@ -176,7 +176,7 @@
   <wizardpage pageid="jabber" flex="1"
               onpageshow="shownPageJabber();"
               onpageadvanced="return advancedPageJabber(this);"
-              oninput="updateJabberConfig();">
+              oninput="updateJabberConfig(event);">
     <hbox flex="1">
       <spacer flex="1"/>
 
