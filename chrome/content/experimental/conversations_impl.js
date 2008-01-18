@@ -160,11 +160,8 @@ function finish() {
 // ----------------------------------------------------------------------
 
 function clickedInConversation(event) {
-    if(event.button != 1 &&
-       event.button != 2)
+    if(event.button != 0)
         return;
-
-    event.preventDefault();
 
     var htmlAnchor =
         event.target instanceof HTMLAnchorElement ?
@@ -174,9 +171,10 @@ function clickedInConversation(event) {
 
     // XXX only recognizes <a href="...">link</a> and <a
     // href="..."><img/></a>.
-    if(htmlAnchor)
+    if(htmlAnchor) {
+        event.preventDefault();
         util.openURL(htmlAnchor.href);
-    
+    }
 }
 
 function selectedContact(account, address) {
