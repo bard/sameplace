@@ -651,7 +651,7 @@ if(experimentalMode()) {
     }
 
     function initDisplayRules() { // EXPERIMENTAL
-        _('frame').addEventListener('contact/select', function(event) {
+        _('frame').addEventListener('conversation/open', function(event) {
             if(isCompact())
                 toExpanded();
         }, false);
