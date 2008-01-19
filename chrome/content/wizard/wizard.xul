@@ -181,6 +181,11 @@
       <spacer flex="1"/>
 
       <vbox class="content" flex="0">
+        <description class="step">
+          Step 1: Create an account on sameplace.cc.  This lets you
+          reach the gateway to the external network.
+        </description>
+        
         <grid>
           <columns>
             <column/>
@@ -206,7 +211,7 @@
                     <menuitem label="gmail.com"/>
                     <menuitem label="googlemail.com"/>
                     <menuseparator/>
-                    <menuitem label="Your own..."/>
+                    <menuitem label="Your own domain..."/>
                   </menupopup>
                 </menulist>
                 <label class="domain-sameplace"
@@ -311,10 +316,12 @@
 
       <vbox flex="1" align="start">
         <vbox class="logo">
+          <label class="step-counter" value="1."/>
           <image/>
         </vbox>
 
         <vbox class="logo next">
+          <label class="step-counter" value="2."/>
           <image/>
         </vbox>
       </vbox>
@@ -326,10 +333,15 @@
               onpageshow="shownPageTransport();"
               onpageadvanced="return advancedPageTransport(this);"
               oninput="updateTransportConfig();">
+
     <hbox flex="1">
       <spacer flex="1"/>
 
       <vbox class="content" flex="0">
+    <description class="step">
+      Step 2: Configure your external account.
+    </description>
+
         <grid>
           <columns>
             <column/>
@@ -386,10 +398,12 @@
 
       <vbox flex="1" align="start">
         <vbox class="logo prev">
+          <label class="step-counter" value="1."/>
           <image/>
         </vbox>
 
         <vbox class="logo">
+          <label class="step-counter" value="2."/>
           <image/>
         </vbox>
       </vbox>
