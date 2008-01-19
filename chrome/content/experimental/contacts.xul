@@ -109,7 +109,7 @@
              label="About"
              accesskey="b"/>
     <command id="detach-sidebar" oncommand="requestedDetachSidebar();"
-             label="Detach Sidebar"
+             label="Detach Sidebar (experimental)"
              accesskey="D"/>
   </commandset>
 
