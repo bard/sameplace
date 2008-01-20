@@ -520,9 +520,11 @@ function saveAccount(account) {
         // it's not saved at all.
 
         for each(var prefName in
-                 ['address', 'resource', 'password',
-                  'autoLogin', 'connectionHost', 'connectionPort', 'connectionSecurity']) {
-            pref.clearUserPref(key + '.' + prefName);
+                 ['address', 'resource', 
+                  'autoLogin', 'connectionHost',
+                  'connectionPort', 'connectionSecurity']) {
+            if(pref.prefHasUserValue(key + '.' + prefName))
+                pref.clearUserPref(key + '.' + prefName);
         }
         XMPP.delPassword(account.address);
 
