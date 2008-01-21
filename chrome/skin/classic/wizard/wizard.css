@@ -221,6 +221,20 @@ wizardpage:not([state="configuring"]) .progress-notifications {
 [pageid="jabber"][next-service="msn"] .logo.next { list-style-image: url("services/msn.png"); }
 [pageid="jabber"][next-service="aim"] .logo.next { list-style-image: url("services/aim.png"); }
 
+[pageid="jabber"] .step-counter,
+[pageid="jabber"] description.step { display: none; }
+[pageid="jabber"][next-service] .step-counter {
+    display: -moz-box;
+    text-align: center;
+    font-weight: bold;
+}
+
+[pageid="jabber"][next-service] description.step {
+    display: -moz-box;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
 
 /* TRANSPORT CONFIGURATION PAGE */
 
@@ -233,3 +247,17 @@ wizardpage:not([state="configuring"]) .progress-notifications {
 [pageid="transport"] .logo.prev               { display: none; }
 [pageid="transport"][prev-service] .logo.prev { display: -moz-box; }
 [pageid="transport"][prev-service="sameplace"] .logo.prev { list-style-image: url("services/sameplace.png"); }
+
+[pageid="transport"] .step-counter,
+[pageid="transport"] description.step { display: none; }
+[pageid="transport"][prev-service] .step-counter {
+    display: -moz-box;
+    text-align: center;
+    font-weight: bold;
+}
+
+[pageid="transport"][prev-service] description.step {
+    display: -moz-box;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
