@@ -651,8 +651,21 @@ if(experimentalMode()) {
     }
 
     function initDisplayRules() { // EXPERIMENTAL
+        // What's a man to do to keep things decoupled...  What we're
+        // doing here is basically "pop sidebar open when conversation
+        // opens, but ONLY if conversation opened as a result of user
+        // clicking on a contact", and the way we find out that is by
+        // checking whether conversation opened within two seconds
+        // from user clicking on the contact.
+        
+        var whenDidUserClickOnContact = 0;
+        _('frame').addEventListener('contact/select', function(event) {
+            if(!isCompact()) return;
+            whenDidUserClickOnContact = Date.now();
+        }, false);
         _('frame').addEventListener('conversation/open', function(event) {
-            if(isCompact())
+            if(!isCompact()) return;
+            if(Date.now() - whenDidUserClickOnContact < 2000)
                 toExpanded();
         }, false);
 
