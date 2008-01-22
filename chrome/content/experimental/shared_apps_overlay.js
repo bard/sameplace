@@ -68,7 +68,7 @@ window.addEventListener('load', function(event) {
         }
 
         xulContactPopup.addEventListener('command', function(event) {
-            if(!hasClass(event.target, 'shared-app'))
+            if(!util.hasClass(event.target, 'shared-app'))
                 return;
 
             var url = event.target.value;
@@ -114,7 +114,7 @@ function interact(account, address, url) {
         activate();
     }
     else {
-        afterLoad(xulPanel, function(panel) {
+        util.afterLoad(xulPanel, function(panel) {
             activate();
             notifyContact();
         });
