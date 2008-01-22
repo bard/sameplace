@@ -71,6 +71,7 @@ tabs tab[selected="true"] .tab-icon {
     width: 8px;
     height: 8px;
     min-height: 8px;
+    max-height: 8px;
     margin-right: 3px;
     -moz-image-region: rect(8px 8px 16px 0px);
 }
