@@ -202,5 +202,8 @@ var __selectedContact = selectedContact;
 selectedContact = function() {
     if(window.isHidden())
         window.show();
+
+    window.focus()
+    
     __selectedContact.apply(null, arguments);
 }
