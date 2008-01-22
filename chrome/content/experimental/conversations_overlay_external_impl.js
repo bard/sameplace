@@ -33,23 +33,38 @@
 // DEFINITIONS
 // ----------------------------------------------------------------------
 
+var wndConversations;
+
 
 // STATE
 // ----------------------------------------------------------------------
 
-var channel;
+//var channel;
 
 
 // INITIALIZATION/FINALIZATION
 // ----------------------------------------------------------------------
 
 function init() {
+    wndConversations = Cc['@mozilla.org/appshell/window-mediator;1']
+        .getService(Ci.nsIWindowMediator)
+        .getMostRecentWindow('SamePlace:Conversations');
+
+    if(!wndConversations) {
+        wndConversations = window.open(
+            'chrome://sameplace/content/experimental/conversations.xul',
+            'SamePlace:Conversations', 'chrome');
+
+        wndConversations.addEventListener('load', function(event) {
+            setTimeout(function() { wndConversations.hide(); });
+        }, false);
+    }
+
     window.addEventListener('contact/select', selectedContact, false);
-    channel = XMPP.createChannel();
 }
 
 function finish() {
-    channel.release();
+
 }
 
 
@@ -57,20 +72,8 @@ function finish() {
 // ----------------------------------------------------------------------
 
 function selectedContact(event) {
-    var account = event.target.getAttribute('account');
-    var address = event.target.getAttribute('address');
-    var convWindow =
-        Cc['@mozilla.org/appshell/window-mediator;1']
-        .getService(Ci.nsIWindowMediator)
-        .getMostRecentWindow('SamePlace:Conversations') ||
-        window.open('chrome://sameplace/content/experimental/conversations.xul',
-                    'SamePlace:Conversations', 'chrome');
-
-    if(convWindow.document.location.href == 'about:blank')
-        convWindow.addEventListener('load', function(event) {
-            convWindow.selectedContact(account, address);
-        }, false);
-    else
-        convWindow.selectedContact(account, address);
+    wndConversations.selectedContact(
+        event.target.getAttribute('account'),
+        event.target.getAttribute('address'));
 }
 
