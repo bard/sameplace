@@ -96,13 +96,13 @@
               <button type="checkbox"
                       id="sameplace-experimental"
                       oncommand="sameplacePrefs.pref.setBoolPref(
-                                 'experimental', !this.checked);
+                                 'experimental', !sameplacePrefs.pref.getBoolPref('experimental'));
                                  setTimeout(function() {
                                  window.alert('Experimental mode ' +
                                  (sameplacePrefs.pref.getBoolPref('experimental') ?
                                  'enabled' : 'disabled') +
                                  '. Will become effective after restart.');
-                                 });"/>
+                                 }, 100);"/>
               <label style="font-size: smaller;"
                      value="(DO NOT PRESS)"/>
             </vbox>
