@@ -70,6 +70,7 @@ tabs tab[selected="true"] .tab-icon {
     list-style-image: url("status8x32.png");
     width: 8px;
     height: 8px;
+    min-height: 8px;
     margin-right: 3px;
     -moz-image-region: rect(8px 8px 16px 0px);
 }
