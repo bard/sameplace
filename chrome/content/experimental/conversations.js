@@ -85,7 +85,7 @@ window.addEventListener('close', function(event) {
 window.addEventListener('unload', function() {
     if(window.isHidden())
         // restore, so width/height get persisted
-        window.show()
+        window.show();
 
     srvWindowWatcher.unregisterNotification(windowObserver);
     
@@ -130,6 +130,9 @@ window.addEventListener('conversation/close', function(event) {
 // ----------------------------------------------------------------------
 
 function hide() {
+    if(window.isHidden())
+        return;
+        
     savedDim = {
         width: window.outerWidth,
         height: window.outerHeight
