@@ -39,6 +39,8 @@ var Cu = Components.utils;
 var pref = Cc['@mozilla.org/preferences-service;1']
     .getService(Ci.nsIPrefService)
     .getBranch('extensions.sameplace.');
+var srvWindowMediator = Cc['@mozilla.org/appshell/window-mediator;1']
+    .getService(Ci.nsIWindowMediator);
 
 
 // UTILITIES - GENERIC - NON-GUI
@@ -81,6 +83,34 @@ function getChatOverlayName() {
         return 'messagepane';
     else
         return 'sidebar';
+}
+
+function getChatWindow() {
+    switch(getChatOverlayName()) {
+    case 'sidebar':
+        var enumWindows = srvWindowMediator.getEnumerator('');
+        while(enumWindows.hasMoreElements()) {
+            var window = enumWindows.getNext();
+            var xulFrame = window.document.getElementById('sameplace-frame');
+            if(xulFrame && xulFrame.contentDocument.location.href != 'about:blank')
+                return xulFrame.contentDocument.getElementById('conversations').contentWindow;
+        }
+        break;
+    case 'messagepane':
+        var enumWindows = srvWindowMediator.getEnumerator('');
+        while(enumWindows.hasMoreElements()) {
+            var window = enumWindows.getNext();
+            if(window.document.getElementById('sameplace-conversations'))
+                return window.conversations;
+        }
+        
+        break;
+    case 'external':
+        return Cc['@mozilla.org/appshell/window-mediator;1']
+            .getService(Ci.nsIWindowMediator)
+            .getMostRecentWindow('SamePlace:Conversations');
+        break;
+    }
 }
 
 
