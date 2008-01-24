@@ -159,6 +159,10 @@ function isLastWindow() {
     return count == 1;
 }
 
+function isStandAlone() {
+    return window == top;
+}
+
 
 // NETWORK REACTIONS
 // ----------------------------------------------------------------------
@@ -203,7 +207,8 @@ selectedContact = function() {
     if(window.isHidden())
         window.show();
 
-    window.focus()
+    if(window.isStandAlone())
+        window.focus()
     
     __selectedContact.apply(null, arguments);
 }
