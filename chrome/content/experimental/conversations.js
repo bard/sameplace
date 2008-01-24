@@ -115,11 +115,7 @@ if(window.isStandAlone()) {
         if(window.isHidden())
             window.show();
 
-        if(window.isStandAlone() &&
-           Cc['@mozilla.org/appshell/window-mediator;1']
-           .getService(Ci.nsIWindowMediator)
-           .getMostRecentWindow('') != window)
-            window.focus();
+        window.focus();
 
         __selectedContact.apply(null, arguments);
     }
