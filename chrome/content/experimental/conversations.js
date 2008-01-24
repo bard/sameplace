@@ -66,120 +66,26 @@ window.addEventListener('DOMContentLoaded', function(event) {
     // Initialize implementation (found in conversations_impl.js).
     init($('#deck'), $('#tabs'));
 
-    // This must come after initialization, or channel won't be there.
-    channel.on({
-        event     : 'message',
-        direction : 'in',
-        stanza    : function(s) { return s.body != undefined; }
-    }, function(message) {
-        receivedMessage();
-    });
+    if(window.isStandAlone()) {
+        // This must come after initialization, or channel won't be there.
+        channel.on({
+            event     : 'message',
+            direction : 'in',
+            stanza    : function(s) { return s.body != undefined; }
+        }, function(message) {
+            popUp();
+        });
 
-    srvWindowWatcher.registerNotification(windowObserver);
-}, false);
-
-window.addEventListener('close', function(event) {
-    requestedClose(event);
-}, false);
-
-window.addEventListener('unload', function() {
-    if(window.isHidden())
-        // restore, so width/height get persisted
-        window.show();
-
-    srvWindowWatcher.unregisterNotification(windowObserver);
-    
-    // finalize conversation implementation
-    finish();
-}, false)
-
-
-// GUI REACTIONS
-// ----------------------------------------------------------------------
-
-var windowObserver = {
-    observe: function(subject, topic, data) {
-        if(topic == 'domwindowclosed' &&
-           window.isHidden() &&
-           window.isLastWindow()) {
-            d('last window close detected, shutting down...');
-            window.close();
-        }
+        srvWindowWatcher.registerNotification(windowObserver);
     }
-};
-
-function requestedClose(event) {
-    d('requested close');
-    if(window.isLastWindow()) {
-        d('last window, accepting');
-        return true;
-    } else {
-        d('hiding instead of closing');
-        event.preventDefault();
-        window.hide();
-    }
-}
-
-window.addEventListener('conversation/close', function(event) {
-    if(getCount() == 1)
-        window.hide();
 }, false);
 
 
 // GUI ACTIONS
 // ----------------------------------------------------------------------
 
-function hide() {
-    if(window.isHidden())
-        return;
-        
-    savedDim = {
-        width: window.outerWidth,
-        height: window.outerHeight
-    };
-    window.resizeTo(0, 0);
-}
-
-function show() {
-    window.resizeTo(savedDim.width, savedDim.height);
-    savedDim = null;
-}
-
-function isHidden() {
-    return window.outerWidth == 0 && window.outerHeight == 0;
-}
-
-function isLastWindow() {
-    var enumWindows = srvWindowMediator.getEnumerator('');
-    var count = 0;
-    while(enumWindows.hasMoreElements()) {
-        enumWindows.getNext();
-        count++;
-    }
-    return count == 1;
-}
-
 function isStandAlone() {
     return window == top;
-}
-
-
-// NETWORK REACTIONS
-// ----------------------------------------------------------------------
-
-function receivedMessage() {
-    var shouldPopup = true;
-    var shouldGetAttention = true;
-
-    if(shouldGetAttention)
-        window.getAttention();
-    
-    if(shouldPopup) {
-        if(window.isHidden())
-            window.show();
-        else if(window.windowState == window.STATE_MINIMIZED)
-            window.restore();
-    }
 }
 
 
@@ -191,8 +97,8 @@ function d(msg) {
 }
 
 
-
-// Load actual implementation
+// ACTUAL IMPLEMENTATION
+// ----------------------------------------------------------------------
 
 Components
     .classes['@mozilla.org/moz/jssubscript-loader;1']
@@ -200,15 +106,115 @@ Components
     .loadSubScript('chrome://sameplace/content/experimental/conversations_impl.js');
 
 
-// Override public API
+if(window.isStandAlone()) {
+    // API OVERRIDES
+    // ----------------------------------------------------------------------
 
-var __selectedContact = selectedContact;
-selectedContact = function() {
-    if(window.isHidden())
-        window.show();
+    var __selectedContact = selectedContact;
+    selectedContact = function() {
+        if(window.isHidden())
+            window.show();
 
-    if(window.isStandAlone())
-        window.focus()
-    
-    __selectedContact.apply(null, arguments);
+        if(window.isStandAlone() &&
+           Cc['@mozilla.org/appshell/window-mediator;1']
+           .getService(Ci.nsIWindowMediator)
+           .getMostRecentWindow('') != window)
+            window.focus();
+
+        __selectedContact.apply(null, arguments);
+    }
+
+    // GUI REACTIONS
+    // ----------------------------------------------------------------------
+
+    var windowObserver = {
+        observe: function(subject, topic, data) {
+            if(topic == 'domwindowclosed' &&
+               window.isHidden() &&
+               window.isLastWindow()) {
+                d('last window close detected, shutting down...');
+                window.close();
+            }
+        }
+    };
+
+    window.addEventListener('close', function(event) {
+        requestedClose(event);
+    }, false);
+
+    window.addEventListener('unload', function() {
+        if(window.isHidden())
+            // restore, so width/height get persisted
+            window.show();
+
+        srvWindowWatcher.unregisterNotification(windowObserver);
+
+        // finalize conversation implementation
+        finish();
+    }, false)
+
+    function requestedClose(event) {
+        d('requested close');
+        if(window.isLastWindow()) {
+            d('last window, accepting');
+            return true;
+        } else {
+            d('hiding instead of closing');
+            event.preventDefault();
+            window.hide();
+        }
+    }
+
+    window.addEventListener('conversation/close', function(event) {
+        if(getCount() == 1)
+            window.hide();
+    }, false);
+
+    // GUI ACTIONS
+    // ----------------------------------------------------------------------
+
+    function hide() {
+        if(window.isHidden())
+            return;
+
+        savedDim = {
+            width: window.outerWidth,
+            height: window.outerHeight
+        };
+        window.resizeTo(0, 0);
+    }
+
+    function show() {
+        window.resizeTo(savedDim.width, savedDim.height);
+        savedDim = null;
+    }
+
+    function isHidden() {
+        return window.outerWidth == 0 && window.outerHeight == 0;
+    }
+
+    function isLastWindow() {
+        var enumWindows = srvWindowMediator.getEnumerator('');
+        var count = 0;
+        while(enumWindows.hasMoreElements()) {
+            enumWindows.getNext();
+            count++;
+        }
+        return count == 1;
+    }
+
+    function popUp() {
+        var shouldPopup = true;
+        var shouldGetAttention = true;
+
+        if(shouldGetAttention)
+            window.getAttention();
+
+        if(shouldPopup) {
+            if(window.isHidden())
+                window.show();
+            else if(window.windowState == window.STATE_MINIMIZED)
+                window.restore();
+        }
+    }
 }
