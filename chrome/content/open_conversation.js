@@ -61,10 +61,7 @@ function init() {
 // ----------------------------------------------------------------------
 
 function doOk() {
-    XMPP.send(v('account'),
-              <message to={v('address')}>
-              <active xmlns={ns_chatstates}/>
-              </message>);
+    util.getChatWindow().selectedContact(v('account'), v('address'));
 }
 
 function doCancel() {
