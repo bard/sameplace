@@ -366,8 +366,9 @@ function seenDisplayableMessage(message) {
 }
 
 function sentChatActivation(message) {
-    selectedContact(message.account,
-                    XMPP.JID(message.stanza.@to).address);
+// XXX remove
+//    selectedContact(message.account,
+//                    XMPP.JID(message.stanza.@to).address);
 }
 
 
