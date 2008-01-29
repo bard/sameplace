@@ -87,7 +87,7 @@ function init(event) {
                             getExtensionVersion('sameplace@hyperstruct.net')
                             .split('.').slice(0,3).join('.'));
             }
-        }, true);
+        }, 1);
 
     updateStatusIndicator();
     initScriptlets();
