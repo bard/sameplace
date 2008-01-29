@@ -85,7 +85,7 @@ function init(event) {
                 if(pref.getCharPref('branch') != 'devel')
                     openURL('http://sameplace.cc/changelog/' +
                             getExtensionVersion('sameplace@hyperstruct.net')
-                            .split('.').slice(0,3).join('.'));
+                            .split('.').slice(0,-1).join('.'));
             }
         }, 1);
 
