@@ -100,8 +100,11 @@
              label="&command.read_latest_news.label;"
              accesskey="&command.read_latest_news.accesskey;"/>    
     <command id="open-preferences" oncommand="openPreferences();"
-             label="Accounts and Prefs..."
-             accesskey="A"/>
+             label="Preferences"
+             accesskey="P"/>
+    <command id="run-wizard" oncommand="runWizard();"
+             label="Account Wizard"
+             accesskey="W"/>
     <command id="import-contacts" oncommand="requestedImportContacts();"
              label="Import Contacts..."
              accesskey="R"/>
@@ -176,6 +179,7 @@
     <popup id="tools-popup" class="with-headers">
       <menuitem class="header" label="Tools" disabled="true"/>
       <menuseparator/>
+      <menuitem class="menuitem-iconic" command="run-wizard"/>
       <menuitem class="menuitem-iconic" command="open-preferences"/>
       <menuitem class="menuitem-iconic" command="import-contacts"/>
       <menuitem class="menuitem-iconic" command="detach-sidebar"/>
