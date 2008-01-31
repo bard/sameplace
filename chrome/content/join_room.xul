@@ -84,7 +84,7 @@
     </rows>
   </grid>
 
-  <hbox pack="end">
+  <hbox pack="end" hidden="true">
     <vbox>
       <checkbox id="save"
                 label="&save.label;"
