@@ -44,6 +44,12 @@ if(typeof(ns_muc) == 'undefined')
     var ns_muc      = 'http://jabber.org/protocol/muc';
 if(typeof(ns_muc_user) == 'undefined')
     var ns_muc_user = 'http://jabber.org/protocol/muc#user';
+if(typeof(ns_event) == 'undefined')
+    var ns_event        = 'jabber:x:event';
+if(typeof(ns_http_auth) == 'undefined')
+    var ns_http_auth    = 'http://jabber.org/protocol/http-auth';
+if(typeof(ns_chatstates) == 'undefined')
+    var ns_chatstates   = 'http://jabber.org/protocol/chatstates';
 
 var util = load('chrome://sameplace/content/experimental/lib/util_impl.js', {});
 
