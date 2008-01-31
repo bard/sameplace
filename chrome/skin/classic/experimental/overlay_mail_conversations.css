@@ -1,0 +1,101 @@
+/*
+ * Copyright 2006-2007 by Massimiliano Mirra
+ * 
+ * This file is part of SamePlace.
+ * 
+ * SamePlace is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 3 of the License, or (at your
+ * option) any later version.
+ * 
+ * SamePlace is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * The interactive user interfaces in modified source and object code
+ * versions of this program must display Appropriate Legal Notices, as
+ * required under Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License
+ * version 3, modified versions must display the "Powered by SamePlace"
+ * logo to users in a legible manner and the GPLv3 text must be made
+ * available to them.
+ * 
+ * Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
+ *  
+ */
+
+
+/* XXX duplicated from conversations.css - find a cleaner way */
+
+#sameplace-conversation-tabs {
+/*    font-size: 10px;*/
+}
+
+#sameplace-conversation-tabs .tabs-closebutton {
+    list-style-image: url("../close.png");
+    -moz-appearance: none;
+    -moz-image-region: rect(0px, 16px, 16px, 0px);
+    padding: 4px 2px;
+    border: none !important;
+}
+
+#sameplace-conversation-tabs .tabs-closebutton:hover {
+    -moz-image-region: rect(0px, 32px, 16px, 16px);
+}
+
+#sameplace-conversation-tabs .tabs-closebutton:hover:active {
+    -moz-image-region: rect(0px, 48px, 16px, 32px);
+}
+
+#sameplace-conversation-tabs .tabs-closebutton > .toolbarbutton-icon {
+    -moz-margin-end: 0px !important;
+    -moz-padding-end: 2px !important;
+    -moz-padding-start: 2px !important;
+}
+
+#sameplace-conversation-tabs tab {
+    padding-left: 4px;
+    padding-right: 2px;
+}
+
+#sameplace-conversation-tabs tab[chatstate="active"]    { color: black;   }
+#sameplace-conversation-tabs tab[chatstate="paused"]    { color: #C4823B; }
+#sameplace-conversation-tabs tab[chatstate="gone"]      { color: black;   }
+#sameplace-conversation-tabs tab.unread                 { color: #d00;    }
+#sameplace-conversation-tabs tab[chatstate="composing"] { color: #E8871E; }
+
+#sameplace-conversation-tabs tab[selected="true"] .tab-icon {
+    list-style-image: url("status8x32.png");
+    width: 8px;
+    height: 8px;
+    margin-right: 3px;
+    -moz-image-region: rect(8px 8px 16px 0px);
+}
+
+#sameplace-conversation-tabs tab[selected="true"][availability="available"][show=""] .tab-icon,
+#sameplace-conversation-tabs tab[selected="true"][availability="available"][show="chat"] .tab-icon {
+    -moz-image-region: rect(8px 8px 16px 0px);
+}
+
+#sameplace-conversation-tabs tab[selected="true"][availability="unavailable"] .tab-icon {
+    -moz-image-region: rect(24px 8px 32px 0px);
+}
+
+#sameplace-conversation-tabs tab[selected="true"][availability="available"][show="away"] .tab-icon,
+#sameplace-conversation-tabs tab[selected="true"][availability="available"][show="xa"] .tab-icon {
+    -moz-image-region: rect(16px 8px 24px 0px);
+}
+
+#sameplace-conversation-tabs tab[selected="true"][availability="available"][show="dnd"] .tab-icon {
+    -moz-image-region: rect(0px 8px 8px 0px);
+}
+
+#sameplace-conversations {
+    background: white;
+    border-right: 1px solid #e2e2e2;
+}
