@@ -270,7 +270,7 @@ function openPreferences(paneID) {
             prefWindow.document.documentElement.showPane(pane);
         }
     } else {
-        window.openDialog('chrome://sameplace/content/preferences.xul',
+        window.openDialog('chrome://sameplace/content/preferences/preferences.xul',
                           'SamePlace:Preferences', features, paneID);
     }
 }

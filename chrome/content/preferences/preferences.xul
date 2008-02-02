@@ -40,18 +40,18 @@
 
   <prefpane id="accounts-pane" label="Accounts"
             image="chrome://xmpp4moz/skin/status/available-big.png"
-            src="chrome://sameplace/content/preferences_accounts.xul"
+            src="chrome://sameplace/content/preferences/preferences_accounts.xul"
             onpaneload="accountPrefs.init();"/>
 
   <prefpane id="sameplace-pane" label="SamePlace"
             image="chrome://sameplace/skin/logo.png"
-            src="chrome://sameplace/content/preferences_sameplace.xul"
+            src="chrome://sameplace/content/preferences/preferences_sameplace.xul"
             onpaneload="sameplacePrefs.init();"/>
 
   <!-- These need be down here or pane order in Firefox2 will be wrong. -->
 
   <script type="application/x-javascript;version=1.7" src="chrome://xmpp4moz/content/xmpp.js"/>  
-  <script type="application/x-javascript;version=1.7" src="lib/getElementsBySelector.js"/>
+  <script type="application/x-javascript;version=1.7" src="../lib/getElementsBySelector.js"/>
   <script type="application/x-javascript;version=1.7" src="preferences_accounts.js"/>
   <script type="application/x-javascript;version=1.7" src="preferences_sameplace.js"/>
 </prefwindow>

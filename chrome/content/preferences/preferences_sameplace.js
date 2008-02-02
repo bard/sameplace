@@ -30,9 +30,9 @@
  */
 
 
-var accountPrefs = {};
+var sameplacePrefs = {};
 
 Components
-    .classes['@mozilla.org/moz/jssubscript-loader;1']
-    .getService(Components.interfaces.mozIJSSubScriptLoader)
-    .loadSubScript('chrome://sameplace/content/preferences_accounts_impl.js', accountPrefs);
+.classes['@mozilla.org/moz/jssubscript-loader;1']
+.getService(Components.interfaces.mozIJSSubScriptLoader)
+    .loadSubScript('chrome://sameplace/content/preferences/preferences_sameplace_impl.js', sameplacePrefs);
