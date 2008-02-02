@@ -125,7 +125,7 @@ function initNetworkReactions() {
         direction : 'in',
         stanza    : function(s) { return s.@type == 'chat' && s.body.text() != undefined; }
     }, function(message) {
-        if(pref.getBoolPref('getAttentionOnMessage'))
+        if(window == getMostRecentWindow() && pref.getBoolPref('getAttentionOnMessage'))
             window.getAttention();
     });
 
