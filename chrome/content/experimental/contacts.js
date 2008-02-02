@@ -477,7 +477,7 @@ function requestedDetachSidebar() {
 
 function requestedImportContacts() {
     var request = {title: 'Enter transport address'};
-    window.openDialog('chrome://sameplace/content/prompt_address.xul',
+    window.openDialog('chrome://sameplace/content/dialogs/prompt_address.xul',
                       'register',
                       'modal,centerscreen',
                       request);
@@ -544,12 +544,12 @@ function requestedOpenConversation(type) {
     switch(type) {
     case 'chat':
         window.openDialog(
-            'chrome://sameplace/content/open_conversation.xul',
+            'chrome://sameplace/content/dialogs/open_conversation.xul',
             'sameplace-open-conversation', 'centerscreen', null, 'contact@server.org');
         break;
     case 'groupchat':
         window.openDialog(
-            'chrome://sameplace/content/join_room.xul',
+            'chrome://sameplace/content/dialogs/join_room.xul',
             'sameplace-join-room', 'centerscreen', null, 'users@places.sameplace.cc');
         break;
     default:
@@ -649,7 +649,7 @@ function requestedAddContact() {
     };
 
     window.openDialog(
-        'chrome://sameplace/content/add_contact.xul',
+        'chrome://sameplace/content/dialogs/add_contact.xul',
         'sameplace-add-contact', 'modal,centerscreen',
         request);
 
@@ -1193,7 +1193,7 @@ function receivedSubscriptionRequestSequence(sequence) {
             'Do you accept?';
 
         window.openDialog(
-            'chrome://sameplace/content/contact_selection.xul',
+            'chrome://sameplace/content/dialogs/contact_selection.xul',
             'contact-selection',
             'modal,centerscreen', request);
 

@@ -31,47 +31,75 @@
 -->
 
 
-<!DOCTYPE dialog SYSTEM "chrome://sameplace/locale/prompt_address.dtd">
+<!DOCTYPE dialog SYSTEM "chrome://sameplace/locale/join_room.dtd">
 
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xul-overlay href="chrome://xmpp4moz/content/ui/accounts.xul"?>
 
 <dialog id="main"
-        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-        title="&default_title;"
-        ondialogaccept="return accepted();"
-        ondialogcancel="return canceled();"
-        onload="init();">
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        title="&dialog.title;"
+        ondialogaccept="return doOk();"
+        ondialogcancel="return doCancel();"
+        onload="init();"
+        flex="1">
 
   <script type="application/x-javascript;version=1.7" src="chrome://xmpp4moz/content/xmpp.js"/>
-  <script type="application/x-javascript;version=1.7" src="lib/getElementsBySelector.js"/> 
-  <script type="application/x-javascript;version=1.7" src="prompt_address.js"/> 
+  <script type="application/x-javascript;version=1.7" src="../lib/namespaces.js"/>
+  <script type="application/x-javascript;version=1.7" src="../lib/utilities_xmpp.js"/>
+  <script type="application/x-javascript;version=1.7" src="join_room.js"/>
 
-  <dialogheader id="title" title="&default_title;"/>
+  <dialogheader id="header" title="&dialog.title;"/>
 
   <grid flex="1">
     <columns>
       <column/>
       <column flex="1"/>
-      <column/>
     </columns>
 
     <rows>
       <row align="center">
-        <label value="&address.label;"
-               accesskey="&address.accesskey;"
+        <label value="&room_address.label;"
+               accesskey="&room_address.accesskey;"
                control="address"/>
-        <textbox id="address" value="" oninput="update();"/>
+        <textbox id="address" oninput="refresh();"/>
       </row>
 
       <row align="center">
-        <label value="&account.label;"
-               accesskey="&account.accesskey;"
+        <label value="&user_nick.label;"
+               accesskey="&user_nick.label;"
+               control="nick"/>
+        <textbox id="nick"/>
+      </row>
+
+      <row align="center">
+        <label value="&user_account.label;"
+               accesskey="&user_account.accesskey;"
                control="accounts"/>
-        <menulist id="account" oncommand="update();" flex="1" label="" sizetopopup="none">
+        <menulist id="account" oncommand="selectedAccount(this);"
+                  flex="1" label="" sizetopopup="none">
           <menupopup id="xmpp-popup-accounts"/>
         </menulist>
       </row>
     </rows>
   </grid>
+
+  <hbox pack="end" hidden="true">
+    <vbox>
+      <checkbox id="save"
+                label="&save.label;"
+                accesskey="&save.accesskey;"
+                oninput="refresh();"/>
+      <checkbox id="autojoin"
+                label="&autojoin.label;"
+                accesskey="&autojoin.accesskey;"
+                oninput="refresh();"/>      
+    </vbox>
+  </hbox>
+
+  <deck id="output" style="height: 2em;">
+    <spacer flex="1"/>
+    <description id="error" style="color: red;"/>
+    <progressmeter id="progress" mode="undetermined"/>
+  </deck>
 </dialog>

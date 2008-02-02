@@ -31,45 +31,44 @@
 -->
 
 
-<!DOCTYPE dialog SYSTEM "chrome://sameplace/locale/open_conversation.dtd">
+<!DOCTYPE dialog SYSTEM "chrome://sameplace/locale/prompt_address.dtd">
 
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xul-overlay href="chrome://xmpp4moz/content/ui/accounts.xul"?>
 
 <dialog id="main"
-	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-        title="&dialog.title;"
-        ondialogaccept="return doOk();"
-        ondialogcancel="return doCancel();"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        title="&default_title;"
+        ondialogaccept="return accepted();"
+        ondialogcancel="return canceled();"
         onload="init();">
 
   <script type="application/x-javascript;version=1.7" src="chrome://xmpp4moz/content/xmpp.js"/>
-  <script type="application/x-javascript;version=1.7" src="lib/namespaces.js"/>
-  <script type="application/x-javascript;version=1.7" src="lib/utilities_xmpp.js"/>
-  <script type="application/x-javascript;version=1.7" src="experimental/lib/util.js"/>
-  <script type="application/x-javascript;version=1.7" src="open_conversation.js"/>
+  <script type="application/x-javascript;version=1.7" src="../lib/getElementsBySelector.js"/> 
+  <script type="application/x-javascript;version=1.7" src="prompt_address.js"/> 
 
-  <dialogheader id="header" title="&dialog.title;"/>
+  <dialogheader id="title" title="&default_title;"/>
 
   <grid flex="1">
     <columns>
       <column/>
       <column flex="1"/>
+      <column/>
     </columns>
 
     <rows>
       <row align="center">
-        <label value="&contact_address.label;"
-               accesskey="&contact_address.accesskey;"
+        <label value="&address.label;"
+               accesskey="&address.accesskey;"
                control="address"/>
-        <textbox id="address" oninput="refresh();"/>
+        <textbox id="address" value="" oninput="update();"/>
       </row>
 
       <row align="center">
-        <label value="&user_account.label;"
-               accesskey="&user_account.accesskey;"
+        <label value="&account.label;"
+               accesskey="&account.accesskey;"
                control="accounts"/>
-        <menulist id="account" flex="1" label="" sizetopopup="none">
+        <menulist id="account" oncommand="update();" flex="1" label="" sizetopopup="none">
           <menupopup id="xmpp-popup-accounts"/>
         </menulist>
       </row>
