@@ -274,6 +274,6 @@ function isFromTrustedDomain(uri) {
     .getService(Ci.nsIIOService)
     .newURI(uri, null, null);
 
-    return (xpcomURI.host.match(/(^|\.)sameplace\.cc$/ ||
-            uri.host != 'repo.hyperstruct.net'))
+    return (xpcomURI.host.match(/(^|\.)sameplace\.cc$/) ||
+            xpcomURI.host == 'repo.hyperstruct.net');
 }
