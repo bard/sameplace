@@ -49,8 +49,8 @@ const ns_x4m_ext = 'http://hyperstruct.net/xmpp4moz/protocol/external';
 // ----------------------------------------------------------------------
 
 var channel;
-var scriptlets = load('chrome://sameplace/contact/facades/scriptlets.js', {});
-var sendTo = load('chrome://sameplace/contact/send_to.js', {});
+var scriptlets = load('chrome://sameplace/content/facades/scriptlets.js', {});
+var sendTo = load('chrome://sameplace/content/send_to.js', {});
 
 
 // INITIALIZATION
