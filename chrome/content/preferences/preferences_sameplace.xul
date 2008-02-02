@@ -88,24 +88,6 @@
                 (Becomes effective after restart.)
               </description>
             </vbox>
-          </row>
-
-          <row align="center">
-            <label value="Experimental Mode:"/>
-            <vbox align="center">
-              <button type="checkbox"
-                      id="sameplace-experimental"
-                      oncommand="sameplacePrefs.pref.setBoolPref(
-                                 'experimental', !sameplacePrefs.pref.getBoolPref('experimental'));
-                                 setTimeout(function() {
-                                 window.alert('Experimental mode ' +
-                                 (sameplacePrefs.pref.getBoolPref('experimental') ?
-                                 'enabled' : 'disabled') +
-                                 '. Will become effective after restart.');
-                                 }, 100);"/>
-              <label style="font-size: smaller;"
-                     value="(DO NOT PRESS)"/>
-            </vbox>
           </row>          
         </rows>
       </grid>
