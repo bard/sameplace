@@ -193,7 +193,7 @@ function initScriptlets() {
     try {
         scriptlets.init(['sameplace', 'scriptlets'],
                         'extensions.sameplace.',
-                        'chrome://sameplace/content/scriptlet_sample.js');
+                        'chrome://sameplace/content/scriptlets/scriptlet_sample.js');
         scriptlets.start();
     } catch(e) {
         Cu.reportError(e);
@@ -380,7 +380,7 @@ function requestedInstallScriptlet(domElement) {
         return;
 
     var scriptletManager = window.openDialog(
-        'chrome://sameplace/content/scriptlet_manager.xul',
+        'chrome://sameplace/content/scriptlets/scriptlet_manager.xul',
         'sameplace-scriptlet-manager', '',
         scriptlets);
     

@@ -252,7 +252,7 @@ function reload(xulReload) {
 }
 
 function edit(fileName) {
-    window.openDialog('chrome://sameplace/content/scriptlet_editor.xul',
+    window.openDialog('chrome://sameplace/content/scriptlets/scriptlet_editor.xul',
                       'SamePlace:ScriptletEditor', '',
                       scriptlets.get(fileName));
 }

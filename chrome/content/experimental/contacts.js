@@ -501,7 +501,7 @@ function requestedChangeStatusMessage(event) {
 }
 
 function requestedManageScriptlets() {
-    window.openDialog('chrome://sameplace/content/scriptlet_manager.xul',
+    window.openDialog('chrome://sameplace/content/scriptlets/scriptlet_manager.xul',
                       'SamePlace:ScriptletManager', 'chrome', getScriptlets());
 }
 
