@@ -188,7 +188,7 @@ function selectedContact(account, address) {
     if(xulPanel)
         getPanels().selectedTab = xulPanel.tab;
     else
-        open(account, address, function(xulPanel) {
+        create(account, address, function(xulPanel) {
             getPanels().selectedTab = xulPanel.tab;
         });
 }
@@ -270,7 +270,7 @@ function simulateDrop(data, contentType) {
     xulPanel.contentDocument.getElementById('dnd-sink').dispatchEvent(dropEvent);
 }
 
-function open(account, address, nextAction) {
+function create(account, address, nextAction) {
     var xulConversations = getPanels();
     var xulTab = xulConversations.addTab();
     var xulPanel = xulConversations.getBrowserForTab(xulTab);
@@ -333,7 +333,7 @@ function sentMUCJoinPresence(presence) {
     var address = room.address;
 
     if(!get(account, address))
-        open(account, address, function(xulPanel) {
+        create(account, address, function(xulPanel) {
             getPanels().selectedTab = xulPanel.tab;
         });
 }
@@ -365,7 +365,7 @@ function seenDisplayableMessage(message) {
     var account = message.account;
     var address = getContact(message).address;
 
-    var xulPanel = get(account, address) || open(account, address);
+    var xulPanel = get(account, address) || create(account, address);
 
     if(!isCurrent(xulPanel))
         util.addClass(xulPanel.tab, 'unread');
