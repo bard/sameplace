@@ -113,15 +113,6 @@ function initNetworkReactions() {
     });
 
     channel.on({
-        event     : 'transport', // XXX legacy
-        direction : 'out',
-        state     : 'start'
-    }, function() {
-        if(window == getMostRecentWindow() && window.toolbar.visible)
-            loadAreas();
-    });
-
-    channel.on({
         event     : 'message',
         direction : 'in',
         stanza    : function(s) { return s.@type == 'chat' && s.body.text() != undefined; }
