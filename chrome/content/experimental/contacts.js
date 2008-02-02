@@ -1100,7 +1100,7 @@ function denySubscriptionRequest(account, address) {
 }
 
 function joinSupportRoom() {
-    window.openDialog('chrome://sameplace/content/join_room.xul',
+    window.openDialog('chrome://sameplace/content/dialogs/join_room.xul',
                       'sameplace-open-conversation', 'centerscreen',
                       null, 'users@places.sameplace.cc');
 }
