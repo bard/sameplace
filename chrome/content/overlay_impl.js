@@ -51,6 +51,7 @@ const ns_x4m_ext = 'http://hyperstruct.net/xmpp4moz/protocol/external';
 var channel;
 var scriptlets = load('chrome://sameplace/content/facades/scriptlets.js', {});
 var sendTo = load('chrome://sameplace/content/send_to.js', {});
+var util = load('chrome://sameplace/content/experimental/lib/util_impl.js', {});
 
 
 // INITIALIZATION
@@ -125,7 +126,9 @@ function initNetworkReactions() {
         direction : 'in',
         stanza    : function(s) { return s.@type == 'chat' && s.body.text() != undefined; }
     }, function(message) {
-        if(window == getMostRecentWindow() && pref.getBoolPref('getAttentionOnMessage'))
+        if(window == getMostRecentWindow() &&
+           pref.getBoolPref('getAttentionOnMessage') &&
+           hostsConversations())
             window.getAttention();
     });
 
@@ -708,6 +711,8 @@ if(experimentalMode()) {
     function seenDisplayableMessage(message) { // EXPERIMENTAL
         if(!_('button'))
             return;
+        if(!hostsConversations())
+            return;
         if(isCompact() || isCollapsed())
             _('button').setAttribute('pending-messages', 'true');
     }
@@ -758,6 +763,17 @@ if(experimentalMode()) {
     function isActive() { // EXPERIMENTAL
         return _('frame').contentDocument.location.href ==
             'chrome://sameplace/content/experimental/contacts.xul';
+    }
+
+    function hostsContacts() { // EXPERIMENTAL
+        return _('frame').contentDocument.location.href != 'about:blank';
+    }
+    
+    function hostsConversations() { // EXPERIMENTAL
+        var chatOverlayName = util.getChatOverlayName();
+        return (hostsContacts() &&
+                (chatOverlayName == 'sidebar' ||
+                 chatOverlayName == 'messagepane'));
     }
 } else {
     function initModeSpecific() {
