@@ -49,7 +49,6 @@
   <script type="application/x-javascript;version=1.7" src="../lib/utilities.js"/>
   <script type="application/x-javascript;version=1.7" src="../lib/utilities_gui.js"/>
   <script type="application/x-javascript;version=1.7" src="../lib/css_query.js"/>
-  <script type="application/x-javascript;version=1.7" src="../lib/process.js"/>
   <script type="application/x-javascript;version=1.7" src="scriptlet_manager.js"/>
 
   <keyset>

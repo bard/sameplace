@@ -157,81 +157,69 @@ function requestedInstallRemoteScriptlet(url) {
     if(isFromTrustedDomain(url) ||
        window.confirm(
            'Scriptlets are like extensions: malicious ones can harm your computer!\n' +
-               'Only proceed if you trust the source.'))
-        return installRemoteScriptlet(url);
+               'Only proceed if you trust the source.')) {
+        installRemoteScriptlet(url);
+        return true;
+    }
     else
         return false;
 }
 
 function installRemoteScriptlet(url) {
-    var process = {
-        start       : { ok: 'requestData' },
-        requestData : { ok: 'saveData', error: 'alertUser' },
-        saveData    : { ok: 'enableScriptlet', error: 'alertUser'},
-        enableScriptlet: { ok: 'refreshScriptlets', error: 'alertUser' }
-    };
-    // XXX use let() here
-    var parts = url.split('/');
-    var name = parts[parts.length-1];
+    function start() {
+        requestData(url,
+                    let(parts = url.split('/'))
+                        parts[parts.length-1]);
+    }
     
-    // XXX get rid of execute(process), use a bunch of functions
-    // instead.  less cool but more comprehensible.
-    var steps = {
-        requestData: function(next, url, name) {
-            var req = new XMLHttpRequest();
-            req.open('GET', url, true);
-            req.onreadystatechange = function(event) {
-                if(req.readyState == 4) {
-                    if(req.status == 200)
-                        next('ok', name, req.responseText);
-                    else
-                        next('error', 'Error loading scriptlet.');
-                }
-            };
-            req.send(null);
-        },
-
-        saveData: function(next, name, data) {
-            try {
-                var file = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
-                file.initWithFile(scriptlets.dir);
-                file.append(name);
-
-                var foStream = Cc['@mozilla.org/network/file-output-stream;1']
-                .createInstance(Ci.nsIFileOutputStream);
-                
-                foStream.init(file, 0x02 | 0x08 | 0x20, 0664, 0);
-                foStream.write(data, data.length);
-                foStream.close();
-                next('ok');
-            } catch(e) {
-                next('error', 'Error while saving file. (' + e + ')');
+    function requestData(url, name) {
+        var req = new XMLHttpRequest();
+        req.open('GET', url, true);
+        req.onreadystatechange = function(event) {
+            if(req.readyState == 4) {
+                if(req.status == 200)
+                    saveData(name, req.responseText);
+                else
+                    alertUser('Error loading scriptlet.');
             }
-        },
+        };
+        req.send(null);
+    }
 
-        alertUser: function(next, message) {
-            window.alert(message);
-        },
+    function saveData(name, data) {
+        try {
+            var file = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
+            file.initWithFile(scriptlets.dir);
+            file.append(name);
 
-        enableScriptlet: function(next) {
-            try {
-                scriptlets.get(name).enable();
-                next('ok');
-            } catch(e) {
-                next('error', 'Error while enabling scriptlet. (' + e + ')');
-            }
-        },
+            var foStream = Cc['@mozilla.org/network/file-output-stream;1']
+            .createInstance(Ci.nsIFileOutputStream);
 
-        refreshScriptlets: function(next) {
+            foStream.init(file, 0x02 | 0x08 | 0x20, 0664, 0);
+            foStream.write(data, data.length);
+            foStream.close();
+            enableScriptlet(name);
+        } catch(e) {
+            alertUser('Error while saving file. (' + e + ')');
+        }
+    }
+
+    function enableScriptlet(name) {
+        try {
+            scriptlets.get(name).enable();
             refreshScriptlets();
             $('#scriptlets')._.selectedItem =
                 $('#scriptlets .filename[value="' + name + '"] ^ .scriptlet')._;
+        } catch(e) {
+            alertUser('Error while enabling scriptlet. (' + e + ')');
         }
-    };
+    }
 
-    execute(process, steps, url, name);
-    
-    return true;
+    function alertUser(message) {
+        window.alert(message);
+    }
+
+    start();
 }
 
 function uninstall(xulUninstall) {
