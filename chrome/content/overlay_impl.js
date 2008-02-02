@@ -61,7 +61,6 @@ function init(event) {
     initNetworkReactions();
     initDisplayRules();
     initHotkeys();
-    initModeSpecific();
 
     // Only preload SamePlace if there's no other window around with
     // an active SamePlace instance, and if this isn't a popup.'
@@ -101,6 +100,14 @@ function finish() {
 function initNetworkReactions() {
     channel = XMPP.createChannel();
 
+    channel.on({
+        event     : 'connector',
+        state     : 'active'
+    }, function(connector) {
+        if(isCollapsed())
+            toCompact();
+    });    
+    
     channel.on({
         event     : 'connector',
     }, function(connector) {
@@ -621,440 +628,125 @@ function keyDescToKeyRepresentation(desc) {
     return repres.join('+');
 }
 
+function initDisplayRules() {
+    // What's a man to do to keep things decoupled...  What we're
+    // doing here is basically "pop sidebar open when conversation
+    // opens, but ONLY if conversation opened as a result of user
+    // clicking on a contact", and the way we find out that is by
+    // checking whether conversation opened within two seconds
+    // from user clicking on the contact.
+    
+    var whenDidUserClickOnContact = 0;
+    _('frame').addEventListener('contact/select', function(event) {
+        if(!isCompact()) return;
+        whenDidUserClickOnContact = Date.now();
+    }, false);
+    _('frame').addEventListener('conversation/open', function(event) {
+        if(!isCompact()) return;
+        if(Date.now() - whenDidUserClickOnContact < 2000)
+            toExpanded();
+    }, false);
 
-// EXPERIMENTAL/CLASSIC
-// ----------------------------------------------------------------------
+    _('frame').addEventListener('detach', function(event) {
+        var wndContacts = window.open(
+            'chrome://sameplace/content/experimental/contacts.xul',
+            'SamePlace:Contacts', 'chrome');
+        wndContacts.addEventListener('unload', function(event) {
+            if(event.target == wndContacts.document &&
+               event.target.location.href != 'about:blank') {
+                loadAreas();
+                toCompact();
+            }
+        }, false);
+        _('frame').contentDocument.location.href = 'about:blank';
+        toCollapsed();
+    }, false);
 
-function experimentalMode() {
-    try {
-        return pref.getBoolPref('experimental');
-    } catch(e) {
-        return false;
+    // In page context menu (if available), only display the "install
+    // scriptlet" option if user clicked on what could be a scriptlet.
+
+    var pageMenu = document.getElementById('contentAreaContextMenu');
+    if(pageMenu) {
+        pageMenu.addEventListener('popupshowing', function(event) {
+            _('install-scriptlet').hidden = !isJavaScriptLink(document.popupNode);
+        }, false);
     }
 }
 
-if(experimentalMode()) {
-    function initModeSpecific () { // EXPERIMENTAL
-        channel.on({
-            event     : 'connector',
-            state     : 'active'
-        }, function(connector) {
-            if(isCollapsed())
-                toCompact();
-        });
-    }
+function findContact() {
+    toExpanded();
+    _('frame').contentWindow.requestedToggleFilter();
+}
 
-    function initDisplayRules() { // EXPERIMENTAL
-        // What's a man to do to keep things decoupled...  What we're
-        // doing here is basically "pop sidebar open when conversation
-        // opens, but ONLY if conversation opened as a result of user
-        // clicking on a contact", and the way we find out that is by
-        // checking whether conversation opened within two seconds
-        // from user clicking on the contact.
-        
-        var whenDidUserClickOnContact = 0;
-        _('frame').addEventListener('contact/select', function(event) {
-            if(!isCompact()) return;
-            whenDidUserClickOnContact = Date.now();
-        }, false);
-        _('frame').addEventListener('conversation/open', function(event) {
-            if(!isCompact()) return;
-            if(Date.now() - whenDidUserClickOnContact < 2000)
-                toExpanded();
-        }, false);
+function loadAreas(force) {
+    if(force || _('frame').contentDocument.location.href != 'chrome://sameplace/content/experimental/contacts.xul')
+        _('frame').contentDocument.location.href = 'chrome://sameplace/content/experimental/contacts.xul';
+}
 
-        _('frame').addEventListener('detach', function(event) {
-            var wndContacts = window.open(
-                'chrome://sameplace/content/experimental/contacts.xul',
-                'SamePlace:Contacts', 'chrome');
-            wndContacts.addEventListener('unload', function(event) {
-                if(event.target == wndContacts.document &&
-                   event.target.location.href != 'about:blank') {
-                    loadAreas();
-                    toCompact();
-                }
-            }, false);
-            _('frame').contentDocument.location.href = 'about:blank';
-            toCollapsed();
-        }, false);
+function seenDisplayableMessage(message) {
+    if(!_('button'))
+        return;
+    if(!hostsConversations())
+        return;
+    if(isCompact() || isCollapsed())
+        _('button').setAttribute('pending-messages', 'true');
+}
 
-        // In page context menu (if available), only display the "install
-        // scriptlet" option if user clicked on what could be a scriptlet.
+function isCompact() {
+    return _('box').width == _('box').getAttribute('minwidth');
+}
 
-        var pageMenu = document.getElementById('contentAreaContextMenu');
-        if(pageMenu) {
-            pageMenu.addEventListener('popupshowing', function(event) {
-                _('install-scriptlet').hidden = !isJavaScriptLink(document.popupNode);
-            }, false);
-        }
-    }
+function isCollapsed() {
+    return _('box').collapsed;
+}
 
-    function findContact() { // EXPERIMENTAL
-        toExpanded();
-        _('frame').contentWindow.requestedToggleFilter();
-    }
+function toExpanded() {
+    loadAreas();
+    _('box').collapsed = false;
+    if(_('box').__restore_width)
+        _('box').width = _('box').__restore_width;
+    else
+        _('box').width = 300;
+    
+    if(_('button'))
+        _('button').removeAttribute('pending-messages');
+}
 
-    function loadAreas(force) { // EXPERIMENTAL
-        if(force || _('frame').contentDocument.location.href != 'chrome://sameplace/content/experimental/contacts.xul')
-            _('frame').contentDocument.location.href = 'chrome://sameplace/content/experimental/contacts.xul';
-    }
+function toCollapsed() {
+    _('box').collapsed = true;
+}
 
-    function seenDisplayableMessage(message) { // EXPERIMENTAL
-        if(!_('button'))
-            return;
-        if(!hostsConversations())
-            return;
-        if(isCompact() || isCollapsed())
-            _('button').setAttribute('pending-messages', 'true');
-    }
-
-    function isCompact() { // EXPERIMENTAL
-        return _('box').width == _('box').getAttribute('minwidth');
-    }
-
-    function isCollapsed() { // EXPERIMENTAL
-        return _('box').collapsed;
-    }
-
-    function toExpanded() { // EXPERIMENTAL
-        loadAreas();
+function toCompact() {
+    if(_('box').collapsed)
         _('box').collapsed = false;
-        if(_('box').__restore_width)
-            _('box').width = _('box').__restore_width;
-        else
-            _('box').width = 300;
-        
-        if(_('button'))
-            _('button').removeAttribute('pending-messages');
-    }
+    else
+        _('box').__restore_width = _('box').width;
+    _('box').width = _('box').getAttribute('minwidth');
+    if(_('button')) // XXX verify whether this actually makes sense.
+        _('button').removeAttribute('pending-messages');
+}
 
-    function toCollapsed() { // EXPERIMENTAL
-        _('box').collapsed = true;
-    }
+function toggle() {
+    if(isCollapsed())
+        toExpanded();
+    else if(isCompact())
+        toCollapsed();
+    else
+        toCompact();
+}
 
-    function toCompact() { // EXPERIMENTAL
-        if(_('box').collapsed)
-            _('box').collapsed = false;
-        else
-            _('box').__restore_width = _('box').width;
-        _('box').width = _('box').getAttribute('minwidth');
-        if(_('button'))
-            _('button').removeAttribute('pending-messages');
-    }
+function isActive() {
+    return _('frame').contentDocument.location.href ==
+        'chrome://sameplace/content/experimental/contacts.xul';
+}
 
-    function toggle() { // EXPERIMENTAL
-        if(isCollapsed())
-            toExpanded();
-        else if(isCompact())
-            toCollapsed();
-        else
-            toCompact();
-    }
-    
-    function isActive() { // EXPERIMENTAL
-        return _('frame').contentDocument.location.href ==
-            'chrome://sameplace/content/experimental/contacts.xul';
-    }
+function hostsContacts() {
+    return _('frame').contentDocument.location.href != 'about:blank';
+}
 
-    function hostsContacts() { // EXPERIMENTAL
-        return _('frame').contentDocument.location.href != 'about:blank';
-    }
-    
-    function hostsConversations() { // EXPERIMENTAL
-        var chatOverlayName = util.getChatOverlayName();
-        return (hostsContacts() &&
-                (chatOverlayName == 'sidebar' ||
-                 chatOverlayName == 'messagepane'));
-    }
-} else {
-    function initModeSpecific() {
-        
-    }
-
-    function isReceivingInput() {
-        return (viewFor('conversations').isReceivingInput() ||
-                (document.commandDispatcher.focusedElement &&
-                 document.commandDispatcher.focusedElement == viewFor('toolbox').document))
-    }
-
-    function areaFor(aspect) {
-        switch(aspect) {
-        case 'contacts':
-        case 'toolbox':
-            return _('area-' + pref.getCharPref('contactsArea'));
-            break;
-        case 'conversations':
-            switch(pref.getCharPref('conversationsArea')) {
-            case 'left':
-            case 'right':
-            case 'sidebar':
-                return _('area-' + pref.getCharPref('conversationsArea'));
-                break;
-            case 'appcontent':
-                // Returning 'area-left' as a proxy.  Conversations will
-                // be in the appcontent area, but conversation handling
-                // code will be hosted in a window loaded in the
-                // 'area-left'.
-                return _('area-left');
-                break;
-            default:
-                throw new Error('Invalid argument. (' + pref.getCharPref('conversationsArea') + ')');
-            }
-            break;
-        default:
-            throw new Error('Invalid argument. (' + aspect + ')');
-        }
-    }
-
-    function frameFor(aspect) {
-        if(['toolbox', 'contacts', 'conversations'].indexOf(aspect) == -1)
-            throw new Error('Invalid argument. (' + aspect + ')');
-
-        var xulArea = areaFor(aspect);
-        if(xulArea.id == 'appcontent')
-            return getBrowser().contentWindow;
-        else
-            return xulArea.getElementsByAttribute(
-                'class', 'sameplace-' + aspect)[0];
-    }
-
-    function viewFor(aspect) {
-        return frameFor(aspect).contentWindow;
-    }
-    
-    function initDisplayRules() { // CLASSIC
-        // Adapt toolbox frame to toolbox content.  This is done once here
-        // and once in toolbox.xul onload handler.  Doing it only here
-        // doesn't work for default theme; doing it only there doesn't
-        // work for iFox smooth theme (assuming the theme has anything to
-        // do with this).  Go figure.
-
-        frameFor('toolbox').addEventListener(
-            'collapse', function(event) {
-                viewFor('toolbox').sizeToContent();
-    //             if(event.currentTarget == event.target &&
-    //                event.attrName == 'collapsed')
-    //                 setTimeout(function(){ viewFor('toolbox').sizeToContent(); }, 0)
-            }, false);
-
-        // When contact is selected, tell so to the conversation view, so
-        // it may open a conversation.
-
-        frameFor('contacts').addEventListener(
-            'contact/select', function(event) {
-                viewFor('conversations').startInteraction(
-                    event.target.getAttribute('account'),
-                    event.target.getAttribute('address'));
-            }, false);
-
-        // In some cases, conversations are not located inside the frame
-        // which hosts conversation handling code.  This is the case, for
-        // example, with conversations in appcontent -- they are in the
-        // main window, but the code is in a frame, so listening for a
-        // conversation event on the frame is useless.  Since the contact
-        // list is meant to reflect conversation state regardless of where
-        // in the browser/mail window conversations are located, we work
-        // around that by just listening on conversation events at the
-        // top window level.
-
-        // Notify contact list when a conversation is focused.  If
-        // conversations are hosted in a frame, only do so if the frame
-        // itself is visible.  XXX needs better form.
-
-
-        if(pref.getCharPref('conversationsArea') != 'appcontent')
-            top.addEventListener(
-                'conversation/focus', function(event) {
-                    if(!frameFor('conversations').collapsed)
-                        viewFor('contacts').nowTalkingWith(
-                            event.originalTarget.getAttribute('account'),
-                            event.originalTarget.getAttribute('address'));
-                }, false);
-        else
-            top.addEventListener(
-                'conversation/focus', function(event) {
-                    viewFor('contacts').nowTalkingWith(
-                        event.originalTarget.getAttribute('account'),
-                        event.originalTarget.getAttribute('address'));    
-                }, false);
-
-        // Notify contact list when a new conversation is opened.
-
-        top.addEventListener(
-            'conversation/open', function(event) {
-                viewFor('contacts').startedConversationWith(
-                    event.originalTarget.getAttribute('account'),
-                    event.originalTarget.getAttribute('address'));
-            }, false);
-
-        // Notify contact list when a conversation is closed
-
-        top.addEventListener(
-            'conversation/close', function(event) {
-                viewFor('contacts').stoppedConversationWith(
-                    event.originalTarget.getAttribute('account'),
-                    event.originalTarget.getAttribute('address'));
-            }, false);
-
-
-        // We only setup rules for collapse of conversation area if the
-        // conversation area truly contains conversations.  This is not
-        // the case when conversationArea is appcontent--then the
-        // conversation area does contain conversation code but it handles
-        // conversations "off-site", in the appcontent area.
-        //
-        // It should probably be inferred from something closer than the
-        // preference value.
-
-        if(pref.getCharPref('conversationsArea') != 'appcontent') {
-
-            // When user selects a contact, display conversation view (NOT
-            // containing area -- another event handler will take care of
-            // that).  We're not using conversation/focus as a trigger
-            // because that also happens as a consequence of incoming
-            // messages, not only of user intention.
-
-            frameFor('contacts').addEventListener(
-                'contact/select', function(event) {
-                    uncollapse(frameFor('conversations'));
-                    //viewFor('conversations').focused();
-                }, false);
-
-            // When last conversation closes, hide conversation view (NOT
-            // containing area).
-
-            frameFor('conversations').addEventListener(
-                'conversation/close', function(event) {
-                    if(viewFor('conversations').conversations.count == 1)
-                        collapse(frameFor('conversations'));
-                }, false);
-        }
-
-        // When conversations are collapsed:
-        //
-        // - hide corresponding splitter
-        //
-        // - if conversations are collapsed, user is no longer keeping an
-        //   eye on "current" conversation, so inform the contacts subsystem
-        //   about this.
-        //
-        // - if conversation frame was receiving input, take input away
-        //   from it, back to the content area
-
-        frameFor('conversations').addEventListener('collapse', function(event) {
-            if(event.target != frameFor('conversations'))
-                return;
-
-            var xulFrame = event.target;
-
-            // If frame is collapsed, hide corresponding splitter
-            xulFrame.previousSibling.hidden = xulFrame.collapsed;
-
-            if(xulFrame.collapsed) {
-                viewFor('contacts').nowTalkingWith(null, null);
-
-                if(viewFor('conversations').isReceivingInput()) {
-                    var contentArea = (document.getElementById('content') ||
-                                       document.getElementById('messagepane'));
-                    if(contentArea)
-                        contentArea.focus();
-                    // XXX need a fallback in case no content area is recognized
-                }
-            } else {
-                viewFor('conversations').shown();
-            }
-        }, false);
-
-        // Conversations are no longer visible even when they're *area* is
-        // collapsed, so take focus away in this case, too.
-
-        areaFor('conversations').addEventListener('collapse', function(event) {
-            if(event.target != areaFor('conversations'))
-                // Event came from descendant
-                return;
-
-            var xulConversations = event.target;
-
-            if(xulConversations.collapsed && viewFor('conversations').isReceivingInput()) {
-                var contentArea = (document.getElementById('content') ||
-                                   document.getElementById('messagepane'));
-                if(contentArea)
-                    contentArea.focus();
-                // XXX need a fallback in case no content area is recognized
-            }
-        }, false);
-
-        // Apply rules to areas
-
-        var xulAreas = document.getElementsByAttribute('class', 'sameplace-area');
-
-        for(var i=0; i<xulAreas.length; i++)
-            xulAreas[i].addEventListener('collapse', function(event) {
-                if(event.target.getAttribute('class') == 'sameplace-area') {
-                    // When area is collapsed, hide corresponding splitter.
-                    var xulArea =
-                        event.target;
-                    var xulSplitter = document.getElementById(
-                        xulArea.id.replace(/^sameplace-area/, 'sameplace-splitter'));
-                    xulSplitter.hidden = (event.target.collapsed);
-                } else if(event.target.nodeName == 'iframe') {
-                    // When view is collapsed, possibly hide containing area too.
-                    var xulArea =
-                        event.currentTarget;
-                    var xulContactsView =
-                        xulArea.getElementsByAttribute('class', 'sameplace-contacts')[0];
-                    var xulConversationsView =
-                        xulArea.getElementsByAttribute('class', 'sameplace-conversations')[0];
-                    if(xulContactsView.collapsed && xulConversationsView.collapsed)
-                        collapse(xulArea);
-                    else
-                        uncollapse(xulArea);
-                }
-            }, false);
-
-        // In page context menu (if available), only display the "install
-        // scriptlet" option if user clicked on what could be a scriptlet.
-
-        var pageMenu = document.getElementById('contentAreaContextMenu');
-        if(pageMenu) {
-            pageMenu.addEventListener('popupshowing', function(event) {
-                _('install-scriptlet').hidden = !isJavaScriptLink(document.popupNode);
-            }, false);
-        }
-    }
-    
-    function loadAreas(force) { // CLASSIC
-        // XXX this does not handle "appcontent" setting as a conversation area
-        if(force || viewFor('conversations').location.href != 'chrome://sameplace/content/sameplace.xul')
-            viewFor('conversations').location.href = 'chrome://sameplace/content/sameplace.xul';
-        if(force || viewFor('contacts').location.href != 'chrome://sameplace/content/contacts.xul') 
-            viewFor('contacts').location.href = 'chrome://sameplace/content/contacts.xul';
-        if(force || viewFor('toolbox').location.href != 'chrome://sameplace/content/toolbox.xul') 
-            viewFor('toolbox').location.href = 'chrome://sameplace/content/toolbox.xul';
-    }
-
-    function seenDisplayableMessage(message) { // CLASSIC
-        if(areaFor('contacts').collapsed && _('button'))
-            _('button').setAttribute('pending-messages', 'true');
-    }
-
-    function toggle(event) { // CLASSIC
-        if(areaFor('contacts').collapsed) {
-            if(_('button'))
-                _('button').removeAttribute('pending-messages');
-            uncollapse(areaFor('contacts'));
-        }
-        else 
-            collapse(areaFor('contacts'));
-
-        if(!areaFor('contacts').collapsed) {
-            uncollapse(frameFor('contacts'));
-            uncollapse(frameFor('toolbox'));
-        }
-    }
-
-    function isActive() { // EXPERIMENTAL
-        return viewFor('contacts').document.location.href ==
-            'chrome://sameplace/content/contacts.xul';
-    }
+function hostsConversations() {
+    var chatOverlayName = util.getChatOverlayName();
+    return (hostsContacts() &&
+            (chatOverlayName == 'sidebar' ||
+             chatOverlayName == 'messagepane'));
 }
