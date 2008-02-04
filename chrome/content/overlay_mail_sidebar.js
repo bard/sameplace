@@ -29,8 +29,6 @@
  *  
  */
 
-if(sameplace.experimentalMode()) {
-
 // Hot-patch Thunderbird routines, hopefully in a robust way, as
 // well as SamePlace toggle() function.  Do so in a smaller scope
 // so we don't pollute the global namespace.
@@ -104,5 +102,4 @@ let(__CycleFolderView = CycleFolderView,
     }
 }
 
-}
 

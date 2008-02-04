@@ -29,7 +29,6 @@
  *  
  */
 
-if(sameplace.experimentalMode()) {
 window.addEventListener('load', function(event) {
     var xulPanels = document.getElementById('sameplace-conversations');
     var xulTabs = document.getElementById('sameplace-conversation-tabs');
@@ -102,65 +101,6 @@ window.addEventListener('load', function(event) {
             this.__removeTab(tab);
     };
 }, false);
-} else {
-window.addEventListener('load', function(event) {
-    var deck = document.getElementById('sameplace-conversations');
-    var tabs = document.getElementById('sameplace-conversation-tabs');
 
-    tabbedArea(deck, tabs);
-
-    tabs.addEventListener('select', function(event) {
-        if(tabs.selectedIndex == 0 && !deck.collapsed) {
-            var savedHeight = deck.height;
-            deck.collapsed = true;
-            document.getElementById('messagepanebox').collapsed = false;
-            document.getElementById('messagepanebox').height = savedHeight;
-        }
-        else if(tabs.selectedIndex > 0 && deck.collapsed){
-            var savedHeight = document.getElementById('messagepanebox').boxObject.height;
-            deck.collapsed = false;
-            document.getElementById('messagepanebox').collapsed = true;
-            deck.height = savedHeight;
-        }
-
-        if(tabs.selectedIndex == 0)
-            tabs.setAttribute('mode', 'fake');
-        else
-            tabs.removeAttribute('mode');
-    }, false);
-
-    document.getElementById('messagepane').addEventListener('load', function(event) {
-        tabs.selectedIndex = 0;
-    }, true);
-
-    tabs.addEventListener('DOMNodeInserted', function(event) {
-        if(event.relatedNode == tabs && event.target.tagName == 'tab')
-            event.target.setAttribute('class', 'im');
-    }, false);
-
-    var _getBrowserForTab = deck.getBrowserForTab;
-    deck.getBrowserForTab = function(tab) {
-        if(tab == tabs.firstChild)
-            return this.firstChild;
-        else
-            return _getBrowserForTab.apply(this, arguments);
-    };
-
-    var _removeTab = deck.removeTab;
-    deck.removeTab = function(tab) {
-        // First tab is really just a placeholder for separate message
-        // pane.
-        if(tab == tabs.firstChild)
-            return;
-        else
-            return _removeTab.apply(this, arguments);
-    };
-
-    tabs.addEventListener('DOMNodeRemoved', function(event) {
-        if(event.relatedNode == tabs && event.target.tagName == 'tab')
-            tabs.collapsed = (tabs.childNodes.length == 2);
-    }, false);
-}, false);
-}
 
 
