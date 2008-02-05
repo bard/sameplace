@@ -179,7 +179,7 @@ function selectedService(xulService) {
             $('[pageid="transport"]').next = 'finish';
         } else if(window.confirm(requestedService.toUpperCase() +
                                  ' connectivity is provided by SamePlace.cc.\n\n'+
-                                 'Create a @sameplace.cc account now?')) {
+                                 'Configure a @sameplace.cc account now?')) {
             $('[pageid="selection"]').next = 'jabber';
             $('[pageid="jabber"]').setAttribute('service', 'sameplace');
             $('[pageid="jabber"]').next = 'transport';
@@ -581,7 +581,7 @@ function waitForSubscription(transportAddress, continuation) {
             done = true;
             continuation();
         }
-    }, 5000);
+    }, 7500);
 
     var reaction = channel.on({
         event     : 'presence',

@@ -182,8 +182,9 @@
 
       <vbox class="content" flex="0">
         <description class="step">
-          Step 1: Create an account on sameplace.cc.  This lets you
-          reach the gateway to the external network.
+          Step 1: Configure an account (existing or new) on
+          sameplace.cc.  This lets you reach the gateway to the
+          external network.
         </description>
         
         <grid>
