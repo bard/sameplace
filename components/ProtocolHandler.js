@@ -46,7 +46,7 @@ function onNewChannel(URI) {
         array.AppendElement(null);
         array.AppendElement(xpcomize(jid));
 
-        ww.openWindow(null, 'chrome://sameplace/content/' +
+        ww.openWindow(null, 'chrome://sameplace/content/dialogs/' +
                       (m[2] == '?join' ? 'join_room.xul' : 'open_conversation.xul'),
                       null, '', array);
     }    
