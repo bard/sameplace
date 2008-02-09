@@ -40,10 +40,6 @@ const pref = Cc['@mozilla.org/preferences-service;1']
 .getService(Ci.nsIPrefService)
 .getBranch('extensions.sameplace.');
 
-const ns_auth = 'jabber:iq:auth';
-const ns_http_auth  = 'http://jabber.org/protocol/http-auth';
-const ns_x4m_ext = 'http://hyperstruct.net/xmpp4moz/protocol/external';
-
 
 // GLOBAL STATE
 // ----------------------------------------------------------------------
@@ -99,14 +95,6 @@ function finish() {
 
 function initNetworkReactions() {
     channel = XMPP.createChannel();
-
-    channel.on({
-        event     : 'connector',
-        state     : 'active'
-    }, function(connector) {
-        if(isCollapsed())
-            toCompact();
-    });    
     
     channel.on({
         event     : 'connector',
@@ -128,42 +116,6 @@ function initNetworkReactions() {
            pref.getBoolPref('getAttentionOnMessage') &&
            hostsConversations())
             window.getAttention();
-    });
-
-    channel.on({
-        event     : 'message',
-        stanza    : function(s) {
-            return (s.ns_x4m_ext::share != undefined &&
-                    s.@type != 'error');
-        }
-    }, function(message) {
-        if(window == getMostRecentWindow())
-            seenSharedAppNegotiation(message);
-    });
-
-    channel.on({
-        event     : 'message',
-        direction : 'in',
-        stanza    : function(s) {
-            return s.ns_http_auth::confirm != undefined;
-        }
-    }, function(message) {
-        if(window == getMostRecentWindow())
-            receivedAuthConfirmRequest(message);
-    });
-
-    channel.on({
-        event     : 'message',
-        direction : 'in',
-        stanza    : function(s) {
-            // Allow non-error messages with readable body [1] or
-            // error messages in general [2] but not auth requests [3]
-            return (((s.@type != 'error' && s.body.text() != undefined) || // [1]
-                     (s.@type == 'error')) && // [2]
-                    (s.ns_http_auth::confirm == undefined)) // [3]
-            }
-    }, function(message) {
-        seenDisplayableMessage(message);
     });
 }
 
@@ -197,169 +149,6 @@ function initScriptlets() {
         scriptlets.start();
     } catch(e) {
         Cu.reportError(e);
-    }
-}
-
-
-// NETWORK REACTIONS
-// ----------------------------------------------------------------------
-
-function seenSharedAppNegotiation(message) {
-    if(!('addTab' in getBrowser()))
-        return;
-
-    var url = message.stanza.ns_x4m_ext::share.@url;
-    var xulNotify = getBrowser().getNotificationBox();
-    if(!xulNotify)
-        return;
-
-    function interact(account, address, url, panel, nextAction) { // XXX duplicated
-        if(account)
-            dump('**** SamePlace **** Deprecation **** ' + getStackTrace() + '\n');
-        if(address)
-            dump('**** SamePlace **** Deprecation **** ' + getStackTrace() + '\n');
-
-        // XXX these are set here and re-set in XMPP.connectPanel().
-        // find out why it wasn't enough to set them in
-        // XMPP.connectPanel() only.
-        var account = panel.getAttribute('account');
-        var address = panel.getAttribute('address');
-
-        function activate() {
-            XMPP.connectPanel(panel, account, address, /^javascript:/.test(url));
-        }
-
-        nextAction = nextAction || function() {};
-
-        if(!url) {
-            activate();
-            nextAction();
-        }
-        else if(url.match(/^javascript:/)) {
-            panel.loadURI(url);
-            activate();
-            nextAction();
-        }
-        else {
-            afterLoad(panel, function(panel) {
-                activate();
-                nextAction();
-            });
-            panel.setAttribute('src', url);
-        }
-    }
-
-    function afterLoad(panel, action) { // XXX duplicated
-        // catch the load event of panel's document in capturing
-        // phase. then catch the load event of the contained window in
-        // bubbling phase (we can't do this before there's a window,
-        // obviously.)
-
-        panel.addEventListener('load', function(event) {
-            if(event.target != panel.contentDocument)
-                return;
-            panel.removeEventListener('load', arguments.callee, true);
-            
-            // The following appears not to work if reference to
-            // panel is not the one carried by event object.
-            panel = event.currentTarget;
-            panel.contentWindow.addEventListener('load', function(event) {
-                action(panel);
-            }, false);
-        }, true);
-    }
-
-    function onAccept() {
-        XMPP.send(message.account,
-                  <message to={message.stanza.@from}>
-                  <share xmlns={ns_x4m_ext} response='accept' url={url}/>
-                  </message>);
-
-        if(!(url.match(/^javascript:/) || getBrowser().currentURI.spec == 'about:blank'))
-            getBrowser().selectedTab = getBrowser().addTab();
-        
-        var panel = getBrowser().selectedBrowser;
-        panel.setAttribute('account', message.account);
-        panel.setAttribute('address', XMPP.JID(message.stanza.@from).address);
-        interact(null, null, url == 'current' ? null : url, panel);
-    }
-
-    function onDecline() {
-        XMPP.send(message.account,
-                  <message to={message.stanza.@from}>
-                  <share xmlns={ns_x4m_ext} response='decline' url={url}/>
-                  </message>);
-    }
-
-    if(message.direction == 'in') {
-        switch(message.stanza.ns_x4m_ext::share.@response.toString()) {
-        case '':
-            // it's a request
-            xulNotify.appendNotification(
-                message.stanza.@from + ' invites you to interact on ' +
-                    url + '. Do you accept?', // XXX localize
-                    'sameplace-shareapp-request',
-                null, xulNotify.PRIORITY_INFO_HIGH,
-                [{label: 'Accept', accessKey: 'A', callback: onAccept},
-                 {label: 'Decline', accessKey: 'D', callback: onDecline}]);
-            break;
-        case 'accept':
-            xulNotify.appendNotification(
-                message.stanza.@from + ' accepted to interact on ' + url,
-                    'sameplace-shareapp-request',
-                null, xulNotify.PRIORITY_INFO_HIGH);
-            break;
-        case 'decline':
-            xulNotify.appendNotification(
-                message.stanza.@from + ' declined to interact on ' + url,
-                    'sameplace-shareapp-request',
-                null, xulNotify.PRIORITY_INFO_HIGH);
-            break;
-        }
-    }
-}
-
-function receivedAuthConfirmRequest(message) {
-    var request = message.stanza;
-
-    var response =
-        <message to={request.@from}>
-        <confirm xmlns={ns_http_auth}
-    method={request.ns_http_auth::confirm.@method}
-    url={request.ns_http_auth::confirm.@url}
-    id={request.ns_http_auth::confirm.@id}/>
-        </message>;
-
-    function onDeny() {
-        response.@type = 'error';
-        response.error =
-            <error code="401" type="auth">
-            <not-authorized xmlns="urn:ietf:params:xml:xmpp-stanzas"/>
-            </error>;
-        XMPP.send(message.account, response);
-    }
-
-    function onAuthorize() {
-        XMPP.send(message.account, response)
-    }
-
-    var userMessage = 'Someone (maybe you) tried to authenticate on ' + // XXX localize
-        request.ns_http_auth::confirm.@url + ' \n' +
-        'as ' + request.@to + ', with transaction ID "' +
-        request.ns_http_auth::confirm.@id + '". Authorize?'
-
-    var xulNotify = getBrowser().getNotificationBox();
-    if(xulNotify) {
-        xulNotify.appendNotification(
-            userMessage, 'sameplace-auth-confirm',
-            null, xulNotify.PRIORITY_INFO_HIGH,
-            [{label: 'Confirm', accessKey: 'C', callback: onAuthorize},
-             {label: 'Deny', accessKey: 'D', callback: onDeny}]);
-    } else {
-        if(window.confirm(userMessage))
-            onAuthorize();
-        else
-            onDeny();
     }
 }
 
@@ -487,10 +276,10 @@ function matchKeyEvent(e1, e2) {
             e1.keyCode  == KeyEvent[e2.keyCodeName]);
 }
 
-function getMostRecentWindow() {
+function getMostRecentWindow(type) {
     return Cc['@mozilla.org/appshell/window-mediator;1']
     .getService(Ci.nsIWindowMediator)
-    .getMostRecentWindow('');
+    .getMostRecentWindow(type);
 }
 
 function isActiveSomewhere() {
@@ -535,6 +324,8 @@ function keyDescToKeyRepresentation(desc) {
 }
 
 function initDisplayRules() {
+    // XXX probably to move to overlay_browser
+
     // What's a man to do to keep things decoupled...  What we're
     // doing here is basically "pop sidebar open when conversation
     // opens, but ONLY if conversation opened as a result of user
@@ -567,21 +358,11 @@ function initDisplayRules() {
         _('frame').contentDocument.location.href = 'about:blank';
         toCollapsed();
     }, false);
-
-    // In page context menu (if available), only display the "install
-    // scriptlet" option if user clicked on what could be a scriptlet.
-
-    var pageMenu = document.getElementById('contentAreaContextMenu');
-    if(pageMenu) {
-        pageMenu.addEventListener('popupshowing', function(event) {
-            _('install-scriptlet').hidden = !isJavaScriptLink(document.popupNode);
-        }, false);
-    }
 }
 
 function findContact() {
-    toExpanded();
-    _('frame').contentWindow.requestedToggleFilter();
+    displayContacts();
+    getContacts().requestedToggleFilter();
 }
 
 function loadAreas(force) {
@@ -589,70 +370,8 @@ function loadAreas(force) {
         _('frame').contentDocument.location.href = 'chrome://sameplace/content/experimental/contacts.xul';
 }
 
-function seenDisplayableMessage(message) {
-    if(!_('button'))
-        return;
-    if(!hostsConversations())
-        return;
-    if(isCompact() || isCollapsed())
-        _('button').setAttribute('pending-messages', 'true');
-}
-
-function isCompact() {
-    return _('box').width == _('box').getAttribute('minwidth');
-}
-
-function isCollapsed() {
-    return _('box').collapsed;
-}
-
-function toExpanded() {
-    loadAreas();
-    _('box').collapsed = false;
-    if(_('box').__restore_width)
-        _('box').width = _('box').__restore_width;
-    else
-        _('box').width = 300;
-    
-    if(_('button'))
-        _('button').removeAttribute('pending-messages');
-}
-
-function toCollapsed() {
-    _('box').collapsed = true;
-}
-
-function toCompact() {
-    if(_('box').collapsed)
-        _('box').collapsed = false;
-    else
-        _('box').__restore_width = _('box').width;
-    _('box').width = _('box').getAttribute('minwidth');
-    if(_('button')) // XXX verify whether this actually makes sense.
-        _('button').removeAttribute('pending-messages');
-}
-
-function toggle() {
-    if(isCollapsed())
-        toExpanded();
-    else if(isCompact())
-        toCollapsed();
-    else
-        toCompact();
-}
-
 function isActive() {
     return _('frame').contentDocument.location.href ==
         'chrome://sameplace/content/experimental/contacts.xul';
 }
 
-function hostsContacts() {
-    return _('frame').contentDocument.location.href != 'about:blank';
-}
-
-function hostsConversations() {
-    var chatOverlayName = util.getChatOverlayName();
-    return (hostsContacts() &&
-            (chatOverlayName == 'sidebar' ||
-             chatOverlayName == 'messagepane'));
-}
