@@ -57,9 +57,11 @@ window.addEventListener('load', function(event) {
     }
 
     function switchToMail() {
-        xulMsgBox.height = xulPanels.height;
+        if(getBrowser().contentDocument.location.href != 'about:blank') {
+            xulMsgBox.height = xulPanels.height;
+            xulMsgBox.collapsed = false;
+        }
         xulPanels.collapsed = true;
-        xulMsgBox.collapsed = false;
     }
 
     xulTabs.addEventListener('select', function(event) {
