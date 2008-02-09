@@ -68,23 +68,23 @@ function init(event) {
     if(!isActiveSomewhere() && !isPopupWindow())
         loadAreas();
 
-    upgradeCheck(
+    util.upgradeCheck(
         'sameplace@hyperstruct.net',
         'extensions.sameplace.version', {
             onFirstInstall: function() {
                 openURL('http://sameplace.cc/get-started');
-                addToolbarButton('sameplace-button');
+                util.addToolbarButton('sameplace-button');
                 setTimeout(function() {
                     runWizard();
                     checkNoScript();
                 }, 2000);
             },
             onUpgrade: function() {
-                removeToolbarButton('xmpp-button');
-                addToolbarButton('sameplace-button');
+                util.removeToolbarButton('xmpp-button');
+                util.addToolbarButton('sameplace-button');
                 if(pref.getCharPref('branch') != 'devel')
                     openURL('http://sameplace.cc/changelog/' +
-                            getExtensionVersion('sameplace@hyperstruct.net')
+                            util.getExtensionVersion('sameplace@hyperstruct.net')
                             .split('.').slice(0,-1).join('.'));
             }
         }, 1);
@@ -412,42 +412,6 @@ function updateStatusIndicator() {
                              'available' : 'unavailable');
 }
 
-function modifyToolbarButtons(modifier) {
-    var toolbar =
-        document.getElementById('nav-bar') ||
-        document.getElementById('mail-bar') ||
-        document.getElementById('mail-bar2');
-
-    if(!toolbar)
-        return;
-
-    if(toolbar.getAttribute('customizable') == 'true') {
-        var newSet = modifier(toolbar.currentSet);
-        if(!newSet)
-            return;
-
-        toolbar.currentSet = newSet;
-        toolbar.setAttribute('currentset', toolbar.currentSet);
-        toolbar.ownerDocument.persist(toolbar.id, 'currentset');
-        try { BrowserToolboxCustomizeDone(true); } catch (e) {}
-    }
-}
-
-function removeToolbarButton(buttonId) {
-    modifyToolbarButtons(function(set) {
-        if(set.indexOf(buttonId) != -1)
-            return set.replace(buttonId, '');
-    });
-}
-
-function addToolbarButton(buttonId) {
-    modifyToolbarButtons(function(set) {
-        if(set.indexOf(buttonId) == -1)
-            return set.replace(/(urlbar-container|separator)/,
-                               buttonId + ',$1');
-    });
-}
-
 function checkNoScript() {
     var noScriptUpdateItem = Cc['@mozilla.org/extensions/manager;1']
         .getService(Ci.nsIExtensionManager)
@@ -566,42 +530,6 @@ function isActiveSomewhere() {
 
 function isPopupWindow() {
     return !window.toolbar.visible;
-}
-
-function getExtensionVersion(id) {
-    return Cc['@mozilla.org/extensions/manager;1']
-        .getService(Ci.nsIExtensionManager)
-        .getItemForID(id).version;
-}
-
-function upgradeCheck(id, versionPref, actions, ignoreTrailingParts) {
-    const pref = Cc['@mozilla.org/preferences-service;1']
-    .getService(Ci.nsIPrefService);
-
-    function compareVersions(a, b) {
-        return Cc['@mozilla.org/xpcom/version-comparator;1']
-        .getService(Ci.nsIVersionComparator)
-        .compare(a, b);
-    }
-
-    var curVersion = getExtensionVersion(id);
-    if(curVersion) {
-        var prevVersion = pref.getCharPref(versionPref);
-        if(prevVersion == '') {
-            if(typeof(actions.onFirstInstall) == 'function')
-                actions.onFirstInstall();
-        } else {
-            if(compareVersions(
-                (ignoreTrailingParts ?
-                 curVersion.split('.').slice(0, -ignoreTrailingParts).join('.') :
-                 curVersion),
-                prevVersion) > 0)
-                if(typeof(actions.onUpgrade) == 'function')
-                    actions.onUpgrade();
-        }
-
-        pref.setCharPref(versionPref, curVersion);
-    }
 }
 
 // Duplicated from sameplace_preferences_impl.js

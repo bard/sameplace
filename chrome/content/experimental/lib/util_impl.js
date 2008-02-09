@@ -55,6 +55,42 @@ function chromeToFileUrl(url) {
         .newURI(url, null, null)).spec;
 }
 
+function getExtensionVersion(id) {
+    return Cc['@mozilla.org/extensions/manager;1']
+        .getService(Ci.nsIExtensionManager)
+        .getItemForID(id).version;
+}
+
+function upgradeCheck(id, versionPref, actions, ignoreTrailingParts) {
+    const pref = Cc['@mozilla.org/preferences-service;1']
+    .getService(Ci.nsIPrefService);
+
+    function compareVersions(a, b) {
+        return Cc['@mozilla.org/xpcom/version-comparator;1']
+        .getService(Ci.nsIVersionComparator)
+        .compare(a, b);
+    }
+
+    var curVersion = getExtensionVersion(id);
+    if(curVersion) {
+        var prevVersion = pref.getCharPref(versionPref);
+        if(prevVersion == '') {
+            if(typeof(actions.onFirstInstall) == 'function')
+                actions.onFirstInstall();
+        } else {
+            if(compareVersions(
+                (ignoreTrailingParts ?
+                 curVersion.split('.').slice(0, -ignoreTrailingParts).join('.') :
+                 curVersion),
+                prevVersion) > 0)
+                if(typeof(actions.onUpgrade) == 'function')
+                    actions.onUpgrade();
+        }
+
+        pref.setCharPref(versionPref, curVersion);
+    }
+}
+
 function hostAppIsMail() {
     return (Components.classes['@mozilla.org/xre/app-info;1']
             .getService(Components.interfaces.nsIXULAppInfo)
@@ -205,6 +241,42 @@ function afterLoad(xulPanel, action) {
         }, true);
 }
 
+function modifyToolbarButtons(modifier) {
+    var toolbar =
+        document.getElementById('nav-bar') ||
+        document.getElementById('mail-bar') ||
+        document.getElementById('mail-bar2');
+
+    if(!toolbar)
+        return;
+
+    if(toolbar.getAttribute('customizable') == 'true') {
+        var newSet = modifier(toolbar.currentSet);
+        if(!newSet)
+            return;
+
+        toolbar.currentSet = newSet;
+        toolbar.setAttribute('currentset', toolbar.currentSet);
+        toolbar.ownerDocument.persist(toolbar.id, 'currentset');
+        try { BrowserToolboxCustomizeDone(true); } catch (e) {}
+    }
+}
+
+function removeToolbarButton(buttonId) {
+    modifyToolbarButtons(function(set) {
+        if(set.indexOf(buttonId) != -1)
+            return set.replace(buttonId, '');
+    });
+}
+
+function addToolbarButton(buttonId) {
+    modifyToolbarButtons(function(set) {
+        if(set.indexOf(buttonId) == -1)
+            return set.replace(/(urlbar-container|separator)/,
+                               buttonId + ',$1');
+    });
+}
+
 
 // UTILITIES - XMPP
 // ----------------------------------------------------------------------
@@ -217,3 +289,20 @@ function getJoinPresence(account, address) {
                             .to(address)
                             .child(ns_muc, 'x'));
 }
+
+
+// UTILITIES - DEVELOPMENT
+// ----------------------------------------------------------------------
+
+function getStackTrace() {
+    var frame = Components.stack.caller;
+    var str = "<top>";
+
+    while (frame) {
+        str += '\n' + frame;
+        frame = frame.caller;
+    }
+
+    return str;
+}
+
