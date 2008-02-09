@@ -427,28 +427,6 @@ function checkNoScript() {
 // GUI UTILITIES
 // ----------------------------------------------------------------------
 
-function fireSimpleEvent(element, eventName) {
-    var event = document.createEvent('Event');
-    event.initEvent(eventName, true, false);
-    element.dispatchEvent(event);
-}
-
-function collapse(element) {
-    if(element.collapsed)
-        return;
-
-    element.collapsed = true;
-    fireSimpleEvent(element, 'collapse');
-}
-
-function uncollapse(element) {
-    if(!element.collapsed)
-        return;
-
-    element.collapsed = false;
-    fireSimpleEvent(element, 'collapse');
-}
-
 function _(id) {
     return document.getElementById('sameplace-' + id);
 }
