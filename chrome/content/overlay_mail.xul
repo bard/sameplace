@@ -44,7 +44,6 @@
   <script type="application/x-javascript;version=1.7" src="chrome://xmpp4moz/content/xmpp.js"/>
   <script type="application/x-javascript;version=1.7" src="overlay.js"/>
   <script type="application/x-javascript;version=1.7" src="lib/tabbed_area.js"/>
-  <script type="application/x-javascript;version=1.7" src="overlay_mail.js"/>
   <script type="application/x-javascript;version=1.7" src="overlay_mail_message_headers.js"/>
   <script type="application/x-javascript;version=1.7" src="overlay_mail_chat_area.js"/>
   <script type="application/x-javascript;version=1.7" src="overlay_mail_sidebar.js"/>  
@@ -103,8 +102,6 @@
     </menu>    
   </menubar>
 
-  <menupopup id="xmpp-popup-accounts-secondary"/>
-
   <hbox id="mailContent">
 
     <!-- SIDEBAR -->
@@ -118,102 +115,6 @@
               insertafter="folderTree"
               collapsed="true"/>
       
-      <splitter id="sameplace-splitter-left"
-                class="sameplace-splitter"
-                persist="state"
-                state="open"
-                resizebefore="closest"
-                resizeafter="closest"
-                hidden="true"/>
-      <vbox flex="1" id="sameplace-area-left"
-            class="sameplace-area"
-            collapsed="true"
-            persist="height"
-            minheight="80"
-            height="400">
-        <iframe id="sameplace-toolbox-left"
-                class="sameplace-toolbox"
-                src="toolbox.xul"
-                collapsed="true"/>
-        <iframe id="sameplace-contacts-left"
-                class="sameplace-contacts"
-                src="about:blank"
-                collapsed="true"
-                flex="1"/>
-        <splitter hidden="true" orient="vertical" resizeafter="farthest"/>
-        <iframe id="sameplace-conversations-left"
-                class="sameplace-conversations"
-                src="about:blank"
-                collapsed="true"
-                persist="height"
-                flex="1"/>
-      </vbox>
-    </vbox>
-
-    <!-- AREAS -->
-
-    <splitter id="sameplace-splitter-middle"
-              class="sameplace-splitter"
-              insertafter="folderpane_splitter"
-              state="open"
-              resizebefore="closest"
-              resizeafter="closest"
-              hidden="true"/>
-    
-    <vbox id="sameplace-area-middle"
-          class="sameplace-area"
-          insertafter="folderpane_splitter"
-          collapsed="true"
-          persist="width"
-          width="300"
-          minwidth="80">
-      <iframe id="sameplace-toolbox-middle"
-              class="sameplace-toolbox"
-              src="toolbox.xul"
-              collapsed="true"/>
-      <iframe id="sameplace-contacts-middle"
-              class="sameplace-contacts"
-              src="about:blank"
-              collapsed="true"
-              flex="1"/>
-      <splitter hidden="true" orient="vertical" resizeafter="farthest"/>
-      <iframe id="sameplace-conversations-middle"
-              class="sameplace-conversations"
-              src="about:blank"
-              collapsed="true"
-              persist="height"
-              flex="1"/>
-    </vbox>
-
-    <splitter id="sameplace-splitter-right"
-              class="sameplace-splitter"
-              state="open"
-              resizebefore="closest"
-              resizeafter="closest"
-              hidden="true"/>
-    
-    <vbox id="sameplace-area-right"
-          class="sameplace-area"
-          collapsed="true"
-          persist="width"
-          width="300"
-          minwidth="80">
-      <iframe id="sameplace-toolbox-right"
-              class="sameplace-toolbox"
-              src="toolbox.xul"
-              collapsed="true"/>
-      <iframe id="sameplace-contacts-right"
-              class="sameplace-contacts"
-              src="about:blank"
-              collapsed="true"
-              flex="1"/>
-      <splitter hidden="true" orient="vertical" resizeafter="farthest"/>
-      <iframe id="sameplace-conversations-middle"
-              class="sameplace-conversations"
-              src="about:blank"
-              collapsed="true"
-              persist="height"
-              flex="1"/>
     </vbox>
   </hbox>
 
