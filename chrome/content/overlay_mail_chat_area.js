@@ -30,6 +30,9 @@
  */
 
 window.addEventListener('load', function(event) {
+    if(sameplace.util.getChatOverlayName() != 'messagepane')
+        return;
+
     var xulPanels = document.getElementById('sameplace-conversations');
     var xulTabs = document.getElementById('sameplace-conversation-tabs');
     var xulMsgBox = document.getElementById('messagepanebox');
