@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://sameplace/skin/overlay.css" type="text/css"?>
 <?xml-stylesheet href="chrome://sameplace/skin/experimental/toolbar-button.css" type="text/css"?>
+<?xml-stylesheet href="chrome://sameplace/skin/experimental/overlay.css" type="text/css"?>
 
 <!--
   Copyright 2006-2007 by Massimiliano Mirra
@@ -86,6 +87,8 @@
   <!-- KEYS -->
 
   <keyset id="mainKeyset">
+    <key modifiers="control" key=" "
+         oncommand="sameplace.findContact();"/>
     <key id="sameplace-key-focus-status"
          key="t"
          modifiers="control alt"
@@ -96,8 +99,6 @@
   </keyset>
 
   <!-- MENUS -->
-
-  <menupopup id="xmpp-popup-accounts-secondary"/>
 
   <popup id="contentAreaContextMenu">
     <!-- XXX localize -->
@@ -114,75 +115,20 @@
               oncommand="sameplace.requestedInstallScriptlet(document.popupNode);"/>
   </popup>
 
+  <!-- BROWSER -->
 
   <hbox id="browser">
-
-    <!-- AREAS -->
-
-    <splitter id="sameplace-splitter-left"
-              class="sameplace-splitter"
-              insertafter="sidebar-splitter"
+    <splitter insertafter="sidebar-splitter"
               state="open"
               resizebefore="closest"
-              resizeafter="closest"
-              hidden="true"/>
+              resizeafter="closest"/>
 
-    <vbox id="sameplace-area-left"
-          class="sameplace-area"
+    <vbox id="sameplace-box"
           insertafter="sidebar-splitter"
-          collapsed="true"
-          persist="width"
           width="300"
-          minwidth="80">
-      <iframe id="sameplace-toolbox-left"
-              class="sameplace-toolbox"
-              src="about:blank"
-              collapsed="true"
-              flex="0"/>
-      <iframe id="sameplace-contacts-left"
-              class="sameplace-contacts"
-              src="about:blank"
-              collapsed="true"
-              flex="1"/>
-      <splitter hidden="true" orient="vertical" resizeafter="farthest"/>
-      <iframe id="sameplace-conversations-left"
-              class="sameplace-conversations"
-              src="about:blank"
-              height="300"
-              collapsed="true"
-              persist="height"
-              flex="1"/>
-    </vbox>
-
-    <splitter id="sameplace-splitter-right"
-              class="sameplace-splitter"
-              state="open"
-              resizebefore="closest"
-              resizeafter="closest"
-              hidden="true"/>
-    
-    <vbox id="sameplace-area-right"
-          class="sameplace-area"
-          collapsed="true"
-          persist="width"
-          width="300"
-          minwidth="80">
-      <iframe id="sameplace-toolbox-right"
-              class="sameplace-toolbox"
-              src="about:blank"
-              collapsed="true"/>
-      <iframe id="sameplace-contacts-right"
-              class="sameplace-contacts"
-              src="about:blank"
-              collapsed="true"
-              flex="1"/>
-      <splitter hidden="true" orient="vertical" resizeafter="farthest"/>
-      <iframe id="sameplace-conversations-left"
-              class="sameplace-conversations"
-              src="about:blank"
-              collapsed="true"
-              persist="height"
-              flex="1"/>
+          minwidth="65"
+          collapsed="true">
+      <iframe id="sameplace-frame" flex="1"/>
     </vbox>
   </hbox>
 </overlay>
