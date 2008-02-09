@@ -384,7 +384,12 @@
           <vbox class="progress-success">
             <description>
               Configured!
-            </description>            
+            </description>
+
+            <description>
+              You may have to go offline then back online for the
+              transport to receive your status.
+            </description>
           </vbox>
 
           <vbox class="progress-failure">
