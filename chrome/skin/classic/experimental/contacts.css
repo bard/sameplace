@@ -102,7 +102,7 @@
 }
 
 #contacts .contact .avatar-stack > vbox {
-    -moz-box-align: start;
+    -moz-box-align: center;
 }
 
 /* avatar area -> small name (visible when no avatar available) */
@@ -262,6 +262,26 @@
 
 /* DISPLAY MODES */
 
+/* tiny avatars */
+
+#view.tiny #contacts .contact .avatar-stack {
+    height: 38px;
+}
+
+#view.tiny #contacts .contact .avatar-stack .indicators {
+    margin-left: -14px;
+    margin-top: 10px;
+}
+
+#view.tiny #contacts .contact .avatar-stack .small-name {
+    margin: 28px 0 0 0;
+}
+
+#view.tiny #contacts .contact .avatar-stack .avatar {
+    width: 26px;
+    height: 26px;
+}
+
 /* sort by activity */
 
 #contacts[sort="activity"] .header {
@@ -351,4 +371,5 @@ popup.with-headers .offset {
     text-align: right;
     max-width: 3em;
 }
+
 

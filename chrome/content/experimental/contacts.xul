@@ -88,6 +88,11 @@
     <command id="toggle-offline"
              label="&popup.toggle_offline.label;"
              oncommand="toggleOfflineContacts();"/>
+    <command id="toggle-tiny-avatars"
+             label="Toggle avatar size"
+             accesskey="T"
+             tooltiptext="Toggle avatar size"
+             oncommand="toggleAvatarSize();"/>
     <command id="view-help" oncommand="viewHelp();"
              label="&command.view_help_pages.label;"
              accesskey="&command.view_help_pages.accesskey;"
@@ -131,6 +136,7 @@
       <menuitem class="menuitem-iconic" command="open-conversation"/>
       <menuseparator/>
       <menuitem command="toggle-offline"/>
+      <menuitem command="toggle-tiny-avatars"/>
       <menuseparator/>
       <menuitem type="radio" name="sort" label="Sort by name"
                 value="display-name"

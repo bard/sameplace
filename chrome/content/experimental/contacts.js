@@ -297,6 +297,10 @@ function toggleOfflineContacts() {
     contactsUpdated();
 }
 
+function toggleAvatarSize() {
+    util.toggleClass($('#view'), 'tiny');
+}
+
 function updateContactPhoto(account, address, xmlPhoto) {
     var xulContact = getContact(account, address);
     
