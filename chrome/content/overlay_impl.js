@@ -186,6 +186,11 @@ function requestedInstallScriptlet(domElement) {
 // GUI ACTIONS
 // ----------------------------------------------------------------------
 
+function isReceivingInput() {
+    // XXX temporary. only to accomodate activity scriptlet
+    return false;
+}
+
 function runWizard() {
     window.openDialog(
         'chrome://sameplace/content/wizard/wizard.xul',
