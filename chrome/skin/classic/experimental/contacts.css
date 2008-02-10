@@ -96,7 +96,7 @@
 
 #contacts .contact .avatar-stack {
     margin-top: 4px;
-    margin-left: 4px;
+    margin-left: 2px;
     width: 52px;
     height: 58px;
 }
@@ -108,7 +108,7 @@
 /* avatar area -> small name (visible when no avatar available) */
 
 #contacts .contact .avatar-stack .small-name {
-    margin: 32px 0 0 0;
+    margin: 51px 0 0 0;
     width: 48px;
     color: #444;
     font-size: 9px;
@@ -119,8 +119,8 @@
 /* avatar area -> avatar */
 
 #contacts .contact .avatar-stack .avatar {
-    width: 48px;
-    height: 48px;
+    width: 50px;
+    height: 50px;
     -moz-border-radius: 3px;
     border: 1px solid lightgray;
     background: #fff;
@@ -140,8 +140,8 @@
 /* avatar area -> indicators (status etc.) */
 
 #contacts .contact .avatar-stack .indicators {
-    padding: 0 4px;
-    margin-top: 44px;
+    margin-left: -5px;
+    margin-top: 34px;
 }
 
 #contacts .contact .avatar-stack .icon-pending {
