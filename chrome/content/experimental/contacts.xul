@@ -54,7 +54,7 @@
       orient="vertical"
       width="320"
       height="640"
-      persist="width height">
+      persist="width height class">
 
   <script type="application/x-javascript" src="chrome://global/content/nsDragAndDrop.js"/>
   <script type="application/x-javascript" src="chrome://global/content/nsTransferable.js"/>
