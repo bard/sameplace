@@ -101,7 +101,7 @@
     height: 58px;
 }
 
-#contacts .contact .avatar-stack > vbox {
+#contacts .contact .avatar-stack .avatar-container {
     -moz-box-align: center;
 }
 
@@ -269,7 +269,7 @@
 }
 
 #view.tiny #contacts .contact .avatar-stack .indicators {
-    margin-left: -14px;
+    margin-left: 1px;
     margin-top: 10px;
 }
 
