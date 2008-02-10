@@ -75,7 +75,11 @@ var commands = {
 
         var nick = $.trim(argstring);
 
-        return <presence to={"/" + nick}/>;
+        // payload isn't required by protocol, but it's currently
+        // needed by xmpp4moz for correct bookkeeping of the cache.
+        return <presence to={"/" + nick}>
+            <x xmlns="http://jabber.org/protocol/muc"/>
+            </presence>;
     },
 
     // XXX does not support XHTML messages yet
