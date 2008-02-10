@@ -210,8 +210,7 @@ function opened(xulPanel) {
     cacheFor(account, address)
         .forEach(function(message) { xulPanel.xmppChannel.receive(message); });
 
-    if(!XMPP.isMUC(account, address))
-        updatePresenceIndicator(account, address);
+    updatePresenceIndicator(account, address);
 
     var openEvent = document.createEvent('Event');
     openEvent.initEvent('conversation/open', true, false);
@@ -229,7 +228,21 @@ function toggle() {
     util.toggleClass(frameElement.parentNode, 'expanded');
 }
 
-// XXX make it clear that this is not to be called for MUCs
+// XXX this is incorrect.  It assumes that if an outgoing available
+// presence with a MUC namespaced <x> is in the cache, the room is
+// joined.  However, such presence is removed from cache only when
+// user intentionally leaves the room, not when he's forced to
+// (because of /kick or disconnection).
+
+function isJoinedMUC(account, address) {
+    return XMPP.cache.first(
+        XMPP.q()
+            .event('presence')
+            .direction('out')
+            .account(account)
+            .to(address)
+            .child(ns_muc,'x'));
+}
 
 function updatePresenceIndicator(account, address) {
     var xulPanel = get(account, address);
@@ -237,16 +250,23 @@ function updatePresenceIndicator(account, address) {
         return;
 
     var xulTab = xulPanel.tab;
-    
-    var presence = XMPP.presencesOf(account, address)[0]; // XXX won't handle conversation with offline contact!
-
-    if(!presence)
-        return;
-
-    var availability = presence.stanza.@type.toString() || 'available';
-    var show         = presence.stanza.show.toString();
-    var status       = presence.stanza.status.text();
-
+    var availability, show, status;
+    if(isJoinedMUC(account, address)) {
+        availability = 'available';
+        show = '';
+        status = '';
+    } else {
+        var presence = XMPP.presencesOf(account, address)[0];
+        if(!presence)
+            // Contact is offline, and indicator is offline by
+            // default, so...
+            return;
+        
+        availability = presence.stanza.@type.toString() || 'available';
+        show         = presence.stanza.show.toString();
+        status       = presence.stanza.status.text();
+    }
+        
     if(xulTab.getAttribute('status') == status &&
        xulTab.getAttribute('show') == show &&
        xulTab.getAttribute('availability') == availability)
