@@ -101,8 +101,9 @@
     height: 58px;
 }
 
-#contacts .contact .avatar-stack .avatar-container {
+#contacts .contact .avatar-stack .avatar-box {
     -moz-box-align: center;
+    -moz-box-pack: start;
 }
 
 /* avatar area -> small name (visible when no avatar available) */

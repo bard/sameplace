@@ -304,7 +304,7 @@
           <vbox>
             <label class="small-name" crop="end"/>
           </vbox>
-          <vbox>
+          <vbox class="avatar-box">
             <image class="avatar"/>            
           </vbox>
           <vbox>
