@@ -489,11 +489,12 @@ function foreignToXMPP(foreignXML, params) {
         .createInstance(Ci.nsIDOMXMLDocument);
     var xsltproc = Cc['@mozilla.org/document-transformer;1?type=xslt']
         .createInstance(Ci.nsIXSLTProcessor);
-    var stylesheet = Cc['@mozilla.org/xml/xml-document;1']
-        .createInstance(Ci.nsIDOMXMLDocument);
-
-    stylesheet.async = false;
-    stylesheet.load(URL_XSL);
+    var request = Cc['@mozilla.org/xmlextras/xmlhttprequest;1']
+        .createInstance(Ci.nsIXMLHttpRequest);
+    request.open('GET', URL_XSL, false);
+    request.send(null);
+    var stylesheet = request.responseXML;
+    
     xsltproc.importStylesheet(stylesheet);
 
     foreignToXMPP = function(foreignXML, params) {
