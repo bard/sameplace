@@ -93,11 +93,23 @@
              accesskey="T"
              tooltiptext="Toggle avatar size"
              oncommand="toggleAvatarSize();"/>
-    <command id="view-help" oncommand="viewHelp();"
-             label="&command.view_help_pages.label;"
-             accesskey="&command.view_help_pages.accesskey;"
-             tooltiptext="&command.view_help_pages.tooltip;"/>
-    <command id="join-support-room" oncommand="joinSupportRoom();"
+    <command id="ask-question" oncommand="askQuestion();"
+             label="Online Support - Ask a Question"
+             accesskey="Q"
+             tooltiptext="Online Support - Ask a Question"/>
+    <command id="report-bug" oncommand="reportBug();"
+             label="Online Support - Report a Bug"
+             accesskey="B"
+             tooltiptext="Online Support - Report a Bug..."/>
+    <command id="view-blog" oncommand="viewBlog();"
+             label="View Blog"
+             accesskey="B"
+             tooltiptext="Online Support - Report a Bug..."/>
+    <command id="follow-twitter" oncommand="followTwitter();"
+             label="Follow on Twitter"
+             accesskey="T"
+             tooltiptext="Follow on Twitter"/>
+    <command id="join-users-room" oncommand="joinUsersRoom();"
              label="&command.join_users_room.label;"
              accesskey="&command.join_users_room.accesskey;"
              tooltiptext="&command.join_users_room.tooltip;"/>
@@ -177,8 +189,13 @@
     <popup id="help-popup" class="with-headers">
       <menuitem class="header" label="Help" disabled="true"/>
       <menuseparator/>
-      <menuitem class="menuitem-iconic" command="join-support-room"/>
-      <menuitem class="menuitem-iconic" command="view-help"/>
+      <menuitem class="menuitem-iconic" command="ask-question"/>
+      <menuitem class="menuitem-iconic" command="report-bug"/>
+      <menuseparator/>
+      <menuitem class="menuitem-iconic" command="view-blog"/>
+      <menuitem class="menuitem-iconic" command="follow-twitter"/>
+      <menuitem class="menuitem-iconic" command="join-users-room"/>
+      <menuseparator/>
       <menuitem class="menuitem-iconic" command="about"/>
     </popup>
     

@@ -1114,14 +1114,26 @@ function denySubscriptionRequest(account, address) {
     XMPP.send(account, <presence to={address} type="unsubscribed"/>);
 }
 
-function joinSupportRoom() {
+function joinUsersRoom() {
     window.openDialog('chrome://sameplace/content/dialogs/join_room.xul',
                       'sameplace-open-conversation', 'centerscreen',
                       null, 'users@places.sameplace.cc');
 }
 
-function viewHelp() {
-    openURL('http://help.sameplace.cc', true);    
+function askQuestion() {
+    util.openURL('https://answers.launchpad.net/sameplace');
+}
+
+function reportBug() {
+    util.openURL('https://bugs.launchpad.net/sameplace');
+}
+
+function viewBlog() {
+    util.openURL('http://sameplace.cc/blog');
+}
+
+function followTwitter() {
+    util.openURL('http://twitter.com/sameplace');
 }
 
 function requestRoster(account) {
