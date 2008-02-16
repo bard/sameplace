@@ -1125,7 +1125,9 @@ function askQuestion() {
 }
 
 function reportBug() {
-    util.openURL('https://bugs.launchpad.net/sameplace');
+    window.openDialog('chrome://sameplace/content/dialogs/report_bug.xul',
+                      'sameplace-report-bug', 'top=40,left=40', null);
+    util.openURL('https://launchpad.net/sameplace');
 }
 
 function viewBlog() {
