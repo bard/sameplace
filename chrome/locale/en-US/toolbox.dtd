@@ -21,8 +21,8 @@
 <!ENTITY command.report_bug.label "Report a problem/request a feature">
 <!ENTITY command.report_bug.tooltip "Report a problem/request a feature">
 <!ENTITY command.report_bug.accesskey "R">
-<!ENTITY command.join_users_room.label "Join support chatroom">
-<!ENTITY command.join_users_room.tooltip "Join support chatroom">
+<!ENTITY command.join_users_room.label "Join Users' Chatroom">
+<!ENTITY command.join_users_room.tooltip "Join Users' Chatroom">
 <!ENTITY command.join_users_room.accesskey "s">
 <!ENTITY command.read_latest_news.label "Read latest news">
 <!ENTITY command.read_latest_news.accesskey "n">
