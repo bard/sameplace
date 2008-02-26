@@ -94,6 +94,7 @@ function init(event) {
     initGUIReactions();
     initNetworkReactions();
     initState();
+    connectAutologinAccounts();
 }
 
 function initGUIReactions() {
@@ -975,6 +976,16 @@ function processURLs(xmlMessageBody) {
 
 // NETWORK ACTIONS
 // ----------------------------------------------------------------------
+
+function connectAutologinAccounts() {
+    XMPP.accounts
+    .filter(function(a) {
+        return a.autoLogin && !XMPP.isUp(a);
+    })
+    .forEach(function(a) {
+        XMPP.up(a);
+    });
+}
 
 function registerToService(account, address, callbacks) {
     function start() {
