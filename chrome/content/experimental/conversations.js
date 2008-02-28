@@ -139,11 +139,7 @@ if(window.isStandAlone()) {
     }, false);
 
     window.addEventListener('unload', function() {
-        if(window.isHidden())
-            // restore, so width/height get persisted
-            window.show();
-
-        srvWindowWatcher.unregisterNotification(windowObserver);
+         srvWindowWatcher.unregisterNotification(windowObserver);
 
         // finalize conversation implementation
         finish();
@@ -173,20 +169,15 @@ if(window.isStandAlone()) {
         if(window.isHidden())
             return;
 
-        savedDim = {
-            width: window.outerWidth,
-            height: window.outerHeight
-        };
-        window.resizeTo(0, 0);
+        window.minimize();
     }
 
     function show() {
-        window.resizeTo(savedDim.width, savedDim.height);
-        savedDim = null;
+        window.restore();
     }
 
     function isHidden() {
-        return window.outerWidth == 0 && window.outerHeight == 0;
+        return window.windowState == window.STATE_MINIMIZED;
     }
 
     function isLastWindow() {
@@ -207,9 +198,7 @@ if(window.isStandAlone()) {
             window.getAttention();
 
         if(shouldPopup) {
-            if(window.isHidden())
-                window.show();
-            else if(window.windowState == window.STATE_MINIMIZED)
+            if(window.windowState == window.STATE_MINIMIZED)
                 window.restore();
         }
     }
