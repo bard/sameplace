@@ -84,6 +84,13 @@ label[signal-error="true"] { color: red; }
     padding: 1em;
 }
 
+.progress-success description,
+.progress-failure description,
+.service-info description,
+.service-info description label {
+    color: black;
+}
+
 
 wizardpage .progress,
 wizardpage .progress-success,
