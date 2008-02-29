@@ -189,11 +189,13 @@
 #controls .control.offline-notice .notice {
     font-size: 22px;
     text-align: center;
+    color: white;
 }
 
 #controls .control.offline-notice .action {
     font-size: 18px;
     text-align: center;
+    color: white;
 }
 
 #controls .control.offline-notice .action:hover {
