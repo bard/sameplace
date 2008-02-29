@@ -9,7 +9,6 @@ skin sameplace classic/1.0 chrome/skin/classic/
 
 overlay chrome://browser/content/browser.xul chrome://sameplace/content/overlay_browser.xul
 overlay chrome://messenger/content/messenger.xul chrome://sameplace/content/overlay_mail.xul
+overlay windowtype:Songbird:Main chrome://sameplace/content/overlay_songbird.xul
 
-
-overlay chrome://browser/content/browser.xul chrome://sameplace/content/experimental/overlay.xul
 style chrome://global/content/customizeToolbar.xul chrome://sameplace/skin/experimental/toolbar-button.css
