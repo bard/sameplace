@@ -61,6 +61,13 @@ function hostAppIsMail() {
             .ID == '{3550f703-e582-4d05-9a08-453d09bdfdc6}');
 }
 
+function hostAppIsSongbird() {
+    return (Components.classes['@mozilla.org/xre/app-info;1']
+            .getService(Components.interfaces.nsIXULAppInfo)
+            .ID == 'songbird@songbirdnest.com');
+}
+
+
 // UTILITIES - SPECIFIC - NON-GUI
 // ----------------------------------------------------------------------
 
@@ -81,6 +88,8 @@ function getChatOverlayName() {
         return overlayName;
     else if(hostAppIsMail())
         return 'messagepane';
+    else if(hostAppIsSongbird())
+        return 'external';
     else
         return 'sidebar';
 }
