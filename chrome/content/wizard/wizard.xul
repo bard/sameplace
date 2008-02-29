@@ -160,6 +160,9 @@
 
       <vbox class="service-info" id="service-info-aim">
         <description>
+          <label style="font-weight: bold;"
+                 class="small-margin"
+                 value="AIM/ICQ."/>
           AOL instant messaging service.
         </description>
 
@@ -168,8 +171,8 @@
         <hbox flex="1" align="start">
           <image class="service-warning"/>
           <description style="font-style: italic;" flex="1">
-            AIM is a proprietary, closed network.  AIM does not
-            provide encrypted connections.
+            AIM/ICQ is a proprietary, closed network.  AIM/ICQ does
+            not provide encrypted connections.
           </description>              
         </hbox>
       </vbox>
