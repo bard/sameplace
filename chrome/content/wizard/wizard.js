@@ -69,7 +69,8 @@ function finish() {
 
 function updateJabberConfig(event) {
     if(event &&
-       event.target.getAttribute('class') == 'connection-server')
+       event.target.getAttribute('class') == 'connection-server' ||
+       event.target.getAttribute('class') == 'connection-port')
         return;
 
     var page            = $('[pageid="jabber"]');
