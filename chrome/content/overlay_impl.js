@@ -72,7 +72,6 @@ function init(event) {
                 util.addToolbarButton('sameplace-button');
                 setTimeout(function() {
                     runWizard();
-                    checkNoScript();
                 }, 2000);
             },
             onUpgrade: function() {
@@ -204,17 +203,6 @@ function updateStatusIndicator() {
     _('button').setAttribute('availability',
                              XMPP.accounts.some(XMPP.isUp) ?
                              'available' : 'unavailable');
-}
-
-function checkNoScript() {
-    var noScriptUpdateItem = Cc['@mozilla.org/extensions/manager;1']
-        .getService(Ci.nsIExtensionManager)
-        .getItemForID('{73a6fe31-595d-460b-a920-fcc0f8843232}');
-    // In Firefox2, an updateItem is always returned, even for
-    // non-installed apps, so we use the name test to check if
-    // NoScript is installed for real.
-    if(noScriptUpdateItem && noScriptUpdateItem.name != '')
-        window.alert("Warning: you are using NoScript.  You'll be able to configure\nSamePlace, but chats will be blocked.\n\nTo fix this, remember to allow scripts from file:// URLs to run."); // localize
 }
 
 
