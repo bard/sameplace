@@ -75,6 +75,8 @@ function _(thing) {
 // ----------------------------------------------------------------------
 
 function init(event) {
+    $('#noscript-notice').hide();
+    
     $('#xmpp-incoming').bind('DOMNodeInserted', null, function(event) {
         var stanza = new XML(event.target.textContent);
         switch(stanza.localName()) {
