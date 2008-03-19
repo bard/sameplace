@@ -143,10 +143,6 @@ function isNearBottom(domElement, threshold) {
                     (domElement.scrollTop + domElement.clientHeight)) < (threshold || 24);
 }
 
-function isAtBottom(domElement) {
-    return domElement.scrollHeight == domElement.scrollTop + domElement.clientHeight;
-}
-
 function smoothScroll(domElement, stepsLeft) {
     if(stepsLeft == undefined)
         stepsLeft = 4;
@@ -163,9 +159,9 @@ function smoothScroll(domElement, stepsLeft) {
 }
 
 function scrollToBottom(domElement, smooth) {
-    if(isAtBottom(domElement) ||
-       (smooth && scrolling))
+    if(smooth && scrolling)
         return;
+
 
     if(smooth == undefined)
         smooth = true;
