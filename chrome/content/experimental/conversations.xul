@@ -48,6 +48,20 @@
   <script type="application/x-javascript;version=1.7" src="../lib/tabbed_area.js"/>
   <script type="application/x-javascript;version=1.7" src="conversations.js"/>
 
+  <commandset>
+    <command id="copy" oncommand="requestedCopy(event);"/>
+  </commandset>
+  
+  <keyset>
+    <key id="key-copy" modifiers="control" key="c" command="copy"/>
+  </keyset>
+  
+  <popupset>
+    <popup id="conversation-menu">
+      <menuitem label="Copy" accesskey="C" key="key-copy" command="copy"/>
+    </popup>
+  </popupset>
+
   <tabs id="tabs" closebutton="true"/>
-  <deck id="deck" flex="1"/>
+  <deck id="deck" flex="1" context="conversation-menu"/>
 </page>

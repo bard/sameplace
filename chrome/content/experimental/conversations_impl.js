@@ -217,6 +217,12 @@ function opened(xulPanel) {
     xulPanel.dispatchEvent(openEvent);
 }
 
+function requestedCopy(event) {
+    Cc['@mozilla.org/widget/clipboardhelper;1']
+        .getService(Ci.nsIClipboardHelper)
+        .copyString(getCurrent().contentWindow.getSelection().toString());
+}
+
 
 // GUI ACTIONS
 // ----------------------------------------------------------------------
