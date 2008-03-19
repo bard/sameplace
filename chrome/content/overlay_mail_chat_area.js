@@ -36,7 +36,7 @@ window.addEventListener('load', function(event) {
     var xulPanels = document.getElementById('sameplace-conversations');
     var xulTabs = document.getElementById('sameplace-conversation-tabs');
     var xulMsgBox = document.getElementById('messagepanebox');
-    conversations = {};
+    var conversations = {};
     Components
         .classes['@mozilla.org/moz/jssubscript-loader;1']
         .getService(Components.interfaces.mozIJSSubScriptLoader)
@@ -104,6 +104,14 @@ window.addEventListener('load', function(event) {
     xulPanels.removeTab = function(tab) {
         if(tab != xulTabs.firstChild)
             this.__removeTab(tab);
+    };
+
+    sameplace.conversations = conversations;
+
+    sameplace.requestedCopy = function() {
+        Components.classes['@mozilla.org/widget/clipboardhelper;1']
+            .getService(Components.interfaces.nsIClipboardHelper)
+            .copyString(conversations.getCurrent().contentWindow.getSelection().toString());
     };
 }, false);
 
