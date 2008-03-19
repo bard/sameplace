@@ -77,15 +77,7 @@
   
   <!-- MENUS -->
 
-  <menubar id="main-menubar">
-    <menu label="SamePlace" accesskey="P" insertbefore="helpMenu">
-      <menupopup onpopupshowing="sameplace.showingMainMenu(event);">
-        <menuitem command="sameplace-command-toggle"
-                  key="sameplace-key-toggle"
-                  class="menuitem-iconic"/>
-      </menupopup>
-    </menu>
-  </menubar>
+  <menubar id="main-menubar"/>
 
   <!-- KEYS -->
 

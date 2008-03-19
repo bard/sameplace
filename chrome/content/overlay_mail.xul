@@ -92,15 +92,7 @@
 
   <!-- MENUS -->
 
-  <menubar id="mail-menubar">
-    <menu label="SamePlace" accesskey="P" insertbefore="helpMenu">
-      <menupopup id="sameplace-menu" onpopupshowing="sameplace.showingMainMenu(event);">
-        <menuitem command="sameplace-command-toggle"
-                  key="sameplace-key-toggle"
-                  class="menuitem-iconic"/>
-      </menupopup>
-    </menu>    
-  </menubar>
+  <menubar id="mail-menubar"/>
 
   <hbox id="mailContent">
 
