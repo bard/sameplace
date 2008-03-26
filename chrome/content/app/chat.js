@@ -173,6 +173,8 @@ function init(event) {
 
 }
 
+window.addEventListener('DOMContentLoaded', init, false);
+
 
 // GUI ACTIONS
 // ----------------------------------------------------------------------
