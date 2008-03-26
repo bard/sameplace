@@ -127,12 +127,16 @@ wizardpage[state="failure"] .progress-failure {
 }
 
 [pageid="selection"] .service {
-    width: 72px; height: 72px;
+    width: 72px; height: 84px;
     -moz-appearance: none;
     -moz-border-radius: 15px;
     -moz-box-align: center;
     -moz-box-pack: center;
     display: -moz-inline-box;
+}
+
+[pageid="selection"] .service label {
+    font-size: smaller;
 }
 
 [pageid="selection"] .service:hover {

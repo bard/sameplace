@@ -58,12 +58,12 @@
                  onmouseout="$('#service-infos').selectedIndex = -1;"
                  onclick="var service = $(event.target, '^ .service');
                           if(service) selectedService(service);">
-      <vbox class="service gtalk"><image/></vbox>
-      <vbox class="service jabber"><image/></vbox>
-      <vbox class="service sameplace"><image/></vbox>
-      <vbox class="service twitter"><image/></vbox>
-      <vbox class="service aim"><image/></vbox>
-      <vbox class="service msn"><image/></vbox>
+      <vbox class="service gtalk"><image/><label value="Gmail"/></vbox>
+      <vbox class="service jabber"><image/><label value="Jabber"/></vbox>
+      <vbox class="service sameplace"><image/><label value="SamePlace"/></vbox>
+      <vbox class="service twitter"><image/><label value="Twitter"/></vbox>
+      <vbox class="service aim"><image/><label value="AIM/ICQ"/></vbox>
+      <vbox class="service msn"><image/><label value="MSN"/></vbox>
     </description>
     
     <deck id="service-infos" selectedIndex="-1">
