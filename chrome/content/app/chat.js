@@ -369,8 +369,13 @@ function seenMessage(stanza) {
             userAddress = JID(stanza.@to.toString()).address;
         
     if(stanza.@type == 'error')
-        displayEvent('error', 'Error (' + stanza.error.@code + '): ' +
-                     stanza.error.ns_stanzas::text.text());
+        displayEvent('error',
+                     'Error' +
+                     (stanza.error.@code != undefined ?
+                      ' (' + stanza.error.@code + ') : ' : ': ') +
+                     (stanza.error.ns_stanzas::text != undefined ?
+                      stanza.error.ns_stanzas::text.text() :
+                      stanza.body.text()));
     else {
         displayMessage(stanza);
         if(stanza.@from != undefined && !isGroupchat)
