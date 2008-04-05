@@ -24,7 +24,7 @@
             <targetApplication>
               <Description>
                 <id>{a463f10c-3994-11da-9945-000d60ca027b}</id>
-                <maxVersion>1.0</maxVersion>
+                <maxVersion>1.1</maxVersion>
                 <minVersion>0.9</minVersion>
                 <updateLink>http://repo.hyperstruct.net/sameplace/unstable/sameplace-unstable.xpi</updateLink>
                 <updateHash/>
@@ -39,6 +39,18 @@
                 <minVersion>2.0</minVersion>
                 <maxVersion>2.0.0.*</maxVersion>
                 <updateLink>http://repo.hyperstruct.net/sameplace/unstable/sameplace-unstable.xpi</updateLink>
+                <updateHash/>
+              </Description>
+            </targetApplication>
+
+            <!-- songbird -->
+
+            <targetApplication>
+              <Description>
+                <id>songbird@songbirdnest.com</id>
+                <minVersion>0.4</minVersion>
+                <maxVersion>1.0+</maxVersion>
+                <updateLink/>
                 <updateHash/>
               </Description>
             </targetApplication>
