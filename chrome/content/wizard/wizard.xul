@@ -388,7 +388,9 @@
 
             <description>
               You may have to go offline then back online for the
-              transport to receive your status.
+              transport to receive your status.  This account is
+              server-side and will not be shown in your local account
+              list.
             </description>
           </vbox>
 
