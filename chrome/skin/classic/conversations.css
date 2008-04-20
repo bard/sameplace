@@ -34,7 +34,7 @@ tabs {
 }
 
 tabs .tabs-closebutton {
-    list-style-image: url("../close.png");
+    list-style-image: url("close.png");
     -moz-appearance: none;
     -moz-image-region: rect(0px, 16px, 16px, 0px);
     padding: 4px 2px;
