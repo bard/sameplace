@@ -475,6 +475,33 @@ dndObserver.onDrop = function(event, dropdata, session) {
     }
 };
 
+function requestedSaveXMPPLog() {
+    var fp = Cc['@mozilla.org/filepicker;1']
+        .createInstance(Ci.nsIFilePicker);
+    fp.init(window, 'Save XMPP Log', Ci.nsIFilePicker.modeSave);
+    fp.appendFilters(Ci.nsIFilePicker.filterText);
+
+    var rv = fp.show();
+
+    if(rv == Ci.nsIFilePicker.returnOK || rv == Ci.nsIFilePicker.returnReplace) {
+        var fos = Cc['@mozilla.org/network/file-output-stream;1']
+            .createInstance(Ci.nsIFileOutputStream);
+        var os = Cc['@mozilla.org/intl/converter-output-stream;1']
+            .createInstance(Ci.nsIConverterOutputStream);
+
+        fos.init(fp.file, 0x02 | 0x08 | 0x20, 0666, 0);
+        os.init(fos, 'UTF-8', 0, 0x0000);
+
+        XMPP.service.wrappedJSObject.sessions.forEach(function(s) {
+            os.writeString('\n******************** ' + s.name + ' ******************************\n\n');
+            os.writeString(s.wrappedJSObject.connector.wrappedJSObject._backlog.join('\n\n'));
+            os.writeString('\n\n');
+        });
+        
+        os.close();
+    }
+}
+
 function requestedDetachSidebar() {
     if(window.confirm('Detaching will close any conversation opened in the sidebar. Proceed?'))
         detachSidebar();

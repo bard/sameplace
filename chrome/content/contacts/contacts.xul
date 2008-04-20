@@ -131,6 +131,9 @@
     <command id="detach-sidebar" oncommand="requestedDetachSidebar();"
              label="Detach Sidebar (experimental)"
              accesskey="D"/>
+    <command id="save-xmpp-log" oncommand="requestedSaveXMPPLog()"
+             label="Save XMPP log"
+             accesskey="L"/>
   </commandset>
 
   <stringbundleset>
@@ -195,6 +198,8 @@
       <menuitem class="menuitem-iconic" command="view-blog"/>
       <menuitem class="menuitem-iconic" command="follow-twitter"/>
       <menuitem class="menuitem-iconic" command="join-users-room"/>
+      <menuseparator/>      
+      <menuitem class="menuitem-iconic" command="save-xmpp-log"/>
       <menuseparator/>
       <menuitem class="menuitem-iconic" command="about"/>
     </popup>
