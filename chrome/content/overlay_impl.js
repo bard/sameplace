@@ -47,7 +47,7 @@ const pref = Cc['@mozilla.org/preferences-service;1']
 var channel;
 var scriptlets = load('chrome://sameplace/content/facades/scriptlets.js', {});
 var sendTo = load('chrome://sameplace/content/send_to.js', {});
-var util = load('chrome://sameplace/content/experimental/lib/util_impl.js', {});
+var util = load('chrome://sameplace/content/lib/util_impl.js', {});
 
 
 // INITIALIZATION
@@ -339,7 +339,7 @@ function initDisplayRules() {
 
     _('frame').addEventListener('detach', function(event) {
         var wndContacts = window.open(
-            'chrome://sameplace/content/experimental/contacts.xul',
+            'chrome://sameplace/content/contacts/contacts.xul',
             'SamePlace:Contacts', 'chrome');
         wndContacts.addEventListener('unload', function(event) {
             if(event.target == wndContacts.document &&
@@ -359,12 +359,12 @@ function findContact() {
 }
 
 function loadAreas(force) {
-    if(force || _('frame').contentDocument.location.href != 'chrome://sameplace/content/experimental/contacts.xul')
-        _('frame').contentDocument.location.href = 'chrome://sameplace/content/experimental/contacts.xul';
+    if(force || _('frame').contentDocument.location.href != 'chrome://sameplace/content/contacts/contacts.xul')
+        _('frame').contentDocument.location.href = 'chrome://sameplace/content/contacts/contacts.xul';
 }
 
 function isActive() {
     return _('frame').contentDocument.location.href ==
-        'chrome://sameplace/content/experimental/contacts.xul';
+        'chrome://sameplace/content/contacts.xul';
 }
 

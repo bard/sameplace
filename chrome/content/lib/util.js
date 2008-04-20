@@ -35,5 +35,5 @@ var util = {};
 Components
     .classes['@mozilla.org/moz/jssubscript-loader;1']
     .getService(Components.interfaces.mozIJSSubScriptLoader)
-    .loadSubScript('chrome://sameplace/content/experimental/lib/util_impl.js', util);
+    .loadSubScript('chrome://sameplace/content/lib/util_impl.js', util);
 

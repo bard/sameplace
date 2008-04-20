@@ -51,7 +51,7 @@ if(typeof(ns_http_auth) == 'undefined')
 if(typeof(ns_chatstates) == 'undefined')
     var ns_chatstates   = 'http://jabber.org/protocol/chatstates';
 
-var util = load('chrome://sameplace/content/experimental/lib/util_impl.js', {});
+var util = load('chrome://sameplace/content/lib/util_impl.js', {});
 
 
 // STATE

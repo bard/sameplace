@@ -90,7 +90,7 @@ window.addEventListener('load', function(event) {
 
     _('frame').addEventListener('detach', function(event) {
         var wndContacts = window.open(
-            'chrome://sameplace/content/experimental/contacts.xul',
+            'chrome://sameplace/content/contacts/contacts.xul',
             'SamePlace:Contacts', 'chrome');
         wndContacts.addEventListener('unload', function(event) {
             if(event.target == wndContacts.document &&
