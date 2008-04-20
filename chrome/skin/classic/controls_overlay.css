@@ -205,7 +205,7 @@
 #controls .control.offline-notice .logo {
     -moz-box-pack: center;
     margin-top: -96px;
-    list-style-image: url("chrome://sameplace/skin/experimental/logo96x96.png");
+    list-style-image: url("chrome://sameplace/skin/logo96x96.png");
 }
 
 

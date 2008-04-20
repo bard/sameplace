@@ -31,7 +31,7 @@
 -->
 
 
-<?xml-stylesheet href="chrome://sameplace/skin/experimental/conversations_overlay_sidebar.css"?>
+<?xml-stylesheet href="chrome://sameplace/skin/conversations_overlay_sidebar.css"?>
 
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script type="application/x-javascript;version=1.7" src="../lib/getElementsBySelector.js"/>

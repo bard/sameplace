@@ -30,13 +30,3 @@
  */
 
 
-button#sameplace-experimental {
-    list-style-image: url("experimental/big_red_button_unchecked.png");
-    -moz-appearance: none;
-    border: none;
-    background: transparent;
-}
-
-button#sameplace-experimental[checked="true"] {
-    list-style-image: url("experimental/big_red_button_checked.png");
-}

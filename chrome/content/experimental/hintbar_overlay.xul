@@ -31,7 +31,7 @@
 -->
 
 
-<?xml-stylesheet href="chrome://sameplace/skin/experimental/hintbar.css"?>
+<?xml-stylesheet href="chrome://sameplace/skin/hintbar.css"?>
 
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script type="application/x-javascript" src="hintbar_overlay.js"/>
