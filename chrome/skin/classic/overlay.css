@@ -52,3 +52,6 @@
     -moz-image-region: rect(48px 16px 64px 0px);
 }
 
+#sameplace-box[collapsed="true"] + splitter {
+    display: none;
+}
