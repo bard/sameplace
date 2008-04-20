@@ -191,7 +191,7 @@ notificationbox {
 
 #contacts .contact .service {
     margin-right: 5px;
-    list-style-image: url("../services/server_im.png");
+    list-style-image: url("services/server_im.png");
     opacity: 0.4;
 }
 
@@ -200,24 +200,24 @@ notificationbox {
 }
 
 #contacts .contact[address$="@sameplace.cc"] .service {
-    list-style-image: url("../services/server_im_sameplace.png");
+    list-style-image: url("services/server_im_sameplace.png");
 }
 
 #contacts .contact[address$="@gmail.com"] .service,
 #contacts .contact[address$="@googlemail.com"] .service {
-    list-style-image: url("../services/server_im_gtalk.png");
+    list-style-image: url("services/server_im_gtalk.png");
 }
 
 #contacts .contact[address$="@twitter.x4m.localhost"] .service {
-    list-style-image: url("../services/server_x-turtle-twitter.png");
+    list-style-image: url("services/server_x-turtle-twitter.png");
 }
 
 #contacts .contact[address*="@msn."] .service {
-    list-style-image: url("../services/gateway_msn.png");
+    list-style-image: url("services/gateway_msn.png");
 }
 
 #contacts .contact[address*="@aim."] .service {
-    list-style-image: url("../services/gateway_aim.png");
+    list-style-image: url("services/gateway_aim.png");
 }
 
 /* unread messages indicator */
