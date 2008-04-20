@@ -38,5 +38,5 @@ var conversations = {};
 Components
     .classes['@mozilla.org/moz/jssubscript-loader;1']
     .getService(Components.interfaces.mozIJSSubScriptLoader)
-    .loadSubScript('chrome://sameplace/content/experimental/conversations_overlay_sidebar_impl.js',
+    .loadSubScript('chrome://sameplace/content/conversations/conversations_overlay_messagepage_impl.js',
                    conversations);

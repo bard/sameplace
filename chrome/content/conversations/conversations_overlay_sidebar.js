@@ -29,26 +29,14 @@
  *  
  */
 
-window.addEventListener('load', function(event) {
-    var overlayName = util.getChatOverlayName();
 
-    var overlays = {
-        'external'    : 'conversations_overlay_external.xul',
-        'sidebar'     : 'conversations_overlay_sidebar.xul',
-        'messagepane' : 'conversations_overlay_messagepane.xul'
-    };
-    
-    if(overlayName == 'external' || overlayName == 'sidebar')
-        document.loadOverlay(
-            'chrome://sameplace/content/experimental/' + overlays[overlayName], {
-                observe: function(subject, topic, data) {
-                    // On Firefox3, when overlay observer is called,
-                    // overlay content isn't there yet.  So let's give it 
-                    // some time... and hope for the best.
-                    //
-                    // The "conversations" object will be brought in
-                    // by the overlay itself.
-                    setTimeout(function(){ conversations.init(); }, 1000);
-                }
-            });
-}, false);
+window.addEventListener(
+    'unload', function(event) { conversations.finish(); }, false);
+
+var conversations = {};
+
+Components
+    .classes['@mozilla.org/moz/jssubscript-loader;1']
+    .getService(Components.interfaces.mozIJSSubScriptLoader)
+    .loadSubScript('chrome://sameplace/content/conversations/conversations_overlay_sidebar_impl.js',
+                   conversations);

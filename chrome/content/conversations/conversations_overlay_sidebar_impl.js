@@ -75,7 +75,7 @@ function init() {
     }, sentChatActivation);
 
     $('#conversations').contentDocument.location.href =
-        'chrome://sameplace/content/experimental/conversations.xul';
+        'chrome://sameplace/content/conversations/conversations.xul';
 }
 
 function finish() {

@@ -68,7 +68,7 @@
   <script type="application/x-javascript;version=1.7" src="../lib/util.js"/>
   <script type="application/x-javascript;version=1.7" src="gecko1.9-scrollbar.js"/>
   <script type="application/x-javascript;version=1.7" src="gecko1.8-richlistbox.js"/>
-  <script type="application/x-javascript;version=1.7" src="../experimental/conversation_area.js"/>
+  <script type="application/x-javascript;version=1.7" src="../conversations/conversation_area.js"/>
   <script type="application/x-javascript;version=1.7" src="contacts.js"/>
 
   <keyset id="keys"/>

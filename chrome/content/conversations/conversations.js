@@ -103,7 +103,7 @@ function d(msg) {
 Components
     .classes['@mozilla.org/moz/jssubscript-loader;1']
     .getService(Components.interfaces.mozIJSSubScriptLoader)
-    .loadSubScript('chrome://sameplace/content/experimental/conversations_impl.js');
+    .loadSubScript('chrome://sameplace/content/conversations/conversations_impl.js');
 
 
 if(window.isStandAlone()) {

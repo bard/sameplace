@@ -52,7 +52,7 @@ function init() {
 
     if(!wndConversations) {
         wndConversations = window.open(
-            'chrome://sameplace/content/experimental/conversations.xul',
+            'chrome://sameplace/content/conversations/conversations.xul',
             'SamePlace:Conversations', 'chrome');
 
         wndConversations.addEventListener('load', function(event) {
