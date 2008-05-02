@@ -56,10 +56,21 @@
         </columns>
         <rows>
           <row>
-            <label value="&sameplace.prefs.default_application_url.label;"
-                   accesskey="&sameplace.prefs.default_application_url.accesskey;"
+            <label value="Chat application:"
+                   accesskey="a"
                    for="sameplace-textbox-default-app-url"/>
-            <textbox preference="sameplace-default-app-url" flex="1"/>
+            <menulist class="sameplace-chat-app-url"
+                      editable="true"
+                      value="default"
+                      oncommand="if(event.target.value == 'custom')
+                                 this.value = 'http://';"
+                      preference="sameplace-default-app-url">
+              <menupopup>
+                <menuitem label="default"/>
+                <menuseparator/>
+                <menuitem label="Custom URL..." value="custom"/>
+              </menupopup>
+            </menulist>
           </row>
   
           <row>
