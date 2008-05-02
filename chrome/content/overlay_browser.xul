@@ -73,10 +73,6 @@
                    oncommand="sameplace.toggle();">
     </toolbarbutton>
   </toolbarpalette>
-  
-  <!-- MENUS -->
-
-  <menubar id="main-menubar"/>
 
   <!-- KEYS -->
 
@@ -94,6 +90,12 @@
 
   <!-- MENUS -->
 
+  <menupopup id="viewSidebarMenu">
+    <menuitem command="sameplace-toggle"
+              key="sameplace-toggle-key"
+              accesskey="P"/>
+  </menupopup>
+  
   <popup id="contentAreaContextMenu">
     <!-- XXX localize -->
     <menu label="Send Link to..."
@@ -108,6 +110,23 @@
               label="&context.install-scriptlet;" accesskey="I"
               oncommand="sameplace.requestedInstallScriptlet(document.popupNode);"/>
   </popup>
+
+  <!-- KEYS -->
+
+  <keyset id="mainKeyset">
+    <key id="sameplace-toggle-key" command="sameplace-toggle" keycode="VK_F9"/>
+  </keyset>
+
+  <!-- COMMANDS -->
+
+  <commandset id="mainCommandSet"> 
+    <command id="sameplace-toggle" 
+             label="SamePlace"
+             autoCheck="false"
+             type="checkbox"
+             group="sidebar"
+             oncommand="sameplace.toggle();" />
+  </commandset>
 
   <!-- BROWSER -->
 
