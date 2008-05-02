@@ -35,8 +35,19 @@
 body {
     background: white;
     font-family: Verdana, sans-serif;
-    font-size: 75%;
     overflow: hidden;
+}
+
+body.fonts-smaller {
+    font-size: 10px;
+}
+
+body.fonts-normal {
+    font-size: 12px;
+}
+
+body.fonts-larger {
+    font-size: 16px;
 }
 
 a {
@@ -156,17 +167,13 @@ a:hover {
 }
 
 
-/* POPUP - STYLES */
+/* POPUP - COMMON */
 
-#styles.menu {
-    left: 10px;
-}
-
-#styles.menu:hover {
+.menu:hover {
     font-size: 14px;
 }
 
-#styles > ul > li.command {
+.menu > ul > li.command {
     display: none;
     cursor: pointer;
     text-decoration: none;
@@ -175,13 +182,27 @@ a:hover {
     border: 1px solid transparent;
 }
 
-#styles:hover > ul > li.command {
+.menu:hover > ul > li.command {
     display: inline;
 }
 
-#styles > ul > li.command:hover {
+.menu > ul > li.command:hover {
     background-color: #a4a4df;
     border: 1px solid blue;
+}
+
+
+/* POPUP - FONT SIZE */
+
+#font-size.menu {
+    left: 80px;
+}
+
+
+/* POPUP - STYLES */
+
+#styles.menu {
+    left: 10px;
 }
 
 #styles #bold {

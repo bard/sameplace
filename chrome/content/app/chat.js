@@ -171,6 +171,7 @@ function init(event) {
         }
     });
 
+    $(document.body).addClass(getPref('font-size') || 'normal');
 }
 
 window.addEventListener('DOMContentLoaded', init, false);
@@ -317,6 +318,15 @@ function scrolledWindow(event) {
 
 function resizedWindow(event) {
     repositionOutput();
+}
+
+function requestedChangeFontSize(event) {
+    if(event.target.getAttribute('class') != 'command')
+        return;
+
+    var size = event.target.getAttribute('id');
+    document.body.setAttribute('class', size);
+    setPref('font-size', size);
 }
 
 function requestedFormatCommand(event) {

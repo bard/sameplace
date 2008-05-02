@@ -179,3 +179,11 @@ function scrollingOnlyIfAtBottom(domElement, action) {
     if(shouldScroll)
         scrollToBottom(domElement);
 }
+
+function setPref(name, value) {
+    globalStorage[document.location.host].setItem(name, value);
+}
+
+function getPref(name) {
+    return globalStorage[document.location.host].getItem(name).toString();
+}
