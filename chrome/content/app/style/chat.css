@@ -36,18 +36,18 @@ body {
     background: white;
     font-family: Verdana, sans-serif;
     overflow: hidden;
+    font-size: 80%;
 }
 
 body.fonts-smaller {
-    font-size: 10px;
+    font-size: 65%;
 }
 
 body.fonts-normal {
-    font-size: 12px;
 }
 
 body.fonts-larger {
-    font-size: 16px;
+    font-size: 110%;
 }
 
 a {
