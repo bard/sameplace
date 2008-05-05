@@ -75,14 +75,15 @@ function init(event) {
                 }, 2000);
             },
             onUpgrade: function() {
-                util.removeToolbarButton('xmpp-button');
-                util.addToolbarButton('sameplace-button');
                 if(pref.getCharPref('branch') != 'devel')
                     openURL('http://sameplace.cc/changelog/' +
                             util.getExtensionVersion('sameplace@hyperstruct.net')
                             .split('.').slice(0,-1).join('.'));
             }
         }, 1);
+
+    if(pref.getBoolPref('addToolbarButton'))
+        util.addToolbarButton('sameplace-button');
 
     updateStatusIndicator();
     initScriptlets();

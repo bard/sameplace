@@ -46,6 +46,9 @@
       <preference id="sameplace-chat-area"
                   name="extensions.sameplace.chatArea"
                   type="string"/>
+      <preference id="sameplace-add-toolbar-button"
+                  name="extensions.sameplace.addToolbarButton"
+                  type="bool"/>
     </preferences>
 
     <groupbox>
@@ -82,7 +85,12 @@
                       oncommand="sameplacePrefs.captureKey('contacts');"/>
             </hbox>
           </row>
-  
+
+          <row>
+            <label value="Add toolbar button:"/>
+            <checkbox preference="sameplace-add-toolbar-button" label=""/>
+          </row>
+          
           <row>
             <label value="Open chats in:"/>
             <vbox>
@@ -99,7 +107,7 @@
                 (Becomes effective after restart.)
               </description>
             </vbox>
-          </row>          
+          </row>
         </rows>
       </grid>
     </groupbox>
