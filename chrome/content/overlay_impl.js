@@ -69,7 +69,6 @@ function init(event) {
         'extensions.sameplace.version', {
             onFirstInstall: function() {
                 openURL('http://sameplace.cc/get-started');
-                util.addToolbarButton('sameplace-button');
                 setTimeout(function() {
                     runWizard();
                 }, 2000);
