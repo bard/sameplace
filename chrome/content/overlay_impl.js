@@ -338,7 +338,7 @@ function initDisplayRules() {
             toExpanded();
     }, false);
 
-    _('frame').addEventListener('detach', function(event) {
+    _('frame').addEventListener('sameplace/detach', function(event) {
         var wndContacts = window.open(
             'chrome://sameplace/content/contacts/contacts.xul',
             'SamePlace:Contacts', 'chrome');

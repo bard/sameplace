@@ -239,7 +239,7 @@ function isMUCJoined(account, address) {
 
 function detachSidebar() {
     var detachEvent = document.createEvent('Event');
-    detachEvent.initEvent('detach', true, false);
+    detachEvent.initEvent('sameplace/detach', true, false);
     window.dispatchEvent(detachEvent);
 }
 
