@@ -181,6 +181,8 @@ function initNetworkReactions() {
 function initState() {
     if(!window.frameElement)
         util.addClass($('#view'), 'standalone');
+    else
+        util.removeClass($('#view'), 'standalone');
 
     resizedView()
     regenerateGroups();
