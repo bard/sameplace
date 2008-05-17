@@ -94,7 +94,10 @@
           <row>
             <label value="Open chats in:"/>
             <vbox>
-              <menulist preference="sameplace-chat-area">
+              <menulist preference="sameplace-chat-area"
+                        oncommand="if(!this._alerted)
+                                   alert('This setting will become effective after restart.');
+                                   this._alerted = true; ">
                 <menupopup>
                   <menuitem label="(default)" value=""/>
                   <menuitem label="Sidebar" value="sidebar"/>
@@ -102,10 +105,6 @@
                   <menuitem label="Message Pane (Thunderbird only)" value="messagepane"/>
                 </menupopup>
               </menulist>
-
-              <description style="font-size: smaller;">
-                (Becomes effective after restart.)
-              </description>
             </vbox>
           </row>
         </rows>
