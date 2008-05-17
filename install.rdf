@@ -7,7 +7,7 @@
     <em:id>sameplace@hyperstruct.net</em:id>
     <em:version>42.0.0</em:version>
     <em:type>2</em:type>
-   
+
     <!-- firefox -->
 
     <em:targetApplication>
@@ -55,5 +55,13 @@
     <em:updateURL/>
     <em:homepageURL>http://sameplace.cc</em:homepageURL>
     <em:updateKey>MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDEIAFfynLWE9Kh6D7bbe0yM3gHyZKikhDkVK1n/3E8RngyNDAnjVb4W7M6XRpJVWjNLObB+CA+izRCUwvWOWzdIA1409od1gN9cjWU6c6X68AX/aGW7/LH30NCGcQcmw/MUtlPUQgI1agOJIIqCVRZh9npef/Vdtr3AxjsKtK4QwIDAQAB</em:updateKey>
+    <em:optionsURL>chrome://sameplace/content/preferences/preferences.xul</em:optionsURL>
+    <em:requires>
+      <Description>
+        <em:id>xmpp4moz@hyperstruct.net</em:id>
+        <em:minVersion>0.6</em:minVersion>
+        <em:maxVersion>42.*</em:maxVersion>
+      </Description>
+    </em:requires>
   </Description>      
 </RDF>
