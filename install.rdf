@@ -60,7 +60,7 @@
       <Description>
         <em:id>xmpp4moz@hyperstruct.net</em:id>
         <em:minVersion>0.6</em:minVersion>
-        <em:maxVersion>42.*</em:maxVersion>
+        <em:maxVersion>2009010100</em:maxVersion>
       </Description>
     </em:requires>
   </Description>      
