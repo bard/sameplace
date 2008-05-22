@@ -110,16 +110,8 @@ function hostAppIsSongbird() {
 function getDefaultAppUrl() {
     var url = pref.getCharPref('defaultAppUrl');
 
-    if(url == 'default')
-        url = 'chrome://sameplace/content/app/chat.xhtml';
-
-    if(/^chrome:\/\//.test(url) && !hostAppIsMail())
-        // Thunderbird's content policy won't allow applications
-        // served from file://.  For all others, we turn security up a
-        // notch and convert chrome:// URLs to file://.
-        return chromeToFileUrl(url);
-    else
-        return url;
+    return url == 'default' ?
+        'http://apps.sameplace.cc/chat/chat.xhtml' : url;
 }
 
 function getChatOverlayName() {
