@@ -110,8 +110,13 @@ function hostAppIsSongbird() {
 function getDefaultAppUrl() {
     var url = pref.getCharPref('defaultAppUrl');
 
-    return url == 'default' ?
-        'http://apps.sameplace.cc/chat/chat.xhtml' : url;
+    if(url == 'default') {
+        if(hostAppIsMail())
+            return 'chrome://sameplace/content/app/chat.xhtml';
+        else
+            return 'http://apps.sameplace.cc/chat/chat.xhtml';
+    } else
+        return url;
 }
 
 function getChatOverlayName() {
