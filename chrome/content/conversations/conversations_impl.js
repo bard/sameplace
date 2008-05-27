@@ -65,6 +65,19 @@ var getPanels, getTabs;
 // INITIALIZATION/FINALIZATION
 // ----------------------------------------------------------------------
 
+function dateToStamp(date) {
+    function pad(n) {
+        return n < 10 ? '0' + n : String(n);
+    }
+    
+    return (date.getUTCFullYear() +
+            pad(date.getUTCMonth()+1) +
+            pad(date.getUTCDate()) + 'T' +
+            pad(date.getUTCHours()) + ':' +
+            pad(date.getUTCMinutes()) + ':' +
+            pad(date.getUTCSeconds()));
+}
+
 function init(xulPanels, xulTabs) {
     getPanels = function() { return xulPanels; };
     getTabs   = function() { return xulTabs; };
@@ -151,6 +164,16 @@ function init(xulPanels, xulTabs) {
     getPanels().addEventListener('conversation/close', function(event) {
         var account = event.target.getAttribute('account');
         var address = event.target.getAttribute('address');
+
+        var messages = cacheFor(account, address);
+        var message = messages[messages.length - 1];
+        if (message) {
+            if (message.stanza.ns_delay::x == undefined ) {
+                message.stanza.ns_delay::x.@stamp = dateToStamp(new Date());
+                message.stanza.ns_delay::x.@from = "SamePlace/Internal";
+            }
+        }
+
         if(XMPP.isMUC(account, address))
             exitRoom(account, address,
                      XMPP.JID(util.getJoinPresence(account, address).stanza.@to).resource);

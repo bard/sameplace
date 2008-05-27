@@ -47,6 +47,7 @@ var userAddress;
 var contactResource;
 var contactName;
 var tooltipTimeout;
+var separator = document.createElement("hr");
 
 
 XML.prettyPrinting = false;
@@ -249,6 +250,7 @@ function displayMessage(stanza) {
     
     scrollingOnlyIfAtBottom($('#chat-output').get(0), function() {
         $('#messages').append(domMessage);
+        if(stanza.ns_delay::x.@from == "SamePlace/Internal") {$('#messages').append(separator);}
     });
 }
 
