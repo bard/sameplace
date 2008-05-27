@@ -87,17 +87,23 @@ behaviour.input = function(container) {
 
     // Setting up iframe content
     // ------------------------------------------------------------
-    
-    iframe.contentDocument.open();
-    iframe.contentDocument.write(
-        '<html xmlns="http://www.w3.org/1999/xhtml">' +
-        '<head><title></title>' +
-        '<style type="text/css">' +
-        'body { margin: 0; font-family: sans-serif; font-size: 10pt; }' +
-        '</style></head>' +
-        '<body></body></html>');
-    iframe.contentDocument.close();
-    iframe.contentDocument.designMode = 'on';
+
+    // Separate file for input area won't work in Firefox2, so we use
+    // this.  This in turn doesn't work in Firefox3, so we use the
+    // separate file.
+
+    if(navigator.userAgent.match(/rv:1.8/)) {
+        iframe.contentDocument.open();
+        iframe.contentDocument.write(
+            '<html xmlns="http://www.w3.org/1999/xhtml">' +
+                '<head><title></title>' +
+                '<style type="text/css">' +
+                'body { margin: 0; font-family: sans-serif; font-size: 10pt; }' +
+                '</style></head>' +
+                '<body></body></html>');
+        iframe.contentDocument.close();
+        iframe.contentDocument.designMode = 'on';
+    }
 
     // Wiring iframe events and reactions
     // ------------------------------------------------------------
