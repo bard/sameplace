@@ -61,8 +61,8 @@
           <row>
             <label value="Chat application:"
                    accesskey="a"
-                   for="sameplace-textbox-default-app-url"/>
-            <menulist class="sameplace-chat-app-url"
+                   for="sameplace-default-app-url"/>
+            <menulist id="sameplace-default-app-url"
                       editable="true"
                       value="default"
                       oncommand="if(event.target.value == 'custom')
