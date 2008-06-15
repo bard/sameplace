@@ -39,6 +39,8 @@ var Cc = Components.classes;
 var pref = Cc['@mozilla.org/preferences-service;1']
     .getService(Ci.nsIPrefService)
     .getBranch('xmpp.account.');
+var srvPrompt = Cc["@mozilla.org/embedcomp/prompt-service;1"]
+    .getService(Ci.nsIPromptService);
 
 
 // STATE
@@ -339,6 +341,10 @@ function advancedPageFinish() {
 // ----------------------------------------------------------------------
 
 function verifyAccount(account, callbacks) {
+    // Much of this duplicates XMPP.open, but it's not trivial to
+    // factor it so as to minimize duplication, since XMPP.open also
+    // creates a session while here we just need a connector.
+
     if(XMPP.isUp(account))
         return;
 
@@ -347,14 +353,7 @@ function verifyAccount(account, callbacks) {
            XMPP.connectorTypeFor(account.address + '/' + account.resource)]
         .createInstance(Ci.nsIXMPPConnector);
 
-    connector.init(account.address + '/' + account.resource,
-                   account.password,
-                   account.connectionHost,
-                   account.connectionPort,
-                   (account.connectionSecurity == 1 ||
-                    account.connectionSecurity == undefined));
-
-    connector.addObserver({
+    var connectionObserver = {
         observe: function(subject, topic, data) {
             switch(topic) {
             case 'active':
@@ -363,14 +362,46 @@ function verifyAccount(account, callbacks) {
                 break;
             case 'error':
                 connector.disconnect();
-                callbacks.onFailure();
+                if(subject && asString(subject) == 'badcert') {
+                    var addException = srvPrompt.confirm(
+                        null, 'Bad certificate for Jabber server',
+                        'Jabber server "' + account.connectionHost + '" is presenting an invalid SSL certificate.\n' +
+                            'To connect to it, you need to add an exception.  Do you want to proceed?');
+                    if(!addException)
+                        break;
+                    
+                    var params = {
+                        exceptionAdded : false,
+                        location       : 'https://' + account.connectionHost + ':' + account.connectionPort,
+                        prefetchCert   : true
+                    };
+
+                    setTimeout(function() {
+                        openDialog('chrome://pippki/content/exceptionDialog.xul',
+                                   '',
+                                   'chrome,centerscreen,modal',
+                                   params);
+
+                        if(params.exceptionAdded)
+                            verifyAccount(account, callbacks);
+                    });
+                } else {
+                    callbacks.onFailure();
+                }
                 break;
             default:
                 break;
             }
        }
-    }, null, false);
+    };
 
+    connector.init(account.address + '/' + account.resource,
+                   account.password,
+                   account.connectionHost,
+                   account.connectionPort,
+                   (account.connectionSecurity == 1 ||
+                    account.connectionSecurity == undefined));
+    connector.addObserver(connectionObserver, null, false);
     connector.connect();
 }
 
