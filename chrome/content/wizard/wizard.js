@@ -356,7 +356,7 @@ function verifyAccount(account, callbacks) {
 
     connector.addObserver({
         observe: function(subject, topic, data) {
-            switch(asString(subject)) {
+            switch(topic) {
             case 'active':
                 connector.disconnect();
                 callbacks.onSuccess();
