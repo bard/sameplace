@@ -129,8 +129,8 @@
               <radiogroup id="connection-security"
                           value="1" orient="horizontal"
                           oncommand="accountPrefs.updatedField(this);">
-                <radio value="2" label="StartTLS (experimental)" flex="1"/>
-                <radio value="1" label="SSL" selected="true" flex="1"/>
+                <radio value="2" label="StartTLS" selected="true" flex="1"/>
+                <radio value="1" label="SSL" flex="1"/>
                 <radio value="0" label="None" flex="1"/>
               </radiogroup>
             </row>
