@@ -299,15 +299,15 @@
 
             <row>
               <label value="Port:"/>
-              <textbox class="connection-port" value="5222"/>
+              <textbox class="connection-port" value="5223"/>
             </row>
 
             <row>
               <label value="Encryption:"/>
               <radiogroup class="connection-security"
                           value="1" orient="horizontal">
-                <radio value="2" label="StartTLS" selected="true" flex="1"/>
-                <radio value="1" label="SSL" flex="1"/>
+                <radio value="2" label="StartTLS" flex="1"/>
+                <radio value="1" label="SSL" selected="true" flex="1"/>
                 <radio value="0" label="None" flex="1"/>
               </radiogroup>
             </row>
