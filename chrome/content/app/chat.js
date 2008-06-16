@@ -172,7 +172,7 @@ function init(event) {
         }
     });
 
-    $(document.body).addClass(getPref('font-size') || 'normal');
+    // $(document.body).addClass(getPref('font-size') || 'normal');
 }
 
 window.addEventListener('DOMContentLoaded', init, false);
