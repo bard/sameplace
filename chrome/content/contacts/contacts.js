@@ -82,7 +82,6 @@ var dndObserver = {};
 // ----------------------------------------------------------------------
 
 var channel;
-var simulation = false;
 var insertionStrategy;
 var subscriptionAccumulator;
 
@@ -189,20 +188,16 @@ function initState() {
 
     insertionStrategy = insertionStrategies[
         $('#contacts').getAttribute('sort')];
-    
-    if(simulation) {
-        populateListFake();
-    } else {
-        XMPP.accounts
-            .filter(XMPP.isUp)
-            .forEach(requestRoster);
-        
-        XMPP.cache
-            .all(XMPP.q()
-                 .event('presence')
-                 .direction('in'))
-            .forEach(receivedContactPresence);
-    }
+
+    XMPP.accounts
+        .filter(XMPP.isUp)
+        .forEach(requestRoster);
+
+    XMPP.cache
+        .all(XMPP.q()
+             .event('presence')
+             .direction('in'))
+        .forEach(receivedContactPresence);
 }
 
 function finish() {
