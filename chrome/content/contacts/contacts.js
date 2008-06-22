@@ -579,7 +579,7 @@ function requestedOpenConversation(type) {
     case 'groupchat':
         window.openDialog(
             'chrome://sameplace/content/dialogs/join_room.xul',
-            'sameplace-join-room', 'centerscreen', null, 'users@places.sameplace.cc');
+            'sameplace-join-room', 'centerscreen', null, 'places.sameplace.cc');
         break;
     default:
         throw new Error('Unexpected. (' + type + ')');
