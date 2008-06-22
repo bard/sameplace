@@ -47,6 +47,7 @@
   <script type="application/x-javascript;version=1.7" src="chrome://xmpp4moz/content/xmpp.js"/>
   <script type="application/x-javascript;version=1.7" src="../lib/namespaces.js"/>
   <script type="application/x-javascript;version=1.7" src="../lib/utilities_xmpp.js"/>
+  <script type="application/x-javascript;version=1.7" src="../lib/util.js"/>
   <script type="application/x-javascript;version=1.7" src="join_room.js"/>
 
   <dialogheader id="header" title="&dialog.title;"/>
@@ -59,10 +60,45 @@
 
     <rows>
       <row align="center">
-        <label value="&room_address.label;"
-               accesskey="&room_address.accesskey;"
-               control="address"/>
-        <textbox id="address" oninput="refresh();"/>
+        <label value="Name:"
+               accesskey="N"
+               control="name"/>
+        <hbox align="center">
+          <textbox id="name" oninput="refresh();" flex="1"/>
+          <label class="text-link small-margin" onclick="searchRooms();" value="Search..."/>
+        </hbox>
+
+
+      </row>
+
+      <row align="center">
+        <label value="Server:"
+               accesskey="S"
+               control="server"/>
+        <textbox id="server" oninput="refresh();"/>
+      </row>
+
+      <row align="center">
+        <spacer/>
+        <separator class="groove"/>
+      </row>
+
+      <row align="center">
+        <label value="Address:"/>
+        <textbox readonly="true" class="plain" id="address" style="text-align: center;" value=""/>
+      </row>
+
+      <row align="center">
+        <spacer/>
+        <description style="font-size: smaller;">
+          <image src="chrome://sameplace/skin/info.png"/>
+          If no room exists with this name, it will be created.
+        </description>
+      </row>
+
+      <row align="center">
+        <spacer/>
+        <separator class="groove"/>
       </row>
 
       <row align="center">

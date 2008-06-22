@@ -50,8 +50,11 @@ function init() {
     xmpp.ui.refreshAccounts(_('xmpp-popup-accounts'));
 
     _('account').value = (account || (XMPP.accounts.filter(XMPP.isUp)[0] || XMPP.accounts[0]).jid);
-    _('address').value = address;
-    _('address').select();
+    if(address) {
+        _('name').value = XMPP.JID(address).username || '';
+        _('server').value = XMPP.JID(address).hostname || '';
+    }
+    _('name').select();
 
     selectedAccount(_('account'));
     refresh();
@@ -67,6 +70,11 @@ function selectedAccount(xulAccount) {
 
 // GUI ACTIONS
 // ----------------------------------------------------------------------
+
+function searchRooms() {
+    util.openURL('http://search.wensley.org.uk/');
+    window.close();
+}
 
 function doOk() {
 
@@ -154,7 +162,11 @@ function doCancel() {
 }
 
 function refresh() {
-    _('main').getButton('accept').disabled = !(v('account') && v('address') && v('nick'));
+    _('address').value = _('name').value && _('server').value ?
+        _('name').value + '@' + _('server').value :
+        '';
+
+    _('main').getButton('accept').disabled = !(v('account') && v('name') && v('server') && v('nick'));
 
     var bookmark = getMUCBookmark(v('account'), v('address'));
     if(bookmark != undefined) {
