@@ -43,6 +43,7 @@
         onunload="finish(event);"
         title="About SamePlace">
     
+  <script type="application/x-javascript" src="lib/util.js"/>
   <script type="application/x-javascript" src="about.js"/>
 
   <vbox id="content" flex="1">
@@ -52,7 +53,21 @@
       </hbox>
       <vbox id="name-box" flex="1" align="start" pack="end">
         <label id="name" value="sameplace"/>
-        <label id="version" value="0.9 alpha"/>
+
+        <grid style="font-size: smaller;">
+          <columns>
+            <column flex="0"/>
+            <column flex="1"/>
+          </columns>
+          <rows>
+            <row>
+              <label value="sameplace"/><label id="sameplace-version"/>
+            </row>
+            <row>
+              <label value="xmpp4moz"/><label id="xmpp4moz-version"/>
+            </row>
+          </rows>
+        </grid>
       </vbox>
     </stack>
 
