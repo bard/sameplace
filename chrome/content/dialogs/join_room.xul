@@ -31,14 +31,14 @@
 -->
 
 
-<!DOCTYPE dialog SYSTEM "chrome://sameplace/locale/join_room.dtd">
+<!DOCTYPE dialog SYSTEM "chrome://sameplace/locale/dialogs.dtd">
 
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xul-overlay href="chrome://xmpp4moz/content/ui/accounts.xul"?>
 
 <dialog id="main"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-        title="&dialog.title;"
+        title="&join_room.dialog.title;"
         ondialogaccept="return doOk();"
         ondialogcancel="return doCancel();"
         onload="init();"
@@ -50,7 +50,7 @@
   <script type="application/x-javascript;version=1.7" src="../lib/util.js"/>
   <script type="application/x-javascript;version=1.7" src="join_room.js"/>
 
-  <dialogheader id="header" title="&dialog.title;"/>
+  <dialogheader id="header" title="&join_room.dialog.title;"/>
 
   <grid flex="1">
     <columns>
@@ -102,15 +102,15 @@
       </row>
 
       <row align="center">
-        <label value="&user_nick.label;"
-               accesskey="&user_nick.label;"
+        <label value="&join_room.user_nick.label;"
+               accesskey="&join_room.user_nick.label;"
                control="nick"/>
         <textbox id="nick"/>
       </row>
 
       <row align="center">
-        <label value="&user_account.label;"
-               accesskey="&user_account.accesskey;"
+        <label value="&join_room.user_account.label;"
+               accesskey="&join_room.user_account.accesskey;"
                control="accounts"/>
         <menulist id="account" oncommand="selectedAccount(this);"
                   flex="1" label="" sizetopopup="none">
@@ -123,13 +123,13 @@
   <hbox pack="end" hidden="true">
     <vbox>
       <checkbox id="save"
-                label="&save.label;"
-                accesskey="&save.accesskey;"
+                label="&join_room.save.label;"
+                accesskey="&join_room.save.accesskey;"
                 oninput="refresh();"/>
       <checkbox id="autojoin"
-                label="&autojoin.label;"
-                accesskey="&autojoin.accesskey;"
-                oninput="refresh();"/>      
+                label="&join_room.autojoin.label;"
+                accesskey="&join_room.autojoin.accesskey;"
+                oninput="refresh();"/>
     </vbox>
   </hbox>
 

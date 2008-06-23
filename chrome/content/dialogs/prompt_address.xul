@@ -31,14 +31,13 @@
 -->
 
 
-<!DOCTYPE dialog SYSTEM "chrome://sameplace/locale/prompt_address.dtd">
-
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xul-overlay href="chrome://xmpp4moz/content/ui/accounts.xul"?>
 
+<!DOCTYPE dialog SYSTEM "chrome://sameplace/locale/dialogs.dtd">
 <dialog id="main"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-        title="&default_title;"
+        title="&prompt_address.dialog.title;"
         ondialogaccept="return accepted();"
         ondialogcancel="return canceled();"
         onload="init();">
@@ -47,7 +46,7 @@
   <script type="application/x-javascript;version=1.7" src="../lib/getElementsBySelector.js"/> 
   <script type="application/x-javascript;version=1.7" src="prompt_address.js"/> 
 
-  <dialogheader id="title" title="&default_title;"/>
+  <dialogheader id="title" title="&prompt_address.dialog.title;"/>
 
   <grid flex="1">
     <columns>
@@ -58,15 +57,15 @@
 
     <rows>
       <row align="center">
-        <label value="&address.label;"
-               accesskey="&address.accesskey;"
+        <label value="&prompt_address.address.label;"
+               accesskey="&prompt_address.address.accesskey;"
                control="address"/>
         <textbox id="address" value="" oninput="update();"/>
       </row>
 
       <row align="center">
-        <label value="&account.label;"
-               accesskey="&account.accesskey;"
+        <label value="&prompt_address.account.label;"
+               accesskey="&prompt_address.account.accesskey;"
                control="accounts"/>
         <menulist id="account" oncommand="update();" flex="1" label="" sizetopopup="none">
           <menupopup id="xmpp-popup-accounts"/>

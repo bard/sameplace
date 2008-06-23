@@ -32,7 +32,8 @@
 
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 
-<dialog id="main" title="Select Contacts"
+<!DOCTYPE dialog SYSTEM "chrome://sameplace/locale/dialogs.dtd">
+<dialog id="main" title="&contact_selection.dialog.title;"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
         ondialogaccept="return chosenOk();"
         ondialogcancel="return chosenCancel();"
@@ -45,7 +46,7 @@
   <listbox id="contacts" 
            flex="1">
     <listhead>
-      <listheader label="Contact"/>
+      <listheader label="&contact_selection.list.header;"/>
     </listhead>
   </listbox>
 

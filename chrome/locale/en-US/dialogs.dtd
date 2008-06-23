@@ -1,0 +1,35 @@
+<!ENTITY add_contact.dialog.title "Add Contact">
+<!ENTITY add_contact.contact_address.label "Contact:">
+<!ENTITY add_contact.contact_address.accesskey "C">
+<!ENTITY add_contact.contact_subscribe_to_presence.label "Show me when this contact is online">
+<!ENTITY add_contact.contact_subscribe_to_presence.accesskey "S">
+<!ENTITY add_contact.user_account.label "Account:">
+<!ENTITY add_contact.user_account.accesskey "A">
+<!ENTITY contact_selection.dialog.title "Select Contacts">
+<!ENTITY contact_selection.list.header "Contact">
+<!ENTITY join_room.dialog.title "Join Chat Room">
+<!ENTITY join_room.room_address.label "Address:">
+<!ENTITY join_room.room_address.accesskey "A">
+<!ENTITY join_room.user_nick.label "Nickname:">
+<!ENTITY join_room.user_nick.accesskey "N">
+<!ENTITY join_room.user_account.label "Account:">
+<!ENTITY join_room.user_account.accesskey "c">
+<!ENTITY join_room.save.label "Save to contact list">
+<!ENTITY join_room.save.accesskey "S">
+<!ENTITY join_room.autojoin.label "Join automatically">
+<!ENTITY join_room.autojoin.accesskey "J">
+<!ENTITY open_conversation.dialog.title "Open Conversation">
+<!ENTITY open_conversation.contact_address.label "Address:">
+<!ENTITY open_conversation.contact_address.accesskey "A">
+<!ENTITY open_conversation.user_account.label "Account:">
+<!ENTITY open_conversation.user_account.accesskey "c">
+<!ENTITY prompt_address.dialog.title "Enter Address">
+<!ENTITY prompt_address.address.label "Address:">
+<!ENTITY prompt_address.address.accesskey "A">
+<!ENTITY prompt_address.account.label "Account:">
+<!ENTITY prompt_address.account.accesskey "c">
+<!ENTITY report_bug.dialog.title "Report">
+<!ENTITY report_bug.close.label "Close">
+<!ENTITY report_bug.close.accesskey "C">
+<!ENTITY report_bug.copy_to_clipboard.label "Copy to Clipboard">
+<!ENTITY report_bug.instructions "Please include the following information with your report:">
