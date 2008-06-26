@@ -66,13 +66,8 @@
   <!-- KEYS -->
 
   <keyset id="mailKeys">
-    <key id="sameplace-key-focus-status"
-         key="t"
-         modifiers="control alt"
-         phase="capture"
-         oncommand="sameplace.viewFor('toolbox').focusStatus();"/>
-    <key id="sameplace-key-toggle"/>
     <key keycode="VK_F12" modifiers="control" command="sameplace-command-load-sidebar-force"/>
+    <key id="sameplace-toggle-key" command="sameplace-toggle" keycode="VK_F9"/>
   </keyset>
 
   <!-- TOOLBAR -->

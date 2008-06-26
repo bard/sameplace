@@ -79,13 +79,8 @@
   <keyset id="mainKeyset">
     <key modifiers="control" key=" "
          oncommand="sameplace.findContact();"/>
-    <key id="sameplace-key-focus-status"
-         key="t"
-         modifiers="control alt"
-         phase="capture"
-         oncommand="sameplace.viewFor('toolbox').focusStatus();"/>
-    <key id="sameplace-key-toggle"/>
     <key keycode="VK_F12" modifiers="control" command="sameplace-command-load-sidebar-force"/>
+    <key id="sameplace-toggle-key" command="sameplace-toggle" keycode="VK_F9"/>
   </keyset>
 
   <!-- MENUS -->
@@ -110,12 +105,6 @@
               label="&context.install-scriptlet;" accesskey="I"
               oncommand="sameplace.requestedInstallScriptlet(document.popupNode);"/>
   </popup>
-
-  <!-- KEYS -->
-
-  <keyset id="mainKeyset">
-    <key id="sameplace-toggle-key" command="sameplace-toggle" keycode="VK_F9"/>
-  </keyset>
 
   <!-- COMMANDS -->
 
