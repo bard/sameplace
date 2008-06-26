@@ -44,14 +44,16 @@
         buttonaccesskeyextra1="&report_bug.close.accesskey;"
         ondialogextra1="doCopy();"
         flex="1"
-        width="400"
-        height="320">
+        width="500"
+        height="420">
 
-  <script type="application/x-javascript;version=1.7" src="report_bug.js"/>
+  <script type="application/x-javascript;version=1.7" src="chrome://xmpp4moz/content/xmpp.js"/>
+  <script type="application/x-javascript;version=1.7" src="debug_info.js"/>
 
   <dialogheader id="header" title="&report_bug.dialog.title;"/>
 
-  <description>&report_bug.instructions;</description>
+  <spacer height="10"/>
+  <description class="header">&report_bug.instructions;</description>
 
   <textbox id="debug-info" multiline="true" flex="1"/>
 </dialog>

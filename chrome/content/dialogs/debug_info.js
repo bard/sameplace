@@ -33,8 +33,15 @@
 // GLOBAL DEFINITIONS
 // ----------------------------------------------------------------------
 
-const Cc = Components.classes;
-const Ci = Components.interfaces;
+var Cc = Components.classes;
+var Ci = Components.interfaces;
+var srvProxy = Cc['@mozilla.org/network/protocol-proxy-service;1']
+    .getService(Ci.nsIProtocolProxyService);
+var srvIO = Cc['@mozilla.org/network/io-service;1']
+    .getService(Ci.nsIIOService);
+var SECURITY_NONE     = 0;
+var SECURITY_SSL      = 1;
+var SECURITY_STARTTLS = 2;
 
 
 // INITIALIZATION
@@ -89,20 +96,46 @@ function getInfo() {
     var x4mString =
         'xmpp4moz: ' + x4m.version;
 
-    var errors = getErrors();
-
-    var s = 
-        'System information:\n\n' +
+    var sysInfo = 
+        'System:\n\n' +
         '\t' + spString + '\n' +
         '\t' + x4mString + '\n' + 
         '\t' + osInfo + '\n' +
         '\t' + hostAppString + '\n' +
-        '\n' +
+        '\n';
+
+
+    var errors = getErrors();
+
+    var errorInfo =
         'Latest relevant errors from console:\n\n' +
         (errors != '' ? errors.replace(/^/gm, '\t') : '\tNone') +
         '\n'
 
-    return s;
+    var securityDescEnum = ['cleartext', 'SSL', 'STARTTLS'];
+
+    var accountInfo =
+        'Accounts:\n\n';
+    for each(var account in XMPP.accounts) {
+        accountInfo += '\t* [username hidden]@' +
+            XMPP.JID(account.jid).hostname +
+            '\n\t  via ' + account.connectionHost +
+            ':' + account.connectionPort + '/' +
+            securityDescEnum[account.connectionSecurity];
+
+        var proxyInfo =  srvProxy.resolve(
+            srvIO.newURI((account.connectionSecurity == SECURITY_SSL ? 'https://' : 'http://') + account.connectionHost, null, null),
+            Ci.nsIProtocolProxyService.RESOLVE_NON_BLOCKING);
+        if(proxyInfo)
+            accountInfo += ' with ' + proxyInfo.type + ' proxy ' + proxyInfo.host + ':' + proxyInfo.port
+        else
+            accountInfo += ' with no proxy'
+
+        accountInfo += '\n';
+    }
+    accountInfo += '\n';
+
+    return sysInfo + accountInfo + errorInfo;
 }
 
 function doCopy() {

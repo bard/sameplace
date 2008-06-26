@@ -1145,12 +1145,14 @@ function joinUsersRoom() {
 }
 
 function askQuestion() {
+    window.openDialog('chrome://sameplace/content/dialogs/debug_info.xul',
+                      'sameplace-debug-info', 'top=40,left=40', null);
     util.openURL('https://answers.launchpad.net/sameplace');
 }
 
 function reportBug() {
-    window.openDialog('chrome://sameplace/content/dialogs/report_bug.xul',
-                      'sameplace-report-bug', 'top=40,left=40', null);
+    window.openDialog('chrome://sameplace/content/dialogs/debug_info.xul',
+                      'sameplace-debug-info', 'top=40,left=40', null);
     util.openURL('https://launchpad.net/sameplace');
 }
 
