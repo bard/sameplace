@@ -115,10 +115,10 @@ function hostsConversations() {
              chatOverlayName == 'messagepane'));
 }
 
-function toggle(skipCompact) {
+function toggle() {
     if(isCollapsed())
         toExpanded();
-    else if(isCompact() || skipCompact)
+    else if(isCompact())
         toCollapsed();
     else
         toCompact();
