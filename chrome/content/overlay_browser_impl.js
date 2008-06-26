@@ -166,5 +166,5 @@ function displayContacts() {
 
 function getContacts() {
     // XXX won't work for external
-    _('frame').contentWindow.requestedToggleFilter();
+    return _('frame').contentWindow;
 }
