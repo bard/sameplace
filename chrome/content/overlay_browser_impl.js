@@ -157,6 +157,10 @@ function toExpanded() {
     
     if(_('button'))
         _('button').removeAttribute('pending-messages');
+
+    var expandEvent = document.createEvent('Event');
+    expandEvent.initEvent('sidebar/expand', true, false);
+    _('frame').dispatchEvent(expandEvent);
 }
 
 function displayContacts() {

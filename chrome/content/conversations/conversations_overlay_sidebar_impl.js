@@ -52,6 +52,13 @@ function init() {
     
     window.addEventListener('conversation/close', closedConversation, false);
     
+    window.frameElement.addEventListener('sidebar/expand', function() {
+        var xulPanel = $('#conversations').contentWindow.getPanels().selectedBrowser;
+        if(xulPanel)
+            setTimeout(function() { xulPanel.contentWindow.focus(); });
+    }, false);
+
+
     delayedMouseOver($('.scroll-arrow-down'), function() {
         util.addClass($('#contacts-stack'), 'attention-on-contacts');
     });
