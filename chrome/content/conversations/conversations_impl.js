@@ -344,7 +344,6 @@ function create(account, address, nextAction) {
     });
     xulPanel.setAttribute('account', account);
     xulPanel.setAttribute('address', address);
-    xulPanel.loadURI(util.getDefaultAppUrl());
     xulPanel.setAttribute('src', util.getDefaultAppUrl());
 
     return xulPanel;
