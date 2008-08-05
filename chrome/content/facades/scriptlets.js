@@ -154,7 +154,7 @@ function forEach(action) {
     }
 }
 
-function create(name) {
+function create(name, url) {
     var file;
     file = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
     file.initWithFile(dir);
@@ -163,12 +163,15 @@ function create(name) {
     if(file.exists())
         throw new Error('File already exists.');
 
-    var sampleSource = readURL(sampleURL);
-
     var outStream = Cc['@mozilla.org/network/file-output-stream;1']
         .createInstance(Ci.nsIFileOutputStream);
     outStream.init(file, 0x02 | 0x08 | 0x20, 0, 0);
-    outStream.write(sampleSource, sampleSource.length);
+    if(url) {
+        var initialContent = readURL(url);
+        outStream.write(initialContent, initialContent.length);
+    } else {
+        outStream.write('\n', 1);
+    }
     outStream.close();
 
     return get(file);

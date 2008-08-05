@@ -75,9 +75,8 @@
   </description>
 
 
-  <hbox>
-    <button label="Create..." accesskey="C" oncommand="requestedCreateScriptlet();"/>
-    <spacer flex="1"/>
+  <hbox id="footer">
+    <spacer id="footer-spacer" flex="1"/>
     <button label="Close" oncommand="window.close();"/>
   </hbox>
 
@@ -92,7 +91,6 @@
       <hbox class="actions">
         <checkbox class="enabled" label="Enabled" checked="false" oncommand="requestedToggleScriptletActivation(this);"/>
         <button class="reload" label="Reload" accesskey="R" oncommand="reload(this);"/>
-        <button class="edit" label="Edit" accesskey="E" oncommand="requestedEditScriptlet(this);"/>
         <spacer flex="1"/>
         <button class="uninstall" label="Uninstall" accesskey="U" oncommand="uninstall(this);"/>
       </hbox>          

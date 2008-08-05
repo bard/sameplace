@@ -79,17 +79,6 @@ function refreshScriptlets() {
         });
 }
 
-function createScriptlet(name) {
-    try {
-        var scriptlet = scriptlets.create(name);
-        scriptlet.enable();
-        edit(scriptlet.fileName);
-        refreshScriptlets();
-    } catch(e) {
-        window.alert(e);
-    }
-}
-
 function updateScriptlet(xulScriptlet, scriptlet) {
     $(xulScriptlet).$('.filename')._.setAttribute('value', scriptlet.fileName);
     try {
@@ -137,20 +126,6 @@ function requestedToggleScriptletActivation(xulCheckbox) {
         scriptlet.disable();
     else
         scriptlet.enable();
-}
-
-function requestedEditScriptlet(xulEdit) {
-    edit($(xulEdit).$('^ .scriptlet .filename')._.value);
-}
-
-function requestedCreateScriptlet() {
-    var name = { value: 'unnamed' };
-
-    var confirm = srvPrompt.prompt(
-        null, 'Creating scriptlet', 'Choose a name for the scriptlet.  Filename will be <name>.js ', name, null, {});
-
-    if(confirm)
-        createScriptlet(name.value + '.js');
 }
 
 function requestedInstallRemoteScriptlet(url) {
@@ -237,12 +212,6 @@ function reload(xulReload) {
         window.alert(e + '\n' + e.stack);
     }
     updateScriptlet(xulScriptlet, scriptlet);
-}
-
-function edit(fileName) {
-    window.openDialog('chrome://sameplace/content/scriptlets/scriptlet_editor.xul',
-                      'SamePlace:ScriptletEditor', '',
-                      scriptlets.get(fileName));
 }
 
 
