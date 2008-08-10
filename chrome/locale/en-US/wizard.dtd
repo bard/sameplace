@@ -1,68 +1,69 @@
 <!ENTITY title "SamePlace Configuration Wizard">
+<!ENTITY select.services.label "Select the services you want to connect to:">
 
-<!ENTITY page.current_status.description "This wizard will guide you through the configuration of an account.">
-<!ENTITY page.current_status.text1 "You can use any account valid on the Jabber network, including GTalk/GMail.com, LiveJournal.com, and so on.  If you don't have one yet, you'll be able to create it.">
-<!ENTITY page.current_status.text2 "Do you have an account already?">
-<!ENTITY page.current_status.choices.have_gmail_account.label "I have a GTalk/GMail.com account">
-<!ENTITY page.current_status.choices.have_gmail_account.accesskey "G">
-<!ENTITY page.current_status.choices.have_other_account.label "I have an account with another Jabber server">
-<!ENTITY page.current_status.choices.have_other_account.accesskey "I">
-<!ENTITY page.current_status.choices.have_no_account.label "I don't have a Jabber account yet">
-<!ENTITY page.current_status.choices.have_no_account.accesskey "d">
+<!ENTITY page.select_service.gtalk.label "Gmail">
+<!ENTITY page.select_service.jabber.label "Jabber">
+<!ENTITY page.select_service.sameplace.label "SamePlace">
+<!ENTITY page.select_service.twitter.label "Twitter">
+<!ENTITY page.select_service.aim.label "AIM/ICQ">
+<!ENTITY page.select_service.msn.label "MSN">
 
-<!ENTITY page.account_existing.address.label "Address:">
-<!ENTITY page.account_existing.address.accesskey "A">
-<!ENTITY page.account_existing.password.label "Password:">
-<!ENTITY page.account_existing.password.accesskey "P">
-<!ENTITY page.account_existing.autologin.label "Login automatically at startup">
-<!ENTITY page.account_existing.autologin.accesskey "o">
-<!ENTITY page.account_existing.remember_password.label "Remember password">
-<!ENTITY page.account_existing.remember_password.accesskey "e">
-<!ENTITY page.account_existing.advanced.label "Advanced...">
-<!ENTITY page.account_existing.advanced.accesskey "d">
-<!ENTITY page.account_existing.resource.label "Resource:">
-<!ENTITY page.account_existing.resource.accesskey "e">
-<!ENTITY page.account_existing.server_for_connection.label "Server for Connection:">
-<!ENTITY page.account_existing.server_for_connection.accesskey "S">
-<!ENTITY page.account_existing.server_port.label "Server Port:">
-<!ENTITY page.account_existing.server_port.accesskey "P">
-<!ENTITY page.account_existing.encryption.label "Encryption:">
-<!ENTITY page.account_existing.encryption.accesskey "E">
-<!ENTITY page.account_existing.encryption.none "None">
+<!ENTITY page.select_service.gtalk_title.label "GMail/GTalk.">
+<!ENTITY page.select_service.gtalk.description "Google's Jabber service.">
+<!ENTITY page.select_service.jabber.description "Jabber is an open, decentralized network. Connection to servers is encrypted.">
+<!ENTITY page.select_service.jabber_not_sp_gmail.label "Choose this if you have a Jabber account on a service other than SamePlace.cc or GMail.com">
 
-<!ENTITY page.account_new.description.label "New Jabber account">
-<!ENTITY page.account_new.text1 "Choose a server to register your account with.">
-<!ENTITY page.account_new.username.label "Username">
-<!ENTITY page.account_new.username.accesskey "U">
-<!ENTITY page.account_new.password.label "Password">
-<!ENTITY page.account_new.password.accesskey "P">
-<!ENTITY page.account_new.server.label "Server">
-<!ENTITY page.account_new.server.accesskey "S">
-<!ENTITY page.account_new.choices.select_from_list.label "Select from list">
-<!ENTITY page.account_new.choices.enter_custom_server.label "Enter custom server">
-<!ENTITY page.account_new.login_automatically.label "Login automatically at startup">
-<!ENTITY page.account_new.login_automatically.accesskey "L">
-<!ENTITY page.account_new.remember_password.label "Remember password">
-<!ENTITY page.account_new.remember_password.accesskey "R">
-<!ENTITY page.account_new.advanced.label "Advanced...">
-<!ENTITY page.account_new.advanced.accesskey "v">
-<!ENTITY page.account_new.advanced.server_for_connection.label "Server for Connection:">
-<!ENTITY page.account_new.advanced.server_for_connection.accesskey "C">
-<!ENTITY page.account_new.advanced.resource.label "Resource:">
-<!ENTITY page.account_new.advanced.resource.accesskey "R">
-<!ENTITY page.account_new.advanced.server_port.label "Server Port:">
-<!ENTITY page.account_new.advanced.server_port.accesskey "P">
-<!ENTITY page.account_new.advanced.encryption.label "Encryption:">
-<!ENTITY page.account_new.advanced.encryption.accesskey "E">
-<!ENTITY page.account_new.advanced.encryption.ssl "SSL">
-<!ENTITY page.account_new.advanced.encryption.none "None">
+<!ENTITY page.select_service.sameplace.description_1 "SamePlace">
+<!ENTITY page.select_service.sameplace.description_2 "'s Jabber service. It also hosts gateways to other networks, such as AIM and MSN">
+<!ENTITY page.select_service.twitter.description_1 "Twitter">
+<!ENTITY page.select_service.twitter.description_2 "lets you broadcast short status messages to your friends and follow their status messages in turn.">
+<!ENTITY page.select_service.twitter_description_3.label "This is equivalent to using Twitter from the web, so connection is not encrypted.">
 
-<!ENTITY page.account_registration.text1 "Connecting... (if this takes too long, consider going back and choosing a different server)">
-<!ENTITY page.account_registration.connect_success "Connected. Requesting registration information...">
-<!ENTITY page.account_registration.registration_success "Account created successfully!  To finish configuration, click Next.">
-<!ENTITY page.account_registration.registration_failure "Error while creating new account:">
+<!ENTITY page.select_service.msn_title.label "MSN.">
+<!ENTITY page.select_service.msn.description_1 "Microsoft instant messaging service.">
+<!ENTITY page.select_service.msn.description_2 "MSN is a proprietary, closed network. MSN does not provide encrypted sessions.">
 
-<!ENTITY page.finish.text1 "Account configured">
-<!ENTITY page.finish.text2 "To connect, select your account from the Jabber menu:">
-<!ENTITY page.finish.connect_now.label "Connect now">
-    
+<!ENTITY page.select_service.aim_title.label "AIM/ICQ.">
+<!ENTITY page.select_service.aim.description_1 "AOL instant messaging service.">
+<!ENTITY page.select_service.aim.description_2 "AIM/ICQ is a proprietary, closed network. AIM/ICQ does not provide encrypted connections.">
+
+<!ENTITY page.jabber.description "Step 1: Configure an account (existing or new) on sameplace.cc. This lets you reach the gateway to the external network.">
+
+<!ENTITY page.jabber.username.label "Username:">
+<!ENTITY page.jabber.domain.label "Domain:">
+<!ENTITY page.jabber.gmail.domain_1.label "gmail.com">
+<!ENTITY page.jabber.gmail.domain_2.label "googlemail.com">
+<!ENTITY page.jabber.gmail.own_domain.label "Your own domain...">
+<!ENTITY page.jabber.sameplace.domain.label "sameplace.cc">
+<!ENTITY page.jabber.twitter.domain.label "twitter.x4m.localhost">
+
+<!ENTITY page.jabber.password.label "Password:">
+<!ENTITY page.jabber.confirm.label "Confirm password:">
+<!ENTITY page.jabber.result.label "Your ID">
+<!ENTITY page.jabber.autologin.label "Login on startup">
+
+<!ENTITY page.jabber.success.label "Account verified!">
+<!ENTITY page.jabber.failure.label "Failure. :-(">
+<!ENTITY page.jabber.failure.description "If you tried to register a new account, the username is already taken. If this is an existing account, you probably provided the wrong password. If this is a non-Jabber account, service might not support registration.">
+
+<!ENTITY page.jabber.advanced.resource.label "Resource:">
+<!ENTITY page.jabber.advanced.resource_example.label "E.g.: Home, Office, ...">
+<!ENTITY page.jabber.advanced.server.label "Server:">
+<!ENTITY page.jabber.advanced.port.label "Port:">
+<!ENTITY page.jabber.advanced.encryption.label "Encryption:">
+<!ENTITY page.jabber.advanced.encrypt.starttls "StartTLS">
+<!ENTITY page.jabber.advanced.encrypt.ssl "SSL">
+<!ENTITY page.jabber.advanced.encrypt.none "None">
+<!ENTITY page.jabber.advanced.button.label "Advanced...">
+
+<!ENTITY page.transport.description "Step 2: Configure your external account.">
+<!ENTITY page.transport.username.label "Username:">
+<!ENTITY page.transport.msn_example.label "Example: john@hotmail.com">
+<!ENTITY page.transport.aim_example.label "Example: john, mary">
+<!ENTITY page.transport.password.label "Password:">
+<!ENTITY page.transport.confirm.label "Confirm password:">
+
+<!ENTITY page.transport.done.label "Configured!">
+<!ENTITY page.transport.done.description "You may have to go offline then back online for the transport to receive your status. This account is server-side and will not be shown in your account list.">
+
+<!ENTITY page.finish.done.label "Done!">

@@ -8,8 +8,8 @@
 <!ENTITY contact_selection.dialog.title "Select Contacts">
 <!ENTITY contact_selection.list.header "Contact">
 <!ENTITY join_room.dialog.title "Join Chat Room">
-<!ENTITY join_room.room_address.label "Address:">
-<!ENTITY join_room.room_address.accesskey "A">
+<!ENTITY join_room.room_name.label "Name:">
+<!ENTITY join_room.room_name.accesskey "A">
 <!ENTITY join_room.user_nick.label "Nickname:">
 <!ENTITY join_room.user_nick.accesskey "N">
 <!ENTITY join_room.user_account.label "Account:">
@@ -33,3 +33,11 @@
 <!ENTITY report_bug.close.accesskey "C">
 <!ENTITY report_bug.copy_to_clipboard.label "Copy to Clipboard">
 <!ENTITY report_bug.instructions "Please include the following information with your report:">
+
+<!ENTITY join_room.room_search.label "Search...">
+<!ENTITY join_room.room_server.label "Server:">
+<!ENTITY join_room.room_server.accesskey "S">
+<!ENTITY join_room.room_address.label "Address:">
+<!ENTITY join_room.join_tip.label "If no room exists with this name, it will be created.">
+
+

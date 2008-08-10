@@ -34,9 +34,11 @@
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://sameplace/skin/wizard/wizard.css" "text/css"?>
 
+<!DOCTYPE window SYSTEM "chrome://sameplace/locale/wizard.dtd">
+
 <wizard id="wizard"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-        title="SamePlace Configuration Wizard"
+        title="&title;"
         onload="init();"
         onunload="finish();">
 
@@ -49,7 +51,7 @@
               onpageshow="shownPageSelection();"> <!-- XXX can't center from css, why? -->
 
     <description class="header">
-      Select the services you want to connect to:
+      &select.services.label;
     </description>
 
     <description id="services"
@@ -58,20 +60,20 @@
                  onmouseout="$('#service-infos').selectedIndex = -1;"
                  onclick="var service = $(event.target, '^ .service');
                           if(service) selectedService(service);">
-      <vbox class="service gtalk"><image/><label value="Gmail"/></vbox>
-      <vbox class="service jabber"><image/><label value="Jabber"/></vbox>
-      <vbox class="service sameplace"><image/><label value="SamePlace"/></vbox>
-      <vbox class="service twitter"><image/><label value="Twitter"/></vbox>
-      <vbox class="service aim"><image/><label value="AIM/ICQ"/></vbox>
-      <vbox class="service msn"><image/><label value="MSN"/></vbox>
+      <vbox class="service gtalk"><image/><label value="&page.select_service.gtalk.label;"/></vbox>
+      <vbox class="service jabber"><image/><label value="&page.select_service.jabber.label;"/></vbox>
+      <vbox class="service sameplace"><image/><label value="&page.select_service.sameplace.label;"/></vbox>
+      <vbox class="service twitter"><image/><label value="&page.select_service.twitter.label;"/></vbox>
+      <vbox class="service aim"><image/><label value="&page.select_service.aim.label;"/></vbox>
+      <vbox class="service msn"><image/><label value="&page.select_service.msn.label;"/></vbox>
     </description>
     
     <deck id="service-infos" selectedIndex="-1">
       <vbox class="service-info" id="service-info-gtalk">
         <description>
           <label style="font-weight: bold;" class="small-margin"
-                 value="GMail/GTalk."/>
-          Google's Jabber service.
+                 value="&page.select_service.gtalk_title.label;"/>
+          &page.select_service.gtalk.description;
         </description>
         
         <spacer flex="1"/>
@@ -79,16 +81,14 @@
         <hbox flex="1" align="start">
           <image class="service-ok"/>
           <description style="font-style: italic;" flex="1">
-            Jabber is an open, decentralized network.  Connection to
-            servers is encrypted.
+            &page.select_service.jabber.description;
           </description>              
         </hbox>
       </vbox>
 
       <vbox class="service-info" id="service-info-jabber">
         <description>
-          Choose this if you have a Jabber account on a service
-          other than SamePlace.cc or GMail.com.
+          &page.select_service.jabber_not_sp_gmail.label;
         </description>
         
         <spacer flex="1"/>
@@ -96,8 +96,7 @@
         <hbox flex="1" align="start">
           <image class="service-ok"/>
           <description style="font-style: italic;" flex="1">
-            Jabber is an open, decentralized network.  Connection to
-            servers is encrypted.
+            &page.select_service.jabber.description;
           </description>              
         </hbox>
       </vbox>
@@ -106,8 +105,7 @@
         <description>
           <label style="font-weight: bold;"
                  class="small-margin"
-                 value="SamePlace"/>'s Jabber service.  It also hosts gateways to
-          other networks, such as AIM and MSN.
+                 value="&page.select_service.sameplace.description_1;"/>&page.select_service.sameplace.description_2;
         </description>
         
         <spacer flex="1"/>
@@ -115,8 +113,7 @@
         <hbox flex="1" align="start">
           <image class="service-ok"/>
           <description style="font-style: italic;" flex="1">
-            Jabber is an open, decentralized network.  Connection to
-            servers is encrypted.
+            &page.select_service.jabber.description;
           </description>              
         </hbox>
       </vbox>
@@ -124,8 +121,7 @@
       <vbox class="service-info" id="service-info-twitter">
         <description>
           <label style="font-weight: bold;" class="small-margin"
-          value="Twitter"/> lets you broadcast short status messages
-          to your friends and follow their status messages in turn.
+          value="&page.select_service.twitter.description_1;"/>&page.select_service.twitter.description_2;
         </description>
 
         <spacer flex="1"/>
@@ -133,8 +129,7 @@
         <hbox flex="1" align="start">
           <image class="service-warning"/>
           <description style="font-style: italic;" flex="1">
-            This is equivalent to using Twitter from the web, so
-            connection is not encrypted.
+            &page.select_service.twitter_description_3.label;
           </description>              
         </hbox>
       </vbox>
@@ -143,8 +138,8 @@
         <description>
           <label style="font-weight: bold;"
                  class="small-margin"
-                 value="MSN."/>
-          Microsoft instant messaging service.
+                 value="&page.select_service.msn_title.label;"/>
+          &page.select_service.msn.description_1;
         </description>
 
         <spacer flex="1"/>
@@ -152,8 +147,7 @@
         <hbox flex="1" align="start">
           <image class="service-warning"/>
           <description style="font-style: italic;" flex="1">
-            MSN is a proprietary, closed network.  MSN does not
-            provide encrypted sessions.
+            &page.select_service.msn.description_2;
           </description>              
         </hbox>
       </vbox>
@@ -162,8 +156,8 @@
         <description>
           <label style="font-weight: bold;"
                  class="small-margin"
-                 value="AIM/ICQ."/>
-          AOL instant messaging service.
+                 value="&page.select_service.aim_title.label;"/>
+          &page.select_service.aim.description_1;
         </description>
 
         <spacer flex="1"/>
@@ -171,8 +165,7 @@
         <hbox flex="1" align="start">
           <image class="service-warning"/>
           <description style="font-style: italic;" flex="1">
-            AIM/ICQ is a proprietary, closed network.  AIM/ICQ does
-            not provide encrypted connections.
+            &page.select_service.aim.description_2;
           </description>              
         </hbox>
       </vbox>
@@ -188,9 +181,7 @@
 
       <vbox class="content" flex="0">
         <description class="step">
-          Step 1: Configure an account (existing or new) on
-          sameplace.cc.  This lets you reach the gateway to the
-          external network.
+          &page.jabber.description;
         </description>
         
         <grid>
@@ -200,11 +191,11 @@
           </columns>
           <rows>
             <row>
-              <label value="Username:"/>
+              <label value="&page.jabber.username.label;"/>
               <textbox class="username"/>
             </row>
             <row class="domain-field">
-              <label value="Domain:"/>
+              <label value="&page.jabber.domain.label;"/>
               <vbox>
                 <textbox class="domain-jabber"/>
                 <menulist class="domain-gtalk"
@@ -215,38 +206,38 @@
                                      else
                                      updateJabberConfig();">
                   <menupopup>
-                    <menuitem label="gmail.com"/>
-                    <menuitem label="googlemail.com"/>
+                    <menuitem label="&page.jabber.gmail.domain_1.label;"/>
+                    <menuitem label="&page.jabber.gmail.domain_2.label;"/>
                     <menuseparator/>
-                    <menuitem label="Your own domain..."/>
+                    <menuitem label="&page.jabber.gmail.own_domain.label;"/>
                   </menupopup>
                 </menulist>
                 <label class="domain-sameplace"
-                       value="sameplace.cc"/>
+                       value="&page.jabber.sameplace.domain.label;"/>
                 <label class="domain-twitter"
-                       value="twitter.x4m.localhost"/>
+                       value="&page.jabber.twitter.domain.label;"/>
               </vbox>
             </row>
             <row>
-              <label value="Password:"/>
+              <label value="&page.jabber.password.label;"/>
               <textbox class="password" type="password"/>
             </row>
             <row>
               <label class="password-confirm-label"
-                     value="Confirm password:"/>
+                     value="&page.jabber.confirm.label;"/>
               <textbox class="password-confirm" type="password"/>
             </row>
           </rows>
         </grid>
 
         <groupbox class="address-box">
-          <caption label="Your ID"/>
+          <caption label="&page.jabber.result.label;"/>
           <label class="address" flex="1"/>
         </groupbox>
 
         <vbox>
           <checkbox class="auto-login"
-                    label="Login on startup"
+                    label="&page.jabber.autologin.label;"
                     checked="true"/>
         </vbox>
 
@@ -255,21 +246,17 @@
 
           <vbox class="progress-success">
             <description>
-              Account verified!
+              &page.jabber.success.label;
             </description>            
           </vbox>
 
           <vbox class="progress-failure">
             <description>
-              Failure. :-(
+              &page.jabber.failure.label;
             </description>
 
             <description>
-              If you tried to register a new account, the username is
-              already taken.  If this is an existing account, you
-              probably provided the wrong password.  If this is a
-              non-Jabber account, service might not support
-              registration.
+              &page.jabber.failure.description;
             </description>
           </vbox>
         </vbox>
@@ -283,32 +270,32 @@
           </columns>
           <rows>
             <row>
-              <label value="Resource:"/>
+              <label value="&page.jabber.advanced.resource.label;"/>
               <vbox>
                 <textbox class="resource" value="SamePlace"/>
                 <description class="example">
-                  E.g.: Home, Office, ...
+                  &page.jabber.advanced.resource_example.label;
                 </description>
               </vbox>
             </row>
 
             <row>
-              <label value="Server:"/>
+              <label value="&page.jabber.advanced.server.label;"/>
               <textbox class="connection-server"/>
             </row>
 
             <row>
-              <label value="Port:"/>
+              <label value="&page.jabber.advanced.port.label;"/>
               <textbox class="connection-port" value="5223"/>
             </row>
 
             <row>
-              <label value="Encryption:"/>
+              <label value="&page.jabber.advanced.encryption.label;"/>
               <radiogroup class="connection-security"
                           value="1" orient="horizontal">
-                <radio value="2" label="StartTLS" flex="1"/>
-                <radio value="1" label="SSL" selected="true" flex="1"/>
-                <radio value="0" label="None" flex="1"/>
+                <radio value="2" label="&page.jabber.advanced.encrypt.starttls;" flex="1"/>
+                <radio value="1" label="&page.jabber.advanced.encrypt.ssl;" selected="true" flex="1"/>
+                <radio value="0" label="&page.jabber.advanced.encrypt.none;" flex="1"/>
               </radiogroup>
             </row>
           </rows>
@@ -316,7 +303,7 @@
 
         <hbox pack="end">
           <button class="config-advanced-button"
-                  label="Advanced..."
+                  label="&page.jabber.advanced.button.label;"
                   oncommand="$(this, '^ .content .config-advanced').hidden =
                              !$(this, '^ .content .config-advanced').hidden;"/>
         </hbox>
@@ -347,7 +334,7 @@
 
       <vbox class="content" flex="0">
     <description class="step">
-      Step 2: Configure your external account.
+      &page.transport.description;
     </description>
 
         <grid>
@@ -357,23 +344,23 @@
           </columns>
           <rows>
             <row>
-              <label value="Username:"/>
+              <label value="&page.transport.username.label;"/>
               <vbox>
                 <textbox class="username"/>
                 <description class="example msn">
-                  Example: john@hotmail.com
+                  &page.transport.msn_example.label;
                 </description>
                 <description class="example aim">
-                  Example: john, mary
+                  &page.transport.aim_example.label;
                 </description>
               </vbox>
             </row>
             <row>
-              <label value="Password:"/>
+              <label value="&page.transport.password.label;"/>
               <textbox class="password" type="password"/>
             </row>
             <row>
-              <label class="password-confirm-label" value="Confirm password:"/>
+              <label class="password-confirm-label" value="&page.transport.confirm.label;"/>
               <textbox class="password-confirm" type="password"/>
             </row>
           </rows>
@@ -384,28 +371,21 @@
 
           <vbox class="progress-success">
             <description>
-              Configured!
+              &page.transport.done.label;
             </description>
 
             <description>
-              You may have to go offline then back online for the
-              transport to receive your status.  This account is
-              server-side and will not be shown in your local account
-              list.
+              &page.transport.done.description;
             </description>
           </vbox>
 
           <vbox class="progress-failure">
             <description>
-              Failure. :-(
+              &page.jabber.failure.label;
             </description>
 
             <description>
-              If you tried to register a new account, the username is
-              already taken.  If this is an existing account, you
-              probably provided the wrong password.  If this is a
-              non-Jabber account, service might not support
-              registration.
+              &page.jabber.failure.description;
             </description>
           </vbox>
         </vbox>
@@ -429,7 +409,7 @@
               onpageshow="shownPageFinish();"
               onpageadvanced="advancedPageFinish();">
     <description style="font-size: 30px;">
-      Done!
+      &page.finish.done.label;
     </description>
 
     <checkbox id="connect-account" checked="true" hidden="true"/>

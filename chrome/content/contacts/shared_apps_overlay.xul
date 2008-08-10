@@ -29,17 +29,17 @@
   
   Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
 -->
-
+<!DOCTYPE overlay SYSTEM "chrome://sameplace/locale/contacts.dtd">
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   
   <script type="application/x-javascript;version=1.7" src="shared_apps_overlay.js"/>  
 
   <popup id="contact-popup">
     <menuseparator/>
-    <menuitem class="header" label="Interact:" disabled="true"/>
+    <menuitem class="header" label="&popup.interact.label;" disabled="true"/>
     
     <menuseparator class="shared-app-separator" hidden="true"/>
-    <menuitem class="offset shared-app" label="Current page"
+    <menuitem class="offset shared-app" label="&popup.current_page.label;"
               value=""/>
   </popup>
 </overlay>

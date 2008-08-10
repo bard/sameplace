@@ -31,10 +31,9 @@
   
   Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
 -->
-
+<!DOCTYPE overlay SYSTEM "chrome://sameplace/locale/toolbox.dtd">
 
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-
   <script type="application/x-javascript" src="controls_overlay.js"/>
 
   <keyset id="keys"/>
@@ -64,23 +63,23 @@
                 onmouseover="hoveredDockContent(event);"
                 onmouseout="$(this, '^ .control .inline-tooltip').hidden = true;">
             <image class="icon presence-indicator" popup="status-popup"
-                   helptext="Status"/>
+                   helptext="&menu.status.helptext;"/>
             <image class="icon people" popup="people-popup"
-                   helptext="People"/>
+                   helptext="&menu.people.helptext;"/>
             <image class="icon filter"
                    onclick="requestedToggleFilter();"
-                   helptext="Search Contacts (Control+Space)"/>
+                   helptext="&menu.search.helptext;"/>
             <vbox class="field filter" pack="center" collapsed="true">
-              <textbox value="Type part of nick…"
+              <textbox value="&menu.search_tip.helptext;"
                        onblur="blurredFilterField(this);"
                        oninput="inputInFilterField(this);"
                        onkeypress="keypressInInputField(event);"
                        onfocus="focusedFilterField(this);"/>
             </vbox>
             <image class="icon tools" popup="tools-popup"
-                   helptext="Tools"/>
+                   helptext="&menu.tools.helptext;"/>
             <image class="icon help" popup="help-popup"
-                   helptext="Help"/>
+                   helptext="&menu.help.helptext;"/>
           </hbox>
 
           <hbox class="inline-tooltip"

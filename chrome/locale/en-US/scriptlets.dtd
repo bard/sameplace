@@ -1,0 +1,18 @@
+<!ENTITY window.title "SamePlace Scriptlet Manager">
+<!ENTITY description.label "To install scriptlets, drag their links from web pages into the above list. An initial selection of scriptlets can be found at">
+<!ENTITY description.url.label "http://sameplace.cc/addons/scriptlets">
+<!ENTITY warning_1.label "Warning:">
+<!ENTITY warning_2.label "Like for extensions, you should only install from sources you trust!">
+<!ENTITY create.label "Create...">
+<!ENTITY create.accesskey "C">
+<!ENTITY close.label "Close">
+<!ENTITY scriptlet_title.label "title">
+<!ENTITY scriptlet_version.label "version">
+<!ENTITY scriptlet_filename.label "filename">
+<!ENTITY scriptlet.enabled.label "Enabled">
+<!ENTITY scriptlet.reload.label "Reload">
+<!ENTITY scriptlet.reload.accesskey "R">
+<!ENTITY scriptlet.edit.label "Edit">
+<!ENTITY scriptlet.edit.accesskey "E">
+<!ENTITY scriptlet.uninstall.label "Uninstall">
+<!ENTITY scriptlet.uninstall.accesskey "U">

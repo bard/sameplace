@@ -1,7 +1,47 @@
-<!ENTITY sameplace.prefs.default_application_url.label "Default application URL:">
-<!ENTITY sameplace.prefs.default_application_url.accesskey "U">
-<!ENTITY sameplace.prefs.toggle_sidebar_hotkey "Toggle sidebar hotkey:">
-<!ENTITY sameplace.prefs.capture.label "Capture">
-<!ENTITY sameplace.prefs.hotkey_help_text.label "(Hotkeys must be distinct and not collide with existing ones.)">
-<!ENTITY sameplace.prefs.flash_taskbar.label "Flash taskbar on incoming messages">
-<!ENTITY sameplace.prefs.flash_taskbar.accesskey "F">
+<!ENTITY window.title "SamePlace Preferences">
+<!ENTITY tab.accounts.label "Accounts">
+<!ENTITY tab.sameplace.label "SamePlace">
+
+<!ENTITY accounts.accounts_description.label "Select an account from the list or add a new one.">
+<!ENTITY accounts.account_username.label "Username:">
+<!ENTITY accounts.account_password.label "Password:">
+<!ENTITY accounts.account_service.label "Service:">
+<!ENTITY accounts.account_startup_connect.label "Login on startup">
+<!ENTITY accounts.account_resource.label "Resource:">
+<!ENTITY accounts.account_resource_description.label "Example: Home, Office, ...">
+<!ENTITY accounts.account_server.label "Server:">
+<!ENTITY accounts.account_port.label "Port:">
+<!ENTITY accounts.account_encryption.label "Encryption:">
+<!ENTITY accounts.account_encryption.starttls.label "StartTLS">
+<!ENTITY accounts.account_encryption.ssl.label "SSL">
+<!ENTITY accounts.account_encryption.none.label "None">
+<!ENTITY accounts.add.label "Add account...">
+<!ENTITY accounts.add.accesskey "A">
+<!ENTITY accounts.delete.label "Delete">
+<!ENTITY accounts.advanced.label "Advanced...">
+<!ENTITY accounts.advanced.accesskey "d">
+
+<!ENTITY sameplace.capture.label "Capture">
+<!ENTITY sameplace.toggle_sidebar_hotkey "Toggle sidebar hotkey:">
+
+<!ENTITY sameplace.chat_app.label "Chat application:">
+<!ENTITY sameplace.chat_app.accesskey "a">
+<!ENTITY sameplace.chat_app_default.label "default">
+<!ENTITY sameplace.chat_app_custom.label "Custom URL...">
+
+<!ENTITY sameplace.add_button.label "Add toolbar button:">
+<!ENTITY sameplace.open_chat.label "Open chats in:">
+<!ENTITY sameplace.settings_alert.label "This setting will become effective after restart.">
+<!ENTITY sameplace.open_chat.default.label "(default)">
+<!ENTITY sameplace.open_chat.sidebar.label "Sidebar">
+<!ENTITY sameplace.open_chat.extwindow.label "External Window">
+<!ENTITY sameplace.open_chat.messagepane.label "Message Pane (Thunderbird only)">
+
+
+
+
+
+
+
+
+

@@ -34,6 +34,8 @@
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://sameplace/skin/conversations.css" type="text/css"?>
 
+<!DOCTYPE page SYSTEM "chrome://sameplace/locale/toolbox.dtd">
+
 <page id="conversations"
       xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
       windowtype="SamePlace:Conversations"
@@ -58,7 +60,7 @@
   
   <popupset>
     <popup id="conversation-menu">
-      <menuitem label="Copy" accesskey="C" key="key-copy" command="copy"/>
+      <menuitem label="&menu.context.copy.label;" accesskey="&menu.context.copy.accesskey;" key="key-copy" command="copy"/>
     </popup>
   </popupset>
 

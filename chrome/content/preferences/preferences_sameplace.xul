@@ -59,8 +59,8 @@
         </columns>
         <rows>
           <row>
-            <label value="Chat application:"
-                   accesskey="a"
+            <label value="&sameplace.chat_app.label;"
+                   accesskey="&sameplace.chat_app.accesskey;"
                    for="sameplace-default-app-url"/>
             <menulist id="sameplace-default-app-url"
                       editable="true"
@@ -69,40 +69,40 @@
                                  this.value = 'http://';"
                       preference="sameplace-default-app-url">
               <menupopup>
-                <menuitem label="default"/>
+                <menuitem label="&sameplace.chat_app_default.label;"/>
                 <menuseparator/>
-                <menuitem label="Custom URL..." value="custom"/>
+                <menuitem label="&sameplace.chat_app_custom.label;" value="custom"/>
               </menupopup>
             </menulist>
           </row>
   
           <row>
-            <label value="&sameplace.prefs.toggle_sidebar_hotkey;"/>
+            <label value="&sameplace.toggle_sidebar_hotkey;"/>
             <hbox flex="0" align="center">
               <textbox flex="1" id="sameplace-toggle-contacts-key"
                        readonly="true" style="text-align: center"/>
-              <button label="&sameplace.prefs.capture.label;"
+              <button label="&sameplace.capture.label;"
                       oncommand="sameplacePrefs.captureKey('contacts');"/>
             </hbox>
           </row>
 
           <row>
-            <label value="Add toolbar button:"/>
+            <label value="&sameplace.add_button.label;"/>
             <checkbox preference="sameplace-add-toolbar-button" label=""/>
           </row>
           
           <row>
-            <label value="Open chats in:"/>
+            <label value="&sameplace.open_chat.label;"/>
             <vbox>
               <menulist preference="sameplace-chat-area"
                         oncommand="if(!this._alerted)
-                                   alert('This setting will become effective after restart.');
+                                   alert('&sameplace.settings_alert.label;');
                                    this._alerted = true; ">
                 <menupopup>
-                  <menuitem label="(default)" value=""/>
-                  <menuitem label="Sidebar" value="sidebar"/>
-                  <menuitem label="External Window" value="external"/>
-                  <menuitem label="Message Pane (Thunderbird only)" value="messagepane"/>
+                  <menuitem label="&sameplace.open_chat.default.label;" value=""/>
+                  <menuitem label="&sameplace.open_chat.sidebar.label;" value="sidebar"/>
+                  <menuitem label="&sameplace.open_chat.extwindow.label;" value="external"/>
+                  <menuitem label="&sameplace.open_chat.messagepane.label;" value="messagepane"/>
                 </menupopup>
               </menulist>
             </vbox>

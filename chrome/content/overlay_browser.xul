@@ -51,11 +51,11 @@
     <command id="sameplace-command-toggle"
              label="&command.hide-show; (F12)"
              oncommand="sameplace.toggle();"
-             accesskey="H"/>
+             accesskey="&command.hide-show.accesskey;"/>
     <command id="sameplace-command-load"
-             label="SamePlace"
+             label="&sameplace.label;"
              oncommand="sameplace.loadAreas();"
-             accesskey="S"/>
+             accesskey="&sameplace.accesskey;"/>
     <command id="sameplace-command-load-sidebar-force"
              oncommand="sameplace.loadAreas(true);"/>
   </commandset>
@@ -67,8 +67,8 @@
   <toolbarpalette id="BrowserToolbarPalette">
     <toolbarbutton id="sameplace-button"
                    class="toolbarbutton-1 chromeclass-toolbar-additional"
-                   label="SP"
-                   tooltiptext="SamePlace"
+                   label="&sp.label;"
+                   tooltiptext="&sp.tooltip;"
                    availability="unavailable"
                    oncommand="sameplace.toggle();">
     </toolbarbutton>
@@ -88,13 +88,13 @@
   <menupopup id="viewSidebarMenu">
     <menuitem command="sameplace-toggle"
               key="sameplace-toggle-key"
-              accesskey="P"/>
+              accesskey="&toggle.accesskey;"/>
   </menupopup>
   
   <popup id="contentAreaContextMenu">
     <!-- XXX localize -->
-    <menu label="Send Link to..."
-          accesskey="S"
+    <menu label="&sendlink.label;"
+          accesskey="&sendlink.accesskey;"
           id="sameplace-sendto">
       <menupopup oncommand="sameplace.sendTo.selectedContact(event);"
                  onpopupshowing="sameplace.sendTo.showingPopup(event);"
@@ -102,7 +102,7 @@
     </menu>
 
     <menuitem id="sameplace-install-scriptlet"
-              label="&context.install-scriptlet;" accesskey="I"
+              label="&context.install-scriptlet;" accesskey="&context.install-scriptlet.accesskey;"
               oncommand="sameplace.requestedInstallScriptlet(document.popupNode);"/>
   </popup>
 

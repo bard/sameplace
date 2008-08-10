@@ -33,8 +33,8 @@
 
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://sameplace/skin/scriptlet_manager.css" type="text/css"?>
-
-<window title="SamePlace Scriptlet Manager"
+<!DOCTYPE window SYSTEM "chrome://sameplace/locale/scriptlets.dtd">
+<window title="&window.title;"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
         windowtype="SamePlace:ScriptletManager"
         width="560"
@@ -62,37 +62,33 @@
                  ondragdrop="nsDragAndDrop.drop(event, dndObserver);"/>
   </hbox>
 
-  <description style="padding: 0.5em;">
-    To install scriptlets, drag their links from web pages into the
-    above list.  An initial selection of scriptlets can be found at
+  <description style="padding: 0.5em;">&description.label;
     <label class="text-link" style="margin: 0;"
     onclick="openURL('http://sameplace.cc/addons/scriptlets')"
     value="http://sameplace.cc/addons/scriptlets"/>.
 
-    <label style="font-weight: bold; margin: 0;">Warning:</label> Like
-    for extensions, you should only install from from sources you
-    trust!
+    <label style="font-weight: bold; margin: 0;">&warning_1.label;</label> &warning_2.label;
   </description>
 
 
   <hbox id="footer">
     <spacer id="footer-spacer" flex="1"/>
-    <button label="Close" oncommand="window.close();"/>
+    <button label="&close.label;" oncommand="window.close();"/>
   </hbox>
 
   <box id="blueprints" hidden="true">
     <richlistitem class="scriptlet" orient="vertical" style="padding: 1em;">
       <hbox>
-        <label class="title"/>
-        <label class="version"/>
-        <label class="filename" hidden="true"/>
+        <label class="&scriptlet_title.label;"/>
+        <label class="&scriptlet_version.label;"/>
+        <label class="&scriptlet_filename.label;" hidden="true"/>
       </hbox>
       <description class="description"/>
       <hbox class="actions">
-        <checkbox class="enabled" label="Enabled" checked="false" oncommand="requestedToggleScriptletActivation(this);"/>
-        <button class="reload" label="Reload" accesskey="R" oncommand="reload(this);"/>
+        <checkbox class="enabled" label="&scriptlet.enabled.label;" checked="false" oncommand="requestedToggleScriptletActivation(this);"/>
+        <button class="reload" label="&scriptlet.reload.label;" accesskey="&scriptlet.reload.accesskey;" oncommand="reload(this);"/>
         <spacer flex="1"/>
-        <button class="uninstall" label="Uninstall" accesskey="U" oncommand="uninstall(this);"/>
+        <button class="uninstall" label="&scriptlet.uninstall.label;" accesskey="&scriptlet.uninstall.accesskey;" oncommand="uninstall(this);"/>
       </hbox>          
     </richlistitem>
   </box>

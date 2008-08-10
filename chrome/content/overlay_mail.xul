@@ -54,11 +54,11 @@
     <command id="sameplace-command-toggle"
              label="&command.hide-show; (F12)"
              oncommand="sameplace.toggle();"
-             accesskey="H"/>
+             accesskey="&command.hide-show.accesskey;"/>
     <command id="sameplace-command-load"
-             label="SamePlace"
+             label="&sameplace.label;"
              oncommand="sameplace.loadAreas();"
-             accesskey="S"/>
+             accesskey="&sameplace.accesskey;"/>
     <command id="sameplace-command-load-sidebar-force"
              oncommand="sameplace.loadAreas(true);"/>
   </commandset>
@@ -77,8 +77,8 @@
   <toolbarpalette id="MailToolbarPalette">
     <toolbarbutton id="sameplace-button"
                    class="toolbarbutton-1 chromeclass-toolbar-additional"
-                   label="SP"
-                   tooltiptext="SamePlace"
+                   label="&sp.label;"
+                   tooltiptext="&sp.tooltip;"
                    availability="unavailable"
                    oncommand="sameplace.toggle();">
     </toolbarbutton>
@@ -107,14 +107,14 @@
 
   <vbox id="expandedHeaders">
     <mail-emailheaderfield id="expandedPresence"
-                           label="Presence:"
+                           label="&mail.presence;"
                            collapsed="true"
                            availability="unavailable"/>
   </vbox>
 
   <box id="messagesBox">
     <popup id="sameplace-conversations-popup">
-      <menuitem label="Copy" accesskey="C" oncommand="sameplace.requestedCopy(event);"/>
+      <menuitem label="&mail.context.copy.label;" accesskey="&mail.context.copy.accesskey;" oncommand="sameplace.requestedCopy(event);"/>
     </popup>
     
     <tabs id="sameplace-conversation-tabs" insertafter="messagepanebox"

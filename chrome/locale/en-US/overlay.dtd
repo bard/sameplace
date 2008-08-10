@@ -1,4 +1,16 @@
 <!ENTITY command.hide-show "Hide/Show">
+<!ENTITY command.hide-show.accesskey "H">
 <!ENTITY command.show-accounts "Accounts &amp; Prefs...">
 <!ENTITY menu.connect "Connect">
 <!ENTITY context.install-scriptlet "Install SamePlace scriptlet...">
+<!ENTITY context.install-scriptlet.accesskey "I">
+<!ENTITY sameplace.label "SamePlace">
+<!ENTITY sameplace.accesskey "S">
+<!ENTITY sp.label "SP">
+<!ENTITY sp.tooltip "SamePlace">
+<!ENTITY toggle.accesskey "P">
+<!ENTITY sendlink.label "Send Link to...">
+<!ENTITY sendlink.accesskey "S">
+<!ENTITY mail.presence "Presence:">
+<!ENTITY mail.context.copy.label "Copy">
+<!ENTITY mail.context.copy.accesskey "C">

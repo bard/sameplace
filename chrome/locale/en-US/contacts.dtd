@@ -2,3 +2,5 @@
 <!ENTITY popup.remove.label "Remove">
 <!ENTITY tooltip.contact_of.label "Contact of:">
 <!ENTITY tooltip.presence_notification.label "Presence notification:">
+<!ENTITY popup.interact.label "Interact:">
+<!ENTITY popup.current_page.label "Current page">

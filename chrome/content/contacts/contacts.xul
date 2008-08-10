@@ -89,26 +89,26 @@
              label="&popup.toggle_offline.label;"
              oncommand="toggleOfflineContacts();"/>
     <command id="toggle-tiny-avatars"
-             label="Toggle avatar size"
-             accesskey="T"
-             tooltiptext="Toggle avatar size"
+             label="&popup.toggle_tiny_avatars.label;"
+             accesskey="&popup.toggle_tiny_avatars.accesskey;"
+             tooltiptext="&popup.toggle_tiny_avatars.tooltip;"
              oncommand="toggleAvatarSize();"/>
     <command id="ask-question" oncommand="askQuestion();"
-             label="Online Support - Ask a Question"
-             accesskey="Q"
-             tooltiptext="Online Support - Ask a Question"/>
+             label="&menu.help.ask_question.label;"
+             accesskey="&menu.help.ask_question.accesskey;"
+             tooltiptext="&menu.help.ask_question.tooltip;"/>
     <command id="report-bug" oncommand="reportBug();"
-             label="Online Support - Report a Bug"
-             accesskey="B"
-             tooltiptext="Online Support - Report a Bug..."/>
+             label="&menu.help.report_bug.label;"
+             accesskey="&menu.help.report_bug.accesskey;"
+             tooltiptext="&menu.help.report_bug.tooltip;"/>
     <command id="view-blog" oncommand="viewBlog();"
-             label="View Blog"
-             accesskey="B"
-             tooltiptext="Online Support - Report a Bug..."/>
+             label="&menu.help.blog.label;"
+             accesskey="&menu.help.blog.accesskey;"
+             tooltiptext="&menu.help.blog.tooltip;"/>
     <command id="follow-twitter" oncommand="followTwitter();"
-             label="Follow on Twitter"
-             accesskey="T"
-             tooltiptext="Follow on Twitter"/>
+             label="&menu.help.follow_twitter.label;"
+             accesskey="&menu.help.follow_twitter.accesskey;"
+             tooltiptext="&menu.help.follow_twitter.tooltip;"/>
     <command id="join-users-room" oncommand="joinUsersRoom();"
              label="&command.join_users_room.label;"
              accesskey="&command.join_users_room.accesskey;"
@@ -117,23 +117,23 @@
              label="&command.read_latest_news.label;"
              accesskey="&command.read_latest_news.accesskey;"/>    
     <command id="open-preferences" oncommand="openPreferences();"
-             label="Preferences"
-             accesskey="P"/>
+             label="&menu.tools.preferences.label;"
+             accesskey="&menu.tools.preferences.accesskey;"/>
     <command id="run-wizard" oncommand="runWizard();"
-             label="Account Wizard"
-             accesskey="W"/>
+             label="&menu.tools.wizard.label;"
+             accesskey="&menu.tools.wizard.accesskey;"/>
     <command id="import-contacts" oncommand="requestedImportContacts();"
-             label="Import Contacts..."
-             accesskey="R"/>
+             label="&menu.tools.import_contacts.label;"
+             accesskey="&menu.tools.import_contacts.accesskey;"/>
     <command id="about" oncommand="openAboutDialog();"
-             label="About"
-             accesskey="b"/>
+             label="&menu.tools.about.label;"
+             accesskey="&menu.tools.about.accesskey;"/>
     <command id="detach-sidebar" oncommand="requestedDetachSidebar();"
-             label="Detach Sidebar (experimental)"
-             accesskey="D"/>
-    <command id="save-xmpp-log" oncommand="requestedSaveXMPPLog()"
-             label="Save XMPP log"
-             accesskey="L"/>
+             label="&menu.tools.detach_sidebar.label;"
+             accesskey="&menu.tools.detach_sidebar.accesskey;"/>
+    <command id="save-xmpp-log" oncommand="requestedSaveXMPPLog();"
+             label="&menu.tools.save_log.label;"
+             accesskey="&menu.tools.save_log.accesskey;"/>
   </commandset>
 
   <stringbundleset>

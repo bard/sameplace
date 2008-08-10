@@ -32,6 +32,8 @@
 
 <?xml-stylesheet href="chrome://sameplace/skin/preferences_accounts.css"?>
 
+<!DOCTYPE overlay SYSTEM "chrome://sameplace/locale/preferences.dtd">
+
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 <prefpane id="accounts-pane">
   <hbox>
@@ -39,14 +41,14 @@
       <richlistbox id="accounts"
                    class="box-inset"
                    onselect="accountPrefs.selectedAccount(event);"/>
-      <button label="Add account..." accesskey="A"
+      <button label="&accounts.add.label;" accesskey="&accounts.add.accesskey;"
               oncommand="accountPrefs.requestedAddAccount();"/>
     </vbox>
 
     <deck id="action-pane" flex="1">
       <box id="help-message" flex="1">
         <description flex="1">
-          Select an account from the list or add a new one.
+          &accounts.accounts_description.label;
         </description>
       </box>
 
@@ -58,19 +60,19 @@
           </columns>
           <rows>
             <row class="credential">
-              <label value="Username:"/>
+              <label value="&accounts.account_username.label;"/>
               <textbox id="username" 
                        oninput="accountPrefs.updatedField(this);"/>
             </row>
 
             <row class="credential">
-              <label value="Password:"/>
+              <label value="&accounts.account_password.label;"/>
               <textbox id="password" type="password" 
                        oninput="accountPrefs.updatedField(this);"/>
             </row>
 
             <row>
-              <label value="Service:"/>
+              <label value="&accounts.account_service.label;"/>
               <textbox id="service" value="" 
                        oninput="accountPrefs.updatedField(this);"/>
             </row>
@@ -78,7 +80,7 @@
         </grid>
 
         <hbox pack="end">
-          <checkbox id="auto-login" label="Login on startup"
+          <checkbox id="auto-login" label="&accounts.account_startup_connect.label;"
                     oncommand="accountPrefs.updatedField(this);"/>
         </hbox>          
 
@@ -86,11 +88,11 @@
 
         <hbox id="commands-secondary" pack="end">
           <button id="delete" 
-                  label="Delete"
+                  label="&accounts.delete.label;"
                   oncommand="accountPrefs.requestedDeleteAccount();"/>
           <button id="config-advanced-button"
-                  label="Advanced..."
-                  accesskey="d"
+                  label="&accounts.advanced.label;"
+                  accesskey="&accounts.advanced.accesskey;"
                   oncommand="$('#config-advanced').hidden =
                              !$('#config-advanced').hidden;"/>
         </hbox>
@@ -102,36 +104,36 @@
           </columns>
           <rows>
             <row>
-              <label value="Resource:"/>
+              <label value="&accounts.account_resource.label;"/>
               <vbox>
                 <textbox id="resource" value=""
                          oninput="accountPrefs.updatedField(this);"/>
                 <description class="example">
-                  Example: Home, Office, ...
+                  &accounts.account_resource_description.label;
                 </description>
               </vbox>
             </row>
 
             <row>
-              <label value="Server:"/>
+              <label value="&accounts.account_server.label;"/>
               <textbox id="connection-host"
                        oninput="accountPrefs.updatedField(this);"/>
             </row>
 
             <row>
-              <label value="Port:"/>
+              <label value="&accounts.account_port.label;"/>
               <textbox id="connection-port" value=""
                        oninput="accountPrefs.updatedField(this);"/>
             </row>
 
             <row>
-              <label value="Encryption:"/>
+              <label value="&accounts.account_encryption.label;"/>
               <radiogroup id="connection-security"
                           value="1" orient="horizontal"
                           oncommand="accountPrefs.updatedField(this);">
-                <radio value="2" label="StartTLS" selected="true" flex="1"/>
-                <radio value="1" label="SSL" flex="1"/>
-                <radio value="0" label="None" flex="1"/>
+                <radio value="2" label="&accounts.account_encryption.starttls.label;" selected="true" flex="1"/>
+                <radio value="1" label="&accounts.account_encryption.ssl.label;" flex="1"/>
+                <radio value="0" label="&accounts.account_encryption.none.label;" flex="1"/>
               </radiogroup>
             </row>
           </rows>

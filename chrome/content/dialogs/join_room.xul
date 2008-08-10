@@ -60,20 +60,20 @@
 
     <rows>
       <row align="center">
-        <label value="Name:"
-               accesskey="N"
+        <label value="&join_room.room_name.label;"
+               accesskey="&join_room.room_name.accesskey;"
                control="name"/>
         <hbox align="center">
           <textbox id="name" oninput="refresh();" flex="1"/>
-          <label class="text-link small-margin" onclick="searchRooms();" value="Search..."/>
+          <label class="text-link small-margin" onclick="searchRooms();" value="&join_room.room_search.label;"/>
         </hbox>
 
 
       </row>
 
       <row align="center">
-        <label value="Server:"
-               accesskey="S"
+        <label value="&join_room.room_server.label;"
+               accesskey="&join_room.room_server.accesskey;"
                control="server"/>
         <textbox id="server" oninput="refresh();"/>
       </row>
@@ -84,7 +84,7 @@
       </row>
 
       <row align="center">
-        <label value="Address:"/>
+        <label value="&join_room.room_address.label;"/>
         <textbox readonly="true" class="plain" id="address" style="text-align: center;" value=""/>
       </row>
 
@@ -92,7 +92,7 @@
         <spacer/>
         <description style="font-size: smaller;">
           <image src="chrome://sameplace/skin/info.png"/>
-          If no room exists with this name, it will be created.
+          &join_room.join_tip.label;
         </description>
       </row>
 
