@@ -34,6 +34,12 @@
 // ----------------------------------------------------------------------
 
 function requestedChangeStatus(xulStatus) {
+    var status = xulStatus.value;
+    var account = $(xulStatus, '^ .account').value;
+    changeStatus(account, status);
+}
+
+function changeStatus(account, status) {
     function previousPresenceStanza(account) {
         var p = XMPP.cache.fetch({
             event     : 'presence',
@@ -61,37 +67,37 @@ function requestedChangeStatus(xulStatus) {
         }
         return newStanza;
     }
-    
-    var status = xulStatus.value;
-    var account = $(xulStatus, '^ .account').value;
 
     if(account == 'all') {
         var accountsUp = XMPP.accounts.filter(XMPP.isUp);
-        if(status == 'unavailable')
-            accountsUp.forEach(XMPP.down);
-        else if(status == 'available' && accountsUp.length == 0)
-            XMPP.accounts.forEach(XMPP.up);
+
+        if(accountsUp.length == 0 && status != 'unavailable')
+            XMPP.accounts.forEach(function(account) {
+                changeStatus(account.jid, status);
+            })
         else
             accountsUp.forEach(function(account) {
-                XMPP.send(account,
-                          updatePresence(
-                              previousPresenceStanza(account.jid) || <presence/>,
-                              status));
+                changeStatus(account.jid, status);
             });
     } else {
-        if(status == 'available' && XMPP.isDown(account))
-            XMPP.up(account);
-        else if(status == 'unavailable' && XMPP.isUp(account))
-            XMPP.down(account);
-        else
-            XMPP.send(account,
-                      updatePresence(
-                          previousPresenceStanza(account) || <presence/>,
-                          status));
-    } 
-
+        if(XMPP.isUp(account)) {
+            if(status == 'unavailable')
+                XMPP.down(account);
+            else
+                XMPP.send(account, updatePresence(
+                    previousPresenceStanza(account) || <presence/>,
+                    status));
+        } else {
+            if(status != 'unavailable') {
+                XMPP.up(account, function() {
+                    XMPP.send(account, updatePresence(
+                        previousPresenceStanza(account) || <presence/>,
+                        status));
+                });
+            }
+         }
+    }
 }
-
 
 // GUI ACTIONS
 // ----------------------------------------------------------------------
