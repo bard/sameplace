@@ -1,8 +1,0 @@
-<!ENTITY command.hide.label "Masquer">
-<!ENTITY command.hide.tooltip "Masquer">
-<!ENTITY contact.label "Contact:">
-<!ENTITY contact.accesskey "a">
-<!ENTITY attach.tooltip "Utiliser une application additionnelle pour interagir avec le contact">
-<!ENTITY attach.menu.current_page.label "Page actuelle">
-<!ENTITY attach.menu.current_page.tooltip "Interagir avec le contact sur la page actuelle (la page actuelle doit être une application partagée)">
-<!ENTITY attach.tooltip-message "Make this conversation channel available to this web page">
