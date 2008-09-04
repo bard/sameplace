@@ -127,24 +127,6 @@ function updateTransportConfig() {
                                password == passwordConfirm);
 }
 
-// TURTLE PAGE
-
-function updateTurtleConfig() {
-    var page            = $('[pageid="turtle"]');
-    var username        = $(page, '.username').value;
-    var password        = $(page, '.password').value;
-    var passwordConfirm = $(page, '.password-confirm').value;
-    
-    $(page, '.password-confirm-label').setAttribute(
-        'signal-error',
-        (passwordConfirm.length == password.length &&
-         passwordConfirm != password));
-
-    $('#wizard').canAdvance = (username &&
-                               password &&
-                               password == passwordConfirm);
-}
-
 
 // GUI REACTIONS
 // ----------------------------------------------------------------------
