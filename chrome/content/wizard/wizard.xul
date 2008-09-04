@@ -46,6 +46,10 @@
   <script type="application/x-javascript;version=1.7" src="../lib/getElementsBySelector.js"/>
   <script type="application/x-javascript;version=1.7" src="wizard.js"/>
 
+  <stringbundleset>
+    <stringbundle id="strings" src="chrome://sameplace/locale/wizard.properties"/>
+  </stringbundleset>
+
   <wizardpage id="page-selection" pageid="selection"
               flex="1" align="center"
               onpageshow="shownPageSelection();"> <!-- XXX can't center from css, why? -->

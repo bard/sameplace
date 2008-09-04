@@ -84,9 +84,9 @@ function updateJabberConfig(event) {
     var passwordConfirm = $(page, '.password-confirm').value;
 
     $(page, '.address').value =
-        (username || '[username]') + // XXX localize
+        (username || '[' + $('#strings').getString('username') + ']') +
         '@' +
-        (domain || '[domain]'); // XXX localize
+        (domain || '[' + $('#strings').getService('domain') + ']');
 
     switch(service) {
     case 'gtalk':
@@ -163,9 +163,8 @@ function selectedService(xulService) {
             $('[pageid="selection"]').next = 'transport';
             $('[pageid="transport"]').setAttribute('service', requestedService);
             $('[pageid="transport"]').next = 'finish';
-        } else if(window.confirm(requestedService.toUpperCase() +
-                                 ' connectivity is provided by SamePlace.cc.\n\n'+
-                                 'Configure a @sameplace.cc account now?')) {
+        } else if(window.confirm($('#strings').getFormattedString(
+            'pageSelection.dialog.transportViaSamePlace.message', [requestedService.toUpperCase()]))) {
             $('[pageid="selection"]').next = 'jabber';
             $('[pageid="jabber"]').setAttribute('service', 'sameplace');
             $('[pageid="jabber"]').next = 'transport';
@@ -309,7 +308,8 @@ function advancedPageTransport(page) {
 function shownPageFinish() {
     if(account) {
         $('#connect-account').hidden = false;
-        $('#connect-account').label = 'Connect ' + account.address;
+        $('#connect-account').label = $('#strings').getFormattedString(
+            'pageFinish.checkbox.connectAccount', [account.address]);
     }
 }
 
@@ -346,9 +346,9 @@ function verifyAccount(account, callbacks) {
                 connector.disconnect();
                 if(subject && asString(subject) == 'badcert') {
                     var addException = srvPrompt.confirm(
-                        null, 'Bad certificate for Jabber server',
-                        'Jabber server "' + account.connectionHost + '" is presenting an invalid SSL certificate.\n' +
-                            'To connect to it, you need to add an exception.  Do you want to proceed?');
+                        null,
+                        $('#strings').getString('pageSelection.dialog.badCertificate.title'),
+                        $('#strings').getFormattedString('pageSelection.diialog.badCertificate.message', [account.connectionHost]));
                     if(!addException)
                         break;
                     
