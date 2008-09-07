@@ -31,7 +31,7 @@
   
   Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
 -->
-<!DOCTYPE overlay SYSTEM "chrome://sameplace/locale/toolbox.dtd">
+<!DOCTYPE overlay SYSTEM "chrome://sameplace/locale/contacts.dtd">
 
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script type="application/x-javascript" src="controls_overlay.js"/>

@@ -1,3 +1,95 @@
+<!ENTITY command.add_contact.label "Add contact...">
+<!ENTITY command.add_contact.tooltip "Add a contact to your contact list">
+<!ENTITY command.open_conversation.label "Open conversation...">
+<!ENTITY command.open_conversation.accesskey "O">
+<!ENTITY command.open_conversation.tooltip "Open a conversation">
+<!ENTITY command.join_room.label "Join/create chat room...">
+<!ENTITY command.join_room.accesskey "r">
+<!ENTITY command.join_room.tooltip "Join a chat room">
+<!ENTITY command.switch_to_unread.label "Go to next unread conversation">
+<!ENTITY command.switch_to_unread.tooltip "Switch to next conversation in line with unread messages">
+<!ENTITY command.switch_to_next.label "Go to next conversation">
+<!ENTITY command.switch_to_next.tooltip "Switch to next conversation">
+<!ENTITY command.view_help_pages.label "View help pages...">
+<!ENTITY command.view_help_pages.accesskey "h">
+<!ENTITY command.view_help_pages.tooltip "View help pages">
+<!ENTITY command.run_wizard.label "Account Wizard...">
+<!ENTITY command.run_wizard.accesskey "W">
+<!ENTITY command.visit_forum.label "Ask on the forum">
+<!ENTITY command.visit_forum.tooltip "Ask on the forum">
+<!ENTITY command.visit_forum.accesskey "f">
+<!ENTITY command.report_bug.label "Report a problem/request a feature">
+<!ENTITY command.report_bug.tooltip "Report a problem/request a feature">
+<!ENTITY command.report_bug.accesskey "R">
+<!ENTITY command.join_users_room.label "Join Users' Chatroom">
+<!ENTITY command.join_users_room.tooltip "Join Users' Chatroom">
+<!ENTITY command.join_users_room.accesskey "s">
+<!ENTITY command.read_latest_news.label "Read latest news">
+<!ENTITY command.read_latest_news.accesskey "n">
+<!ENTITY command.hide.label "Hide">
+<!ENTITY command.hide.tooltip "Hide">
+<!ENTITY command.import_contacts.label "Import Contacts...">
+<!ENTITY command.import_contacts.accesskey "I">
+<!ENTITY command.open_standalon.label "Open Standalone (EXPERIMENTAL)">
+<!ENTITY command.open_standalon.accesskey "S">
+<!ENTITY menu.scriptlets.label "Scriptlets">
+<!ENTITY menu.scriptlets.manage.label "Manage...">
+<!ENTITY menu.scriptlets.manage.accesskey "M">
+<!ENTITY status_message.tooltip.label "Change your status message">
+<!ENTITY popup.toggle_offline.label "Hide/Show Offline Contacts">
+<!ENTITY popup.toggle_tiny_avatars.label "Toggle avatar size">
+<!ENTITY popup.toggle_tiny_avatars.accesskey "T">
+<!ENTITY popup.toggle_tiny_avatars.tooltip "Toggle avatar size">
+<!ENTITY toolbar.people.label "People">
+<!ENTITY toolbar.status.label "Status">
+<!ENTITY menu.status-all-accounts.label "All">
+<!ENTITY menu.status-online.label "Online">
+<!ENTITY menu.status-away.label "Away">
+<!ENTITY menu.status-busy.label "Busy">
+<!ENTITY menu.status-offline.label "Offline">
+
+<!ENTITY menu.help.follow_twitter.label "Follow on Twitter">
+<!ENTITY menu.help.follow_twitter.accesskey "T">
+<!ENTITY menu.help.follow_twitter.tooltip "Follow on Twitter">
+<!ENTITY menu.help.blog.label "View Blog">
+<!ENTITY menu.help.blog.accesskey "B">
+<!ENTITY menu.help.blog.tooltip "View Blog">
+<!ENTITY menu.tools.preferences.label "Preferences">
+<!ENTITY menu.tools.preferences.accesskey "P">
+
+<!ENTITY menu.tools.wizard.label "Account Wizard">
+<!ENTITY menu.tools.wizard.accesskey "W">
+
+<!ENTITY menu.tools.import_contacts.label "Import Contacts...">
+<!ENTITY menu.tools.import_contacts.accesskey "R">
+
+<!ENTITY menu.tools.about.label "About">
+<!ENTITY menu.tools.about.accesskey "b">
+
+<!ENTITY menu.tools.detach_sidebar.label "Detach Sidebar (experimental)">
+<!ENTITY menu.tools.detach_sidebar.accesskey "D">
+
+<!ENTITY menu.tools.save_log.label "Save XMPP log">
+<!ENTITY menu.tools.save_log.accesskey "L">
+
+<!ENTITY menu.help.ask_question.label "Online Support - Ask a Question">
+<!ENTITY menu.help.ask_question.accesskey "Q">
+<!ENTITY menu.help.ask_question.tooltip "Online Support - Ask a Question">
+
+<!ENTITY menu.help.report_bug.label "Online Support - Report a Bug...">
+<!ENTITY menu.help.report_bug.accesskey "B">
+<!ENTITY menu.help.report_bug.tooltip "Online Support - Report a Bug...">
+
+<!ENTITY menu.status.helptext "Status">
+<!ENTITY menu.people.helptext "People">
+<!ENTITY menu.search.helptext "Search Contacts (Control+Space)">
+<!ENTITY menu.search_tip.helptext "Type part of nick…">
+<!ENTITY menu.tools.helptext "Tools">
+<!ENTITY menu.help.helptext "Help">
+
+<!ENTITY menu.context.copy.label "Copy">
+<!ENTITY menu.context.copy.accesskey "C">
+
 <!ENTITY popup.set_alias.label "Set Alias...">
 <!ENTITY popup.remove.label "Remove">
 <!ENTITY tooltip.contact_of.label "Contact of:">

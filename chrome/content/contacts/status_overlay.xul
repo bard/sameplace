@@ -33,7 +33,7 @@
 
 <?xml-stylesheet href="chrome://sameplace/skin/status_overlay.css"?>
 
-<!DOCTYPE overlay SYSTEM "chrome://sameplace/locale/toolbox.dtd">
+<!DOCTYPE overlay SYSTEM "chrome://sameplace/locale/contacts.dtd">
 
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script type="application/x-javascript" src="status_overlay.js"/>
