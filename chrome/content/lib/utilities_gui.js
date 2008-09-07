@@ -161,7 +161,8 @@ function getBrowser() {
     return undefined;
 }
 
-// XXX merge with openURL below
+// XXX merge with openURL below?
+// XXX unused?
 
 function openLink(url, newTab) {
     const srvPrompt = Cc['@mozilla.org/embedcomp/prompt-service;1']
