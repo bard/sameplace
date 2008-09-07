@@ -205,7 +205,7 @@ function quitFilter() {
     requestedFilter('');
 
     var xulTextbox = $('#controls .field.filter').firstChild;
-    xulTextbox.value = 'Type part of nick…';
+    xulTextbox.value = xulTextbox.getAttribute('placeholder');
     xulTextbox.parentNode.focus();
     xulTextbox.parentNode.collapsed = true;
 

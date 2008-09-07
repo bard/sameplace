@@ -71,6 +71,7 @@
                    helptext="&menu.search.helptext;"/>
             <vbox class="field filter" pack="center" collapsed="true">
               <textbox value="&menu.search_tip.helptext;"
+                       placeholder="&menu.search_tip.helptext;"
                        onblur="blurredFilterField(this);"
                        oninput="inputInFilterField(this);"
                        onkeypress="keypressInInputField(event);"

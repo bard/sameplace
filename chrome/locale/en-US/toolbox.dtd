@@ -83,7 +83,7 @@
 <!ENTITY menu.status.helptext "Status">
 <!ENTITY menu.people.helptext "People">
 <!ENTITY menu.search.helptext "Search Contacts (Control+Space)">
-<!ENTITY menu.search_tip.helptext "Type part of nick...">
+<!ENTITY menu.search_tip.helptext "Type part of nick…">
 <!ENTITY menu.tools.helptext "Tools">
 <!ENTITY menu.help.helptext "Help">
 
