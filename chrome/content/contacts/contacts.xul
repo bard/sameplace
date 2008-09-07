@@ -138,7 +138,6 @@
 
   <stringbundleset>
     <stringbundle id="strings" src="chrome://sameplace/locale/contacts.properties"/>
-    <stringbundle id="strings-toolbox" src="chrome://sameplace/locale/toolbox.properties"/>    
   </stringbundleset>
 
   <popupset id="popups">

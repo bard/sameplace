@@ -485,7 +485,7 @@ function requestedSaveXMPPLog() {
 }
 
 function requestedDetachSidebar() {
-    if(window.confirm('Detaching will close any conversation opened in the sidebar. Proceed?'))
+    if(window.confirm($('#strings').getString('dialog.detachSidebar')))
         detachSidebar();
 }
 
@@ -500,8 +500,8 @@ function requestedImportContacts() {
         return;
     
     registerToService(request.account, request.address, {
-        onSuccess: function() { window.alert($('#strings-toolbox').getString('transportRegistrationSuccess')); },
-        onError: function(info) { window.alert($('#strings-toolbox').getFormattedString('transportRegistrationError', [info])); },
+        onSuccess: function() { window.alert($('#strings').getString('transportRegistrationSuccess')); },
+        onError: function(info) { window.alert($('#strings').getFormattedString('transportRegistrationError', [info])); },
         onCancel: function() {}
     });
 }
@@ -539,7 +539,7 @@ function showingScriptletList(xulPopup) {
             }, false);
         } catch(e) {
             xulScriptlet.setAttribute(
-                'label', $('#strings-toolbox').getFormattedString('scriptletLoadingError',
+                'label', $('#strings').getFormattedString('scriptletLoadingError',
                                                           [scriptlet.fileName]));
             xulScriptlet.setAttribute('style', 'color:red;')
             xulScriptlet.addEventListener('command', function(event) {
@@ -689,8 +689,8 @@ function requestedSetContactAlias(xulPopupNode) {
 
     var confirm = srvPrompt.prompt(
         null,
-        $('#strings').getString('aliasChangeTitle'),
-        $('#strings').getFormattedString('aliasChangeMessage', [address]),
+        $('#strings').getString('dialog.aliasChange.title'),
+        $('#strings').getFormattedString('dialog.aliasChange.message', [address]),
         alias, null, {});
 
     if(confirm)
@@ -1228,9 +1228,7 @@ function receivedSubscriptionRequestSequence(sequence) {
                     XMPP.JID(presence.stanza.@from).address,
                     true];
         });
-        request.description =
-            'These contacts want to add you to their contact list. ' +
-            'Do you accept?';
+        request.description = $('#strings').getString('presenceSubscriptionRequest');
 
         window.openDialog(
             'chrome://sameplace/content/dialogs/contact_selection.xul',
