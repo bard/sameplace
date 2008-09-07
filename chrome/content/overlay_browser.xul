@@ -55,7 +55,7 @@
 
   <commandset id="mainCommandSet">
     <command id="sameplace-command-toggle"
-             label="&command.hide-show; (F12)"
+             label="&command.hide-show;"
              oncommand="sameplace.toggle();"
              accesskey="&command.hide-show.accesskey;"/>
     <command id="sameplace-command-load"
@@ -73,8 +73,7 @@
   <toolbarpalette id="BrowserToolbarPalette">
     <toolbarbutton id="sameplace-button"
                    class="toolbarbutton-1 chromeclass-toolbar-additional"
-                   label="&sp.label;"
-                   tooltiptext="&sp.tooltip;"
+                   label="&sameplace.label;"
                    availability="unavailable"
                    oncommand="sameplace.toggle();">
     </toolbarbutton>
@@ -98,7 +97,6 @@
   </menupopup>
   
   <popup id="contentAreaContextMenu">
-    <!-- XXX localize -->
     <menu label="&sendlink.label;"
           accesskey="&sendlink.accesskey;"
           id="sameplace-sendto">

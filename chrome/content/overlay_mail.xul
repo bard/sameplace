@@ -77,8 +77,7 @@
   <toolbarpalette id="MailToolbarPalette">
     <toolbarbutton id="sameplace-button"
                    class="toolbarbutton-1 chromeclass-toolbar-additional"
-                   label="&sp.label;"
-                   tooltiptext="&sp.tooltip;"
+                   label="&sameplace.label;"
                    availability="unavailable"
                    oncommand="sameplace.toggle();">
     </toolbarbutton>
