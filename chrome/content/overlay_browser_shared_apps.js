@@ -137,14 +137,19 @@ sameplace.seenSharedAppNegotiation = function(message) {
     if(message.direction == 'in') {
         switch(message.stanza.ns_x4m_ext::share.@response.toString()) {
         case '':
+            var strings = document.getElementById('sameplace-strings');
             // it's a request
             xulNotify.appendNotification(
-                message.stanza.@from + ' invites you to interact on ' +
-                    url + '. Do you accept?', // XXX localize
-                    'sameplace-shareapp-request',
+                strings.getFormattedString('notification.sharedAppInvitation.message',
+                                           [message.stanza.@from, url]),
+                'sameplace-shareapp-request',
                 null, xulNotify.PRIORITY_INFO_HIGH,
-                [{label: 'Accept', accessKey: 'A', callback: onAccept},
-                 {label: 'Decline', accessKey: 'D', callback: onDecline}]);
+                [{label: strings.getString('notification.sharedAppInvitation.accept.label'),
+                  accessKey: strings.getString('notification.sharedAppInvitation.accept.accesskey'),
+                  callback: onAccept},
+                 {label: strings.getString('notification.sharedAppInvitation.decline.label'),
+                  accessKey: strings.getString('notification.sharedAppInvitation.decline.accesskey'),
+                  callback: onDecline}]);
             break;
         case 'accept':
             xulNotify.appendNotification(

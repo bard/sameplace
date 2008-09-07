@@ -71,18 +71,24 @@ sameplace.receivedAuthConfirmRequest = function(message) {
         XMPP.send(message.account, response)
     }
 
-    var userMessage = 'Someone (maybe you) tried to authenticate on ' + // XXX localize
-        request.ns_http_auth::confirm.@url + ' \n' +
-        'as ' + request.@to + ', with transaction ID "' +
-        request.ns_http_auth::confirm.@id + '". Authorize?'
+    var strings = document.getElementById('sameplace-strings');
+    var userMessage = strings.getFormattedString(
+        'notification.openIDRequest.message', [
+            request.ns_http_auth::confirm.@url,
+            request.@to,
+            request.ns_http_auth::confirm.@id]);
 
     var xulNotify = getBrowser().getNotificationBox();
     if(xulNotify) {
         xulNotify.appendNotification(
             userMessage, 'sameplace-auth-confirm',
             null, xulNotify.PRIORITY_INFO_HIGH,
-            [{label: 'Confirm', accessKey: 'C', callback: onAuthorize},
-             {label: 'Deny', accessKey: 'D', callback: onDeny}]);
+            [{label: strings.getString('notification.openIDRequest.confirm.label'),
+              accessKey: strings.getString('notification.openIDRequest.confirm.accesskey'),
+              callback: onAuthorize},
+             {label: strings.getString('notification.openIDRequest.deny.label'),
+              accessKey: strings.getString('notification.openIDRequest.deny.accesskey'),
+              callback: onDeny}]);
     } else {
         if(window.confirm(userMessage))
             onAuthorize();
