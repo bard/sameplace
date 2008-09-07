@@ -46,21 +46,6 @@
 // nor produce side effects.  This is a relaxed restriction, though.
 
 
-// TODO
-// ----------------------------------------------------------------------
-
-// Replace "contact name" with "contact handle"
-//
-// Only blink message indicator if status is "available"
-//
-// On certain events, change contact background to get attention
-//
-// On upper right of contact, display capabilities and info like web
-// page, mail, etc
-//
-// Per-contact menu to access shared apps
-
-
 // DEFINITIONS
 // ----------------------------------------------------------------------
 
