@@ -4,3 +4,4 @@
 <!ENTITY tooltip.presence_notification.label "Presence notification:">
 <!ENTITY popup.interact.label "Interact:">
 <!ENTITY popup.current_page.label "Current page">
+<!ENTITY status.placeholder "[ your status message here ]">

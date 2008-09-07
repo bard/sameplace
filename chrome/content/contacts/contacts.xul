@@ -287,9 +287,9 @@
                            this.nextSibling.hidden = true;"
                oninput="this.nextSibling.hidden = false;
                         this.nextSibling.value = '[' + this.textLength + ']';"
-               placeholder="[ your status message here ]"
+               placeholder="&status.placeholder;"
                onfocus="this.select();"
-               value="[ your status message here ]"/>
+               value="&status.placeholder;"/>
       <textbox id="status-message-counter" flex="1" class="plain"/>
     </hbox>
   </vbox>
