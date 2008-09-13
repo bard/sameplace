@@ -8,3 +8,9 @@ pref("extensions.sameplace@hyperstruct.net.description", "chrome://sameplace/loc
 pref("extensions.sameplace.branch", "devel");
 pref("extensions.sameplace.chatArea", "");
 pref("extensions.sameplace.addToolbarButton", true);
+pref("extensions.sameplace.popup", true);
+pref("extensions.sameplace.roomspopup", true);
+pref("extensions.sameplace.sound", true);
+pref("extensions.sameplace.autorec", true);
+pref("extensions.sameplace.autojoin", false);
+pref("extensions.sameplace.usersArray", "[]");
