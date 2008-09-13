@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+
+<!--
+  This file is part of 'Notify me' (SamePlace addon).
+
+  'Notify me' is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License,
+  or any later version.
+  
+  'Notify me' is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License
+  along with 'Notify me'.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<?xml-stylesheet href="chrome://notifyme/skin/overlay.css" type="text/css"?>
+<!DOCTYPE overlay SYSTEM "chrome://notifyme/locale/overlay.dtd">
+
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  
+<prefpane id="roomsautojoin-pane">
+
+  <preferences>
+    <preference id="notifyme-autojoin"
+		name="extensions.notifyme.autojoin"
+		type="bool"
+		instantApply="true" />
+  </preferences>
+  <vbox>
+    
+    <checkbox preference="notifyme-autojoin"
+	      id="roomsautojoin"
+	      label="Enable rooms autojoin"/>
+    
+    <label control="roomid" value="Specify a room and a nickname:"/>
+    
+  <grid>
+    <columns>
+      <column flex="2"/>      
+      <column flex="1"/>
+    </columns>
+    <rows>
+      <row>
+	<textbox id="roomid"
+		 value="...@places.sameplace.cc/"
+
+		 onkeypress="return notifymeRoomsAutojoin.receivedRET(event);"/>
+	</row>
+      <row>
+	<textbox id="nickid"
+		 value="nickname"
+		 onkeypress="return notifymeRoomsAutojoin.receivedRET(event);"/>
+	
+	<button label="Add"
+		accesskey="A"
+		oncommand="notifymeRoomsAutojoin.addItem();"
+		/>
+      </row>
+      <listbox id="thelist"
+	       onselect="document.getElementById('removebuttonid').disabled = false;">
+      </listbox>
+      <button id="removebuttonid"
+	      label="Remove"
+	      accesskey="R"
+		disabled="true"
+	      oncommand="notifymeRoomsAutojoin.removeSelectedRoom();"/>
+    </rows>
+  </grid>
+  </vbox>
+  
+</prefpane>
+</overlay>
