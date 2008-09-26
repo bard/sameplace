@@ -49,28 +49,11 @@
             src="chrome://sameplace/content/preferences/preferences_sameplace.xul"
             onpaneload="sameplacePrefs.init();"/>
 
-  <prefpane id="notifyme-pane"
-	    insertafter="sameplace-pane"
-	    label="Notify me"
-            image="chrome://sameplace/skin/logo_nm.png"
-            src="chrome://sameplace/content/preferences/preferences_notifyme.xul"
-            onpaneload="notifymePrefs.init();"/>
-  <!--
-  <prefpane id="roomsautojoin-pane"
-	    insertafter="notifyme-pane"
-	    label="Rooms Auto-join"
-	    image="chrome://sameplace/skin/logo_nm.png"
-	    src="chrome://sameplace/content/preferences/preferences_roomsautojoin.xul"
-	    onpaneload="notifymeRoomsAutojoin.init();"
-	    />
-  -->
   <!-- These need be down here or pane order in Firefox2 will be wrong. -->
 
   <script type="application/x-javascript;version=1.7" src="chrome://xmpp4moz/content/xmpp.js"/>  
   <script type="application/x-javascript;version=1.7" src="../lib/getElementsBySelector.js"/>
   <script type="application/x-javascript;version=1.7" src="preferences_accounts.js"/>
   <script type="application/x-javascript;version=1.7" src="preferences_sameplace.js"/>
-  <script type="application/x-javascript;version=1.7" src="preferences_notifyme.js"/>
-  <script type="application/x-javascript;version=1.7" src="preferences_roomsautojoin.js"/>
 </prefwindow>
 

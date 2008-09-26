@@ -61,15 +61,6 @@ function init(event) {
     // Only preload SamePlace if there's no other window around with
     // an active SamePlace instance, and if this isn't a popup.'
 
-	try {
-	    Components
-		.classes['@hyperstruct.net/sameplace/connectors/service;1']
-		.getService(Components.interfaces.nsIXMPPPresenceNotificationService);
-
-	} catch(exp) {
-	    Components.utils.reportError(exp); // report the error and continue execution
-	}
-
     if(!isActiveSomewhere() && !isPopupWindow())
         loadAreas();
 
