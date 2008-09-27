@@ -36,7 +36,12 @@
 <?xul-overlay href="shared_apps_overlay.xul"?>
 <?xul-overlay href="controls_overlay.xul"?>
 
-<!DOCTYPE page SYSTEM "chrome://sameplace/locale/contacts.dtd">
+<!DOCTYPE page [
+  <!ENTITY % contactsDTD SYSTEM "chrome://sameplace/locale/contacts.dtd">
+  %contactsDTD;
+  <!ENTITY % statusDTD SYSTEM "chrome://sameplace/locale/status_overlay.dtd">
+  %statusDTD;
+]>
 
 <page id="view"
       class="tiny"

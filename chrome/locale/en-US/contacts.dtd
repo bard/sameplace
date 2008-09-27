@@ -42,11 +42,6 @@
 <!ENTITY popup.toggle_tiny_avatars.tooltip "Toggle avatar size">
 <!ENTITY toolbar.people.label "People">
 <!ENTITY toolbar.status.label "Status">
-<!ENTITY menu.status-all-accounts.label "All">
-<!ENTITY menu.status-online.label "Online">
-<!ENTITY menu.status-away.label "Away">
-<!ENTITY menu.status-busy.label "Busy">
-<!ENTITY menu.status-offline.label "Offline">
 
 <!ENTITY menu.help.follow_twitter.label "Follow on Twitter">
 <!ENTITY menu.help.follow_twitter.accesskey "T">
@@ -86,9 +81,6 @@
 <!ENTITY menu.search_tip.helptext "Type part of nick…">
 <!ENTITY menu.tools.helptext "Tools">
 <!ENTITY menu.help.helptext "Help">
-
-<!ENTITY menu.context.copy.label "Copy">
-<!ENTITY menu.context.copy.accesskey "C">
 
 <!ENTITY popup.set_alias.label "Set Alias...">
 <!ENTITY popup.remove.label "Remove">

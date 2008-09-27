@@ -1,0 +1,5 @@
+<!ENTITY menu.status-all-accounts.label "All">
+<!ENTITY menu.status-online.label "Online">
+<!ENTITY menu.status-away.label "Away">
+<!ENTITY menu.status-busy.label "Busy">
+<!ENTITY menu.status-offline.label "Offline">
