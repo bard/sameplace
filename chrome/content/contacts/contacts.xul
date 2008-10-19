@@ -143,7 +143,7 @@
   <popupset id="popups">
     <popup id="people-popup" class="with-headers"
            onpopupshowing="showingSortMenu(event);">
-      <menuitem class="header" label="People" disabled="true"/>
+      <menuitem class="header" label="&menu.people.label;" disabled="true"/>
       <menuseparator/>
       <menuitem class="menuitem-iconic" command="add-contact"/>
       <menuitem class="menuitem-iconic" command="join-room"/>
@@ -152,16 +152,16 @@
       <menuitem command="toggle-offline"/>
       <menuitem command="toggle-tiny-avatars"/>
       <menuseparator/>
-      <menuitem type="radio" name="sort" label="Sort by name"
+      <menuitem type="radio" name="sort" label="&menu.sort.name.label;"
                 value="display-name"
                 oncommand="setInsertionStrategy(this.value);"/>
-      <menuitem type="radio" name="sort" label="Sort by recent activity"
+      <menuitem type="radio" name="sort" label="&menu.sort.activity.label;"
                 value="activity"
                 oncommand="setInsertionStrategy(this.value);"/>
-      <menuitem type="radio" name="sort" label="Sort by group"
+      <menuitem type="radio" name="sort" label="&menu.sort.group.label;"
                 value="group" disabled="true"
                 oncommand="setInsertionStrategy(this.value);"/>
-      <menuitem type="radio" name="sort" label="Sort by popularity"
+      <menuitem type="radio" name="sort" label="&menu.sort.popularity.label;"
                 value="popularity" disabled="true"
                 oncommand="setInsertionStrategy(this.value);"/>
     </popup>
@@ -174,22 +174,22 @@
     <popup id="sort-popup" class="with-headers"
            onpopupshowing="showingSortMenu(event);"
            oncommand="requestedChangeSort(this)">
-      <menuitem class="header" label="Sort" disabled="true"/>
+      <menuitem class="header" label="&menu.sort.label;" disabled="true"/>
       <menuseparator/>
-      <menuitem type="radio" name="sort" label="Name"
+      <menuitem type="radio" name="sort" label="&menu.sort.radio.name.label;"
                 value="display-name"
                 oncommand="setInsertionStrategy(this.value);"/>
-      <menuitem type="radio" name="sort" label="Recent activity"
+      <menuitem type="radio" name="sort" label="&menu.sort.radio.activity.label;"
                 value="activity"
                 oncommand="setInsertionStrategy(this.value);"/>
-      <menuitem type="radio" name="sort" label="Group"
+      <menuitem type="radio" name="sort" label="&menu.sort.radio.group.label;"
                 value="group" disabled="true"/>      
-      <menuitem type="radio" name="sort" label="Most talked with"
+      <menuitem type="radio" name="sort" label="&menu.sort.radio.talks.label;"
                 value="messages" disabled="true"/>
     </popup>
 
     <popup id="help-popup" class="with-headers">
-      <menuitem class="header" label="Help" disabled="true"/>
+      <menuitem class="header" label="&menu.help.label;" disabled="true"/>
       <menuseparator/>
       <menuitem class="menuitem-iconic" command="ask-question"/>
       <menuitem class="menuitem-iconic" command="report-bug"/>
@@ -204,7 +204,7 @@
     </popup>
     
     <popup id="tools-popup" class="with-headers">
-      <menuitem class="header" label="Tools" disabled="true"/>
+      <menuitem class="header" label="&menu.tools.label;" disabled="true"/>
       <menuseparator/>
       <menuitem class="menuitem-iconic" command="run-wizard"/>
       <menuitem class="menuitem-iconic" command="open-preferences"/>
@@ -230,7 +230,7 @@
                 label="&popup.remove.label;"
                 oncommand="requestedRemoveContact(document.popupNode);"/>
       <menuitem class="remove-room"
-                label="Remove"
+                label="&popup.remove_room.label;"
                 oncommand="requestedRemoveRoom(document.popupNode);"/>      
     </popup>
 

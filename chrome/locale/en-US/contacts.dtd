@@ -30,8 +30,6 @@
 <!ENTITY command.hide.tooltip "Hide">
 <!ENTITY command.import_contacts.label "Import Contacts...">
 <!ENTITY command.import_contacts.accesskey "I">
-<!ENTITY command.open_standalon.label "Open Standalone (EXPERIMENTAL)">
-<!ENTITY command.open_standalon.accesskey "S">
 <!ENTITY menu.scriptlets.label "Scriptlets">
 <!ENTITY menu.scriptlets.manage.label "Manage...">
 <!ENTITY menu.scriptlets.manage.accesskey "M">
@@ -43,49 +41,58 @@
 <!ENTITY toolbar.people.label "People">
 <!ENTITY toolbar.status.label "Status">
 
-<!ENTITY menu.help.follow_twitter.label "Follow on Twitter">
-<!ENTITY menu.help.follow_twitter.accesskey "T">
-<!ENTITY menu.help.follow_twitter.tooltip "Follow on Twitter">
-<!ENTITY menu.help.blog.label "View Blog">
-<!ENTITY menu.help.blog.accesskey "B">
-<!ENTITY menu.help.blog.tooltip "View Blog">
 <!ENTITY menu.tools.preferences.label "Preferences">
 <!ENTITY menu.tools.preferences.accesskey "P">
-
 <!ENTITY menu.tools.wizard.label "Account Wizard">
 <!ENTITY menu.tools.wizard.accesskey "W">
-
 <!ENTITY menu.tools.import_contacts.label "Import Contacts...">
 <!ENTITY menu.tools.import_contacts.accesskey "R">
-
 <!ENTITY menu.tools.about.label "About">
 <!ENTITY menu.tools.about.accesskey "b">
-
 <!ENTITY menu.tools.detach_sidebar.label "Detach Sidebar (experimental)">
 <!ENTITY menu.tools.detach_sidebar.accesskey "D">
-
 <!ENTITY menu.tools.save_log.label "Save XMPP log">
 <!ENTITY menu.tools.save_log.accesskey "L">
 
 <!ENTITY menu.help.ask_question.label "Online Support - Ask a Question">
 <!ENTITY menu.help.ask_question.accesskey "Q">
 <!ENTITY menu.help.ask_question.tooltip "Online Support - Ask a Question">
-
 <!ENTITY menu.help.report_bug.label "Online Support - Report a Bug...">
 <!ENTITY menu.help.report_bug.accesskey "B">
 <!ENTITY menu.help.report_bug.tooltip "Online Support - Report a Bug...">
+<!ENTITY menu.help.follow_twitter.label "Follow on Twitter">
+<!ENTITY menu.help.follow_twitter.accesskey "T">
+<!ENTITY menu.help.follow_twitter.tooltip "Follow on Twitter">
+<!ENTITY menu.help.blog.label "View Blog">
+<!ENTITY menu.help.blog.accesskey "B">
+<!ENTITY menu.help.blog.tooltip "View Blog">
 
-<!ENTITY menu.status.helptext "Status">
+<!ENTITY menu.sort.radio.name.label "Name">
+<!ENTITY menu.sort.radio.activity.label "Recent activity">
+<!ENTITY menu.sort.radio.group.label "Group">
+<!ENTITY menu.sort.radio.talks.label "Most talked with">
+<!ENTITY menu.sort.name.label "Sort by name">
+<!ENTITY menu.sort.activity.label "Sort by recent activity">
+<!ENTITY menu.sort.group.label "Sort by group">
+<!ENTITY menu.sort.popularity.label "Sort by popularity">
+
+<!ENTITY menu.people.label "People">
 <!ENTITY menu.people.helptext "People">
+<!ENTITY menu.sort.label "Sort">
+<!ENTITY menu.tools.label "Tools">
+<!ENTITY menu.tools.helptext "Tools">
+<!ENTITY menu.status.helptext "Status">
 <!ENTITY menu.search.helptext "Search Contacts (Control+Space)">
 <!ENTITY menu.search_tip.helptext "Type part of nick…">
-<!ENTITY menu.tools.helptext "Tools">
+<!ENTITY menu.help.label "Help">
 <!ENTITY menu.help.helptext "Help">
 
 <!ENTITY popup.set_alias.label "Set Alias...">
 <!ENTITY popup.remove.label "Remove">
+<!ENTITY popup.remove_room.label "Remove">
 <!ENTITY tooltip.contact_of.label "Contact of:">
 <!ENTITY tooltip.presence_notification.label "Presence notification:">
 <!ENTITY popup.interact.label "Interact:">
 <!ENTITY popup.current_page.label "Current page">
 <!ENTITY status.placeholder "[ your status message here ]">
+
