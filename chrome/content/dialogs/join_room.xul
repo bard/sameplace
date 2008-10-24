@@ -65,7 +65,8 @@
                control="name"/>
         <hbox align="center">
           <textbox id="name" oninput="refresh();" flex="1"/>
-          <label class="text-link small-margin" onclick="searchRooms();" value="&join_room.room_search.label;"/>
+          <label class="text-link small-margin" onclick="searchRooms();" value="&join_room.room_search.label;"
+                 tabindex="99"/>
         </hbox>
 
 
