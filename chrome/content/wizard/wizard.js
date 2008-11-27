@@ -86,7 +86,7 @@ function updateJabberConfig(event) {
     $(page, '.address').value =
         (username || '[' + $('#strings').getString('username') + ']') +
         '@' +
-        (domain || '[' + $('#strings').getService('domain') + ']');
+        (domain || '[' + $('#strings').getString('domain') + ']');
 
     switch(service) {
     case 'gtalk':
