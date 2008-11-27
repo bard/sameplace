@@ -54,6 +54,13 @@ var accounts;
 function init() {
     window.sizeToContent()
     refresh();
+
+    var id = window.arguments[1];
+    if(typeof(id) != 'undefined') {
+        var account = find(accounts, function(a) a.id == id);
+        $('#accounts').selectedItem = $('#accounts .account[id="' + id + '"]');
+        displayAccount(account);
+    }
 }
 
 
@@ -70,13 +77,14 @@ function refresh() {
     });
     accounts.forEach(addAccount);
 
-    updateForm();
+    $('#action-pane').selectedIndex =
+        $('#accounts').selectedIndex == -1 ? 0 : 1;
 }
 
 function getCurrentAccount() {
     var xulAccount = $('#accounts').selectedItem;
     if(xulAccount)
-        return findAccount(xulAccount.getAttribute('id'));
+        return find(accounts, function(a) a.id == xulAccount.getAttribute('id'));
 }
 
 function addAccount(account) {
@@ -94,9 +102,16 @@ function addAccount(account) {
     $('#accounts').appendChild(xulAccount);
 }
 
-function updateForm() {
-    $('#action-pane').selectedIndex =
-        $('#accounts').selectedIndex == -1 ? 0 : 1;
+function displayAccount(account) {
+    $('#username').value = account.username || '';
+    $('#password').value = account.password || '';
+    $('#service').value = account.service;
+    $('#resource').value = account.resource;
+    $('#connection-host').value = account.connectionHost;
+    $('#connection-port').value = account.connectionPort;
+    $('#connection-security').value = account.connectionSecurity;
+    $('#auto-login').checked  = account.autoLogin;
+    $('#action-pane').selectedIndex = 1;
 }
 
 
@@ -122,28 +137,13 @@ function requestedAddAccount() {
 }
 
 function selectedAccount(event) {
-    var account = findAccount(event.target.selectedItem.id);
-    $('#username').value = account.username || '';
-    $('#password').value = account.password || '';
-    $('#service').value = account.service;
-    $('#resource').value = account.resource;
-    $('#connection-host').value = account.connectionHost;
-    $('#connection-port').value = account.connectionPort;
-    $('#connection-security').value = account.connectionSecurity;
-    $('#auto-login').checked  = account.autoLogin;
-    updateForm();
+    var account = find(accounts, function(account) account.id = event.target.selectedItem.id)
+    displayAccount(account);
 }
 
 
 // OTHER ACTIONS
 // ----------------------------------------------------------------------
-
-function findAccount(id) {
-    for each(var account in accounts) {
-        if(account.id == id)
-            return account;
-    }
-}
 
 function deleteAccount(accountId) {
     pref.deleteBranch(accountId + '.');
@@ -153,6 +153,14 @@ function deleteAccount(accountId) {
 
 // UTILITIES
 // ----------------------------------------------------------------------
+
+function find(collection, condition) {
+    for each(var member in collection) {
+        if(condition(member))
+            return member;
+    }
+    return null;
+}
 
 function convertAccount(source) {
     return {
