@@ -79,11 +79,6 @@
           </rows>
         </grid>
 
-        <hbox pack="end">
-          <checkbox id="auto-login" label="&accounts.account_startup_connect.label;"
-                    oncommand="accountPrefs.updatedField(this);"/>
-        </hbox>          
-
         <separator class="groove"/>
 
         <hbox id="commands-secondary" pack="end">

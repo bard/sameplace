@@ -6,7 +6,6 @@
 <!ENTITY accounts.account_username.label "Username:">
 <!ENTITY accounts.account_password.label "Password:">
 <!ENTITY accounts.account_service.label "Service:">
-<!ENTITY accounts.account_startup_connect.label "Login on startup">
 <!ENTITY accounts.account_resource.label "Resource:">
 <!ENTITY accounts.account_resource_description.label "Example: Home, Office, ...">
 <!ENTITY accounts.account_server.label "Server:">

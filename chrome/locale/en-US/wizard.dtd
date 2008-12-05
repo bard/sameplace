@@ -40,7 +40,6 @@
 <!ENTITY page.jabber.password.label "Password:">
 <!ENTITY page.jabber.confirm.label "Confirm password:">
 <!ENTITY page.jabber.result.label "Your ID">
-<!ENTITY page.jabber.autologin.label "Login on startup">
 
 <!ENTITY page.jabber.success.label "Account verified!">
 <!ENTITY page.jabber.failure.label "Failure. :-(">

@@ -62,6 +62,8 @@ var COMPACT_WIDTH = 65;
 
 var dndObserver = {};
 
+Components.utils.import('resource://sameplace/main.jsm'); // Imports sameplaceSrv
+
 
 // STATE
 // ----------------------------------------------------------------------
@@ -78,7 +80,7 @@ function init(event) {
     initGUIReactions();
     initNetworkReactions();
     initState();
-    connectAutologinAccounts();
+    sameplaceSrv.init();
 }
 
 function initGUIReactions() {
@@ -990,16 +992,6 @@ function processURLs(xmlMessageBody) {
 
 // NETWORK ACTIONS
 // ----------------------------------------------------------------------
-
-function connectAutologinAccounts() {
-    XMPP.accounts
-    .filter(function(a) {
-        return a.autoLogin && !XMPP.isUp(a);
-    })
-    .forEach(function(a) {
-        XMPP.up(a);
-    });
-}
 
 function registerToService(account, address, callbacks) {
     function start() {

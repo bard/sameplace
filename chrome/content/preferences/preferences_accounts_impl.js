@@ -110,7 +110,6 @@ function displayAccount(account) {
     $('#connection-host').value = account.connectionHost;
     $('#connection-port').value = account.connectionPort;
     $('#connection-security').value = account.connectionSecurity;
-    $('#auto-login').checked  = account.autoLogin;
     $('#action-pane').selectedIndex = 1;
 }
 
@@ -247,10 +246,6 @@ function convertAccount(source) {
             return source.connectionSecurity;
         },
 
-        get autoLogin() {
-            return source.autoLogin;
-        },
-
         get resource() {
             return source.resource;
         },
@@ -269,10 +264,6 @@ function convertAccount(source) {
 
         set password(val) {
             XMPP.setPassword(this.address, val);
-        },
-
-        set autoLogin(val) {
-            pref.setBoolPref(this.id + '.autoLogin', val);
         },
 
         set connectionHost(val) {

@@ -239,12 +239,6 @@
           <label class="address" flex="1"/>
         </groupbox>
 
-        <vbox>
-          <checkbox class="auto-login"
-                    label="&page.jabber.autologin.label;"
-                    checked="true"/>
-        </vbox>
-
         <vbox class="progress-notifications">
           <progressmeter class="progress" mode="undetermined"/>
 

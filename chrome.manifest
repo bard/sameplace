@@ -12,3 +12,5 @@ overlay chrome://messenger/content/messenger.xul chrome://sameplace/content/over
 overlay windowtype:Songbird:Main chrome://sameplace/content/overlay_songbird.xul
 
 style chrome://global/content/customizeToolbar.xul chrome://sameplace/skin/toolbar-button.css
+
+resource sameplace modules/
