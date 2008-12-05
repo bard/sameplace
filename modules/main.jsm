@@ -76,15 +76,17 @@ function restoreOnlineState(presence) {
     XMPP.accounts
         .filter(function(account) account.lastPresence)
         .forEach(function(account) {
-            // TODO should ask connector whether to go online and
-            // replicate last presence.  Will mess with e.g. twitter
-
             var stanza = new XML(account.lastPresence);
             if(stanza.@type == 'unavailable')
                 return;
 
             XMPP.up(account, function() {
-                XMPP.send(account, stanza);
+                if(XMPP.connectorTypeFor(account.jid) == 'tcp')
+                    XMPP.send(account, stanza);
+                else
+                    // Play it safe, do not restore state in case of
+                    // non-XMPP+TCP accounts for now.
+                    XMPP.send(account);
             });
         });
 }
