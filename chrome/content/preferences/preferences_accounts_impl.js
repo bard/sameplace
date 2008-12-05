@@ -55,11 +55,13 @@ function init() {
     window.sizeToContent()
     refresh();
 
-    var id = window.arguments[1];
-    if(typeof(id) != 'undefined') {
-        var account = find(accounts, function(a) a.id == id);
-        $('#accounts').selectedItem = $('#accounts .account[id="' + id + '"]');
-        displayAccount(account);
+    if(window.arguments && window.arguments[1]) {
+        var id = window.arguments[1];
+        if(typeof(id) != 'undefined') {
+            var account = find(accounts, function(a) a.id == id);
+            $('#accounts').selectedItem = $('#accounts .account[id="' + id + '"]');
+            displayAccount(account);
+        }
     }
 }
 
@@ -137,7 +139,7 @@ function requestedAddAccount() {
 }
 
 function selectedAccount(event) {
-    var account = find(accounts, function(account) account.id = event.target.selectedItem.id)
+    var account = find(accounts, function(account) account.id == event.target.selectedItem.id)
     displayAccount(account);
 }
 
