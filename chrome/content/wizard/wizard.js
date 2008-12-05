@@ -205,8 +205,6 @@ function advancedPageJabber(page) {
         connectionPort     : $(page, '.connection-port').value,
 
         connectionSecurity : $(page, '.connection-security').value,
-        
-        autoLogin          : $(page, '.auto-login').checked,
 
         get jid() {
             return this.address + '/' + this.resource;
@@ -526,7 +524,6 @@ function saveAccount(account) {
         pref.setCharPref(key + '.resource', account.resource);
         if(account.password)
             XMPP.setPassword(account.address, account.password);
-        pref.setBoolPref(key + '.autoLogin', account.autoLogin);
         pref.setCharPref(key + '.connectionHost', account.connectionHost);
         pref.setIntPref(key + '.connectionPort', account.connectionPort);
         pref.setIntPref(key + '.connectionSecurity', account.connectionSecurity);
@@ -535,8 +532,9 @@ function saveAccount(account) {
         // it's not saved at all.
 
         for each(var prefName in
-                 ['address', 'resource', 
+                 ['address', 'resource',
                   'autoLogin', 'connectionHost',
+                  'lastPresence',
                   'connectionPort', 'connectionSecurity']) {
             if(pref.prefHasUserValue(key + '.' + prefName))
                 pref.clearUserPref(key + '.' + prefName);
