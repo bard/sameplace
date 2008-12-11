@@ -90,12 +90,21 @@ function changeStatus(account, status) {
         } else {
             if(status != 'unavailable') {
                 XMPP.up(account, function() {
-                    XMPP.send(account, updatePresence(
-                        previousPresenceStanza(account) || <presence/>,
-                        status));
+                    XMPP.send(account,
+                              <iq type='get'>
+                              <query xmlns='jabber:iq:roster'/>
+                              </iq>,
+                              function() {
+                                  var newp = updatePresence(
+                                      previousPresenceStanza(account) ||
+                                          <presence/>,
+                                      status);
+
+                                  XMPP.send(account, newp);
+                              })
                 });
             }
-         }
+        }
     }
 }
 
