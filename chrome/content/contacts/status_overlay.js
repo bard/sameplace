@@ -54,9 +54,10 @@ function changeStatus(account, status) {
     function updatePresence(stanza, status) {
         var newStanza = stanza.copy();
 
+        delete newStanza.@type;
+
         switch(status) {
         case 'available':
-            delete newStanza.@type;
             delete newStanza.show;
             break;
         case 'away':
