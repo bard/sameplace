@@ -41,12 +41,12 @@ function requestedChangeStatus(xulStatus) {
 
 function changeStatus(account, status) {
     function previousPresenceStanza(account) {
-        var p = XMPP.cache.fetch({
-            event     : 'presence',
-            account   : account,
-            direction : 'out',
-            stanza    : function(s) { return s.ns_muc::x == undefined; }
-        })[0];
+        var p = XMPP.cache.first(
+            XMPP.q()
+                .event('presence')
+                .account(account)
+                .direction('out')
+                .xpath('[not(@to)]'));
 
         return p ? p.stanza : null;
     }
