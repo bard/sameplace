@@ -62,7 +62,9 @@ var COMPACT_WIDTH = 65;
 
 var dndObserver = {};
 
-Components.utils.import('resource://sameplace/main.jsm'); // Imports sameplaceSrv
+// Imports sameplace global object
+
+Components.utils.import('resource://sameplace/main.jsm');
 
 
 // STATE
@@ -80,7 +82,7 @@ function init(event) {
     initGUIReactions();
     initNetworkReactions();
     initState();
-    sameplaceSrv.init();
+    sameplace.init();
 }
 
 function initGUIReactions() {

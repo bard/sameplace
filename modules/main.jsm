@@ -118,8 +118,9 @@ function restoreOnlineState() {
 // EXPORTS
 // ----------------------------------------------------------------------
 
-var EXPORTED_SYMBOLS = ["sameplaceSrv"];
+var EXPORTED_SYMBOLS = ['sameplace'];
 
-var sameplaceSrv = {
-    init: init
+var sameplace = {
+    init: init,
+    services: services
 };
