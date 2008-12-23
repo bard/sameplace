@@ -1,3 +1,9 @@
+// EXPORTS
+// ----------------------------------------------------------------------
+
+var EXPORTED_SYMBOLS = ['sameplace'];
+
+
 // DEFINITIONS
 // ----------------------------------------------------------------------
 
@@ -31,10 +37,6 @@ var initialized = false;
 // ----------------------------------------------------------------------
 
 function init() {
-    if(initialized)
-        return;
-    initialized = true;
-
     loader.loadSubScript('chrome://xmpp4moz/content/xmpp.js');
 
     channel = XMPP.createChannel();
@@ -101,12 +103,11 @@ function restoreOnlineState() {
 }
 
 
-// EXPORTS
+// KICKSTART
 // ----------------------------------------------------------------------
 
-var EXPORTED_SYMBOLS = ['sameplace'];
-
 var sameplace = {
-    init: init,
     services: services
 };
+
+init();

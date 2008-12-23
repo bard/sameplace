@@ -82,7 +82,6 @@ function init(event) {
     initGUIReactions();
     initNetworkReactions();
     initState();
-    sameplace.init();
 }
 
 function initGUIReactions() {
