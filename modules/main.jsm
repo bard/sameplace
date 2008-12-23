@@ -85,32 +85,18 @@ function changedPresence(presence) {
 // ACTIONS
 // ----------------------------------------------------------------------
 
-function restoreOnlineState() {
-    function startUserSession(account, initialPresenceStanza) {
-        XMPP.send(account,
-                  <iq type='get'>
-                  <query xmlns='jabber:iq:roster'/>
-                  </iq>,
-                  function() { XMPP.send(account, initialPresenceStanza); });
-    }
+// To be called at startup.  Brings up accounts that were online last
+// time the application was closed.
 
+function restoreOnlineState() {
     XMPP.accounts
         .filter(function(account) account.presenceHistory)
         .forEach(function(account) {
             var history = JSON.parse(account.presenceHistory);
 
             var lastPresenceStanza = new XML(history[history.length-1]);
-            if(lastPresenceStanza.@type == 'unavailable')
-                return;
-
-            XMPP.up(account, function() {
-                if(XMPP.connectorTypeFor(account.jid) == 'tcp')
-                    startUserSession(account, lastPresenceStanza);
-                else
-                    // Play it safe, do not restore state in case of
-                    // non-XMPP+TCP accounts for now.
-                    startUserSession(account, <presence/>);
-            });
+            if(lastPresenceStanza.@type != 'unavailable')
+                XMPP.up(account);
         });
 }
 
