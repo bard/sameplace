@@ -92,7 +92,7 @@ var cssToXPath = let(memo = {})
                     if (m[5])
                     parts[index] = m[5];
                     else
-                    parts[index] = m[2];
+                    parts[index] = '*[local-name() = "' + m[2] + '"]';
                 }
                 else if (m[1] == '#')
                 parts.push("[@id='" + m[2] + "']"); 
@@ -182,7 +182,13 @@ cssToXPath.test = function() {
                 ".//*[@foo=bar]",
                 cssToXPath('[foo=bar]'));
         },
-        
+
+        'tag selector': function() {
+            assert.equals(
+                './/*[local-name() = "foo"]',
+                cssToXPath('foo'));
+        },
+
         'single attribute selector': function() {
             assert.equals(
                 ".//*[@id='contacts']//*[contains(concat(' ', @class, ' '), ' contact ')]" +
