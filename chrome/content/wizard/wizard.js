@@ -348,7 +348,7 @@ function verifyAccount(account, callbacks) {
                     var addException = srvPrompt.confirm(
                         null,
                         $('#strings').getString('pageSelection.dialog.badCertificate.title'),
-                        $('#strings').getFormattedString('pageSelection.diialog.badCertificate.message', [account.connectionHost]));
+                        $('#strings').getFormattedString('pageSelection.dialog.badCertificate.message', [account.connectionHost]));
                     if(!addException)
                         break;
                     
