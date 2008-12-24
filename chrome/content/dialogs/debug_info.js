@@ -116,24 +116,23 @@ function getInfo() {
 
     var accountInfo =
         'Accounts:\n\n';
-    for each(var account in XMPP.accounts) {
-        accountInfo += '\t* [username hidden]@' +
-            XMPP.JID(account.jid).hostname +
-            '\n\t  via ' + account.connectionHost +
-            ':' + account.connectionPort + '/' +
-            securityDescEnum[account.connectionSecurity];
 
+    accountInfo += XMPP.accounts.map(function(account) {
         var proxyInfo =  srvProxy.resolve(
             srvIO.newURI((account.connectionSecurity == SECURITY_SSL ? 'https://' : 'http://') + account.connectionHost, null, null),
             Ci.nsIProtocolProxyService.RESOLVE_NON_BLOCKING);
-        if(proxyInfo)
-            accountInfo += ' with ' + proxyInfo.type + ' proxy ' + proxyInfo.host + ':' + proxyInfo.port
-        else
-            accountInfo += ' with no proxy'
 
-        accountInfo += '\n';
-    }
-    accountInfo += '\n';
+        return '\t* [username hidden]@' +
+            XMPP.JID(account.jid).hostname +
+            '\n\t  via ' + account.connectionHost +
+            ':' + account.connectionPort + '/' +
+            securityDescEnum[account.connectionSecurity] +
+            (proxyInfo ?
+             ' with ' + proxyInfo.type + ' proxy ' + proxyInfo.host + ':' + proxyInfo.port :
+             ' with no proxy')
+    }).join('\n');
+
+    accountInfo += '\n\n';
 
     return sysInfo + accountInfo + errorInfo;
 }

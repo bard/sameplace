@@ -52,12 +52,9 @@ function init() {
 
     xmpp.ui.refreshAccounts(_('xmpp-popup-accounts'));
 
-    for each(var account in XMPP.accounts) {
-        if(XMPP.isUp(account.jid)) {
-            _('account').value = account.jid;
-            break;
-        }
-    }
+    var firstOnlineAccount = XMPP.accounts.filter(XMPP.isUp)[0];
+    if(firstOnlineAccount)
+        _('account').value = firstOnlineAccount.jid;
 
     refresh();
 }
