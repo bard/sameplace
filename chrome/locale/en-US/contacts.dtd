@@ -96,3 +96,19 @@
 <!ENTITY popup.current_page.label "Current page">
 <!ENTITY status.placeholder "[ your status message here ]">
 
+<!ENTITY offlineDescription "You're offline.">
+<!ENTITY connectDescription "Connect »">
+
+<!ENTITY menu.popups.people.label "People">
+<!ENTITY menu.popups.sort_name.label "Sort by name">
+<!ENTITY menu.popups.sort_activity.label "Sort by recent activity">
+<!ENTITY menu.popups.sort_group.label "Sort by group">
+<!ENTITY menu.popups.sort_popularity.label "Sort by popularity">
+<!ENTITY menu.popups.sort.label "Sort">
+<!ENTITY menu.popups.sort_radio.name.label "Name">
+<!ENTITY menu.popups.sort_radio.activity.label "Recent activity">
+<!ENTITY menu.popups.sort_radio.group.label "Group">
+<!ENTITY menu.popups.sort_radio.talks.label "Most talked with">
+<!ENTITY menu.popups.tools.label "Tools">
+<!ENTITY menu.popups.help.label "Help">
+

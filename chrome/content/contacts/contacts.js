@@ -464,7 +464,7 @@ dndObserver.onDrop = function(event, dropdata, session) {
 function requestedSaveXMPPLog() {
     var fp = Cc['@mozilla.org/filepicker;1']
         .createInstance(Ci.nsIFilePicker);
-    fp.init(window, 'Save XMPP Log', Ci.nsIFilePicker.modeSave);
+    fp.init(window, $('#strings').getString('saveDebugLog'), Ci.nsIFilePicker.modeSave);
     fp.appendFilters(Ci.nsIFilePicker.filterText);
 
     var rv = fp.show();
@@ -494,7 +494,7 @@ function requestedDetachSidebar() {
 }
 
 function requestedImportContacts() {
-    var request = {title: 'Enter transport address'};
+    var request = {title: $('#strings').getString('enterTranAddress')};
     window.openDialog('chrome://sameplace/content/dialogs/prompt_address.xul',
                       'register',
                       'modal,centerscreen',
