@@ -44,7 +44,7 @@ dialog {
 
 #logo {
     margin-right: -30px;
-    list-style-image: url("logo-large.png");
+    list-style-image: url("../logo-large.png");
 }
 
 #name-box {

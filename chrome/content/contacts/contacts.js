@@ -227,7 +227,7 @@ function detachSidebar() {
 }
 
 function openAboutDialog() {
-    window.openDialog('chrome://sameplace/content/about.xul',
+    window.openDialog('chrome://sameplace/content/dialogs/about.xul',
                       'About', 'centerscreen,chrome,resizable=no');
 }
 
