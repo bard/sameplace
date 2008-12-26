@@ -100,12 +100,12 @@
         </hbox>
 
         <description class="notice">
-          You're offline.
+          &offlineDescription;
         </description>
 
         <description class="action"
                      onclick="requestedConnection();">
-          Connect »
+          &connectDescription;
         </description>
       </vbox>
 
