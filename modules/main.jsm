@@ -107,7 +107,7 @@ function restoreOnlineState() {
 // ----------------------------------------------------------------------
 
 var sameplace = {
-    services: services
+
 };
 
 init();
