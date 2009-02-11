@@ -518,46 +518,6 @@ function requestedChangeStatusMessage(event) {
     $('#contacts').focus();
 }
 
-function requestedManageScriptlets() {
-    window.openDialog('chrome://sameplace/content/scriptlets/scriptlet_manager.xul',
-                      'SamePlace:ScriptletManager', 'chrome', getScriptlets());
-}
-
-function showingScriptletList(xulPopup) {
-    var xulSeparator = xulPopup.getElementsByTagName('menuseparator')[0];
-    while(xulPopup.firstChild && xulPopup.firstChild != xulSeparator)
-        xulPopup.removeChild(xulPopup.firstChild);
-
-    var scriptlets = getScriptlets();
-    var count = 0;
-    scriptlets.forEach(function(scriptlet) {
-        count++;
-        var xulScriptlet = document.createElement('menuitem');
-        try {
-            xulScriptlet.setAttribute('label', scriptlet.info.name);
-            xulScriptlet.addEventListener('command', function(event) {
-                if(scriptlet.enabled)
-                    scriptlet.disable();
-                else
-                    scriptlet.enable();
-            }, false);
-        } catch(e) {
-            xulScriptlet.setAttribute(
-                'label', $('#strings').getFormattedString('scriptletLoadingError',
-                                                          [scriptlet.fileName]));
-            xulScriptlet.setAttribute('style', 'color:red;')
-            xulScriptlet.addEventListener('command', function(event) {
-                window.alert(e.name + '\n' + e.stack);
-            }, false);
-        }
-        xulScriptlet.setAttribute('type', 'checkbox');
-        xulScriptlet.setAttribute('checked', scriptlet.enabled ? 'true' : 'false');
-        xulPopup.insertBefore(xulScriptlet, xulSeparator);
-    });
-    
-    xulSeparator.hidden = (count == 0);
-}
-
 function requestedOpenConversation(type) {
     switch(type) {
     case 'chat':
@@ -1392,14 +1352,6 @@ function contactChangedRelationship(account, address, subscription, name) {
     xulContact.setAttribute('display-name', displayName.toLowerCase());
 
     placeContact(xulContact);
-}
-
-
-// OTHER ACTIONS
-// ----------------------------------------------------------------------
-
-function getScriptlets() {
-    return top.sameplace.scriptlets;
 }
 
 

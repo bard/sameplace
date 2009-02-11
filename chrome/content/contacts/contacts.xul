@@ -210,15 +210,6 @@
       <menuitem class="menuitem-iconic" command="open-preferences"/>
       <menuitem class="menuitem-iconic" command="import-contacts"/>
       <menuitem class="menuitem-iconic" command="detach-sidebar"/>
-      <menuseparator/>
-      <menu class="menuitem-iconic" label="&menu.scriptlets.label;">
-        <menupopup id="scriptlets-popup" onpopupshowing="showingScriptletList(this);">
-          <menuseparator/>
-          <menuitem label="&menu.scriptlets.manage.label;"
-                    accesskey="&menu.scriptlets.manage.accesskey;"
-                    oncommand="requestedManageScriptlets();"/>
-        </menupopup>
-      </menu>
     </popup>
 
     <popup id="contact-popup" class="with-headers"

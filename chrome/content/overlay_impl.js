@@ -45,7 +45,6 @@ const pref = Cc['@mozilla.org/preferences-service;1']
 // ----------------------------------------------------------------------
 
 var channel;
-var scriptlets = load('chrome://sameplace/content/facades/scriptlets.js', {});
 var sendTo = load('chrome://sameplace/content/send_to.js', {});
 var util = load('chrome://sameplace/content/lib/util_impl.js', {});
 
@@ -86,7 +85,6 @@ function init(event) {
         util.addToolbarButton('sameplace-button');
 
     updateStatusIndicator();
-    initScriptlets();
 }
 
 function finish() {
@@ -141,17 +139,6 @@ function initHotkeys() {
     }, false);
 }
 
-function initScriptlets() {
-    try {
-        scriptlets.init(['sameplace', 'scriptlets'],
-                        'extensions.sameplace.',
-                        'chrome://sameplace/content/scriptlets/scriptlet_sample.js');
-        scriptlets.start();
-    } catch(e) {
-        Cu.reportError(e);
-    }
-}
-
 
 // GUI REACTIONS
 // ----------------------------------------------------------------------
@@ -162,24 +149,6 @@ function showingMainMenu(event) {
     _('command-toggle').setAttribute(
         'label', label.replace(/\((.+?)\)/,
                                '(' + keyDescToKeyRepresentation(toggleContactsKey) + ')'));
-}
-
-function requestedInstallScriptlet(domElement) {
-    if(!isJavaScriptLink(domElement))
-        return;
-
-    var scriptletManager = window.openDialog(
-        'chrome://sameplace/content/scriptlets/scriptlet_manager.xul',
-        'sameplace-scriptlet-manager', '',
-        scriptlets);
-    
-    scriptletManager.addEventListener('load', function(event) {
-        scriptletManager.removeEventListener(
-            'load', arguments.callee, false);
-
-        if(!scriptletManager.requestedInstallRemoteScriptlet(domElement.href))
-            scriptletManager.close();
-    }, false);
 }
 
 
