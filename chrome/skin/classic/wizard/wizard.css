@@ -156,7 +156,7 @@ wizardpage[state="failure"] .progress-failure {
 [pageid="selection"] .service.twitter   { list-style-image: url("services/twitter.png"); }
 
 [pageid="selection"] .service-info image {
-    mission: 5px 10px 0 5px;
+    margin: 5px 10px 0 5px;
     width: 32px;
     height: 32px;
     min-height: 32px;
