@@ -43,7 +43,7 @@
     padding-left: 12px;
     padding-bottom: 12px;
     background: url('bgshadow.png') transparent bottom left no-repeat;
-//*    opacity: 0.999; /* force compositing in firefox 2. take this away and expect hell */
+/*    opacity: 0.999; /* force compositing in firefox 2. take this away and expect hell */
 }
 
 #conversations-area #conversations-box #conversations-collapser {
