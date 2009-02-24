@@ -12,75 +12,79 @@ var Ci = Components.interfaces;
 var Cu = Components.utils;
 var loader = Cc['@mozilla.org/moz/jssubscript-loader;1']
     .getService(Ci.mozIJSSubScriptLoader);
-var srvIdle = Cc["@mozilla.org/widget/idleservice;1"]
-    .getService(Ci.nsIIdleService); // https://developer.mozilla.org/en/nsIIdleService
-var pref = Cc['@mozilla.org/preferences-service;1']
-    .getService(Ci.nsIPrefService)
-    .getBranch('xmpp.account.');
-var ns_x4m = 'http://hyperstruct.net/xmpp4moz/protocol/internal';
+var srvIdle = Cc['@mozilla.org/widget/idleservice;1']
+    .getService(Ci.nsIIdleService);
+var srvObserver = Cc['@mozilla.org/observer-service;1']
+    .getService(Ci.nsIObserverService);
 
-if(typeof(JSON) == "undefined") {
-    Components.utils.import("resource://gre/modules/JSON.jsm");
-    JSON.parse = JSON.fromString;
-    JSON.stringify = JSON.toString;
-}
+var prefServices = Cc['@mozilla.org/preferences-service;1']
+    .getService(Ci.nsIPrefService)
+    .getBranch('extensions.sameplace.services.');
+
+var XMPP = {};
+Cu.import('resource://xmpp4moz/xmpp.jsm', XMPP);
+Cu.import('resource://xmpp4moz/json.jsm');
+Cu.import('resource://xmpp4moz/namespaces.jsm');
+
 
 // STATE
 // ----------------------------------------------------------------------
 
-// A system-wide channel
 var channel;
-var initialized = false;
+var services = {};
 
 
 // INITIALIZATION
 // ----------------------------------------------------------------------
 
 function init() {
-    loader.loadSubScript('chrome://xmpp4moz/content/xmpp.js');
-
     channel = XMPP.createChannel();
 
-    channel.on({
-        // TODO for some reason, this does not <presence
-        // type="unavailable"/> when sythesized, only when sent to the
-        // network, which at the moment means "only when user
-        // disconnects account explicitly".  This does what we want,
-        // but it's not future-proof: if we decide that xmpp4moz will
-        // need to behave nicely and send a <presence
-        // type="unavailable"/> before closing the stream, we will
-        // always record that, thus breaking the restore-presence
-        // functionality.
-
-        event     : 'presence',
-        direction : 'out',
-        stanza    : function(s) {
-            return ((s.@type == undefined || s.@type == 'unavailable') &&
-                    (s.@to == undefined));
-        }
-    }, function(presence) {
-        changedPresence(presence);
-    });
-
+    loadServices();
     restoreOnlineState();
+
+    srvObserver.addObserver(
+        { observe: function(subject, topic, data) { finish(); }},
+        'quit-application',
+        false);
+}
+
+// Not exposed.  Called when application quits.
+
+function finish() {
+    for(var serviceName in services) {
+        if(typeof(services[serviceName].finish) == 'function') {
+            try {
+                services[serviceName].finish();
+            } catch(e) {
+                dump('Error while stopping service "' + serviceName + '":\n' +
+                     e + '\n' +
+                     (e.stack ? e.stack + '\n' : ''));
+            }
+        }
+    }
+    channel.release();
 }
 
 
-// REACTIONS
+// ACTIONS
 // ----------------------------------------------------------------------
 
-function changedPresence(presence) {
-    var account = XMPP.getAccountByJid(presence.account);
-    var stanza = presence.stanza.copy();
-    delete stanza.@id;
-    delete stanza.ns_x4m::meta;
+function loadServices() {
+    for each(let keyName in prefServices.getChildList('', {})) {
+        let [serviceName, subProperty] = keyName.split('.');
+        if(subProperty != 'src')
+            continue;
 
-    var history = JSON.parse(account.presenceHistory || '[]');
-    if(history.length >= 5)
-        history.splice(0, 4);
-
-    history.push(stanza.toXMLString());
-    pref.setCharPref(account.key + '.presenceHistory', JSON.stringify(history));
+        try {
+            let service = {};
+            loader.loadSubScript(prefServices.getCharPref(keyName), service);
+            service.init();
+            services[serviceName] = service;
+        } catch(e) {
+            Cu.reportError(e + ' (' + e.fileName + ', line ' + e.lineNumber + ')');
+        }
+    }
 }
 
 
@@ -107,7 +111,7 @@ function restoreOnlineState() {
 // ----------------------------------------------------------------------
 
 var sameplace = {
-
+    services: services
 };
 
 init();
