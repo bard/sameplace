@@ -74,20 +74,27 @@ function upgradeCheck(id, versionPref, actions, ignoreTrailingParts) {
     var curVersion = getExtensionVersion(id);
     if(curVersion) {
         var prevVersion = pref.getCharPref(versionPref);
-        if(prevVersion == '') {
-            if(typeof(actions.onFirstInstall) == 'function')
-                actions.onFirstInstall();
-        } else {
-            if(compareVersions(
-                (ignoreTrailingParts ?
-                 curVersion.split('.').slice(0, -ignoreTrailingParts).join('.') :
-                 curVersion),
-                prevVersion) > 0)
-                if(typeof(actions.onUpgrade) == 'function')
-                    actions.onUpgrade();
+        try {
+            if(prevVersion == '') {
+                if(typeof(actions.onFirstInstall) == 'function')
+                    actions.onFirstInstall();
+            } else {
+                if(compareVersions(
+                    (ignoreTrailingParts ?
+                     curVersion.split('.').slice(0, -ignoreTrailingParts).join('.') :
+                     curVersion),
+                    prevVersion) > 0)
+                    if(typeof(actions.onUpgrade) == 'function')
+                        actions.onUpgrade();
+            }
+        } catch(e) {
+            Cu.reportError(e);
+        } finally {
+            pref.setCharPref(versionPref, curVersion);
+            // Flush prefs to disk, otherwise if app is killed and pref is
+            // not saved, actions will be repeated on next startup.
+            pref.savePrefFile(null);
         }
-
-        pref.setCharPref(versionPref, curVersion);
     }
 }
 
