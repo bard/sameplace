@@ -58,7 +58,7 @@ function init() {
     if(window.arguments && window.arguments[1]) {
         var id = window.arguments[1];
         if(typeof(id) != 'undefined') {
-            var account = find(accounts, function(a) a.id == id);
+            var account = find(accounts, function(a) { return a.id == id });
             $('#accounts').selectedItem = $('#accounts .account[id="' + id + '"]');
             displayAccount(account);
         }
@@ -86,7 +86,7 @@ function refresh() {
 function getCurrentAccount() {
     var xulAccount = $('#accounts').selectedItem;
     if(xulAccount)
-        return find(accounts, function(a) a.id == xulAccount.getAttribute('id'));
+        return find(accounts, function(a) { return a.id == xulAccount.getAttribute('id'); });
 }
 
 function addAccount(account) {
@@ -139,7 +139,7 @@ function requestedAddAccount() {
 }
 
 function selectedAccount(event) {
-    var account = find(accounts, function(account) account.id == event.target.selectedItem.id)
+    var account = find(accounts, function(account) { return account.id == event.target.selectedItem.id; })
     displayAccount(account);
 }
 
