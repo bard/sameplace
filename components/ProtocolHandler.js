@@ -1,3 +1,10 @@
+const Cc = Components.classes;
+const Ci = Components.interfaces;
+const Cr = Components.results;
+const Cu = Components.utils;
+
+try {
+
 /* ---------------------------------------------------------------------- */
 /*                        Protocol specific code                          */
 
@@ -8,103 +15,109 @@ const kCONTENT_NAME = 'XMPP Content Handler';
 const kCONTENT_CID = Components.ID('{2d12cfe5-8cdd-49bb-b766-e551343c1265}');
 
 
-this.__defineGetter__(
-    'XMPP', function() {
-        if(!arguments.callee.XMPP)
-            loader.loadSubScript('chrome://xmpp4moz/content/xmpp.js', arguments.callee);
-
-        return arguments.callee.XMPP;
-    });
-
-function xpcomize(thing) {
-    if(typeof(thing) == 'string') {
-        var xpcomString = Cc["@mozilla.org/supports-string;1"]
-            .createInstance(Ci.nsISupportsString);
-        xpcomString.data = thing;
-        return xpcomString;
-    } else if(thing instanceof Ci.nsISupports) {
-        return thing;
-    } else {
-        throw new Error('Neither an XPCOM object nor a string. (' + thing + ')');
-    }
-}
-
-function onNewChannel(URI) {
-    var m = URI.spec.match(/^xmpp:([^\?$]+)(\?\w+)?(;.+)?$/);
-    var jid = encodeURI(m[1]);
-
-    switch(m[2]) {
-    case '?roster':
-    case '?remove':
-    case '?subscribe':
-    case '?unsubscribe':
-
-    case '?join':
-    case '?message':
-    default:
-        var array = Cc['@mozilla.org/supports-array;1'].createInstance(Ci.nsISupportsArray);
-        array.AppendElement(null);
-        array.AppendElement(xpcomize(jid));
-
-        ww.openWindow(null, 'chrome://sameplace/content/dialogs/' +
-                      (m[2] == '?join' ? 'join_room.xul' : 'open_conversation.xul'),
-                      null, '', array);
-    }    
-
-    return new Channel(URI);
-}
-
-
-
 /* ---------------------------------------------------------------------- */
-/*                            Template code                               */ 
+/*                            Template code                               */
 
 const kPROTOCOL_CONTRACTID = '@mozilla.org/network/protocol;1?name=' + kSCHEME;
 const kSIMPLEURI_CONTRACTID = '@mozilla.org/network/simple-uri;1';
 const kIOSERVICE_CONTRACTID = '@mozilla.org/network/io-service;1';
 const kCONTENT_CONTRACTID = '@mozilla.org/uriloader/content-handler;1?type=x-application-' + kSCHEME;
 
-const Cc = Components.classes;
-const Ci = Components.interfaces;
-const Cr = Components.results;
-const loader = Cc['@mozilla.org/moz/jssubscript-loader;1']
-    .getService(Ci.mozIJSSubScriptLoader);
-const ww = Cc['@mozilla.org/embedcomp/window-watcher;1']
-    .getService(Ci.nsIWindowWatcher);
-
 
 // PROTOCOL HANDLER
 // ----------------------------------------------------------------------
 
+const ww = Cc['@mozilla.org/embedcomp/window-watcher;1']
+    .getService(Ci.nsIWindowWatcher);
+
 function ProtocolHandler() {}
 
 ProtocolHandler.prototype = {
+    scheme: kSCHEME,
+
+    defaultPort: 5222,
+
+    protocolFlags: Ci.nsIProtocolHandler.URI_NORELATIVE,
+
+    allowPort: function(port, scheme) {
+        return false;
+    },
+
+    newURI: function(spec, charset, baseURI) {
+        // xmpp URIs can come, with regard to the authority component,
+        // in three formats:
+        //
+        //   xmpp:contact@domain.org
+        //   xmpp:///contact@domain.org
+        //   xmpp://user@domain.org/contact@domain.org
+        //
+        // We tell them apart by the number of slashes: three or none
+        // means there's no authority component; two means there's an
+        // authority component.
+
+        var uri = Cc['@mozilla.org/network/standard-url;1']
+            .createInstance(Ci.nsIStandardURL);
+
+        var type;
+        if(spec.match(/^xmpp:\/{3}/) ||
+           spec.match(/^xmpp:[^\/]/))
+            type = Ci.nsIStandardURL.URLTYPE_NO_AUTHORITY;
+        else if(spec.match(/^xmpp:\/\/[^\/]/))
+            type = Ci.nsIStandardURL.URLTYPE_AUTHORITY;
+        else
+            throw new Error('Malformed URL'); // XXX should probably throw nsIException
+
+        uri.init(type, 5222, spec, null, null);
+        return uri.QueryInterface(Ci.nsIURI);
+    },
+
+    newChannel: function(uri) {
+
+        // Look for the query part
+        var m = uri.path.match(/(.+?)\?(.+)$/);
+        var path, query;
+        if(m) {
+            path = m[1];
+            query = m[2];
+        } else {
+            path = uri.path;
+        }
+
+        // Path part will always start with a slash after URI parsing,
+        // even for URIs in the form of xmpp:node@domain
+        var jid = path.replace(/^\//, '');
+        var account = uri.username + '@' + uri.host;
+
+        switch(query) {
+        case 'roster':
+        case 'remove':
+        case 'subscribe':
+        case 'unsubscribe':
+        case 'join':
+        case 'message':
+        default:
+            var array = Cc['@mozilla.org/supports-array;1']
+                .createInstance(Ci.nsISupportsArray);
+            array.AppendElement(asXPCOM(account));
+            array.AppendElement(asXPCOM(jid));
+
+            ww.openWindow(
+                null,
+                'chrome://sameplace/content/dialogs/' + (
+                    query == 'join' ? 'join_room.xul' : 'open_conversation.xul'
+                ),
+                null, '', array);
+        }
+
+        return new Channel(uri);
+    },
+
     QueryInterface: function(iid) {
         if(!iid.equals(Ci.nsIProtocolHandler) &&
            !iid.equals(Ci.nsISupports))
             throw Cr.NS_ERROR_NO_INTERFACE;
 
         return this;
-    },
-
-    scheme: kSCHEME,
-
-    defaultPort: -1,
-
-    protocolFlags: Ci.nsIProtocolHandler.URI_NORELATIVE | Ci.nsIProtocolHandler.URI_NOAUTH,
-  
-    allowPort: function(port, scheme) {
-        return false;
-    },
-
-    newURI: function(spec, charset, baseURI) {
-        var uri = Components.classes[kSIMPLEURI_CONTRACTID].createInstance(Ci.nsIURI);
-        uri.spec = spec;
-        return uri;
-    },
-
-    newChannel: function(URI) {
-        return onNewChannel(URI);
     }
 };
 
@@ -118,7 +131,7 @@ ContentHandler.prototype = {
     QueryInterface: function(iid) {
         if(!iid.equals(Ci.nsIContentHandler))
             throw Cr.NS_ERROR_NO_INTERFACE;
-        
+
         return this;
     },
 
@@ -131,9 +144,9 @@ ContentHandler.prototype = {
 // CHANNEL
 // ----------------------------------------------------------------------
 
-function Channel(URI) {
-   this.URI = URI;
-   this.originalURI = URI;
+function Channel(uri) {
+   this.URI = uri;
+   this.originalURI = uri;
 }
 
 Channel.prototype = {
@@ -142,7 +155,7 @@ Channel.prototype = {
            !iid.equals(Ci.nsIRequest) &&
            !iid.equals(Ci.nsISupports))
             throw Cr.NS_ERROR_NO_INTERFACE;
-        
+
         return this;
     },
 
@@ -156,7 +169,7 @@ Channel.prototype = {
     securityInfo: null,
 
     open: function() {
-        throw Cr.NS_ERROR_NOT_IMPLEMENTED; 
+        throw Cr.NS_ERROR_NOT_IMPLEMENTED;
     },
 
     asyncOpen: function(observer, ctxt) {
@@ -171,8 +184,8 @@ Channel.prototype = {
 
     status: Cr.NS_OK,
 
-    isPending: function() { 
-        return true; 
+    isPending: function() {
+        return true;
     },
 
     cancel: function(status) {
@@ -189,14 +202,31 @@ Channel.prototype = {
 };
 
 
-// FACTORIES
+// INTERNALS
+// ----------------------------------------------------------------------
+
+function asXPCOM(thing) {
+    if(typeof(thing) == 'string') {
+        var xpcomString = Cc["@mozilla.org/supports-string;1"]
+            .createInstance(Ci.nsISupportsString);
+        xpcomString.data = thing;
+        return xpcomString;
+    } else if(thing instanceof Ci.nsISupports) {
+        return thing;
+    } else {
+        throw new Error('Neither an XPCOM object nor a string. (' + thing + ')');
+    }
+}
+
+
+// XPCOM REGISTRATION
 // ----------------------------------------------------------------------
 
 var ProtocolHandlerFactory = {
     createInstance: function(outer, iid) {
         if(outer != null)
             throw Cr.NS_ERROR_NO_AGGREGATION;
-        
+
         if(!iid.equals(Ci.nsIProtocolHandler) &&
            !iid.equals(Ci.nsISupports))
             throw Cr.NS_ERROR_NO_INTERFACE;
@@ -210,7 +240,7 @@ var ContentHandlerFactory = {
         if (outer != null) {
             throw Cr.NS_ERROR_NO_AGGREGATION;
         }
-        
+
         if (!iid.equals(Ci.nsIContentHandler) &&
             !iid.equals(Ci.nsISupports)) {
             throw Cr.NS_ERROR_INVALID_ARG;
@@ -219,24 +249,20 @@ var ContentHandlerFactory = {
     }
 };
 
-
-// MODULE
-// ----------------------------------------------------------------------
-
 var Module = {
     registerSelf: function(compMgr, fileSpec, location, type) {
         compMgr = compMgr.QueryInterface(Components.interfaces.nsIComponentRegistrar);
         compMgr.registerFactoryLocation(kPROTOCOL_CID,
                                         kPROTOCOL_NAME,
                                         kPROTOCOL_CONTRACTID,
-                                        fileSpec, 
-                                        location, 
+                                        fileSpec,
+                                        location,
                                         type);
         compMgr.registerFactoryLocation(kCONTENT_CID,
                                         kCONTENT_NAME,
                                         kCONTENT_CONTRACTID,
-                                        fileSpec, 
-                                        location, 
+                                        fileSpec,
+                                        location,
                                         type);
     },
 
@@ -262,3 +288,10 @@ function NSGetModule(compMgr, fileSpec) {
     return Module;
 }
 
+
+
+
+} catch(e) {
+    dump(e + '\n');
+    dump(e.stack + '\n');
+}
