@@ -44,12 +44,22 @@ xmpp.ui = xmpp.ui || {};
 // ----------------------------------------------------------------------
 
 function init() {
-    var account = window.arguments[0];
+    var accountHint = window.arguments[0];
+    var account = null;
+    if(accountHint)
+        if(XMPP.JID(accountHint).resource) {
+            account = XMPP.accounts.get({jid: accountHint});
+        } else {
+            account = XMPP.accounts.get({address: accountHint});
+        }
+    else
+        account = XMPP.accounts.filter(XMPP.isUp)[0] || XMPP.accounts.get(0);
+
     var address = window.arguments[1];
-    
+
     xmpp.ui.refreshAccounts(_('xmpp-popup-accounts'));
 
-    _('account').value = (account || (XMPP.accounts.filter(XMPP.isUp)[0] || XMPP.accounts[0]).jid);
+    _('account').value = account.jid;
     _('address').value = address;
     _('address').select();
 
