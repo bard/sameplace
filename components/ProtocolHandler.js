@@ -3,6 +3,10 @@ const Ci = Components.interfaces;
 const Cr = Components.results;
 const Cu = Components.utils;
 
+const NS_ERROR_MODULE_NETWORK_BASE = 0x804b0000;
+const NS_ERROR_NO_CONTENT = NS_ERROR_MODULE_NETWORK_BASE + 17;
+
+
 try {
 
 /* ---------------------------------------------------------------------- */
@@ -72,43 +76,6 @@ ProtocolHandler.prototype = {
     },
 
     newChannel: function(uri) {
-
-        // Look for the query part
-        var m = uri.path.match(/(.+?)\?(.+)$/);
-        var path, query;
-        if(m) {
-            path = m[1];
-            query = m[2];
-        } else {
-            path = uri.path;
-        }
-
-        // Path part will always start with a slash after URI parsing,
-        // even for URIs in the form of xmpp:node@domain
-        var jid = path.replace(/^\//, '');
-        var account = uri.username + '@' + uri.host;
-
-        switch(query) {
-        case 'roster':
-        case 'remove':
-        case 'subscribe':
-        case 'unsubscribe':
-        case 'join':
-        case 'message':
-        default:
-            var array = Cc['@mozilla.org/supports-array;1']
-                .createInstance(Ci.nsISupportsArray);
-            array.AppendElement(asXPCOM(account));
-            array.AppendElement(asXPCOM(jid));
-
-            ww.openWindow(
-                null,
-                'chrome://sameplace/content/dialogs/' + (
-                    query == 'join' ? 'join_room.xul' : 'open_conversation.xul'
-                ),
-                null, '', array);
-        }
-
         return new Channel(uri);
     },
 
@@ -172,11 +139,47 @@ Channel.prototype = {
         throw Cr.NS_ERROR_NOT_IMPLEMENTED;
     },
 
-    asyncOpen: function(observer, ctxt) {
-        //observer.onStartRequest(this, ctxt);
+    asyncOpen: function(listener, ctxt) {
+        // Look for the query part
+        var m = this.URI.path.match(/(.+?)\?(.+)$/);
+        var path, query;
+        if(m) {
+            path = m[1];
+            query = m[2];
+        } else {
+            path = this.URI.path;
+        }
+
+        // Path part will always start with a slash after URI parsing,
+        // even for URIs in the form of xmpp:node@domain
+        var jid = path.replace(/^\//, '');
+        var account = this.URI.username + '@' + this.URI.host;
+
+        switch(query) {
+        case 'roster':
+        case 'remove':
+        case 'subscribe':
+        case 'unsubscribe':
+        case 'join':
+        case 'message':
+        default:
+            var array = Cc['@mozilla.org/supports-array;1']
+                .createInstance(Ci.nsISupportsArray);
+            array.AppendElement(asXPCOM(account));
+            array.AppendElement(asXPCOM(jid));
+
+            ww.openWindow(
+                null,
+                'chrome://sameplace/content/dialogs/' + (
+                    query == 'join' ? 'join_room.xul' : 'open_conversation.xul'
+                ),
+                null, '', array);
+        }
+
+        Components.returnCode = NS_ERROR_NO_CONTENT;
     },
 
-    asyncRead: function(listener, ctxt) {
+    asyncRead: function(observer, ctxt) {
         return listener.onStartRequest(this, ctxt);
     },
 
