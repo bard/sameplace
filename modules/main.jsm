@@ -21,10 +21,12 @@ var prefServices = Cc['@mozilla.org/preferences-service;1']
     .getService(Ci.nsIPrefService)
     .getBranch('extensions.sameplace.services.');
 
-var XMPP = {};
-Cu.import('resource://xmpp4moz/xmpp.jsm', XMPP);
+Cu.import('resource://xmpp4moz/xmpp.jsm');
 Cu.import('resource://xmpp4moz/json.jsm');
 Cu.import('resource://xmpp4moz/namespaces.jsm');
+Cu.import('resource://xmpp4moz/log.jsm');
+
+var log = Log.getSource('sameplace-main');
 
 
 // STATE
@@ -48,8 +50,6 @@ function init() {
         'quit-application',
         false);
 }
-
-// Not exposed.  Called when application quits.
 
 function finish() {
     for(var serviceName in services) {
