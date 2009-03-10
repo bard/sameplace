@@ -12,8 +12,6 @@ var Ci = Components.interfaces;
 var Cu = Components.utils;
 var loader = Cc['@mozilla.org/moz/jssubscript-loader;1']
     .getService(Ci.mozIJSSubScriptLoader);
-var srvIdle = Cc['@mozilla.org/widget/idleservice;1']
-    .getService(Ci.nsIIdleService);
 var srvObserver = Cc['@mozilla.org/observer-service;1']
     .getService(Ci.nsIObserverService);
 
@@ -25,8 +23,6 @@ Cu.import('resource://xmpp4moz/xmpp.jsm');
 Cu.import('resource://xmpp4moz/json.jsm');
 Cu.import('resource://xmpp4moz/namespaces.jsm');
 Cu.import('resource://xmpp4moz/log.jsm');
-
-var log = Log.getSource('sameplace-main');
 
 
 // STATE
@@ -96,7 +92,6 @@ function loadServices() {
 
 function restoreOnlineState() {
     XMPP.accounts
-        .filter(function(account) account.presenceHistory)
         .forEach(function(account) {
             var history = JSON.parse(account.presenceHistory);
 
