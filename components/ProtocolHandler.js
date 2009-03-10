@@ -31,8 +31,12 @@ const kCONTENT_CONTRACTID = '@mozilla.org/uriloader/content-handler;1?type=x-app
 // PROTOCOL HANDLER
 // ----------------------------------------------------------------------
 
-const ww = Cc['@mozilla.org/embedcomp/window-watcher;1']
+const srvWindow = Cc['@mozilla.org/embedcomp/window-watcher;1']
     .getService(Ci.nsIWindowWatcher);
+const srvIO = Cc['@mozilla.org/network/io-service;1']
+    .getService(Ci.nsIIOService);
+const srvObserver = Cc['@mozilla.org/observer-service;1']
+    .getService(Ci.nsIObserverService);
 
 function ProtocolHandler() {}
 
@@ -48,28 +52,16 @@ ProtocolHandler.prototype = {
     },
 
     newURI: function(spec, charset, baseURI) {
-        // xmpp URIs can come, with regard to the authority component,
-        // in three formats:
-        //
-        //   xmpp:contact@domain.org
-        //   xmpp:///contact@domain.org
-        //   xmpp://user@domain.org/contact@domain.org
-        //
-        // We tell them apart by the number of slashes: three or none
-        // means there's no authority component; two means there's an
-        // authority component.
-
         var uri = Cc['@mozilla.org/network/standard-url;1']
             .createInstance(Ci.nsIStandardURL);
 
         var type;
-        if(spec.match(/^xmpp:\/{3}/) ||
-           spec.match(/^xmpp:[^\/]/))
+        if(spec.match(/^xmpp:[^\/]/))
             type = Ci.nsIStandardURL.URLTYPE_NO_AUTHORITY;
         else if(spec.match(/^xmpp:\/\/[^\/]/))
             type = Ci.nsIStandardURL.URLTYPE_AUTHORITY;
         else
-            throw new Error('Malformed URL'); // XXX should probably throw nsIException
+            throw new Error('Malformed URL. (' + spec + ')');
 
         uri.init(type, 5222, spec, null, null);
         return uri.QueryInterface(Ci.nsIURI);
@@ -152,28 +144,28 @@ Channel.prototype = {
 
         // Path part will always start with a slash after URI parsing,
         // even for URIs in the form of xmpp:node@domain
-        var jid = path.replace(/^\//, '');
+        var address = path.replace(/^\//, '');
         var account = this.URI.username + '@' + this.URI.host;
+
+        var array = Cc['@mozilla.org/supports-array;1']
+            .createInstance(Ci.nsISupportsArray);
+        array.AppendElement(asXPCOM(account));
+        array.AppendElement(asXPCOM(address));
 
         switch(query) {
         case 'roster':
+            srvWindow.openWindow(null,
+                                 'chrome://sameplace/content/dialogs/add_contact.xul',
+                                 null, '', array);
+            break;
         case 'remove':
         case 'subscribe':
         case 'unsubscribe':
+            break;
         case 'join':
         case 'message':
         default:
-            var array = Cc['@mozilla.org/supports-array;1']
-                .createInstance(Ci.nsISupportsArray);
-            array.AppendElement(asXPCOM(account));
-            array.AppendElement(asXPCOM(jid));
-
-            ww.openWindow(
-                null,
-                'chrome://sameplace/content/dialogs/' + (
-                    query == 'join' ? 'join_room.xul' : 'open_conversation.xul'
-                ),
-                null, '', array);
+            srvObserver.notifyObservers(this.URI, 'xmpp-uri-invoked', null);
         }
 
         Components.returnCode = NS_ERROR_NO_CONTENT;
@@ -210,7 +202,7 @@ Channel.prototype = {
 
 function asXPCOM(thing) {
     if(typeof(thing) == 'string') {
-        var xpcomString = Cc["@mozilla.org/supports-string;1"]
+        var xpcomString = Cc['@mozilla.org/supports-string;1']
             .createInstance(Ci.nsISupportsString);
         xpcomString.data = thing;
         return xpcomString;
