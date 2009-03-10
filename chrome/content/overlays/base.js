@@ -38,6 +38,6 @@ window.addEventListener(
 var sameplace = {};
 
 Components
-.classes['@mozilla.org/moz/jssubscript-loader;1']
-.getService(Components.interfaces.mozIJSSubScriptLoader)
-    .loadSubScript('chrome://sameplace/content/overlay_impl.js', sameplace);
+    .classes['@mozilla.org/moz/jssubscript-loader;1']
+    .getService(Components.interfaces.mozIJSSubScriptLoader)
+    .loadSubScript('chrome://sameplace/content/overlays/base_impl.js', sameplace);

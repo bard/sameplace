@@ -1,21 +1,21 @@
 /*
  * Copyright 2006-2007 by Massimiliano Mirra
- * 
+ *
  * This file is part of SamePlace.
- * 
+ *
  * SamePlace is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
  * Free Software Foundation; either version 3 of the License, or (at your
  * option) any later version.
- * 
+ *
  * SamePlace is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * The interactive user interfaces in modified source and object code
  * versions of this program must display Appropriate Legal Notices, as
  * required under Section 5 of the GNU General Public License version 3.
@@ -24,9 +24,9 @@
  * version 3, modified versions must display the "Powered by SamePlace"
  * logo to users in a legible manner and the GPLv3 text must be made
  * available to them.
- * 
+ *
  * Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
- *  
+ *
  */
 
 
@@ -54,8 +54,6 @@ var util = load('chrome://sameplace/content/lib/util_impl.js', {});
 
 function init(event) {
     initNetworkReactions();
-    initDisplayRules();
-    initHotkeys();
 
     // Only preload SamePlace if there's no other window around with
     // an active SamePlace instance, and if this isn't a popup.'
@@ -85,6 +83,13 @@ function init(event) {
         util.addToolbarButton('sameplace-button');
 
     updateStatusIndicator();
+
+    var xulPanels = _('panels');
+    xulPanels.addEventListener('custom/foreground', function(event) {
+        for(let i=0, l=xulPanels.childNodes.length; i<l; i++)
+            if(xulPanels.childNodes[i] == event.target)
+                xulPanels.parentNode.selectedIndex = i;
+    }, false);
 }
 
 function finish() {
@@ -93,7 +98,7 @@ function finish() {
 
 function initNetworkReactions() {
     channel = XMPP.createChannel();
-    
+
     channel.on({
         event     : 'connector',
     }, function(connector) {
@@ -117,48 +122,9 @@ function initNetworkReactions() {
     });
 }
 
-function initHotkeys() {
-    var toggleContactsKey = eval(pref.getCharPref('toggleContactsKey'))
-
-    window.addEventListener('keypress', function(event) {
-        if(matchKeyEvent(event, toggleContactsKey))
-            toggle();
-    }, true);
-
-    pref.QueryInterface(Ci.nsIPrefBranch2)
-    pref.addObserver('', {
-        observe: function(subject, topic, data) {
-            if(topic == 'nsPref:changed') {
-                switch(data) {
-                case 'toggleContactsKey':
-                    toggleContactsKey = eval(pref.getCharPref('toggleContactsKey'));
-                    break;
-                }
-            }
-        }
-    }, false);
-}
-
-
-// GUI REACTIONS
-// ----------------------------------------------------------------------
-
-function showingMainMenu(event) {
-    var toggleContactsKey = eval(pref.getCharPref('toggleContactsKey'));
-    var label = _('command-toggle').getAttribute('label');
-    _('command-toggle').setAttribute(
-        'label', label.replace(/\((.+?)\)/,
-                               '(' + keyDescToKeyRepresentation(toggleContactsKey) + ')'));
-}
-
 
 // GUI ACTIONS
 // ----------------------------------------------------------------------
-
-function isReceivingInput() {
-    // XXX temporary. only to accomodate activity scriptlet
-    return false;
-}
 
 function runWizard() {
     window.openDialog(
@@ -173,6 +139,18 @@ function updateStatusIndicator() {
     _('button').setAttribute('availability',
                              XMPP.accounts.some(XMPP.isUp) ?
                              'available' : 'unavailable');
+}
+
+function loadAreas() {
+    function loadOnce(xulContentPanel, urlSpec) {
+        if(xulContentPanel.contentDocument.location.href != urlSpec)
+            xulContentPanel.contentDocument.location.href = urlSpec;
+    }
+
+    
+    loadOnce(_('dashboard'), 'chrome://sameplace/content/dashboard/dashboard.xul');
+    loadOnce(_('chats'), 'chrome://sameplace/content/conversations/chats.xul');
+    loadOnce(_('stream'), 'chrome://sameplace/content/stream/stream.xul');
 }
 
 
@@ -230,15 +208,6 @@ function load(url, context) {
     }
 }
 
-function matchKeyEvent(e1, e2) {
-    return (e1.ctrlKey  == e2.ctrlKey &&
-            e1.shiftKey == e2.shiftKey &&
-            e1.altKey   == e2.altKey &&
-            e1.metaKey  == e2.metaKey &&
-            e1.charCode == e2.charCode &&
-            e1.keyCode  == KeyEvent[e2.keyCodeName]);
-}
-
 function getMostRecentWindow(type) {
     return Cc['@mozilla.org/appshell/window-mediator;1']
     .getService(Ci.nsIWindowMediator)
@@ -262,79 +231,6 @@ function isPopupWindow() {
     return !window.toolbar.visible;
 }
 
-// Duplicated from sameplace_preferences_impl.js
-
-function keyDescToKeyRepresentation(desc) {
-    var modifiers = {
-        ctrlKey  : 'Control',
-        shiftKey : 'Shift',
-        altKey   : 'Alt',
-        metaKey  : 'Meta'
-    };
-
-    var repres = [];
-    
-    for(var name in modifiers)
-        if(desc[name])
-            repres.push(modifiers[name]);
-
-    if(desc.charCode)
-        repres.push(String.fromCharCode(desc.charCode))
-    else if(desc.keyCodeName)
-        repres.push(desc.keyCodeName.replace(/^DOM_VK_/, ''))
-
-    return repres.join('+');
-}
-
-function initDisplayRules() {
-    // XXX probably to move to overlay_browser
-
-    // What's a man to do to keep things decoupled...  What we're
-    // doing here is basically "pop sidebar open when conversation
-    // opens, but ONLY if conversation opened as a result of user
-    // clicking on a contact", and the way we find out that is by
-    // checking whether conversation opened within two seconds
-    // from user clicking on the contact.
-    
-    var whenDidUserClickOnContact = 0;
-    _('frame').addEventListener('contact/select', function(event) {
-        if(!isCompact()) return;
-        whenDidUserClickOnContact = Date.now();
-    }, false);
-    _('frame').addEventListener('conversation/open', function(event) {
-        if(!isCompact()) return;
-        if(Date.now() - whenDidUserClickOnContact < 2000)
-            toExpanded();
-    }, false);
-
-    _('frame').addEventListener('sameplace/detach', function(event) {
-        var wndContacts = window.open(
-            'chrome://sameplace/content/contacts/contacts.xul',
-            'SamePlace:Contacts', 'chrome');
-        wndContacts.addEventListener('unload', function(event) {
-            if(event.target == wndContacts.document &&
-               event.target.location.href != 'about:blank') {
-                loadAreas();
-                toCompact();
-            }
-        }, false);
-        _('frame').contentDocument.location.href = 'about:blank';
-        toCollapsed();
-    }, false);
-}
-
-function findContact() {
-    displayContacts();
-    getContacts().requestedToggleFilter();
-}
-
-function loadAreas(force) {
-    if(force || _('frame').contentDocument.location.href != 'chrome://sameplace/content/contacts/contacts.xul')
-        _('frame').contentDocument.location.href = 'chrome://sameplace/content/contacts/contacts.xul';
-}
-
 function isActive() {
-    return _('frame').contentDocument.location.href ==
-        'chrome://sameplace/content/contacts.xul';
+    return _('dashboard').contentDocument.location.href != 'about:blank';
 }
-

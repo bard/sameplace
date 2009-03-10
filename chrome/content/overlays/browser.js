@@ -33,4 +33,4 @@
 Components
     .classes['@mozilla.org/moz/jssubscript-loader;1']
     .getService(Components.interfaces.mozIJSSubScriptLoader)
-    .loadSubScript('chrome://sameplace/content/overlay_browser_impl.js', sameplace);
+    .loadSubScript('chrome://sameplace/content/overlays/browser_impl.js', sameplace);

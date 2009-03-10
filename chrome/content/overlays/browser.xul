@@ -35,7 +35,8 @@
 
 <!DOCTYPE overlay SYSTEM "chrome://sameplace/locale/overlay.dtd">
 <overlay id="sameplace-overlay"
-         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+         xmlns:svg="http://www.w3.org/2000/svg">
 
   <!-- SCRIPTS -->
 
@@ -82,20 +83,19 @@
   <!-- KEYS -->
 
   <keyset id="mainKeyset">
-    <key modifiers="control" key=" "
-         oncommand="sameplace.findContact();"/>
-    <key keycode="VK_F12" modifiers="control" command="sameplace-command-load-sidebar-force"/>
     <key id="sameplace-toggle-key" command="sameplace-toggle" keycode="VK_F9"/>
+
+    <!-- development only -->
+    <key keycode="VK_F8" oncommand="var dashboard = document.getElementById('sameplace-dashboard');
+                                    var stream = document.getElementById('sameplace-stream');
+                                    var chats = document.getElementById('sameplace-chats');
+                                    dashboard.contentDocument.location.href = dashboard.contentDocument.location.href;
+                                    stream.contentDocument.location.href = stream.contentDocument.location.href;
+                                    chats.contentDocument.location.href = chats.contentDocument.location.href;"/>
   </keyset>
 
   <!-- MENUS -->
 
-  <menupopup id="viewSidebarMenu">
-    <menuitem command="sameplace-toggle"
-              key="sameplace-toggle-key"
-              accesskey="&toggle.accesskey;"/>
-  </menupopup>
-  
   <popup id="contentAreaContextMenu">
     <menu label="&sendlink.label;"
           accesskey="&sendlink.accesskey;"
@@ -135,12 +135,35 @@
           minwidth="65"
           collapsed="true"
           persist="collapsed">
+
       <sidebarheader align="center">
         <image src="chrome://sameplace/skin/logo16x16.png" style="padding-left: 4px;"/>
         <label class="sidebar-title" value="SamePlace" flex="1" crop="end"/>
         <toolbarbutton class="tabs-closebutton" oncommand="sameplace.toCollapsed();"/>
       </sidebarheader>
-      <iframe id="sameplace-frame" flex="1"/>
+
+      <tabbox flex="1">
+        <tabpanels id="sameplace-panels"
+                   flex="1"
+                   style="padding: 0; border-width: 1px; border: none;">
+          <iframe id="sameplace-dashboard"
+                  flex="1"
+                  src="chrome://sameplace/content/dashboard/dashboard.xul"/>
+          <iframe id="sameplace-chats"
+                  flex="1"
+                  src="chrome://sameplace/content/conversations/chats.xul"/>
+          <iframe id="sameplace-stream"
+                  flex="1"
+                  src="chrome://sameplace/content/stream/stream.xul"/>
+          <tabpanel/>
+        </tabpanels>
+
+        <tabs id="sameplace-tabs" pack="center" align="center">
+          <tab id="sameplace-tab-dashboard" tooltiptext="Dashboard"/>
+          <tab id="sameplace-tab-chats" tooltiptext="Chats"/>
+          <tab id="sameplace-tab-stream" tooltiptext="Stream"/>
+        </tabs>
+      </tabbox>
     </vbox>
   </hbox>
 </overlay>
