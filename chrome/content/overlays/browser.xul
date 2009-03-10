@@ -96,19 +96,7 @@
 
   <!-- MENUS -->
 
-  <popup id="contentAreaContextMenu">
-    <menu label="&sendlink.label;"
-          accesskey="&sendlink.accesskey;"
-          id="sameplace-sendto">
-      <menupopup oncommand="sameplace.sendTo.selectedContact(event);"
-                 onpopupshowing="sameplace.sendTo.showingPopup(event);"
-                 onpopuphidden="sameplace.sendTo.hiddenPopup(event);"/>
-    </menu>
-
-    <menuitem id="sameplace-install-scriptlet"
-              label="&context.install-scriptlet;" accesskey="&context.install-scriptlet.accesskey;"
-              oncommand="sameplace.requestedInstallScriptlet(document.popupNode);"/>
-  </popup>
+  <popup id="contentAreaContextMenu"/>
 
   <!-- COMMANDS -->
 

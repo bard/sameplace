@@ -45,7 +45,6 @@ const pref = Cc['@mozilla.org/preferences-service;1']
 // ----------------------------------------------------------------------
 
 var channel;
-var sendTo = load('chrome://sameplace/content/send_to.js', {});
 var util = load('chrome://sameplace/content/lib/util_impl.js', {});
 
 
