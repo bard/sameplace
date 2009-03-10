@@ -78,8 +78,7 @@ function makeUnpopular(account, address) {
 }
 
 function makePopular(account, address) {
-    if(!counters[address])
-        counters[address] = true;
+    counters[address] = true;
 }
 
 function isPopular(account, address) {
