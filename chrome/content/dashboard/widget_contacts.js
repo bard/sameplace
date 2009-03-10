@@ -1,0 +1,910 @@
+/*
+ * Copyright 2008 by Massimiliano Mirra
+ *
+ * This file is part of SamePlace.
+ *
+ * SamePlace is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 3 of the License, or (at your
+ * option) any later version.
+ *
+ * SamePlace is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * The interactive user interfaces in modified source and object code
+ * versions of this program must display Appropriate Legal Notices, as
+ * required under Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License
+ * version 3, modified versions must display the "Powered by SamePlace"
+ * logo to users in a legible manner and the GPLv3 text must be made
+ * available to them.
+ *
+ * Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
+ *
+ */
+
+
+// STATE
+// ----------------------------------------------------------------------
+
+var contacts = {};
+
+
+// INITIALIZATION
+// ----------------------------------------------------------------------
+
+window.addEventListener('dashboard/load', function(event) { contacts.init(); }, false)
+window.addEventListener('dashboard/unload', function(event) { contacts.finish(); }, false)
+
+
+contacts.init = function() {
+    this._srvIO = Cc['@mozilla.org/network/io-service;1']
+        .getService(Ci.nsIIOService);
+
+    this._pref = Cc['@mozilla.org/preferences-service;1']
+        .getService(Ci.nsIPrefService)
+        .getBranch('extensions.sameplace.services.contacts.');
+
+    this._prompt = Cc['@mozilla.org/embedcomp/prompt-service;1']
+        .getService(Ci.nsIPromptService);
+
+    this._channel = XMPP.createChannel();
+
+    this._channel.on({
+        event     : 'iq',
+        direction : 'in',
+        stanza    : function(s) {
+            return s.ns_roster::query != undefined;
+        }
+    }, function(iq) {
+        for each(var item in iq.stanza..ns_roster::item) {
+            contacts.updateContactItem(iq.account,
+                                       item.@jid.toString(),
+                                       item.@name.toString(),
+                                       item.@subscription.toString());
+        }
+    });
+
+    this._channel.on({
+        event     : 'presence',
+        direction : 'in',
+        stanza    : function(s) {
+            return (
+                    // We're not interested in "presence commands" (e.g. type="subscribe")
+                    (s.@type == 'unavailable' || s.@type == undefined) &&
+                    // We're not interested in presences from chatrooms, either
+                    s.ns_muc_user::x == undefined &&
+                    // Server echoing back our presence to us, ignore.
+                    XMPP.JID(s.ns_x4m_in::meta.@account).address != XMPP.JID(s.@from).address);
+        }
+    }, function(presence) contacts.receivedContactPresence(presence));
+
+    this._channel.on({
+        event     : 'connector'
+    }, function(connector) {
+        if(connector.state == 'disconnected' &&
+           XMPP.accounts.every(XMPP.isDown))
+            $('#widget-contacts').setAttribute('minimized', 'true');
+        else if(connector.state == 'active')
+            $('#widget-contacts').setAttribute('minimized', 'false');
+    });
+
+    XMPP.accounts.forEach(function(account) {
+        task(contacts.taskdef_initList)
+            .start()
+            .send(account.jid);
+    });
+};
+
+
+// FINALIZATION
+// ----------------------------------------------------------------------
+
+contacts.finish = function() {
+    this._channel.release();
+};
+
+
+// GUI ACTIONS
+// ----------------------------------------------------------------------
+
+contacts.updateContactPresence = function(presence) {
+    var account = presence.account;
+    var address = XMPP.JID(presence.stanza.@from).address;
+
+    var xulConcreteContact = this._findConcreteContact(account, address);
+    if(!xulConcreteContact)
+        // We only want to update presence if a contact is in the UI already.
+        return;
+
+    // Grab most relevant presence of contact or, if none, use given presence
+    //var presence = XMPP.presencesOf(account, address)[0] || presence;
+
+    var xulContact = $(xulConcreteContact, '^ .contact');
+
+    // TODO: there should be a way of deciding which is most relevant
+    // presence among concrete contacts... for now we use the lazy way
+    // and just use latest presence.
+    xulContact
+        .setAttribute('availability', (presence.stanza.@type == undefined ?
+                                       'available' :
+                                       presence.stanza.@type));
+    xulContact
+        .setAttribute('show', presence.stanza.show.toString());
+    $(xulContact, '.status-message')
+        .setAttribute('value', presence.stanza.status.toString());
+};
+
+contacts.updateContactItem = function(account, address, name, subscription) {
+    name = name || address;
+
+    // Removal from roster and removal from list of popular contacts
+    // are handled the same way, i.e. concrete contact is removed and we return early.
+
+    if(subscription == 'remove' ||
+       !sameplace.services.contacts.isPopular(account, address)) {
+
+        let xulConcreteContact = this._findConcreteContact(account, address);
+        if(!xulConcreteContact)
+            return;
+
+        let xulConcreteContacts = xulConcreteContact.parentNode;
+        let xulContact = $(xulConcreteContacts, '^ .contact');
+        xulConcreteContacts.removeChild(xulConcreteContact);
+        if(xulConcreteContacts.childNodes.length == 0)
+            xulContact.parentNode.removeChild(xulContact);
+        return;
+    }
+
+    // TODO: when adding a new contact, status isn't updated. (Still holds?)
+
+    // Most of the logic below is for deducing whether this is a
+    // rename or addition
+
+    var xulContact = this._findContact(name);
+    if(xulContact) {
+        // Metacontact was found.  Either we need to move an existing
+        // concrete contact to the metacontact, or we need to add one.
+
+        var xulConcreteContact = this._findConcreteContact(account, address);
+        if(xulConcreteContact) {
+            // Move existing concrete contact (and remove containing
+            // metacontact if no more concrete contacts are under it)
+
+            var xulConcreteContactDst = $(xulContact, '.concrete-contacts');
+            var xulConcreteContactSrc = xulConcreteContact.parentNode;
+
+            xulConcreteContactDst.appendChild(xulConcreteContact);
+            if(xulConcreteContactSrc.childNodes.length == 0) {
+                var xulContactSrc = $(xulConcreteContactSrc, '^ .contact');
+                xulContactSrc.parentNode.removeChild(xulContactSrc);
+            }
+        } else {
+            // Create new concrete contact
+
+            xulConcreteContact = this._makeConcreteContact(account, address);
+            $(xulContact, '.concrete-contacts').appendChild(xulConcreteContact);
+        }
+    } else {
+        // Contact wasn't found by name in the XUL list, thus either
+        // it's a new contact altogether, or an existing contact was
+        // renamed.
+
+        xulContact = this._makeContact(name);
+        var xulConcreteContactDst = $(xulContact, '.concrete-contacts');
+
+        var xulConcreteContact = this._findConcreteContact(account, address);
+        if(xulConcreteContact) {
+            // Concrete contact is already there, use it (meaning this is a rename)
+            var xulConcreteContactSrc = xulConcreteContact.parentNode;
+
+            xulConcreteContactDst.appendChild(xulConcreteContact);
+
+            if(xulConcreteContactSrc.childNodes.length == 0) {
+                var xulContactSrc = $(xulConcreteContactSrc, '^ .contact');
+                xulContactSrc.parentNode.removeChild(xulContactSrc);
+            }
+        } else {
+            // No concrete contact, create it (user added new contact)
+            xulConcreteContact = this._makeConcreteContact(account, address);
+            xulConcreteContactDst.appendChild(xulConcreteContact);
+        }
+
+        this._sortedInsert(xulContact, $('#widget-contacts .list'), 'name');
+    }
+
+    this.updateContactPresence(XMPP.presencesOf(account, address)[0] ||
+                               XMPP.packet(<presence from={address} type='unavailable'>
+                                           <meta xmlns={ns_x4m_in} direction='in' account={account}/>
+                                           </presence>));
+};
+
+
+// GUI REACTIONS
+// ----------------------------------------------------------------------
+
+contacts.clickedContact = function(xulContactDescendant) {
+    if(this._contactHoverTimeout)
+        window.clearTimeout(this._contactHoverTimeout);
+
+    $('#contact-popup').hidePopup();
+
+    var xulContact = $(xulContactDescendant, '^ .contact');
+
+    // XXX Defaults to first concrete contact... not necessarily the
+    // best choice!
+
+    var xulConcreteContact = $(xulContact, '.concrete-contact');
+    var account = xulConcreteContact.getAttribute('account');
+    var address = xulConcreteContact.getAttribute('address');
+
+    this._srvIO.newChannel('xmpp://' + account + '/' + address,
+                           null,
+                           null)
+        .asyncOpen(null, null);
+};
+
+contacts.requestedHideContact = function(event) {
+    $('#contact-popup').hidePopup();
+
+    var xulConcreteContact = $('#contact-popup .concrete-contacts').firstChild;
+    while(xulConcreteContact) {
+        this.removeFromPopular(xulConcreteContact.getAttribute('account'),
+                               xulConcreteContact.getAttribute('address'));
+        xulConcreteContact = xulConcreteContact.nextSibling;
+    }
+};
+
+contacts.requestedRemoveContact = function(event) {
+    $('#contact-popup').hidePopup();
+
+    var request = {
+        concreteContacts: []
+    };
+    var xulConcreteContact = $('#contact-popup .concrete-contacts').firstChild;
+    while(xulConcreteContact) {
+        request.concreteContacts.push({
+            account: xulConcreteContact.getAttribute('account'),
+            address: xulConcreteContact.getAttribute('address')
+        });
+        xulConcreteContact = xulConcreteContact.nextSibling;
+    }
+
+    window.openDialog('chrome://sameplace/content/dialogs/remove_contacts.xul',
+                      'SamePlace:RemoveContacts', 'modal', request);
+
+};
+
+contacts.requestedRenameContact = function(event, useNickAsPreset) {
+    var xulPopup = $('#contact-popup');
+    var xulContact = this._hoveredContact;
+
+    xulPopup.hidePopup();
+
+    var newName = useNickAsPreset ?
+        $(xulPopup, '.nick').getAttribute('value') :
+        window.prompt('Rename contact', $(xulPopup, '.name').getAttribute('value'));
+
+    var xulConcreteContact = $(xulContact, '.concrete-contact');
+    while(xulConcreteContact) {
+        var account = xulConcreteContact.getAttribute('account');
+        var address = xulConcreteContact.getAttribute('address');
+
+        if(newName && newName.replace(/(^\s*|\s*$)/g, '') != '')
+            XMPP.send(account,
+                      <iq type='set'>
+                      <query xmlns='jabber:iq:roster'>
+                      <item jid={address} name={newName}/>
+                      </query>
+                      </iq>);
+
+        xulConcreteContact = xulConcreteContact.nextSibling;
+    }
+};
+
+
+// NETWORK REACTIONS
+// ----------------------------------------------------------------------
+
+contacts.receivedContactPresence = function(presence) {
+    this.updateContactPresence(
+        XMPP.presencesOf(
+            presence.account,
+            XMPP.JID(presence.stanza.@from).address)[0] || presence);
+};
+
+
+// SEARCH/COMPLETION
+// ----------------------------------------------------------------------
+
+contacts.enteredSearchText = function(s) {
+    // Wrap everything in a try() because the XBL that calls this
+    // handler seems to swallow errors.
+    try {
+        var searchString = s.replace(/(^\s*|\s*$)/g, '');
+        $('#widget-contacts-search').value = '';
+        document.commandDispatcher.advanceFocus();
+
+        var entity = XMPP.entity(s);
+
+        if(!entity.action) {
+            if(entity.account && entity.address) {
+                let xmlRosterItem = this._getRosterItem(entity.account,
+                                                        entity.address);
+                if(!xmlRosterItem)
+                    alert('entity not in roster');
+
+                this.addToPopular(entity.account,
+                                  xmlRosterItem.@jid.toString(),
+                                  xmlRosterItem.@name.toString());
+            }
+            else
+                alert('unimplemented');
+        } else if(entity.action == 'roster') {
+            var request = {
+                contactAddress: entity.address,
+                subscribeToPresence: undefined,
+                confirm: false,
+                account: undefined
+            };
+
+            window.openDialog(
+                'chrome://sameplace/content/dialogs/add_contact.xul',
+                'im:add-contact', 'modal,centerscreen',
+                request);
+
+            alert(request.toSource());
+        }
+
+    } catch(e) {
+        Cu.reportError(e);
+    }
+};
+
+contacts.removeFromPopular = function(account, address) {
+    sameplace.services.contacts.makeUnpopular(account, address);
+    var xmlRosterItem = this._getRosterItem(account, address);
+    this.updateContactItem(account,
+                           xmlRosterItem.@jid.toString(),
+                           xmlRosterItem.@name.toString());
+};
+
+contacts.addToPopular = function(account, address, name) {
+    sameplace.services.contacts.makePopular(account, address);
+    this.updateContactItem(account, address, name);
+};
+
+contacts.promptAddContact = function(account, address) {
+    if(window.confirm('"' + address + '" is not in your contact list.\n' +
+                      'Do you want to add it as a contact?'))
+        window.openDialog('chrome://sameplace/content/dialogs/add_contacts.xul',
+                          'SamePlace:AddContacts', '', address);
+};
+
+
+// CONTACT POPUP
+// ----------------------------------------------------------------------
+
+contacts.hidingContactPopup = function(xulPopup) {
+    $(xulPopup, '.no-photo').hidden = true;
+    $(xulPopup, '.avatar').removeAttribute('src');
+};
+
+contacts.showingContactPopup = function(xulPopup) {
+
+    // For some reason, document.popupNode isn't available when popup
+    // was opened through openPopup()
+
+    var xulContact = this._hoveredContact;
+
+    $(xulPopup, '.name').setAttribute('value', $(xulContact, '.name').getAttribute('value'));
+    $(xulPopup, '.status-message').textContent = $(xulContact, '.status-message').getAttribute('value');
+    $(xulPopup, '.nick-container').hidden = true;
+
+    var xulPopupConcreteContacts = $(xulPopup, '.concrete-contacts');
+    while(xulPopupConcreteContacts.lastChild)
+        xulPopupConcreteContacts.removeChild(xulPopupConcreteContacts.lastChild);
+
+    var xulConcreteContact = $(xulContact, '.concrete-contact');
+    while(xulConcreteContact) {
+        let xulLabel = xulConcreteContact.cloneNode(true);
+        xulLabel.value = xulLabel.getAttribute('account') + ' → ' + xulLabel.value;
+        xulLabel.setAttribute('crop', 'start')
+        $(xulPopup, '.concrete-contacts').appendChild(xulLabel);
+        xulConcreteContact = xulConcreteContact.nextSibling;
+    }
+
+    // XXX Retrieve vcard of first concrete contact... not necessarily
+    // the best choice!
+
+    var account = xulPopupConcreteContacts.childNodes[0].getAttribute('account');
+    var address = xulPopupConcreteContacts.childNodes[0].getAttribute('address');
+
+    var retrieveVCardTask = task(function(receive) {
+        var iq = yield XMPP.req(
+            account,
+                <iq to={address} type='get'>
+                <connection xmlns={ns_x4m_in} control='cache,remote-if-online'/>
+                <vCard xmlns='vcard-temp'/>
+                </iq>);
+
+        if(iq.stanza.@type == 'error') {
+            Cu.reportError(iq.stanza.toXMLString());
+            return;
+        }
+
+        var xmlPhoto = iq.stanza..ns_vcard::PHOTO;
+        if(xmlPhoto.ns_vcard::BINVAL != undefined)
+            $(xulPopup, '.avatar').setAttribute(
+                'src', 'data:' + xmlPhoto.ns_vcard::TYPE + ';base64,' +
+                    xmlPhoto.ns_vcard::BINVAL);
+        else if(xmlPhoto.ns_vcard::EXTVAL != undefined)
+            $(xulPopup, '.avatar').setAttribute(
+                'src', xmlPhoto.ns_vcard::EXTVAL);
+        else
+            $(xulPopup, '.no-photo').hidden = false;
+
+        var nick = iq.stanza..ns_vcard::FN.text().toString();
+        if($(xulContact, '.name').getAttribute('value') != nick) {
+            $(xulPopup, '.nick-container').hidden = (nick == '')
+            $(xulPopup, '.nick').setAttribute('value', nick);
+        }
+    });
+
+    retrieveVCardTask.start();
+};
+
+// hoveredContact, unhoveredContact, hoveredContactPopup,
+// unhoveredContactPopup handle interaction between contacts and their
+// "More info" popups.  Desired behaviour is:
+//
+// - if mouse stays on contact for longer than one second, bring up
+//   popup;
+//
+// - if mouse leaves contact for longer than oen second and doesn't
+//   enter popup, hide popup;
+//
+// - if mouse enters popup and then leaves it for longer than one
+//   second, hide popup.
+
+contacts.hoveredContact = function(event) {
+    var xulContact = event.currentTarget;
+
+    if(this._contactHoverTimeout)
+        window.clearTimeout(this._contactHoverTimeout);
+    this._contactHoverTimeout = window.setTimeout(function() {
+        contacts._hoveredContact = xulContact;
+        $('#contact-popup').openPopup(xulContact, 'end_before', -80, -20, false, false);
+    }, 1000);
+};
+
+contacts.unhoveredContact = function(xulContact) {
+    if(this._contactHoverTimeout)
+        window.clearTimeout(this._contactHoverTimeout);
+
+    this._contactUnhoverTimeout = window.setTimeout(function() {
+        contacts._unhoveredContact = null;
+        $('#contact-popup').hidePopup();
+    }, 1000);
+};
+
+contacts.hoveredContactPopup = function(xulPopup) {
+    if(this._contactUnhoverTimeout)
+        window.clearTimeout(this._contactUnhoverTimeout);
+
+    if(this._contactPopupHoverTimeout)
+        window.clearTimeout(this._contactPopupHoverTimeout);
+};
+
+contacts.unhoveredContactPopup = function(xulPopup) {
+    this._contactPopupHoverTimeout = window.setTimeout(function() {
+        xulPopup.hidePopup();
+    }, 1000);
+};
+
+
+
+// INTERNALS
+// ----------------------------------------------------------------------
+
+// Inserts a xulElement into a sorted nodeList, ordering by attrName.
+
+contacts._sortedInsert = function(xulElement, nodeList, attrName) {
+    var attrValue = xulElement.getAttribute(attrName);
+
+    if(nodeList.childNodes.length == 0)
+        nodeList.appendChild(xulElement);
+    else if(attrValue.toLowerCase() >= nodeList.childNodes[nodeList.childNodes.length-1].getAttribute(attrName).toLowerCase())
+        nodeList.appendChild(xulElement);
+    else if(attrValue.toLowerCase() <= nodeList.firstChild.getAttribute(attrName).toLowerCase())
+        nodeList.insertBefore(xulElement, nodeList.firstChild)
+    else {
+        var elementIter = nodeList.firstChild;
+        while(elementIter.nextSibling) {
+            if(attrValue > elementIter.getAttribute(attrName) &&
+               attrValue <= elementIter.nextSibling.getAttribute(attrName)) {
+                nodeList.insertBefore(xulElement, elementIter.nextSibling);
+                break;
+            }
+            elementIter = elementIter.nextSibling;
+        }
+    }
+};
+
+contacts._findContact = function(name) {
+    return $('#widget-contacts .list .contact[name="' + name + '"]');
+};
+
+contacts._makeContact = function(name) {
+    var xulContact = $('#blueprints > .contact').cloneNode(true);
+    xulContact.setAttribute('name', name);
+    $(xulContact, '.name').setAttribute('value', name);
+    return xulContact;
+};
+
+contacts._findConcreteContact = function(account, address) {
+    return $('#widget-contacts .list .concrete-contact[account="' + account + '"][address="' + address + '"]');
+};
+
+contacts._makeConcreteContact = function(account, address) {
+    var xulConcreteContact = document.createElement('label');
+    xulConcreteContact.setAttribute('class', 'concrete-contact');
+    xulConcreteContact.setAttribute('value', address);
+    xulConcreteContact.setAttribute('account', account);
+    xulConcreteContact.setAttribute('address', address);
+    xulConcreteContact.setAttribute('crop', 'end');
+    return xulConcreteContact;
+};
+
+contacts._getRosterItem = function(account, address) {
+    var roster = XMPP.cache.first(
+        XMPP.q()
+            .event('iq')
+            .direction('in')
+            .account(account)
+            .child('jabber:iq:roster', 'query'));
+
+    return roster.stanza..ns_roster::item.(@jid == address);
+};
+
+
+// TASKS
+// ----------------------------------------------------------------------
+
+contacts.taskdef_initList = function(receive) {
+    var account = yield receive();
+
+    var iq = yield XMPP.req(
+        account,
+            <iq type='get'>
+            <query xmlns='jabber:iq:roster'/>
+            <connection xmlns={ns_x4m_in} control='cache,remote-if-online'/>
+            </iq>);
+
+    for each(let item in iq.stanza..ns_roster::item) {
+        contacts.updateContactItem(account,
+                                   item.@jid.toString(),
+                                   item.@name.toString());
+    }
+
+    XMPP.cache
+        .all(XMPP.q()
+             .event('presence')
+             .direction('in')
+             .account(account))
+        .forEach(function(presence) contacts.receivedContactPresence(presence));
+}
+
+
+// LAB AREA
+// ----------------------------------------------------------------------
+
+// Temporary.  Under consideration for inclusion in xmpp.js, possibly
+// with task() or XMPP.task().  Connection control part under
+// consideration for inclusion in client_service.js
+
+XMPP.req = function(account, stanza) {
+    return function(resume) {
+        XMPP.sendPseudoSync(account, stanza, function(reply) resume(reply));
+    }
+};
+
+XMPP.sendPseudoSync = function(account, stanza, replyHandler) {
+    var connectionControl = stanza.ns_x4m_in::connection.@control.toString();
+
+    function cachedReply() {
+
+    }
+
+    if(!connectionControl)
+        XMPP.send(account, stanza, replyHandler);
+    else {
+        let tmp = stanza.copy();
+        delete tmp.ns_x4m_in::*;
+        // Per RFC-3920, iq's of type="get" must contain only one
+        // (namespaced) child indicating the semantics of the
+        // request, thus we assume that once we've removed our
+        // non-standard control element, we are left with the
+        // semanticts-indicating child only.
+        let child = tmp.*;
+
+        let reply = XMPP.cache.first(
+            XMPP.q()
+                .event('iq')
+                .account(account)
+                .from(stanza.@to)
+                .type('result')
+                .direction('in')
+                .child(child.namespace().toString(), child.name().localName));
+
+        switch(connectionControl) {
+        case 'cache,offline':
+            if(reply)
+                replyHandler(reply);
+            else {
+                var replyStanza = stanza.copy();
+                replyStanza.@type = 'error';
+                replyStanza.appendChild(<error xmlns={ns_x4m_in} type='ondemand-connection-refused'/>);
+                replyStanza.appendChild(<meta xmlns={ns_x4m_in} account={account} direction='in'/>);
+                replyHandler(XMPP.packet(replyStanza));
+            }
+            break;
+
+        case 'cache,remote-if-online':
+            if(reply)
+                replyHandler(reply);
+            else if(XMPP.isUp(account))
+                XMPP.send(account, stanza, replyHandler);
+            else {
+                var replyStanza = tmp;
+                replyStanza.@type = 'error';
+                replyStanza.appendChild(<error xmlns={ns_x4m_in} type='cache-miss'/>);
+                replyStanza.appendChild(<meta xmlns={ns_x4m_in} account={account} direction='in'/>);
+                replyHandler(XMPP.packet(replyStanza));
+            }
+            break;
+
+        case 'cache,remote-always':
+            // TODO throw error if it's not an iq or if it's an iq-set
+            // TODO investigate HTTP criteria for caching, they should be
+            // similar
+
+            if(reply)
+                replyHandler(reply);
+            else
+                XMPP.send(account, stanza, replyHandler);
+            break;
+
+        default:
+            throw new Error('Unknown value for <connection/>. (' + connectionControl + ')');
+        }
+    }
+};
+
+XMPP.packet = function(xmlStanza) {
+    return {
+        get direction() {
+            return xmlStanza.ns_x4m_in::meta.@direction.toString();
+        },
+
+        get account() {
+            return xmlStanza.ns_x4m_in::meta.@account.toString();
+        },
+
+        get stanza() {
+            return xmlStanza;
+        },
+
+        get event() {
+            return xmlStanza.name().localName;
+        }
+    }
+};
+
+
+
+
+// ATTIC
+// ----------------------------------------------------------------------
+
+// Stuff I'm emotionally connected with (since writing it took so damn
+// much) but is really no longer of use
+
+// contacts.requestedSearch = function(event) {
+//     // WARNING: exceptions in this function get swallowed by the
+//     // caller (textbox)
+
+//     var xulPopup = $('#contact-popup-completions');
+//     var xulTextbox = event.target;
+//     var searchString = xulTextbox.value.replace(/(^\s*|\s*$)/g, '').toLowerCase();
+
+//     if(searchString == '') {
+//         if(xulPopup.state == 'open')
+//             xulPopup.hidePopup();
+
+//         return;
+//     }
+
+//     var xulCompletions = $(xulPopup, '.contact-completions');
+//     while(xulCompletions.lastChild)
+//         xulCompletions.removeChild(xulCompletions.lastChild);
+
+//     var rosters = XMPP.cache.all(
+//         XMPP.q()
+//             .event('iq')
+//             .direction('in')
+//             .type('result')
+//             .child('jabber:iq:roster', 'query'));
+
+//     // This could be done way more efficiently through just XPath, but
+//     // we don't have a clear abstraction for it, and anyway the
+//     // following will not be called often.
+
+//     var completionsAvailable = false;
+
+//     for each(let roster in rosters) {
+//         for each(let xmlRosterItem in roster.stanza..ns_roster::item) {
+//             let completion;
+
+//             if(xmlRosterItem.@name.toString().toLowerCase().indexOf(searchString) != -1)
+//                 completion = xmlRosterItem.@name.toString();
+
+//             if(!completion && xmlRosterItem.@jid.toString().toLowerCase().indexOf(searchString) != -1)
+//                 completion = xmlRosterItem.@jid.toString();
+
+//             if(completion) {
+//                 completionsAvailable = true;
+//                 let xulCompletion = $('#blueprints > .contact-completion').cloneNode(true);
+//                 $(xulCompletion, '> .completion').setAttribute('value', completion);
+//                 $(xulCompletion, '> .address').setAttribute('value', xmlRosterItem.@jid);
+//                 xulCompletion.setAttribute('completion', completion);
+//                 xulCompletion.setAttribute('account', roster.account);
+//                 xulCompletion.setAttribute('address', xmlRosterItem.@jid);
+//                 xulCompletions.appendChild(xulCompletion);
+//             }
+//         }
+//     }
+
+//     if(xulPopup.state == 'closed' && completionsAvailable)
+//         xulPopup.openPopup(xulTextbox, 'after_start', 0, 0, true, false);
+//     else if(xulPopup.state == 'open' && !completionsAvailable)
+//         xulPopup.hidePopup();
+// };
+
+// Search/completion use cases:
+//
+// 1. User types some letters then selects a completion with the
+//    keyboard or mouse
+//
+//      - we have account, address, possibly name
+//
+//      - handled by pressedKeyInCompletions() or clickedCompletion()
+//
+// 2. User types an address or name that is in the contact list
+//    already, then presses Return
+//
+//      - we have an address or name (though don't know which of the
+//        two)
+//
+//      - handled by pressedKeyInSearchBox()
+//
+// 3. User types something that is not in the contact list, then
+//    presses Return
+//
+//      - we assume it's an address and ask the user if he wants to
+//        add it to the contact list
+//
+//      - handled by pressedKeyInSearchBox()
+
+// contacts.pressedKeyInSearchBox = function(event) {
+//     if(event.keyCode == event.DOM_VK_DOWN ||
+//        event.keyCode == event.DOM_VK_TAB) {
+//         $('#contact-popup-completions').firstChild.focus();
+//         $('#contact-popup-completions > .contact-completions').selectedIndex = 0;
+//         event.preventDefault();
+//     } else if(event.keyCode == event.DOM_VK_RETURN) {
+//         if($('#contact-popup-completions').state == 'open')
+//             $('#contact-popup-completions').hidePopup();
+
+//         let searchString = event.target.value;
+//         event.target.value = '';
+//         event.target.blur();
+//         this.enteredSearchString(searchString);
+//     }
+// };
+
+// contacts.enteredSearchString = function(searchString) {
+//     var rosters = XMPP.cache.all(
+//         XMPP.q()
+//             .event('iq')
+//             .direction('in')
+//             .child('jabber:iq:roster', 'query'));
+
+//     var account, address, xmlRosterItem;
+//     for each(let roster in rosters) {
+//         for each(let item in roster.stanza..ns_roster::item) {
+//             if(item.@jid == searchString || item.@name == searchString) {
+//                 xmlRosterItem = item;
+//                 address = item.@jid;
+//                 account = roster.account;
+//                 break;
+//             }
+//         }
+//     }
+
+//     if(account && address)
+//         this.addToPopular(account, xmlRosterItem);
+//     else
+//         this.promptAddContact(null, searchString);
+// };
+
+// contacts.clickedCompletion = function(event) {
+//     var xulContact = event.currentTarget;
+//     var account = xulContact.getAttribute('account');
+//     var address = xulContact.getAttribute('address');
+
+//     $('#contact-popup-completions').hidePopup();
+//     $('#contact-search').value = '';
+//     $('#widget-contacts .list').focus();
+
+//     var roster = XMPP.cache.first(
+//         XMPP.q()
+//             .event('iq')
+//             .direction('in')
+//             .account(account)
+//             .child('jabber:iq:roster', 'query'));
+
+//     var xmlRosterItem = roster.stanza..ns_roster::item.(@jid == address);
+//     if(xmlRosterItem != undefined)
+//         this.addToPopular(account, xmlRosterItem);
+//     else
+//         throw new Error('Bug');
+// };
+
+// contacts.pressedKeyOnCompletions = function(event) {
+//     var xulList = event.target;
+
+//     if(event.keyCode == event.DOM_VK_TAB) {
+//         event.preventDefault();
+
+//         if(event.shiftKey) {
+//             if(xulList.selectedIndex > 0)
+//                 xulList.selectedIndex--;
+//         } else {
+//             if(xulList.selectedIndex < xulList.childNodes.length)
+//                 event.target.selectedIndex++;
+//         }
+
+//     } else if(event.keyCode == event.DOM_VK_RETURN &&
+//               xulList.selectedItem) {
+//         event.preventDefault();
+
+//         var xulContact = event.target.selectedItem;
+//         var account = xulContact.getAttribute('account');
+//         var address = xulContact.getAttribute('address');
+
+//         $('#contact-popup-completions').hidePopup();
+//         $('#contact-search').value = '';
+//         $('#widget-contacts .list').focus();
+
+//         var roster = XMPP.cache.first(
+//             XMPP.q()
+//                 .event('iq')
+//                 .direction('in')
+//                 .account(account)
+//                 .child('jabber:iq:roster', 'query'));
+
+//         var xmlRosterItem = roster.stanza..ns_roster::item.(@jid == address);
+//         if(xmlRosterItem != undefined)
+//             this.addToPopular(account, xmlRosterItem);
+//         else
+//             throw new Error('Bug');
+//     }
+// };
+

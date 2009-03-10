@@ -1,0 +1,52 @@
+
+#main {
+    overflow-y: auto;
+    background-image: url("background.png");
+    background-position: bottom right;
+    background-repeat: no-repeat;
+    padding: 0 8px 0 8px;
+}
+
+/* TOOLBAR */
+
+#widgets-toolbar {
+    -moz-appearance: none;
+    margin-bottom: 4px;
+}
+
+#widgets-toolbar > button {
+    display: inline;
+    min-width: 0;
+    margin: 2px;
+}
+
+#widgets-toolbar > button,
+#widgets-toolbar > button:hover
+{
+    -moz-appearance: none;
+    border: none;
+    background: none !important;
+}
+
+#widgets-toolbar > button[checked="true"],
+#widgets-toolbar > button:active {
+    /* Reset "pressed" effect from default theme */
+/*    padding: 3px 3px 3px 3px !important;*/
+}
+
+#widgets-toolbar > button:not([checked="true"]) {
+    opacity: 0.25;
+}
+
+#widgets-toolbar > button:hover {
+    opacity: 0.8;
+}
+
+#widgets-toolbar > button:hover[checked="true"] {
+    opacity: 1;
+}
+
+#more-widgets {
+    text-align: right;
+}
+

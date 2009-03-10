@@ -8,3 +8,4 @@ pref("extensions.sameplace@hyperstruct.net.description", "chrome://sameplace/loc
 pref("extensions.sameplace.branch", "devel");
 pref("extensions.sameplace.chatArea", "");
 pref("extensions.sameplace.addToolbarButton", true);
+pref("extensions.sameplace.services.contacts.src", "chrome://sameplace/content/services/contacts.js");

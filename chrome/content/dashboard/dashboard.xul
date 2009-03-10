@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+
+<!--
+  Copyright 2006-2009 by Massimiliano Mirra
+
+  This file is part of SamePlace.
+
+  SamePlace is free software; you can redistribute it and/or modify it
+  under the terms of the GNU General Public License as published by the
+  Free Software Foundation; either version 3 of the License, or (at your
+  option) any later version.
+
+  SamePlace is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+  The interactive user interfaces in modified source and object code
+  versions of this program must display Appropriate Legal Notices, as
+  required under Section 5 of the GNU General Public License version 3.
+
+  In accordance with Section 7(b) of the GNU General Public License
+  version 3, modified versions must display the "Powered by SamePlace"
+  logo to users in a legible manner and the GPLv3 text must be made
+  available to them.
+
+  Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
+-->
+
+<!-- visual style -->
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://sameplace/skin/status_overlay.css" type="text/css"?>
+<?xml-stylesheet href="chrome://sameplace/skin/sidebar.css" type="text/css"?>
+<?xml-stylesheet href="chrome://sameplace/skin/dashboard/dashboard.css" type="text/css"?>
+<?xml-stylesheet href="chrome://sameplace/skin/dashboard/widget.css" type="text/css"?>
+
+<!-- XBL bindings -->
+
+<?xml-stylesheet href="chrome://sameplace/content/dashboard/bindings.css" type="text/css"?>
+
+<!-- overlays -->
+
+<?xul-overlay href="chrome://sameplace/content/dashboard/widget_accounts.xul"?>
+<?xul-overlay href="chrome://sameplace/content/dashboard/widget_contacts.xul"?>
+
+<!-- localization -->
+
+<!DOCTYPE page SYSTEM "chrome://sameplace/locale/status_overlay.dtd">
+
+<page xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+      id="dashboard"
+      title="Dashboard"
+      onload="init();"
+      onunload="finish();"
+      orient="vertical">
+
+  <script type="application/x-javascript" src="../lib/getElementsBySelector.js"/>
+  <script type="application/x-javascript" src="dashboard.js"/>
+
+  <popupset id="popups"/>
+
+  <stack flex="1" id="stack">
+    <scrollbox id="main" flex="1" orient="vertical">
+      <description id="widgets-toolbar" class="toolbar">
+        <toolbarspring flex="1"/>
+        <toolbaritem flex="1" hidden="true">
+          <label id="more-widgets" class="text-link" value="More &#187;"
+                 href="http://www.sameplace.cc/download"
+                 tooltiptext="More &#187;"
+                 crop="end"
+                 flex="1"/>
+        </toolbaritem>
+      </description>
+
+      <vbox id="widgets" flex="1"/>
+    </scrollbox>
+  </stack>
+
+  <box id="blueprints" hidden="true"/>
+</page>

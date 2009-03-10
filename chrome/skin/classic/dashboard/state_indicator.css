@@ -1,0 +1,44 @@
+.state-indicator {
+    list-style-image: url("../status16x64.png");
+}
+
+.state-indicator[progress="true"] {
+    list-style-image: url("spinner.png");
+    -moz-image-region: rect(0px 16px 16px 0px) !important;
+}
+
+/* TODO .entity ? */
+
+/* First case is for state indicators that are descendants of an
+element representing an account.  Second case for stand-alone state
+indicators, as in menus. */
+
+[availability="available"] .state-indicator,
+.state-indicator[availability="available"] {
+    -moz-image-region: rect(16px 16px 32px 0px);
+}
+
+[availability="available"][show="away"] .state-indicator,
+[availability="available"][show="xa"] .state-indicator,
+.state-indicator[availability="available"][show="away"],
+.state-indicator[availability="available"][show="xa"] {
+    -moz-image-region: rect(32px 16px 48px 0px);
+}
+
+[availability="available"][show="dnd"] .state-indicator,
+.state-indicator[availability="available"][show="dnd"] {
+    -moz-image-region: rect(0px 16px 16px 0px);
+}
+
+[availability="unavailable"] .state-indicator,
+.state-indicator[availability="unavailable"] {
+    -moz-image-region: rect(48px 16px 64px 0px);
+}
+
+/* Only make this half-transparent for account and contact descendants */
+
+[availability="unavailable"] .state-indicator {
+    opacity: 0.3;
+}
+
+

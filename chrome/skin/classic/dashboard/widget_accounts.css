@@ -1,0 +1,30 @@
+#widget-accounts .widget-icon {
+/*    list-style-image: url("../people16x16.png");*/
+}
+
+.account {
+    padding: 0;
+}
+
+.account > image.state-indicator,
+.pseudo-account > image.state-indicator {
+    cursor: pointer;
+}
+
+.account-options {
+    margin: 0;
+    padding: 0;
+    -moz-appearance: none;
+    border: none;
+    min-width: 0;
+    max-width: 0;
+    background: transparent;
+    -moz-border-radius: 3px;
+    background: #ddeeff;
+    opacity: 0.3;
+}
+
+.pseudo-account:hover > .account-options,
+.account:hover > .account-options {
+    opacity: 0.8;
+}

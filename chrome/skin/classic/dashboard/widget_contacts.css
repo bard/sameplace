@@ -1,0 +1,86 @@
+.contact[availability="unavailable"] > label {
+    opacity: 0.5;
+}
+
+.contact .status-message[value=""],
+.contact[availability="unavailable"] .status-message
+{
+    display: none;
+}
+
+.contact .status-message {
+    color: gray;
+    font-size: 10px;
+    margin-left: 16px;
+}
+
+/* SEARCH AND COMPLETIONS */
+
+#widget-contacts-search {
+    font-size: 11px;
+    -moz-appearance: none;
+    -moz-border-radius: 7px;
+    padding: 3px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: black !important; /* not working, border stays 3d. why? */
+    margin-bottom: 10px;
+}
+
+/* not working ... why? 
+#widget-contacts-search .autocomplete-icon {
+    list-style-image: url(chrome://global/skin/icons/Search-glass.png);
+}
+*/
+
+#contact-popup-completions {
+    min-width: 200px;
+}
+
+#contact-popup-completions > .completions {
+    -moz-appearance: none;
+}
+
+
+#contact-popup-completions .contact-completion .address {
+    color: gray;
+    font-size: 10px;
+    padding-left: 1em;
+}
+
+/* CONTACT POPUP */
+
+#contact-popup {
+    padding: 10px;
+}
+
+#contact-popup .status-message {
+    max-width: 30em;
+    font-style: italic;
+    padding-left: 1em;
+}
+
+#contact-popup .avatar {
+    width: 128px;
+    height: 128px;
+    border: 1px solid gray;
+}
+
+#contact-popup .no-photo {
+    font-weight: bold;
+    opacity: 0.3;
+    font-size: 18px;
+}
+
+#contact-popup .concrete-contacts {
+    color: #555;
+}
+
+/*  .ac-site-icon .ac-title [.ac-ellipsis-after .ac-comment] [.ac-type-icon .ac-result-type-suggestfirst]
+    .ac-url-box .ac-site-icon .ac-url [.ac-ellipsis-after .ac-url-text] .ac-type-icon
+    */
+
+#widget-contacts-completions .autocomplete-richlistitem .ac-url {
+    font-size: 10px;
+    color: graytext;
+}

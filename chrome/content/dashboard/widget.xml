@@ -1,0 +1,175 @@
+<?xml version="1.0"?>
+<bindings xmlns="http://www.mozilla.org/xbl"
+          xmlns:xbl="http://www.mozilla.org/xbl"
+          xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <binding id="widget">
+    <content persist="minimized hidden">
+      <xul:stack>
+        <xul:vbox flex="1">
+          <xul:toolbar anonid="header" class="widget-header" align="center">
+            <xul:toolbaritem class="widget-icon-container">
+              <xul:image class="widget-icon" xbl:inherits="src=image"/>
+            </xul:toolbaritem>
+            <xul:toolbaritem flex="1" class="widget-title-container">
+              <xul:label class="widget-title" xbl:inherits="value=title" crop="end" flex="1"/>
+            </xul:toolbaritem>
+            <xul:toolbarspring/>
+            <xul:toolbarbutton label="?" anonid="button-help" hidden="true"/>
+            <xul:toolbarbutton label="&#10005;" anonid="button-hide"/>
+            <xul:toolbarbutton type="menu">
+              <xul:menupopup anonid="popup">
+                <xul:menuitem anonid="menuitem-minimize" label="Minimize" type="checkbox"/>
+                <xul:menuitem anonid="menuitem-hide" label="Hide"/>
+                <xul:menuitem anonid="menuitem-uninstall" label="Uninstall"/>
+                <xul:menuitem anonid="menuitem-options" label="Options..."/>
+              </xul:menupopup>
+            </xul:toolbarbutton>
+          </xul:toolbar>
+        </xul:vbox>
+        <xul:vbox flex="1">
+          <xul:vbox class="widget-body">
+            <children/>
+          </xul:vbox>
+        </xul:vbox>
+      </xul:stack>
+    </content>
+
+    <implementation>
+      <constructor><![CDATA[
+        var me = this;
+
+        me._('header').addEventListener('click', function(event) {
+            if(event.originalTarget.localName == 'toolbarbutton')
+                return;
+            me.toggle();
+        }, false);
+
+        me._('popup').addEventListener('popupshowing', function(event) {
+            me._('menuitem-options').hidden = !me.hasAttribute('optionurl');
+            me._('menuitem-minimize').setAttribute('checked', me.getAttribute('minimized'));
+            me._('menuitem-uninstall').setAttribute('hidden', !me.hasAttribute('extid'));
+        }, false);
+
+        me._('menuitem-options').addEventListener('command', function(event) {
+            window.openDialog(me.getAttribute('optionurl'));
+        }, false);
+
+        me._('menuitem-minimize').addEventListener('command', function(event) {
+            me.setAttribute('minimized', event.originalTarget.getAttribute('checked'));
+        }, false);
+
+        me._('button-hide').addEventListener('command', function(event) {
+            me.hide();
+        }, false);
+
+        me._('menuitem-hide').addEventListener('command', function(event) {
+            me.hide();
+        }, false);
+
+        me._('menuitem-uninstall').addEventListener('command', function(event) {
+            window.confirm('This operation will remove the widget "' + me.getAttribute('title') + '" and all\n' +
+                           'other widgets, if any, belonging to the extension "' + me.getAttribute('extid') + '".\n' +
+                           'Really continue?');
+        }, false);
+
+
+        var help = this.getElementsByTagName('widget-help')[0];
+
+        if(help) {
+            me._('button-help').hidden = false;
+
+            me._('button-help').addEventListener('click', function(event) {
+                if(me.minimized) {
+                    help.hidden = false;
+                    me.minimized = false;
+                } else
+                    help.hidden = !help.hidden;
+            }, false);
+        }
+      ]]></constructor>
+
+      <property name="minimized"
+                onget="return this.getAttribute('minimized') == 'true';"
+                onset="this.setAttribute('minimized', val); return val"/>
+
+      <property name="title"
+                onget="return this.getAttribute('title');"
+                onset="this.setAttribute('title', val); return val;"/>
+
+      <property name="subTitle"
+                onget="return this.getAttribute('subtitle');"
+                onset="this.setAttribute('subtitle', val); this._updateTitle(); return val;"/>
+
+      <method name="toggle">
+        <body><![CDATA[
+            var toggleEvent = document.createEvent('Event');
+
+            this.minimized = !this.minimized;
+
+            toggleEvent.initEvent('widget/toggle', true, false);
+            this.dispatchEvent(toggleEvent);
+        ]]></body>
+      </method>
+
+      <method name="_updateTitle">
+        <body><![CDATA[
+            this._('widget-title').value = this.getAttribute('title') + this.getAttribute('subtitle');
+        ]]></body>
+      </method>
+
+      <method name="hide">
+        <body><![CDATA[
+            if(this.hidden)
+                return;
+            this.hidden = true;
+            var hideEvent = document.createEvent('Event');
+            hideEvent.initEvent('widget/hide', true, false);
+            this.dispatchEvent(hideEvent);
+        ]]></body>
+      </method>
+
+      <method name="_">
+        <parameter name="name"/>
+        <body><![CDATA[
+            return (document.getAnonymousElementByAttribute(this, 'anonid', name) ||
+                    document.getAnonymousElementByAttribute(this, 'class', name));
+        ]]></body>
+      </method>
+    </implementation>
+  </binding>
+
+  <binding id="widget-footer">
+    <content>
+      <children/>
+    </content>
+  </binding>
+
+  <binding id="widget-help">
+    <content orient="horizontal" align="start">
+      <xul:image class="help-icon"/>
+      <xul:description flex="1">
+        <children/>
+      </xul:description>
+      <xul:button label="&#10005;" anonid="button-close"
+                  style="-moz-appearance: none; background: none; min-width: 0; border: none;"/>
+    </content>
+
+    <implementation>
+      <constructor><![CDATA[
+        var me = this;
+
+        me._('button-close').addEventListener('click', function(event) {
+            me.hidden = true;
+        }, false);
+      ]]></constructor>
+
+      <method name="_">
+        <parameter name="name"/>
+        <body><![CDATA[
+            return (document.getAnonymousElementByAttribute(this, 'anonid', name) ||
+                    document.getAnonymousElementByAttribute(this, 'class', name));
+        ]]></body>
+      </method>
+    </implementation>
+  </binding>
+</bindings>

@@ -1,0 +1,12 @@
+widget {
+    -moz-binding: url('chrome://sameplace/content/dashboard/widget.xml#widget');
+    -moz-box-orient: vertical;
+}
+
+widget-footer {
+    -moz-binding: url('chrome://sameplace/content/dashboard/widget.xml#widget-footer');
+}
+
+widget-help {
+    -moz-binding: url('chrome://sameplace/content/dashboard/widget.xml#widget-help');
+}

@@ -1,0 +1,107 @@
+
+widget {
+    border: 1px solid #ddeeff;
+    -moz-border-radius: 7px;
+    margin-bottom: 10px;
+    background: url("widget-body-background.png") transparent top left repeat;
+}
+
+widget-help .help-icon {
+    list-style-image: url("help_icon.png");
+}
+
+widget-help {
+    font-size: 11px;
+    -moz-border-radius: 5px;
+    padding: 5px;
+    background-color: #ffffdd;
+    border: 1px solid #D1D1B5;
+    margin: 5px 5px 8px 0;
+}
+
+widget-footer {
+    font-size: 11px;
+    margin-top: 3px;
+    -moz-box-pack: end;
+}
+
+widget[minimized="true"] {
+    height: 22px; /* widget-header padding + height + border */
+    margin-bottom: 6px;
+}
+
+widget[minimized="true"] .widget-header {
+    overflow: hidden;
+    opacity: 0.6;
+}
+
+widget[minimized="true"] .widget-body {
+    margin: 0;
+    display: none;
+}
+
+.widget-header {
+    padding: 0 4px 0 6px;
+    min-width: 16px;
+    font-size: 10px;
+    font-weight: bold;
+    height: 10px;
+    background: url("widget-header-background.png") #ddeeff top left repeat-x;
+    -moz-appearance: none;
+    -moz-border-radius: 5px;
+}
+
+.widget-title {
+    color: #447;
+}
+
+.widget-header > toolbarbutton {
+    -moz-appearance: none;
+    opacity: 0.35;
+    border: none;
+}
+
+.widget-header > toolbarbutton:hover {
+    opacity: 0.8;
+}
+
+.widget-header > toolbarbutton[type="menu"] {
+    min-width: 0;
+    max-width: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.widget-header:hover .widget-title {
+    color: #003;
+}
+
+.widget-icon {
+    min-height: 16px;
+    min-width: 16px;
+}
+
+.widget-body {
+    margin: 25px 5px 2px 10px;
+}
+
+/* ---------------------------------------------------------------------- */
+
+/*
+.widget-header {
+    -moz-box-pack: end;
+}
+
+.widget-title-container {
+    display: none;
+}
+
+.widget-header {
+    background: transparent;
+}
+
+.widget-body {
+    margin-top: 15px;
+    margin-left: 15px;
+}
+*/
