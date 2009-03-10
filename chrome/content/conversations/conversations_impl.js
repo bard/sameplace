@@ -35,23 +35,16 @@
 
 var Cc = Components.classes;
 var Ci = Components.interfaces;
+var Cu = Components.utils;
+
 var pref = Cc['@mozilla.org/preferences-service;1']
     .getService(Ci.nsIPrefService)
     .getBranch('extensions.sameplace.');
 
-var MAX_MESSAGE_CACHE = 10;
-if(typeof(ns_muc) == 'undefined')
-    var ns_muc      = 'http://jabber.org/protocol/muc';
-if(typeof(ns_muc_user) == 'undefined')
-    var ns_muc_user = 'http://jabber.org/protocol/muc#user';
-if(typeof(ns_event) == 'undefined')
-    var ns_event        = 'jabber:x:event';
-if(typeof(ns_http_auth) == 'undefined')
-    var ns_http_auth    = 'http://jabber.org/protocol/http-auth';
-if(typeof(ns_chatstates) == 'undefined')
-    var ns_chatstates   = 'http://jabber.org/protocol/chatstates';
+var MAX_MESSAGE_CACHE = 100;
 
 var util = load('chrome://sameplace/content/lib/util_impl.js', {});
+Cu.import('resource://xmpp4moz/namespaces.jsm');
 
 
 // STATE
