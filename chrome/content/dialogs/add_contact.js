@@ -48,6 +48,8 @@ var request;
 
 function init() {
     request = window.arguments[0];
+    if(request.contactAddress)
+        _('address').value = request.contactAddress;
     _('address').select();
 
     xmpp.ui.refreshAccounts(_('xmpp-popup-accounts'));
