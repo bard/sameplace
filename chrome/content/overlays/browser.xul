@@ -41,10 +41,10 @@
   <!-- SCRIPTS -->
 
   <script type="application/x-javascript;version=1.7" src="chrome://xmpp4moz/content/xmpp.js"/>
-  <script type="application/x-javascript;version=1.7" src="overlay.js"/>
-  <script type="application/x-javascript;version=1.7" src="overlay_browser.js"/>
-  <script type="application/x-javascript;version=1.7" src="overlay_browser_shared_apps.js"/>
-  <script type="application/x-javascript;version=1.7" src="overlay_browser_open_id.js"/>
+  <script type="application/x-javascript;version=1.7" src="base.js"/>
+  <script type="application/x-javascript;version=1.7" src="browser.js"/>
+  <script type="application/x-javascript;version=1.7" src="browser_shared_apps.js"/>
+  <script type="application/x-javascript;version=1.7" src="browser_open_id.js"/>
 
   <!-- STRINGS -->
 
