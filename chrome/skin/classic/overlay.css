@@ -55,3 +55,42 @@
 #sameplace-box[collapsed="true"] + splitter {
     display: none;
 }
+
+#sameplace-tabs .tabs-left {
+    -moz-box-flex: 1;
+}
+
+#sameplace-tabs {
+    background-image: url("dashboard/tabs-background.png");
+    border: none;
+}
+
+#sameplace-tabs > tab {
+    -moz-border-radius: 0;
+    -moz-appearance: none;
+    border: none;
+    background: transparent;
+    opacity: 0.55;
+}
+
+#sameplace-tabs > tab[selected="true"],
+#sameplace-tabs > tab:hover {
+    opacity: 1.0;
+}
+
+#sameplace-tabs > tab:not([selected="true"])  image {
+    width: 24px;
+    height: 24px;
+}
+
+#sameplace-tab-dashboard {
+    list-style-image: url(chrome://sameplace/skin/logo32x32.png);
+}
+
+#sameplace-tab-chats {
+    list-style-image: url(chrome://sameplace/skin/chats32x32.png)
+}
+
+#sameplace-tab-stream {
+    list-style-image: url(chrome://sameplace/skin/sort32x32.png)
+}
