@@ -1,0 +1,290 @@
+html {
+    font-family: Verdana, helvetica, Arial, sans-serif;
+    font-size: 12px;
+    background: white;
+    margin: 0;
+}
+
+img {
+    border: 0;
+}
+
+#flash {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 14px;
+    text-align: center;
+    border: none;
+}
+
+#info {
+    padding: 2px 12px;
+    font-size: 10px;
+    background-color: #eaeaff;
+    -moz-border-radius: 0 0 5px 5px;
+}
+
+#stream {
+    margin: 0;
+    list-style-type: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 40px;
+    overflow-y: auto;
+    padding: 0;
+    padding-bottom: 10px;
+}
+
+#input {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 40px;
+    height: 40px;
+}
+
+#tips {
+    font-size: 10px;
+    position: fixed;
+    left: 0:
+    right: 0;
+    height: 40px;
+    bottom: 0;
+    text-align: center;
+}
+
+#input > iframe {
+    width: 99%;
+    height: 94%;
+    border: 1px solid gray;
+}
+
+#blueprints, #socket, #storage {
+    display: none;
+}
+
+/* EVENT */
+
+.event {
+    word-wrap: break-word;
+    position: relative;
+    padding-top: 9px; /* just 1px more than .icons's .margin-top, to give it a nice "grounded" feeling */
+    padding-right: 24px;
+    padding-bottom: 4px;
+    padding-left: 48px; /* will be changed by subclasses depending on expected icons */
+    border-top: 1px dashed #ccc;
+    min-height: 32px;
+    position: relative;
+}
+
+.event:first-child,
+.event.continuation {
+    border-top: none;
+}
+
+.event.continuation {
+    padding-top: 2px;
+}
+
+.event .origin,
+.event .target {
+    text-decoration: none;
+}
+
+.event.direction-in .origin:hover,
+.event .target:hover {
+    text-decoration: underline;
+}
+
+.event > .content {
+    white-space: pre-line;
+}
+
+.event > .content > a {
+    text-decoration: none;
+    color: #0084B4;
+}
+
+.event > .content > a:hover {
+    text-decoration: underline;
+}
+
+/* ICONS */
+
+.icons {
+    position: absolute;
+    top: 0;
+    left: 8px;
+    width: 64px;
+    margin-top: 8px;
+}
+
+.icons > img {
+    float: left;
+}
+
+.icons > .public {
+    opacity: 0.15;
+    display: block;
+    width: 24px;
+    height: 32px;
+    display: block;
+    background: transparent url("images/status.png") no-repeat center left;
+}
+
+.icons > .public:hover {
+    opacity: 0.45;
+}
+
+.icons > .avatar {
+    display: block;
+    width: 32px;
+    height: 32px;
+}
+
+/* CONTROLS */
+
+.controls {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding-top: 4px;
+    padding-right: 4px;
+    width: 16px;
+    height: 32px;
+    visibility: hidden;
+}
+
+.event.direction-in:hover > .controls {
+    visibility: visible;
+}
+
+.event.presence.direction-in > .controls > .mute {
+    display: block;
+    height: 16px;
+    width: 16px;
+    background-image: url("images/mute.png");
+}
+
+.event.continuation > .controls {
+    display: none;
+}
+
+
+/* MESSAGE-SPECIFIC */
+
+.message.direction-in {
+    background-color: #eeeeff;
+}
+
+.event.direction-out .target {
+    color: black;
+}
+
+.event.direction-in .origin {
+    font-weight: bold;
+    color: #0084B4;
+}
+
+.message.direction-out .target-container:before {
+    content: "→ ";
+}
+
+.message.direction-out .target-container > .target {
+
+}
+
+.message.direction-out .target-container:after {
+    content: ":";
+}
+
+.message.direction-out .target-container {
+    padding-right: 2px;
+}
+
+.message > .icons > .public {
+    display: none;
+}
+
+
+/* PRESENCE-SPECIFIC */
+
+.presence {
+    font-style: italic;
+    padding-left: 74px;
+    max-height: 46px; /* just about enough to show three lines */
+    overflow: hidden;
+}
+
+
+/* MESSAGE-SPECIFIC */
+
+.event.direction-in > .icons > .avatar:not([src]) {
+    background-image: url("images/default-user-avatar.png");
+    opacity: 0.5;
+}
+
+.event.direction-out > .icons > .avatar:not([src]) {
+    background-image: url("images/default-contact-avatar.png");
+}
+
+
+/* TOOLTIPS */
+
+.tooltip {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    display: none;
+}
+
+/* DYNAMIC STUFF */
+
+.event.continuation .origin-container {
+    display: none;
+}
+
+.event.continuation .icons {
+    display: none;
+}
+
+.event.continuation .target-container {
+    display: none;
+}
+
+
+
+.event > .toggle {
+    display: none;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    text-decoration: none;
+    padding: 2px 4px;
+    color: #ccc;
+}
+
+.event > .toggle:hover {
+    color: #888;
+}
+
+.event.toggleable > .toggle {
+    display: block;
+}
+
+.event.toggleable > .toggle:after {
+    content: "▼";
+}
+
+.event.toggleable.expanded > .toggle:after {
+    content: "▲";
+}
+
+
+/*.body { background: red; }*/
+

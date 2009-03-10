@@ -1,0 +1,90 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Stream</title>
+
+    <!-- library stylesheets -->
+
+    <!-- local stylesheets -->
+
+    <link rel="stylesheet" type="text/css" href="stream.css"/>
+
+    <!-- library scripts -->
+
+    <script type="application/x-javascript" src="vendor/jquery.js"/>
+    <script type="application/x-javascript" src="vendor/jquery.simpletip.js"/>
+    <script type="application/x-javascript" src="vendor/jquery.cookie.js"/>
+    <script type="application/x-javascript" src="vendor/parseuri.js"/>
+
+    <!-- local scripts: xml manipulation -->
+
+    <script type="application/x-javascript" src="lib/filter.js"/>
+    <script type="application/x-javascript" src="lib/conv.js"/>
+    <script type="application/x-javascript" src="lib/xml.js"/>
+    <script type="application/x-javascript" src="lib/text.js"/>
+    <script type="application/x-javascript" src="lib/display_filters.js"/>
+    <script type="application/x-javascript" src="lib/utils_ui.js"/>
+    <script type="application/x-javascript" src="lib/utils_xmpp.js"/>
+    <script type="application/x-javascript" src="lib/storage.js"/>
+
+    <!-- local scripts: general -->
+
+    <script type="application/x-javascript" src="lib/namespaces.js"/>
+
+    <!-- local scripts: network -->
+
+    <script type="application/x-javascript" src="lib/xmpp.js"/>
+
+    <!-- local scripts: user interface -->
+
+    <script type="application/x-javascript" src="lib/jquery.editor.js"/>
+
+    <!-- local scripts: application -->
+
+    <script type="application/x-javascript" src="stream.js"/>
+  </head>
+  <body>
+    <div id="flash" style="display: none;">
+      <span id="info">
+        Foobar has been muted. <a href="#" style="font-weight:bold;">Undo</a>
+      </span>
+    </div>
+
+    <ol id="stream"/>
+
+    <div id="input" style="display:none;"/>
+
+    <div id="tips" style="display:none;">
+      <strong>Tip:</strong> Control-click contact names to create their own stream view
+    </div>
+
+    <!-- support area -->
+
+    <div id="blueprints">
+      <li class="event">
+        <div class="icons">
+          <img class="public" title="This message may by readable by others"/>
+          <img class="avatar"/>
+        </div>
+        <div class="body">
+          <span class="origin-container"><a class="origin"/></span>
+          <span class="target-container"><a class="target"/></span>
+          <span class="content"/>
+        </div>
+        <div class="controls">
+          <a class="mute" href="#" onclick="mutePresence(this);" title="Mute status changes from this contact"/>
+        </div>
+        <a href="#" class="toggle"/>
+      </li>
+    </div>
+
+    <div id="socket">
+      <div id="xmpp-outgoing"/>
+    </div>
+
+    <div id="storage">
+      <div id="storage-conf">
+        <![CDATA[{}]]>
+      </div>
+    </div>
+  </body>
+</html>
