@@ -17,7 +17,7 @@ function $(first, second) {
 }
 
 function $$(first, second) {
-    var context, css;
+    var context, query;
     if(second) {
         context = first;
         query = second;
