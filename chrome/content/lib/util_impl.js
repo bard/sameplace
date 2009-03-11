@@ -41,6 +41,8 @@ var pref = Cc['@mozilla.org/preferences-service;1']
     .getBranch('extensions.sameplace.');
 var srvWindowMediator = Cc['@mozilla.org/appshell/window-mediator;1']
     .getService(Ci.nsIWindowMediator);
+var srvIO = Cc['@mozilla.org/network/io-service;1']
+    .getService(Ci.nsIIOService);
 
 
 // UTILITIES - GENERIC - NON-GUI
@@ -170,32 +172,25 @@ function getChatWindow() {
 // UTILITIES - GENERIC - GUI
 // ----------------------------------------------------------------------
 
-function openURL(url) {
-    if(!url.match(/^((https?|ftp|file):\/\/|(xmpp|mailto):)/))
-        return;
-    
-    function canLoadPages(w) {
-        return (w && 
-                typeof(w.getBrowser) == 'function' &&
-                'addTab' in w.getBrowser());
-    }
+function openURL(spec) {
+    var navigator =  Cc['@mozilla.org/appshell/window-mediator;1']
+        .getService(Ci.nsIWindowMediator)
+        .getMostRecentWindow('navigator:browser');
 
-    var candidates = [
-        top, 
-        Cc['@mozilla.org/appshell/window-mediator;1']
-            .getService(Ci.nsIWindowMediator)
-            .getMostRecentWindow('navigator:browser')]
-        .filter(canLoadPages);
-
-    if(candidates.length > 0)
-        candidates[0].getBrowser().selectedTab =
-        candidates[0].getBrowser().addTab(url);
+    if(spec.match(/^(https?|ftp|file):\/\//) &&
+       navigator &&
+       typeof(navigator.getBrowser) == 'function' &&
+       'addTab' in navigator.getBrowser())
+        navigator.getBrowser().selectedTab = navigator.getBrowser().addTab(spec);
+    else if(spec.match(/^xmpp:/))
+        srvIO.newChannel(spec, null, null)
+        .asyncOpen(null, null);
     else
         Cc['@mozilla.org/uriloader/external-protocol-service;1']
         .getService(Ci.nsIExternalProtocolService)
         .loadUrl(Cc['@mozilla.org/network/io-service;1']
                  .getService(Ci.nsIIOService)
-                 .newURI(url, null, null));
+                 .newURI(spec, null, null));
 }
 
 function setClass(xulElement, aClass, state) {
