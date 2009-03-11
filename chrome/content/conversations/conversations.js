@@ -50,6 +50,10 @@ var savedDim;
 // INITIALIZATION/FINALIZATION
 // ----------------------------------------------------------------------
 
+window.addEventListener('unload', function(event) {
+    finish();
+}, false);
+
 window.addEventListener('DOMContentLoaded', function(event) {
     // From outside (e.g. selectedContact() in
     // conversations_overlay_external_impl.js), other events will be
