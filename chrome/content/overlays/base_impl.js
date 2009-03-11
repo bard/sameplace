@@ -116,7 +116,7 @@ function initNetworkReactions() {
     }, function(message) {
         if(window == getMostRecentWindow() &&
            pref.getBoolPref('getAttentionOnMessage') &&
-           hostsConversations())
+           isActive())
             window.getAttention();
     });
 }
