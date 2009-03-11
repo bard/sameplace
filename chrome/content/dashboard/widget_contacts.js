@@ -467,7 +467,7 @@ contacts.showingContactPopup = function(xulPopup) {
 // - if mouse stays on contact for longer than one second, bring up
 //   popup;
 //
-// - if mouse leaves contact for longer than oen second and doesn't
+// - if mouse leaves contact for longer than one second and doesn't
 //   enter popup, hide popup;
 //
 // - if mouse enters popup and then leaves it for longer than one
@@ -476,34 +476,29 @@ contacts.showingContactPopup = function(xulPopup) {
 contacts.hoveredContact = function(event) {
     var xulContact = event.currentTarget;
 
-    if(this._contactHoverTimeout)
-        window.clearTimeout(this._contactHoverTimeout);
-    this._contactHoverTimeout = window.setTimeout(function() {
+    this._showPopupTimeout = window.setTimeout(function() {
         contacts._hoveredContact = xulContact;
         $('#contact-popup').openPopup(xulContact, 'end_before', -80, -20, false, false);
     }, 1000);
 };
 
-contacts.unhoveredContact = function(xulContact) {
-    if(this._contactHoverTimeout)
-        window.clearTimeout(this._contactHoverTimeout);
+contacts.unhoveredContact = function(event) {
+    if(this._showPopupTimeout)
+        window.clearTimeout(this._showPopupTimeout);
 
-    this._contactUnhoverTimeout = window.setTimeout(function() {
-        contacts._unhoveredContact = null;
-        $('#contact-popup').hidePopup();
-    }, 1000);
+    if($('#contact-popup').state == 'open')
+        this._hidePopupTimeout = window.setTimeout(function() {
+            $('#contact-popup').hidePopup();
+        }, 1000);
 };
 
 contacts.hoveredContactPopup = function(xulPopup) {
-    if(this._contactUnhoverTimeout)
-        window.clearTimeout(this._contactUnhoverTimeout);
-
-    if(this._contactPopupHoverTimeout)
-        window.clearTimeout(this._contactPopupHoverTimeout);
+    if(this._hidePopupTimeout)
+        window.clearTimeout(this._hidePopupTimeout);
 };
 
 contacts.unhoveredContactPopup = function(xulPopup) {
-    this._contactPopupHoverTimeout = window.setTimeout(function() {
+    this._hidePopupTimeout = window.setTimeout(function() {
         xulPopup.hidePopup();
     }, 1000);
 };
@@ -572,6 +567,19 @@ contacts._getRosterItem = function(account, address) {
 
     return roster.stanza..ns_roster::item.(@jid == address);
 };
+
+function eventFromDescendant(container, event) {
+    var containee = event.relatedTarget;
+
+    while(containee != null) {
+        if(container == containee)
+            return true;
+        containee = containee.parentNode;
+    }
+
+    return false;
+}
+
 
 
 // TASKS
@@ -907,4 +915,6 @@ XMPP.packet = function(xmlStanza) {
 //             throw new Error('Bug');
 //     }
 // };
+
+
 

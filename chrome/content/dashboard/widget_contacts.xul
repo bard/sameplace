@@ -40,8 +40,8 @@
     <panel id="contact-popup"
            onpopupshowing="contacts.showingContactPopup(this);"
            onpopuphiding="contacts.hidingContactPopup(this);"
-           onmouseover="contacts.hoveredContactPopup(this);"
-           onmouseout="contacts.unhoveredContactPopup(this);">
+           onmouseover="if(!eventFromDescendant(this, event)) contacts.hoveredContactPopup(this);"
+           onmouseout="if(!eventFromDescendant(this, event)) contacts.unhoveredContactPopup(this);">
       <vbox class="contact" account="" address="">
         <hbox align="baseline">
           <label value="Chat »" class="text-link" style="font-size: 17px;"
@@ -128,8 +128,8 @@
 
   <box id="blueprints">
     <vbox class="contact"
-          onmouseover="contacts.hoveredContact(event);"
-          onmouseout="contacts.unhoveredContact(event);"
+          onmouseover="if(!eventFromDescendant(this, event)) contacts.hoveredContact(event);"
+          onmouseout="if(!eventFromDescendant(this, event)) contacts.unhoveredContact(event);"
           availability="unavailable"
           address=""
           account="">
