@@ -184,13 +184,9 @@ function clickedView(event) {
         event.target : (event.target.parentNode instanceof HTMLAnchorElement ?
                         event.target.parentNode : null);
 
-    if(htmlAnchor && htmlAnchor.getAttribute('href') != '#') {
+    if(htmlAnchor && htmlAnchor.getAttribute('href') != '#')
         event.preventDefault();
-        if(htmlAnchor.href.match(/^xmpp:/))
-            ; // XXX
-        else
-            util.openURL(htmlAnchor.href);
-    }
+        util.openURL(htmlAnchor.href);
 }
 
 // ACTIONS
