@@ -75,23 +75,13 @@
               </menupopup>
             </menulist>
           </row>
-  
-          <row>
-            <label value="&sameplace.toggle_sidebar_hotkey;"/>
-            <hbox flex="0" align="center">
-              <textbox flex="1" id="sameplace-toggle-contacts-key"
-                       readonly="true" style="text-align: center"/>
-              <button label="&sameplace.capture.label;"
-                      oncommand="sameplacePrefs.captureKey('contacts');"/>
-            </hbox>
-          </row>
 
           <row>
             <label value="&sameplace.add_button.label;"/>
             <checkbox preference="sameplace-add-toolbar-button" label=""/>
           </row>
           
-          <row>
+          <row hidden="true">
             <label value="&sameplace.open_chat.label;"/>
             <vbox>
               <menulist preference="sameplace-chat-area"

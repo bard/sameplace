@@ -20,9 +20,6 @@
 <!ENTITY accounts.advanced.label "Advanced...">
 <!ENTITY accounts.advanced.accesskey "d">
 
-<!ENTITY sameplace.capture.label "Capture">
-<!ENTITY sameplace.toggle_sidebar_hotkey "Toggle sidebar hotkey:">
-
 <!ENTITY sameplace.chat_app.label "Chat application:">
 <!ENTITY sameplace.chat_app.accesskey "a">
 <!ENTITY sameplace.chat_app_default.label "default">

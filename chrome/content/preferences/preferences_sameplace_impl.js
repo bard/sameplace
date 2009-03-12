@@ -47,44 +47,15 @@ var pref = Cc['@mozilla.org/preferences-service;1']
 
 function init() {
     window.sizeToContent();
-    displayKey('contacts', eval(pref.getCharPref('toggleContactsKey')));
 }
 
 
 // ACTIONS
 // ----------------------------------------------------------------------
 
-function captureKey(which) {
-    document.addEventListener(
-        'keypress', function(event) {
-            try {
-                capturedKey(which, keyEventToKeyDesc(event));
-            } finally {
-                document.removeEventListener(
-                    'keypress', arguments.callee, false);
-            }
-        }, false);
-}
-
-function displayKey(which, desc) {
-    _('toggle-' + which + '-key').value = keyDescToKeyRepresentation(desc);
-}
-
-function saveKey(which, desc) {
-    function capitalize(s) {
-        return s.substr(0, 1).toUpperCase() + s.substr(1);
-    }
-    pref.setCharPref('toggle' + capitalize(which) + 'Key', desc.toSource());
-}
-
 
 // REACTIONS
 // ----------------------------------------------------------------------
-
-function capturedKey(which, desc) {
-    displayKey(which, desc);
-    saveKey(which, desc);
-}
 
 
 // UTILITIES
@@ -94,45 +65,3 @@ function _(id) {
     return document.getElementById('sameplace-' + id);''
 }
 
-function keyEventToKeyDesc(event) {
-    var keyCodeMap = arguments.callee.keyCodeMap;
-    if(!keyCodeMap) {
-        keyCodeMap = (arguments.callee.keyCodeMap = {});
-        for(var name in KeyEvent)
-            if(name.match(/^DOM_VK_/))
-                keyCodeMap[KeyEvent[name]] = name;
-    }
-
-    var desc = {};
-    for each(var name in ['ctrlKey', 'metaKey', 'shiftKey', 'altKey', 'charCode'])
-        desc[name] = event[name];
-
-    if(event.keyCode)
-        // Save the key code as name instead of number, in case it's
-        // mapped differently on different platforms.
-        desc.keyCodeName = keyCodeMap[event.keyCode];
-    
-    return desc;
-}
-
-function keyDescToKeyRepresentation(desc) {
-    var modifiers = {
-        ctrlKey  : 'Control',
-        shiftKey : 'Shift',
-        altKey   : 'Alt',
-        metaKey  : 'Meta'
-    };
-
-    var repres = [];
-    
-    for(var name in modifiers)
-        if(desc[name])
-            repres.push(modifiers[name]);
-
-    if(desc.charCode)
-        repres.push(String.fromCharCode(desc.charCode))
-    else if(desc.keyCodeName)
-        repres.push(desc.keyCodeName.replace(/^DOM_VK_/, ''))
-
-    return repres.join('+');
-}
