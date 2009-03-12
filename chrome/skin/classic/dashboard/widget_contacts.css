@@ -38,20 +38,6 @@
 }
 */
 
-#contact-popup-completions {
-    min-width: 200px;
-}
-
-#contact-popup-completions > .completions {
-    -moz-appearance: none;
-}
-
-
-#contact-popup-completions .contact-completion .address {
-    color: gray;
-    font-size: 10px;
-    padding-left: 1em;
-}
 
 /* CONTACT POPUP */
 
