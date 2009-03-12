@@ -79,6 +79,7 @@
 #widget-contacts .list {
     -moz-appearance: none;
     max-height: 22em;
+    background: transparent;
 }
 
 #widget-contacts-display-mode > radio:hover {
