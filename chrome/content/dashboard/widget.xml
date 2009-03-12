@@ -4,9 +4,9 @@
           xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <binding id="widget">
     <content persist="minimized hidden">
-      <xul:stack>
+      <xul:stack mousethrough="always">
         <xul:vbox flex="1">
-          <xul:toolbar anonid="header" class="widget-header" align="center">
+          <xul:toolbar anonid="header" class="widget-header" align="center" mousethrough="never">
             <xul:toolbaritem class="widget-icon-container">
               <xul:image class="widget-icon" xbl:inherits="src=image"/>
             </xul:toolbaritem>
