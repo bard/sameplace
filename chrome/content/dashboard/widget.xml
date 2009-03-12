@@ -145,7 +145,7 @@
   </binding>
 
   <binding id="widget-help">
-    <content orient="horizontal" align="start">
+    <content orient="horizontal" align="start" persist="hidden">
       <xul:image class="help-icon"/>
       <xul:description flex="1">
         <children/>
