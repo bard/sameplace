@@ -95,11 +95,8 @@ contacts.init = function() {
             $('#widget-contacts').setAttribute('minimized', 'false');
     });
 
-    XMPP.accounts.forEach(function(account) {
-        task(contacts.taskdef_initList)
-            .start()
-            .send(account.jid);
-    });
+    this._displayMode = $('#widget-contacts-display-mode').value;
+    this._refreshList();
 };
 
 
@@ -144,21 +141,31 @@ contacts.updateContactPresence = function(presence) {
 contacts.updateContactItem = function(account, address, name, subscription) {
     name = name || address;
 
-    // Removal from roster and removal from list of popular contacts
-    // are handled the same way, i.e. concrete contact is removed and we return early.
+    // Removal from roster, removal from list of popular contacts
+    // (when display mode is "popular"), and update of offline contact
+    // (when display mode is "online") is handled in essentially the
+    // same way: remove concrete contact (if any), remove contact (if
+    // concrete contact was last one), and return early.
 
-    if(subscription == 'remove' ||
+    if(subscription == 'remove') {
+        this._removeConcreteContact(account, address);
+        return;
+    }
+
+    if(this._displayMode == 'popular' &&
        !sameplace.services.contacts.isPopular(account, address)) {
+        this._removeConcreteContact(account, address);
+        return;
+    }
 
-        let xulConcreteContact = this._findConcreteContact(account, address);
-        if(!xulConcreteContact)
-            return;
+    var contactPresence = (XMPP.presencesOf(account, address)[0] ||
+                           XMPP.packet(<presence from={address} type='unavailable'>
+                                       <meta xmlns={ns_x4m_in} direction='in' account={account}/>
+                                       </presence>));
 
-        let xulConcreteContacts = xulConcreteContact.parentNode;
-        let xulContact = $(xulConcreteContacts, '^ .contact');
-        xulConcreteContacts.removeChild(xulConcreteContact);
-        if(xulConcreteContacts.childNodes.length == 0)
-            xulContact.parentNode.removeChild(xulContact);
+    if(this._displayMode == 'online' &&
+       contactPresence.stanza.@type != undefined) {
+        this._removeConcreteContact(account, address);
         return;
     }
 
@@ -219,10 +226,15 @@ contacts.updateContactItem = function(account, address, name, subscription) {
         this._sortedInsert(xulContact, $('#widget-contacts .list'), 'name');
     }
 
-    this.updateContactPresence(XMPP.presencesOf(account, address)[0] ||
-                               XMPP.packet(<presence from={address} type='unavailable'>
-                                           <meta xmlns={ns_x4m_in} direction='in' account={account}/>
-                                           </presence>));
+    this.updateContactPresence(contactPresence);
+};
+
+contacts.changeDisplayMode = function(mode) {
+    if(this._displayMode == mode)
+        return;
+
+    this._displayMode = mode;
+    this._refreshList();
 };
 
 
@@ -317,6 +329,13 @@ contacts.receivedContactPresence = function(presence) {
         XMPP.presencesOf(
             presence.account,
             XMPP.JID(presence.stanza.@from).address)[0] || presence);
+
+    if(this._displayMode == 'online') {
+        var account = presence.account;
+        var address = XMPP.JID(presence.stanza.@from).address;
+        var name = this._getRosterItem(account, address).@name.toString();
+        this.updateContactItem(account, address, name);
+    }
 };
 
 
@@ -504,9 +523,32 @@ contacts.unhoveredContactPopup = function(xulPopup) {
 };
 
 
-
 // INTERNALS
 // ----------------------------------------------------------------------
+
+contacts._removeConcreteContact = function(account, address) {
+    let xulConcreteContact = this._findConcreteContact(account, address);
+    if(!xulConcreteContact)
+        return;
+
+    let xulConcreteContacts = xulConcreteContact.parentNode;
+    let xulContact = $(xulConcreteContacts, '^ .contact');
+    xulConcreteContacts.removeChild(xulConcreteContact);
+    if(xulConcreteContacts.childNodes.length == 0)
+        xulContact.parentNode.removeChild(xulContact);
+};
+
+contacts._refreshList = function() {
+    var xulList = $('#widget-contacts .list');
+    while(xulList.lastChild)
+        xulList.removeChild(xulList.lastChild);
+
+    XMPP.accounts.forEach(function(account) {
+        task(contacts.taskdef_initList)
+            .start()
+            .send(account.jid);
+    });
+};
 
 // Inserts a xulElement into a sorted nodeList, ordering by attrName.
 

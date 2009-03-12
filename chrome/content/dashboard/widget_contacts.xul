@@ -123,6 +123,18 @@
                style=""
                ontextentered="contacts.enteredSearchText(this.value);"/>
       <vbox class="list"/>
+
+      <widget-footer align="center">
+        <label value="Show:" class="small-margin"/>
+        <radiogroup id="widget-contacts-display-mode"
+                    orient="horizontal"
+                    value="online" persist="value"
+                    onselect="contacts.changeDisplayMode(this.value);">
+          <radio value="popular" label="popular" class="small-margin"/>
+          <radio value="online" label="online" class="small-margin"/>
+          <radio value="all" label="all" class="small-margin"/>
+        </radiogroup>
+      </widget-footer>
     </widget>
   </vbox>
 
