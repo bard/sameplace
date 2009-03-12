@@ -123,6 +123,13 @@
                style=""
                ontextentered="contacts.enteredSearchText(this.value);"/>
 
+      <widget-help id="widget-contacts-help">
+        To display your contacts, select "all" below, or add them with
+        the search bar above, or just chat with them.  The widget will
+        learn with whom you communicate the most and will show only
+        those contacts.
+      </widget-help>
+
       <richlistbox class="list" disableKeyNavigation="true"/>
 
       <widget-footer align="center">
@@ -130,7 +137,7 @@
         <radiogroup id="widget-contacts-display-mode"
                     orient="horizontal"
                     value="online" persist="value"
-                    onselect="contacts.changeDisplayMode(this.value);">
+                    onselect="contacts.requestedChangeDisplayMode(event);">
           <radio value="popular" label="popular" class="small-margin"/>
           <radio value="online" label="online" class="small-margin"/>
           <radio value="all" label="all" class="small-margin"/>
