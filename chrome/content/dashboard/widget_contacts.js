@@ -439,6 +439,19 @@ contacts.showingContactPopup = function(xulPopup) {
         xulConcreteContact = xulConcreteContact.nextSibling;
     }
 
+    // Popup may hide while we are waiting for the vCard, and then
+    // show up again but on another contact.  We don't want the
+    // previous contact's photo to be displayed in the new contact's
+    // popup, so we use a one-time handler to set a flag which will
+    // later tell the retrieveVCardTask whether the popup has closed
+    // in the meantime.
+
+    popupHidden = false;
+    xulPopup.addEventListener('popuphidden', function() {
+        xulPopup.removeEventListener('popuphidden', arguments.callee, false);
+        popupHidden = true;
+    }, false);
+
     // XXX Retrieve vcard of first concrete contact... not necessarily
     // the best choice!
 
@@ -457,6 +470,9 @@ contacts.showingContactPopup = function(xulPopup) {
             Cu.reportError(iq.stanza.toXMLString());
             return;
         }
+
+        if(popupHidden)
+            return;
 
         var xmlPhoto = iq.stanza..ns_vcard::PHOTO;
         if(xmlPhoto.ns_vcard::BINVAL != undefined)
