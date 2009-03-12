@@ -23,6 +23,7 @@ widget-footer {
     font-size: 11px;
     margin-top: 3px;
     -moz-box-pack: end;
+    opacity: 0.8;
 }
 
 widget[minimized="true"] {
