@@ -89,3 +89,12 @@
     font-size: 10px;
     color: graytext;
 }
+
+#widget-contacts .list {
+    -moz-appearance: none;
+    max-height: 22em;
+}
+
+#widget-contacts-display-mode > radio:hover {
+    -moz-appearance: none;
+}

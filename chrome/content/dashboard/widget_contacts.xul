@@ -122,7 +122,8 @@
                tabscrolling="true"
                style=""
                ontextentered="contacts.enteredSearchText(this.value);"/>
-      <vbox class="list"/>
+
+      <richlistbox class="list" disableKeyNavigation="true"/>
 
       <widget-footer align="center">
         <label value="Show:" class="small-margin"/>
@@ -139,12 +140,13 @@
   </vbox>
 
   <box id="blueprints">
-    <vbox class="contact"
-          onmouseover="if(!eventFromDescendant(this, event)) contacts.hoveredContact(event);"
-          onmouseout="if(!eventFromDescendant(this, event)) contacts.unhoveredContact(event);"
-          availability="unavailable"
-          address=""
-          account="">
+    <richlistitem class="contact"
+                  onmouseover="if(!eventFromDescendant(this, event)) contacts.hoveredContact(event);"
+                  onmouseout="if(!eventFromDescendant(this, event)) contacts.unhoveredContact(event);"
+                  availability="unavailable"
+                  address=""
+                  account=""
+                  orient="vertical">
       <hbox flex="1" align="center">
         <image class="state-indicator" availability="" show=""/>
         <label class="name"
@@ -161,6 +163,6 @@
              crop="end"/>
 
       <vbox class="concrete-contacts" hidden="true"/>
-    </vbox>
+    </richlistitem>
   </box>
 </overlay>
