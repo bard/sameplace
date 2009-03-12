@@ -240,9 +240,9 @@ contacts.changeDisplayMode = function(mode) {
        this._pref.getBoolPref('displayPopularContactsHelp')) {
         var stopDisplayingAlert = { value: false };
         this._prompt.alertCheck(null, 'Changing contacts display mode',
-                                '"Popular" contacts are those who you chat with most often.\n\n' +
+                                '"Popular" contacts are those you chat with most often.\n\n' +
                                 'If you just installed SamePlace, the list will be empty; use\n' +
-                                'the search field to add contacts manually.\n',
+                                'the search field to add some contacts manually.\n',
                                 'Do not display this help message in the future.',
                                 stopDisplayingAlert);
         if(stopDisplayingAlert.value === true)
