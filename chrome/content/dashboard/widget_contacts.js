@@ -49,7 +49,7 @@ contacts.init = function() {
 
     this._pref = Cc['@mozilla.org/preferences-service;1']
         .getService(Ci.nsIPrefService)
-        .getBranch('extensions.sameplace.services.contacts.');
+        .getBranch('extensions.sameplace.widget.contacts.');
 
     this._prompt = Cc['@mozilla.org/embedcomp/prompt-service;1']
         .getService(Ci.nsIPromptService);
@@ -230,11 +230,24 @@ contacts.updateContactItem = function(account, address, name, subscription) {
 };
 
 contacts.changeDisplayMode = function(mode) {
-    if(this._displayMode == mode)
+    if(this._displayMode === mode)
         return;
 
     this._displayMode = mode;
     this._refreshList();
+
+    if(mode === 'popular' &&
+       this._pref.getBoolPref('displayPopularContactsHelp')) {
+        var stopDisplayingAlert = { value: false };
+        this._prompt.alertCheck(null, 'Changing contacts display mode',
+                                '"Popular" contacts are those who you chat with most often.\n\n' +
+                                'If you just installed SamePlace, the list will be empty; use\n' +
+                                'the search field to add contacts manually.\n',
+                                'Do not display this help message in the future.',
+                                stopDisplayingAlert);
+        if(stopDisplayingAlert.value === true)
+            this._pref.setBoolPref('displayPopularContactsHelp', false);
+    }
 };
 
 
