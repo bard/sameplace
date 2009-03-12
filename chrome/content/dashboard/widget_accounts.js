@@ -203,7 +203,7 @@ accounts.requestedRemove = function(xulAccountDescendant) {
 
 accounts.requestedEdit = function(xulAccountDescendant) {
     var accountKey = $(xulAccountDescendant, '^ .account').getAttribute('key');
-    openPreferences('accounts-pane', accountKey)
+    dashboard.openPreferences('accounts-pane', accountKey)
 };
 
 accounts.requestedAdd = function() {

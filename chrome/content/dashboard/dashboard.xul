@@ -54,8 +54,8 @@
 <page xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
       id="dashboard"
       title="Dashboard"
-      onload="init();"
-      onunload="finish();"
+      onload="dashboard.init();"
+      onunload="dashboard.finish();"
       orient="vertical">
 
   <script type="application/x-javascript" src="../lib/getElementsBySelector.js"/>

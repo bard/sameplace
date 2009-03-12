@@ -47,7 +47,9 @@ Cu.import('resource://sameplace/main.jsm');
 // INITIALIZATION
 // ----------------------------------------------------------------------
 
-function init() {
+var dashboard = {};
+
+dashboard.init = function() {
     $$('widget').forEach(function(xulWidget) {
         var xulToggle = document.createElement('button');
         xulToggle.setAttribute('image', xulWidget.getAttribute('image'));
@@ -66,7 +68,6 @@ function init() {
     });
 
     $('#widgets').addEventListener('widget/hide', function(event) {
-        var xulWidget = event.target;
         $('#widgets-toolbar > button[control="' + event.target.getAttribute('id') + '"]').checked = false;
     }, false);
 
@@ -88,7 +89,7 @@ function init() {
 // FINALIZATION
 // ----------------------------------------------------------------------
 
-function finish() {
+dashboard.finish = function() {
     var unloadEvent = document.createEvent('Event');
     unloadEvent.initEvent('dashboard/unload', true, false);
     window.dispatchEvent(unloadEvent);
@@ -102,7 +103,7 @@ function finish() {
 // ACTIONS
 // ----------------------------------------------------------------------
 
-function openPreferences(paneID) {
+dashboard.openPreferences = function(paneID) {
     var instantApply;
     try {
         instantApply = Cc['@mozilla.org/preferences-service;1']
