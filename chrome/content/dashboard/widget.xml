@@ -27,7 +27,7 @@
           </xul:toolbar>
         </xul:vbox>
         <xul:vbox flex="1">
-          <xul:vbox class="widget-body">
+          <xul:vbox class="widget-body" mousethrough="never">
             <children/>
           </xul:vbox>
         </xul:vbox>
