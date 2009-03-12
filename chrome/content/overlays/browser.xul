@@ -130,7 +130,7 @@
         <toolbarbutton class="tabs-closebutton" oncommand="sameplace.toCollapsed();"/>
       </sidebarheader>
 
-      <tabbox flex="1">
+      <tabbox flex="1" handleCtrlTab="false">
         <tabpanels id="sameplace-panels"
                    flex="1"
                    style="padding: 0; border-width: 1px; border: none;">
