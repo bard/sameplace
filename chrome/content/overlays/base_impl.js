@@ -140,16 +140,16 @@ function updateStatusIndicator() {
                              'available' : 'unavailable');
 }
 
-function loadAreas() {
-    function loadOnce(xulContentPanel, urlSpec) {
-        if(xulContentPanel.contentDocument.location.href != urlSpec)
-            xulContentPanel.contentDocument.location.href = urlSpec;
+function loadAreas(force) {
+    function load(xulContentPanel, urlSpec, force) {
+        if((xulContentPanel.contentDocument.location.href != urlSpec) ||
+           force)
+           xulContentPanel.contentDocument.location.href = urlSpec;
     }
 
-    
-    loadOnce(_('dashboard'), 'chrome://sameplace/content/dashboard/dashboard.xul');
-    loadOnce(_('chats'), 'chrome://sameplace/content/conversations/chats.xul');
-    loadOnce(_('stream'), 'chrome://sameplace/content/stream/stream.xul');
+    load(_('dashboard'), 'chrome://sameplace/content/dashboard/dashboard.xul', force);
+    load(_('chats'), 'chrome://sameplace/content/conversations/chats.xul', force);
+    load(_('stream'), 'chrome://sameplace/content/stream/stream.xul', force);
 }
 
 

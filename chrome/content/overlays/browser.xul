@@ -53,21 +53,6 @@
     <stringbundle id="sameplace-strings" src="chrome://sameplace/locale/overlay_browser.properties"/>
   </stringbundleset>
 
-  <!-- COMMANDS -->
-
-  <commandset id="mainCommandSet">
-    <command id="sameplace-command-toggle"
-             label="&command.hide-show;"
-             oncommand="sameplace.toggle();"
-             accesskey="&command.hide-show.accesskey;"/>
-    <command id="sameplace-command-load"
-             label="&sameplace.label;"
-             oncommand="sameplace.loadAreas();"
-             accesskey="&sameplace.accesskey;"/>
-    <command id="sameplace-command-load-sidebar-force"
-             oncommand="sameplace.loadAreas(true);"/>
-  </commandset>
-
   <!-- TOOLBAR -->
  
   <toolbox id="navigator-toolbox"/>
@@ -87,12 +72,7 @@
     <key id="sameplace-toggle-key" command="sameplace-toggle" keycode="VK_F9"/>
 
     <!-- development only -->
-    <key keycode="VK_F8" oncommand="var dashboard = document.getElementById('sameplace-dashboard');
-                                    var stream = document.getElementById('sameplace-stream');
-                                    var chats = document.getElementById('sameplace-chats');
-                                    dashboard.contentDocument.location.href = dashboard.contentDocument.location.href;
-                                    stream.contentDocument.location.href = stream.contentDocument.location.href;
-                                    chats.contentDocument.location.href = chats.contentDocument.location.href;"/>
+    <key id="sameplace-reload-key" command="sameplace-reload" keycode="VK_F9" modifiers="control"/>
   </keyset>
 
   <!-- MENUS -->
@@ -101,13 +81,15 @@
 
   <!-- COMMANDS -->
 
-  <commandset id="mainCommandSet"> 
-    <command id="sameplace-toggle" 
+  <commandset id="mainCommandSet">
+    <command id="sameplace-toggle"
              label="SamePlace"
              autoCheck="false"
              type="checkbox"
              group="sidebar"
              oncommand="sameplace.toggle();" />
+    <command id="sameplace-reload"
+             oncommand="sameplace.loadAreas(true);"/>
   </commandset>
 
   <!-- BROWSER -->
