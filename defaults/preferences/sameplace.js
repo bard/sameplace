@@ -10,3 +10,4 @@ pref("extensions.sameplace.services.idle.src", "chrome://sameplace/content/servi
 pref("extensions.sameplace.services.idle.timeout", 300);
 pref("extensions.sameplace.panel.stream.store", "{}");
 pref("extensions.sameplace.widget.contacts.displayPopularContactsHelp", true);
+pref("extensions.sameplace.openMode", "sidebar");
