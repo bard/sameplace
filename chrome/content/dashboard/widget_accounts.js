@@ -30,8 +30,11 @@
  */
 
 
-window.addEventListener('load', function(event) { accounts.init(); }, false)
-window.addEventListener('unload', function(event) { accounts.finish(); }, false)
+// INITIALIZATION/FINALIZATION
+// ----------------------------------------------------------------------
+
+window.addEventListener('dashboard/load', function(event) { accounts.init(); }, false)
+window.addEventListener('dashboard/unload', function(event) { accounts.finish(); }, false)
 
 var accounts = {};
 
@@ -85,6 +88,8 @@ accounts.init = function() {
 accounts.finish = function() {
     this._channel.release();
 };
+
+// ----------------------------------------------------------------------
 
 accounts.update = function() {
     $('#widget-accounts-all-accounts').hidden = XMPP.accounts.length <= 1;

@@ -30,18 +30,13 @@
  */
 
 
-// STATE
-// ----------------------------------------------------------------------
-
-var contacts = {};
-
-
-// INITIALIZATION
+// INITIALIZATION/FINALIZATION
 // ----------------------------------------------------------------------
 
 window.addEventListener('dashboard/load', function(event) { contacts.init(); }, false)
 window.addEventListener('dashboard/unload', function(event) { contacts.finish(); }, false)
 
+var contacts = {};
 
 contacts.init = function() {
     this._srvIO = Cc['@mozilla.org/network/io-service;1']
@@ -98,10 +93,6 @@ contacts.init = function() {
     this._displayMode = $('#widget-contacts-display-mode').value;
     this._refreshList();
 };
-
-
-// FINALIZATION
-// ----------------------------------------------------------------------
 
 contacts.finish = function() {
     this._channel.release();
