@@ -137,7 +137,7 @@
         <radiogroup id="widget-contacts-display-mode"
                     orient="horizontal"
                     value="online" persist="value"
-                    onselect="contacts.requestedChangeDisplayMode(event);">
+                    onclick="contacts.changeDisplayMode(event);">
           <radio value="popular" label="popular" class="small-margin"/>
           <radio value="online" label="online" class="small-margin"/>
           <radio value="all" label="all" class="small-margin"/>

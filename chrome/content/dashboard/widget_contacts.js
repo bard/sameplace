@@ -220,7 +220,8 @@ contacts.updateContactItem = function(account, address, name, subscription) {
     this.updateContactPresence(contactPresence);
 };
 
-contacts.changeDisplayMode = function(mode) {
+contacts.changeDisplayMode = function(event) {
+    var mode = event.target.value;
     if(this._displayMode === mode)
         return;
 
@@ -323,19 +324,6 @@ contacts.requestedRenameContact = function(event, useNickAsPreset) {
         xulConcreteContact = xulConcreteContact.nextSibling;
     }
 };
-
-contacts.requestedChangeDisplayMode = function(event) {
-    if(this._displayMode === undefined)
-        // Veto the event.  If this._displayMode is not set, it means
-        // that we are being called before init() has a chance to run.
-        // This happens upon first load because of this chain of
-        // events: load event -> radio regains persisted value ->
-        // select event -> we are called -> dashboard/load event ->
-        // init() called -> this._displayMode gets initialize.
-        return;
-
-    this.changeDisplayMode(event.target.value);
-}
 
 
 // NETWORK REACTIONS
