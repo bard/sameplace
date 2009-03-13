@@ -208,9 +208,9 @@ function advancedPageJabber(page) {
 
         connectionHost     : $(page, '.connection-server').value,
 
-        connectionPort     : $(page, '.connection-port').value,
+        connectionPort     : Number($(page, '.connection-port').value),
 
-        connectionSecurity : $(page, '.connection-security').value,
+        connectionSecurity : Number($(page, '.connection-security').value),
 
         get jid() {
             return this.address + '/' + this.resource;
@@ -343,7 +343,7 @@ function verifyAccount(account, callbacks) {
         password : account.password,
         host     : account.connectionHost,
         port     : account.connectionPort,
-        security : Number(account.connectionSecurity)
+        security : account.connectionSecurity
     };
 
     var connector = new XMPPTCPConnector(conf);
@@ -358,25 +358,8 @@ function verifyAccount(account, callbacks) {
             case 'error':
                 connector.disconnect();
 
-                if(subject instanceof Ci.nsIDOMElement) {
-                    switch(subject.namespaceURI) {
-                    case ns_sasl:
-                        srvPrompt.alert(null, 'SASL Error', subject.firstChild.localName);
-                        break;
-                    case ns_stream:
-                        srvPrompt.alert(null, 'Stream Error', subject.firstChild.localName);
-                        break;
-                    case ns_tls:
-                        srvPrompt.alert(null, 'TLS Error', subject.firstChild.localName);
-                        break;
-                    case ns_stanzas:
-                        srvPrompt.alert(null, 'Stanza Error', subject.firstChild.localName);
-                        break;
-                    default:
-                        srvPrompt.alert(null, 'Connection Error', serializer.serializeToString(subject));
-                    }
+                if(subject instanceof Ci.nsIDOMElement)
                     callbacks.onFailure();
-                }
                 else if(subject == 'bad-certificate') {
                     queryAddCertException(conf.host, conf.port, {
                         onDeny:   function() { callbacks.onFailure(); },
@@ -411,10 +394,11 @@ function registerAccount(account, callbacks) {
     });
     
     function start() {
-        XMPP.open(service, {
-            connectionHost: account.connectionHost,
-            connectionPort: account.connectionPort,
-            connectionSecurity: account.connectionSecurity
+        XMPP.open({
+            domain   : service,
+            host     : account.connectionHost,
+            port     : account.connectionPort,
+            security : account.connectionSecurity
         }, tryRegistering);
     }
 
