@@ -82,10 +82,6 @@
     background: transparent;
 }
 
-#widget-contacts-display-mode > radio:hover {
-    -moz-appearance: none;
-}
-
 #widget-contacts .list > richlistitem[selected="true"] {
     background: inherit;
     color: inherit;

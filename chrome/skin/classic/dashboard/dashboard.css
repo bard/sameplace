@@ -7,6 +7,12 @@
     padding: 0 8px 0 8px;
 }
 
+checkbox:hover,
+radio:hover {
+    -moz-appearance: none;
+}
+
+
 /* TOOLBAR */
 
 #widgets-toolbar {
