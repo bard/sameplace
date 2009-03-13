@@ -93,7 +93,7 @@ function loadServices() {
 function restoreOnlineState() {
     XMPP.accounts
         .forEach(function(account) {
-            var history = JSON.parse(account.presenceHistory);
+            var history = JSON.parse(account.presenceHistory || '[]');
 
             var lastPresenceStanza = new XML(history[history.length-1]);
             if(lastPresenceStanza.@type != 'unavailable')
