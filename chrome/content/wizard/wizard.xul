@@ -67,7 +67,7 @@
       <vbox class="service gtalk"><image/><label value="&page.select_service.gtalk.label;"/></vbox>
       <vbox class="service jabber"><image/><label value="&page.select_service.jabber.label;"/></vbox>
       <vbox class="service sameplace"><image/><label value="&page.select_service.sameplace.label;"/></vbox>
-      <vbox class="service twitter"><image/><label value="&page.select_service.twitter.label;"/></vbox>
+      <vbox class="service twitter" hidden="true"><image/><label value="&page.select_service.twitter.label;"/></vbox>
       <vbox class="service aim"><image/><label value="&page.select_service.aim.label;"/></vbox>
       <vbox class="service msn"><image/><label value="&page.select_service.msn.label;"/></vbox>
     </description>
