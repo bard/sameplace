@@ -35,13 +35,18 @@
 
 var Ci = Components.interfaces;
 var Cc = Components.classes;
+var Cu = Components.utils;
 
 var pref = Cc['@mozilla.org/preferences-service;1']
     .getService(Ci.nsIPrefService)
     .getBranch('xmpp.account.');
 var srvPrompt = Cc["@mozilla.org/embedcomp/prompt-service;1"]
     .getService(Ci.nsIPromptService);
+var serializer = Cc['@mozilla.org/xmlextras/xmlserializer;1']
+    .getService(Ci.nsIDOMSerializer);
 
+Cu.import('resource://xmpp4moz/connector-xmpp_tcp.jsm');
+Cu.import('resource://xmpp4moz/namespaces.jsm');
 
 // STATE
 // ----------------------------------------------------------------------
@@ -314,7 +319,7 @@ function shownPageFinish() {
 
 function advancedPageFinish() {
     if(account && $('#connect-account').checked)
-        XMPP.up(account);
+        XMPP.up(account.address);
 }
 
 
@@ -326,15 +331,24 @@ function verifyAccount(account, callbacks) {
     // factor it so as to minimize duplication, since XMPP.open also
     // creates a session while here we just need a connector.
 
+    // XXX this should really be upstream and only check for duplicate
+    // account, not existing session.
     if(XMPP.isUp(account))
         return;
 
-    var connector =
-        Cc['@hyperstruct.net/xmpp4moz/connector;1?type=' +
-           XMPP.connectorTypeFor(account.address + '/' + account.resource)]
-        .createInstance(Ci.nsIXMPPConnector);
+    var conf = {
+        node     : XMPP.JID(account.address).node,
+        domain   : XMPP.JID(account.address).domain,
+        resource : account.resource,
+        password : account.password,
+        host     : account.connectionHost,
+        port     : account.connectionPort,
+        security : Number(account.connectionSecurity)
+    };
 
-    var connectionObserver = {
+    var connector = new XMPPTCPConnector(conf);
+
+    connector.addObserver({
         observe: function(subject, topic, data) {
             switch(topic) {
             case 'active':
@@ -343,46 +357,43 @@ function verifyAccount(account, callbacks) {
                 break;
             case 'error':
                 connector.disconnect();
-                if(subject && asString(subject) == 'badcert') {
-                    var addException = srvPrompt.confirm(
-                        null,
-                        $('#strings').getString('pageSelection.dialog.badCertificate.title'),
-                        $('#strings').getFormattedString('pageSelection.dialog.badCertificate.message', [account.connectionHost]));
-                    if(!addException)
+
+                if(subject instanceof Ci.nsIDOMElement) {
+                    switch(subject.namespaceURI) {
+                    case ns_sasl:
+                        srvPrompt.alert(null, 'SASL Error', subject.firstChild.localName);
                         break;
-                    
-                    var params = {
-                        exceptionAdded : false,
-                        location       : 'https://' + account.connectionHost + ':' + account.connectionPort,
-                        prefetchCert   : true
-                    };
-
-                    setTimeout(function() {
-                        openDialog('chrome://pippki/content/exceptionDialog.xul',
-                                   '',
-                                   'chrome,centerscreen,modal',
-                                   params);
-
-                        if(params.exceptionAdded)
-                            verifyAccount(account, callbacks);
+                    case ns_stream:
+                        srvPrompt.alert(null, 'Stream Error', subject.firstChild.localName);
+                        break;
+                    case ns_tls:
+                        srvPrompt.alert(null, 'TLS Error', subject.firstChild.localName);
+                        break;
+                    case ns_stanzas:
+                        srvPrompt.alert(null, 'Stanza Error', subject.firstChild.localName);
+                        break;
+                    default:
+                        srvPrompt.alert(null, 'Connection Error', serializer.serializeToString(subject));
+                    }
+                    callbacks.onFailure();
+                }
+                else if(subject == 'bad-certificate') {
+                    queryAddCertException(conf.host, conf.port, {
+                        onDeny:   function() { callbacks.onFailure(); },
+                        onCancel: function() { callbacks.onFailure(); },
+                        onAccept: function() { verifyAccount(account, callbacks); }
                     });
                 } else {
+                    Cu.reportError('Error during XMPP connection. (' + subject + ')');
                     callbacks.onFailure();
                 }
                 break;
             default:
-                break;
+                 break;
             }
-       }
-    };
+        }
+    });
 
-    connector.init(account.address + '/' + account.resource,
-                   account.password,
-                   account.connectionHost,
-                   account.connectionPort,
-                   (account.connectionSecurity == 1 ||
-                    account.connectionSecurity == undefined));
-    connector.addObserver(connectionObserver, null, false);
     connector.connect();
 }
 
@@ -512,9 +523,7 @@ function registerToTransport(account, transportAddress,
 // ----------------------------------------------------------------------
 
 function getSamePlaceAccount() {
-    return XMPP.accounts.filter(function(account) {
-        return XMPP.JID(account.jid).hostname == 'sameplace.cc';
-    })[0];
+    return XMPP.accounts.get(function(a) XMPP.JID(a).domain == 'sameplace.cc');
 }
 
 function saveAccount(account) {
@@ -526,6 +535,7 @@ function saveAccount(account) {
         if(account.password)
             XMPP.setPassword(account.address, account.password);
         pref.setCharPref(key + '.connectionHost', account.connectionHost);
+        pref.setCharPref(key + '.presenceHistory', '[]');
         pref.setIntPref(key + '.connectionPort', account.connectionPort);
         pref.setIntPref(key + '.connectionSecurity', account.connectionSecurity);
     } catch(e) {
