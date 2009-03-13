@@ -54,21 +54,31 @@ var util = load('chrome://sameplace/content/lib/util_impl.js', {});
 function init(event) {
     initNetworkReactions();
 
-    // Only preload SamePlace if there's no other window around with
-    // an active SamePlace instance, and if this isn't a popup.'
-
-    if(!isActiveSomewhere() && !isPopupWindow())
-        loadAreas();
+    switch(pref.getCharPref('openMode')) {
+    case 'standalone':
+        if(!getMostRecentWindow('SamePlace'))
+            // Do not open SamePlace window if there is one around already.
+            window.open('chrome://sameplace/content/standalone.xul', 'SamePlace', 'chrome');
+        break;
+    case 'sidebar':
+        // Only preload SamePlace if there's no other window around with
+        // an active SamePlace instance, and if this isn't a popup.'
+        if(!isActiveSomewhere() && !isPopupWindow())
+            loadAreas();
+        break;
+    default:
+        throw new Error('Unknown open mode. (' + pref.getCharPref('mode') + ')');
+    }
 
     util.upgradeCheck(
         'sameplace@hyperstruct.net',
         'extensions.sameplace.version', {
             onFirstInstall: function() {
-                openURL('http://sameplace.cc/get-started');
+                //openURL('http://sameplace.cc/get-started');
                 toExpanded();
-                setTimeout(function() {
-                    runWizard();
-                }, 2000);
+                //setTimeout(function() {
+                //runWizard();
+                //}, 2000);
             },
             onUpgrade: function() {
                 if(pref.getCharPref('branch') != 'devel')
@@ -141,15 +151,15 @@ function updateStatusIndicator() {
 }
 
 function loadAreas(force) {
-    function load(xulContentPanel, urlSpec, force) {
+    function loadPanel(xulContentPanel, urlSpec, force) {
         if((xulContentPanel.contentDocument.location.href != urlSpec) ||
            force)
            xulContentPanel.contentDocument.location.href = urlSpec;
     }
 
-    load(_('dashboard'), 'chrome://sameplace/content/dashboard/dashboard.xul', force);
-    load(_('chats'), 'chrome://sameplace/content/conversations/chats.xul', force);
-    load(_('stream'), 'chrome://sameplace/content/stream/stream.xul', force);
+    loadPanel(_('dashboard'), 'chrome://sameplace/content/dashboard/dashboard.xul', force);
+    loadPanel(_('chats'), 'chrome://sameplace/content/conversations/chats.xul', force);
+    loadPanel(_('stream'), 'chrome://sameplace/content/stream/stream.xul', force);
 }
 
 
