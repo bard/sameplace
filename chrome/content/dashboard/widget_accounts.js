@@ -209,8 +209,7 @@ accounts.requestedEdit = function(xulAccountDescendant) {
 accounts.requestedAdd = function() {
     window.openDialog(
         'chrome://sameplace/content/wizard/wizard.xul',
-        'sameplace-wizard', 'chrome,modal,centerscreen,width=600,height=480');
-    this.update();
+        'sameplace-wizard', 'chrome,centerscreen,width=600,height=480');
 };
 
 accounts.showingPopup = function(popupNode, menuPopup) {
