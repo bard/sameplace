@@ -41,6 +41,7 @@ var Cu = Components.utils;
 Cu.import('resource://xmpp4moz/xmpp.jsm');
 Cu.import('resource://xmpp4moz/namespaces.jsm');
 Cu.import('resource://xmpp4moz/task.jsm');
+Cu.import('resource://xmpp4moz/json.jsm');
 Cu.import('resource://sameplace/main.jsm');
 
 
