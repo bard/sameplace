@@ -357,19 +357,7 @@ function verifyAccount(account, callbacks) {
                 break;
             case 'error':
                 connector.disconnect();
-
-                if(subject instanceof Ci.nsIDOMElement)
-                    callbacks.onFailure();
-                else if(subject == 'bad-certificate') {
-                    queryAddCertException(conf.host, conf.port, {
-                        onDeny:   function() { callbacks.onFailure(); },
-                        onCancel: function() { callbacks.onFailure(); },
-                        onAccept: function() { verifyAccount(account, callbacks); }
-                    });
-                } else {
-                    Cu.reportError('Error during XMPP connection. (' + subject + ')');
-                    callbacks.onFailure();
-                }
+                callbacks.onFailure(subject);
                 break;
             default:
                  break;
