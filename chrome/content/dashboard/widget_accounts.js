@@ -71,6 +71,7 @@ accounts.init = function() {
         var xulStatus = $(xulAccount, '> .state-indicator');
         switch(connector.state) {
         case 'disconnected':
+        case 'error':
             xulStatus.setAttribute('progress', 'false');
             xulAccount.setAttribute('availability', 'unavailable');
             break;
