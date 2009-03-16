@@ -224,12 +224,12 @@ img {
 /* MESSAGE-SPECIFIC */
 
 .event.direction-in > .icons > .avatar:not([src]) {
-    background-image: url("images/default-user-avatar.png");
+    background-image: url("images/default-contact-avatar.png");
     opacity: 0.5;
 }
 
 .event.direction-out > .icons > .avatar:not([src]) {
-    background-image: url("images/default-contact-avatar.png");
+    background-image: url("images/default-user-avatar.png");
 }
 
 
