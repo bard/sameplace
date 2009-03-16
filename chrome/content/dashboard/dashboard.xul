@@ -64,6 +64,7 @@
 
   <popupset id="popups"/>
 
+  <notificationbox id="notify" flex="1">
   <stack flex="1" id="stack">
     <scrollbox id="main" flex="1" orient="vertical">
       <description id="widgets-toolbar" class="toolbar">
@@ -80,6 +81,7 @@
       <vbox id="widgets" flex="1"/>
     </scrollbox>
   </stack>
+  </notificationbox>
 
   <box id="blueprints" hidden="true"/>
 </page>

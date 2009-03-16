@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 by Massimiliano Mirra
+ * Copyright 2008-2009 by Massimiliano Mirra
  *
  * This file is part of SamePlace.
  *
@@ -88,6 +88,12 @@ contacts.init = function() {
     }, function(presence) contacts.receivedContactPresence(presence));
 
     this._channel.on({
+        event     : 'presence',
+        direction : 'in',
+        stanza    : function(s) s.@type == 'subscribe',
+    }, function(presence) contacts.receivedSubscriptionRequest(presence));
+
+    this._channel.on({
         event     : 'connector'
     }, function(connector) {
         if(connector.state == 'disconnected' &&
@@ -104,6 +110,45 @@ contacts.init = function() {
 contacts.finish = function() {
     this._channel.release();
 };
+
+
+// UTILITIES
+// ----------------------------------------------------------------------
+
+function eventFromDescendant(container, event) {
+    var containee = event.relatedTarget;
+
+    while(containee != null) {
+        if(container == containee)
+            return true;
+        containee = containee.parentNode;
+    }
+
+    return false;
+}
+
+function delayAndAccumulate(fn, delay) {
+    var delay = delay || 1000;
+    var argSets = [];
+    var timeout;
+
+    return function() {
+        if(timeout)
+            window.clearTimeout(timeout);
+
+        argSets.push(arguments);
+
+        timeout = window.setTimeout(function() {
+            try {
+                fn(argSets);
+            } catch(e) {
+                Cu.reportError(e);
+            } finally {
+                argSets = [];
+            }
+        }, delay);
+    }
+}
 
 
 // GUI ACTIONS
@@ -350,6 +395,80 @@ contacts.receivedContactPresence = function(presence) {
     }
 };
 
+contacts.receivedSubscriptionRequest = delayAndAccumulate(function(argSets) {
+    var xulNotify = $('#notify');
+    xulNotify.appendNotification(
+        argSets.length + ' request(s) pending',
+        'subscription-request', null, xulNotify.PRIORITY_INFO_HIGH,
+        [{label: 'View', accessKey: 'V', callback: viewRequest}]);
+
+    function viewRequest() {
+        var request = { };
+        request.choice = false;
+        request.contacts = argSets.map(function([presence]) {
+            return [presence.account,
+                    XMPP.JID(presence.stanza.@from).address,
+                    true];
+        });
+        request.description = 'These contacts want to add you to their contact list. Do you accept?';
+
+        window.openDialog(
+            'chrome://sameplace/content/dialogs/contact_selection.xul',
+            'contact-selection',
+            'modal,centerscreen', request);
+
+        if(request.choice == true) {
+            for each(let [account, address, authorize] in request.contacts) {
+                if(authorize) {
+                    contacts.acceptSubscriptionRequest(account, address);
+                    let xmlRosterItem = contacts._getRosterItem(account, address);
+                    if(xmlRosterItem == undefined ||
+                       xmlRosterItem.@subscription == 'none' ||
+                       xmlRosterItem.@subscription == 'from') {
+                        // contact not yet in our contact list, request
+                        // auth to make things even ;-)
+                        contacts.requestPresenceSubscription(account, address);
+                    }
+                } else {
+                    contacts.denySubscriptionRequest(account, address);
+                }
+            }
+        } else {
+            for each(let [account, address, authorize] in request.contacts) {
+                contacts.denySubscriptionRequest(account, address);
+            }
+        }
+    }
+});
+
+
+// NETWORK ACTIONS
+// ----------------------------------------------------------------------
+
+contacts.addContact = function(account, address, subscribe) {
+    XMPP.send(account,
+              <iq type='set'>
+              <query xmlns={ns_roster}>
+              <item jid={address}/>
+              </query>
+              </iq>);
+
+    if(subscribe)
+        XMPP.send(account, <presence to={address} type='subscribe'/>);
+};
+
+contacts.requestPresenceSubscription = function(account, address) {
+    XMPP.send(account, <presence to={address} type="subscribe"/>);
+};
+
+contacts.acceptSubscriptionRequest = function(account, address) {
+    XMPP.send(account, <presence to={address} type="subscribed"/>);
+};
+
+contacts.denySubscriptionRequest = function(account, address) {
+    XMPP.send(account, <presence to={address} type="unsubscribed"/>);
+};
+
 
 // SEARCH/COMPLETION
 // ----------------------------------------------------------------------
@@ -390,7 +509,12 @@ contacts.enteredSearchText = function(s) {
                 'im:add-contact', 'modal,centerscreen',
                 request);
 
-            alert(request.toSource());
+            // XXX this should really be done by the dialog itself
+
+            if(request.confirm)
+                this.addContact(request.account,
+                                request.contactAddress,
+                                request.subscribeToPresence);
         }
 
     } catch(e) {
@@ -410,6 +534,8 @@ contacts.addToPopular = function(account, address, name) {
     sameplace.services.contacts.makePopular(account, address);
     this.updateContactItem(account, address, name);
 };
+
+// XXX currently unused
 
 contacts.promptAddContact = function(account, address) {
     if(window.confirm('"' + address + '" is not in your contact list.\n' +
@@ -638,19 +764,6 @@ contacts._getRosterItem = function(account, address) {
     return roster.stanza..ns_roster::item.(@jid == address);
 };
 
-function eventFromDescendant(container, event) {
-    var containee = event.relatedTarget;
-
-    while(containee != null) {
-        if(container == containee)
-            return true;
-        containee = containee.parentNode;
-    }
-
-    return false;
-}
-
-
 
 // TASKS
 // ----------------------------------------------------------------------
@@ -695,10 +808,6 @@ XMPP.req = function(account, stanza) {
 
 XMPP.sendPseudoSync = function(account, stanza, replyHandler) {
     var connectionControl = stanza.ns_x4m_in::connection.@control.toString();
-
-    function cachedReply() {
-
-    }
 
     if(!connectionControl)
         XMPP.send(account, stanza, replyHandler);
