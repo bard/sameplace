@@ -122,14 +122,6 @@
                tabscrolling="true"
                style=""
                ontextentered="contacts.enteredSearchText(this.value);"/>
-
-      <widget-help id="widget-contacts-help">
-        To display your contacts, select "all" below, or add them with
-        the search bar above, or just chat with them.  The widget will
-        learn with whom you communicate the most and will show only
-        those contacts.
-      </widget-help>
-
       <richlistbox class="list" disableKeyNavigation="true"/>
 
       <widget-footer align="center">
