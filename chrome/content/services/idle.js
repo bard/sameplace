@@ -79,7 +79,7 @@ function observe(subject, topic, data) {
                 } else {
                     newPresenceStanza = currentPresence.stanza.copy();
                     newPresenceStanza.show = 'away';
-                    newPresenceStanza.status = 'Away as a result of being idle';
+                    newPresenceStanza.status = 'Auto status (idle)'; // XXX make configurable
                     newPresenceStanza.idleset = <idleset xmlns={ns_x4m_in}/>;
 
                     log.send({debug: 'autosetting away state based on previous presence', data: newPresenceStanza});
