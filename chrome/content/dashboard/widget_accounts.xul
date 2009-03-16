@@ -87,7 +87,7 @@
       </grid>
 
       <widget-footer>
-        <label value="Add..." class="text-link" onclick="accounts.requestedAdd();" style="font-size: 11px;"/>
+        <label value="Add..." class="text-link" onclick="this.blur(); accounts.requestedAdd();"/>
       </widget-footer>
     </widget>
   </vbox>
