@@ -45,7 +45,7 @@ window.addEventListener('load', function(event) {
     }, function(message) {
         if(!_('button'))
             return;
-        if(isCollapsed())
+        if(isHidden())
             _('button').setAttribute('pending-messages', 'true');
     });
 
