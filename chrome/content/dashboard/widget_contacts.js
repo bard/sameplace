@@ -396,20 +396,21 @@ contacts.receivedContactPresence = function(presence) {
 };
 
 contacts.receivedSubscriptionRequest = delayAndAccumulate(function(argSets) {
-    var xulNotify = $('#notify');
-    xulNotify.appendNotification(
-        argSets.length + ' request(s) pending',
-        'subscription-request', null, xulNotify.PRIORITY_INFO_HIGH,
-        [{label: 'View', accessKey: 'V', callback: viewRequest}]);
+    var presences = argSets.map(function([presence]) presence);
+
+    dashboard.notify(presences.length + ' request(s) pending',
+                     'subscription-request',
+                     null,
+                     'info_high',
+                     xulNotify.PRIORITY_INFO_HIGH,
+                     [{label: 'View', accessKey: 'V', callback: viewRequest}]);
 
     function viewRequest() {
         var request = { };
         request.choice = false;
-        request.contacts = argSets.map(function([presence]) {
-            return [presence.account,
-                    XMPP.JID(presence.stanza.@from).address,
-                    true];
-        });
+        request.contacts = presences.map(function(presence) [presence.account,
+                                                      XMPP.JID(presence.stanza.@from).address,
+                                                      true]);
         request.description = 'These contacts want to add you to their contact list. Do you accept?';
 
         window.openDialog(
