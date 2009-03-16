@@ -132,4 +132,13 @@ dashboard.openPreferences = function(paneID) {
                                        'SamePlace:Preferences',
                                        features].concat(Array.slice(arguments)));
     }
-}
+};
+
+dashboard.notify = function(label, value, image, priority, buttons) {
+    $('#notify').appendNotification(
+        label,
+        value,
+        image,
+        priority && $('#notify')['PRIORITY_' + priority.toUpperCase()],
+        buttons);
+};
