@@ -83,7 +83,7 @@ var uriObserver = {
             frameElement.dispatchEvent(foregroundEvent);
 
             setTimeout(function() {
-                $('#chats').contentWindow.selectedContact(entity.account, entity.address);
+                $('#chats').contentWindow.selectedContact(decodeURIComponent(entity.account), entity.address);
             });
 
         } catch(e) {
