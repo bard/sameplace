@@ -34,6 +34,7 @@
 
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://sameplace/skin/sidebar.css" type="text/css"?>
+<?xml-stylesheet href="chrome://sameplace/skin/chats.css" type="text/css"?>
 
 <!-- localization -->
 
@@ -54,12 +55,11 @@
              type="autocomplete"
              autocompletesearch="xmpp-contacts"
              autocompletepopup="completions"
-             autocompletesearchparam="add"
+             autocompletesearchparam=""
              showcommentcolumn="true"
-             emptytext="Contact name or address..."
+             emptytext="Search contacts"
              tabscrolling="true"
-             ontextentered="enteredContactURI(this.value);"
-             hidden="true"/>
+             ontextentered="enteredSearchText(this);"/>
 
     <panel id="completions"
            type="autocomplete-richlistbox"

@@ -40,6 +40,8 @@ var Cu = Components.utils;
 
 var srvObserver = Cc["@mozilla.org/observer-service;1"]
     .getService(Ci.nsIObserverService);
+var srvIO = Cc['@mozilla.org/network/io-service;1']
+    .getService(Ci.nsIIOService);
 
 Cu.import('resource://xmpp4moz/xmpp.jsm');
 Cu.import('resource://xmpp4moz/namespaces.jsm');
@@ -57,6 +59,11 @@ function init() {
 function loadedView() {
     // Handle the load event only once.
     $('#chats').removeEventListener('load', loadedView, true);
+
+    $('#chats').contentWindow.$('#tabs').addEventListener('select', function(event) {
+        var xulPanel = event.target.nextSibling.selectedPanel;
+        $('#search').value = 'xmpp://' + xulPanel.getAttribute('account') + '/' + xulPanel.getAttribute('address');
+    }, false);
 
     srvObserver.addObserver(uriObserver, 'xmpp-uri-invoked', false);
 }
@@ -91,6 +98,21 @@ var uriObserver = {
         }
     }
 };
+
+function enteredSearchText(xulSearch) {
+    // Wrap everything in a try() because the XBL that calls this
+    // handler seems to swallow errors.
+    try {
+        var searchString = xulSearch.value.replace(/(^\s*|\s*$)/g, '');
+        document.commandDispatcher.advanceFocus();
+
+        srvIO.newChannel(searchString, null, null)
+            .asyncOpen(null, null);
+    } catch(e) {
+        Cu.reportError(e);
+    }
+}
+
 
 
 // ACTIONS

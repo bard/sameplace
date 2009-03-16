@@ -1,0 +1,10 @@
+#main {
+    background: inherit;
+}
+
+#search {
+    font-size: 11px;
+    padding: 4px;
+    border-width: 1px;
+    -moz-appearance: none;
+}
