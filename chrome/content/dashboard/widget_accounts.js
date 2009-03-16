@@ -33,8 +33,15 @@
 // INITIALIZATION/FINALIZATION
 // ----------------------------------------------------------------------
 
-window.addEventListener('dashboard/load', function(event) { accounts.init(); }, false)
-window.addEventListener('dashboard/unload', function(event) { accounts.finish(); }, false)
+window.addEventListener('dashboard/load', function(event) {
+    // For some reason, the console won't display errors happening in
+    // the dashboard/load and dashboard/unload handlers, so we force it.
+    try { accounts.init(); } catch(e) { Cu.reportError(e); }
+}, false);
+
+window.addEventListener('dashboard/unload', function(event) {
+    try { accounts.finish(); } catch(e) { Cu.reportError(e); }
+}, false);
 
 var accounts = {};
 

@@ -33,8 +33,15 @@
 // INITIALIZATION/FINALIZATION
 // ----------------------------------------------------------------------
 
-window.addEventListener('dashboard/load', function(event) { contacts.init(); }, false)
-window.addEventListener('dashboard/unload', function(event) { contacts.finish(); }, false)
+window.addEventListener('dashboard/load', function(event) {
+    // For some reason, the console won't display errors happening in
+    // the dashboard/load and dashboard/unload handlers, so we force it.
+    try { contacts.init(); } catch(e) { Cu.reportError(e); }
+}, false);
+
+window.addEventListener('dashboard/unload', function(event) {
+    try { contacts.finish(); } catch(e) { Cu.reportError(e); }
+}, false);
 
 var contacts = {};
 
