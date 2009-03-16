@@ -58,11 +58,19 @@ settings.finish = function() {
 // ----------------------------------------------------------------------
 
 settings.changedOpenMode = function(event) {
-    var mode = event.target.value;
+    function restart() {
+        Cc['@mozilla.org/toolkit/app-startup;1']
+            .getService(Ci.nsIAppStartup)
+            .quit(Ci.nsIAppStartup.eAttemptQuit | Ci.nsIAppStartup.eRestart);
+    }
 
+    var mode = event.target.value;
     if(mode !== this._pref.getCharPref('openMode')) {
         this._pref.setCharPref('openMode', mode);
-        this._prompt.alert(null, 'Changing open mode',
-                           'This setting will take effect after browser is restarted.');
+        dashboard.notify('This setting will take effect after restart.',
+                         'restart',
+                         null,
+                         'info_high',
+                         [{label: 'Restart', accessKey: 'R', callback: restart}]);
     }
 };
