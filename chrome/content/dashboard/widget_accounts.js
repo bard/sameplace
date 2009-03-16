@@ -206,7 +206,7 @@ accounts.changeStatus = function(account, availability, show) {
 accounts.requestedRemove = function(xulAccountDescendant) {
     var account = $(xulAccountDescendant, '^ .account .address').getAttribute('value');
     var accountKey = $(xulAccountDescendant, '^ .account').getAttribute('key');
-    if(window.confirm('This action will remove the account "' + account + '" from your computer, not from the server.\n' +
+    if(window.confirm('This action will remove the account "' + account + '" from your computer, not from the server. ' +
                       'You\'ll be able to reconfigure it later if you want.\n' +
                       'Continue?')) {
         XMPP.accounts.remove({key: accountKey});
