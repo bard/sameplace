@@ -104,8 +104,7 @@
           insertafter="sidebar-splitter"
           width="300"
           minwidth="65"
-          collapsed="true"
-          persist="collapsed">
+          collapsed="true">
 
       <sidebarheader align="center">
         <image src="chrome://sameplace/skin/logo16x16.png" style="padding-left: 4px;"/>
