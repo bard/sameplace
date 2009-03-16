@@ -110,7 +110,7 @@
       <sidebarheader align="center">
         <image src="chrome://sameplace/skin/logo16x16.png" style="padding-left: 4px;"/>
         <label class="sidebar-title" value="SamePlace" flex="1" crop="end"/>
-        <toolbarbutton class="tabs-closebutton" oncommand="sameplace.toCollapsed();"/>
+        <toolbarbutton class="tabs-closebutton" oncommand="sameplace.hide();"/>
       </sidebarheader>
 
       <tabbox flex="1" handleCtrlTab="false">

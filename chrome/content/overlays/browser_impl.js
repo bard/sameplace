@@ -29,7 +29,6 @@
  *  
  */
 
-
 window.addEventListener('load', function(event) {
     const ns_http_auth  = 'http://jabber.org/protocol/http-auth';
 
@@ -62,25 +61,48 @@ window.addEventListener('load', function(event) {
 }, false);
 
 function toggle() {
-    if(isCollapsed())
-        toExpanded();
+    if(isHidden())
+        show();
     else
-        toCollapsed();
+        hide();
 }
 
-function isCollapsed() {
-    return _('box').collapsed;
+function isHidden() {
+    switch(pref.getCharPref('openMode')) {
+    case 'standalone':
+        return getMostRecentWindow('SamePlace') == null;
+        break;
+    case 'sidebar':
+        return _('box').collapsed;
+        break;
+    }
 }
 
-
-function toCollapsed() {
-    _('box').collapsed = true;
+function hide() {
+    switch(pref.getCharPref('openMode')) {
+    case 'standalone':
+        break;
+    case 'sidebar':
+        _('box').collapsed = true;
+        break;
+    }
 }
 
-function toExpanded() {
-    loadAreas();
-    _('box').collapsed = false;
+function show() {
+    switch(pref.getCharPref('openMode')) {
+    case 'standalone':
+        let spWindow = getMostRecentWindow('SamePlace');
+        if(spWindow)
+            spWindow.focus();
+        else
+            window.open('chrome://sameplace/content/standalone.xul', 'SamePlace', 'chrome');
+        break;
+    case 'sidebar':
+        loadAreas();
+        _('box').collapsed = false;
 
-    if(_('button'))
-        _('button').removeAttribute('pending-messages');
+        if(_('button'))
+            _('button').removeAttribute('pending-messages');
+        break;
+    }
 }

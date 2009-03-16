@@ -75,7 +75,7 @@ function init(event) {
         'extensions.sameplace.version', {
             onFirstInstall: function() {
                 //openURL('http://sameplace.cc/get-started');
-                toExpanded();
+                show();
                 //setTimeout(function() {
                 //runWizard();
                 //}, 2000);
@@ -243,3 +243,4 @@ function isPopupWindow() {
 function isActive() {
     return _('dashboard').contentDocument.location.href != 'about:blank';
 }
+
