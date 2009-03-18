@@ -48,7 +48,6 @@ rosters = new XMLList();
 // Initialize DOM-dependent components when DOM is ready
 
 $(document).ready(function() {
-
     // Initialize xmpp forwarding
 
     xmpp.init();

@@ -72,8 +72,7 @@ function init() {
     // the load event.
     $('#stream').addEventListener('DOMContentLoaded', loadedView, true);
     $('#stream').addEventListener('click', clickedView, true);
-    $('#stream').contentDocument.location.href =
-        util.chromeToFileUrl('chrome://sameplace/content/stream/app/stream.xhtml');
+    $('#stream').contentDocument.location.href = 'resource://sameplace/stream/stream.xhtml';
 }
 
 function loadedView(event) {
