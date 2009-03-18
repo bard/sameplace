@@ -319,7 +319,9 @@ function create(account, address, nextAction) {
     xulTab.setAttribute('tooltiptext', address);
     xulPanel.tab = xulTab;
 
-    util.afterLoad(xulPanel, function() {
+    xulPanel.addEventListener('load', function(event) {
+        xulPanel.removeEventListener('load', arguments.callee, true);
+
         XMPP.connectPanel(xulPanel, account, address);
         // Using beforeunload because sometimes, by the time 'unload'
         // fired, xulPanel would already have lost account/address
@@ -334,7 +336,8 @@ function create(account, address, nextAction) {
 
         if(typeof(nextAction) == 'function')
             nextAction(xulPanel);
-    });
+    }, true);
+
     xulPanel.setAttribute('account', account);
     xulPanel.setAttribute('address', address);
     xulPanel.setAttribute('src', util.getDefaultAppUrl());
