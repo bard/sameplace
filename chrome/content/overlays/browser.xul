@@ -79,6 +79,12 @@
 
   <popup id="contentAreaContextMenu"/>
 
+  <menupopup id="viewSidebarMenu">
+    <menuitem command="sameplace-toggle"
+              key="sameplace-toggle-key"
+              accesskey="&toggle.accesskey;"/>
+  </menupopup>
+  
   <!-- COMMANDS -->
 
   <commandset id="mainCommandSet">
