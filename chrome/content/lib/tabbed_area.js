@@ -84,16 +84,21 @@ function tabbedArea(deck, tabs) {
         var tab = document.createElement('tab');
         tab.setAttribute('crop', 'end');
         tab.setAttribute('flex', '1')
-        tab.setAttribute('label', url);
         tabs.appendChild(tab);
-        
-        browser.addEventListener('DOMTitleChanged', function(event) {
-            if(event.target != browser.contentDocument)
-                return;
-            tab.setAttribute('label', event.target.title);
+
+        browser.addEventListener('load', function(event) {
+            browser.removeEventListener('load', arguments.callee, true);
+
+            browser.contentDocument.addEventListener('DOMTitleChanged', function(event) {
+                tab.setAttribute('label', event.target.title);
+            }, false);
         }, true);
-        
-        browser.loadURI(url);
+
+        if(url) {
+            tab.setAttribute('label', url);
+            browser.loadURI(url);
+        }
+
         tab.linkedBrowser = browser;
         return tab;
     };
