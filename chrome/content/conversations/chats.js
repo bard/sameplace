@@ -60,8 +60,8 @@ function loadedView() {
     // Handle the load event only once.
     $('#chats').removeEventListener('load', loadedView, true);
 
-    $('#chats').contentWindow.$('#tabs').addEventListener('select', function(event) {
-        var xulPanel = event.target.nextSibling.selectedPanel;
+    $('#chats').contentDocument.getElementById('tabs').addEventListener('select', function(event) {
+        var xulPanel = event.target.linkedBrowser;
         $('#search').value = 'xmpp://' + xulPanel.getAttribute('account') + '/' + xulPanel.getAttribute('address');
     }, false);
 
@@ -82,17 +82,13 @@ function finish() {
 
 var uriObserver = {
     observe: function(subject, topic, data) {
-        try {
-            var entity = XMPP.entity(subject);
+        if(!window.frameElement)
+            return;
 
+        try {
             var foregroundEvent = document.createEvent('Event');
             foregroundEvent.initEvent('custom/foreground', true, false);
-            frameElement.dispatchEvent(foregroundEvent);
-
-            setTimeout(function() {
-                $('#chats').contentWindow.selectedContact(decodeURIComponent(entity.account), entity.address);
-            });
-
+            window.frameElement.dispatchEvent(foregroundEvent);
         } catch(e) {
             Cu.reportError(e)
         }

@@ -40,6 +40,8 @@ var Cu = Components.utils;
 var pref = Cc['@mozilla.org/preferences-service;1']
     .getService(Ci.nsIPrefService)
     .getBranch('extensions.sameplace.');
+var srvObserver = Cc["@mozilla.org/observer-service;1"]
+    .getService(Ci.nsIObserverService);
 
 var MAX_MESSAGE_CACHE = 100;
 
@@ -171,11 +173,28 @@ function init(xulPanels, xulTabs) {
             exitRoom(account, address,
                      XMPP.JID(util.getJoinPresence(account, address).stanza.@to).resource);
     }, false);
+
+    srvObserver.addObserver(uriObserver, 'xmpp-uri-invoked', false);
 }
 
 function finish() {
+    srvObserver.removeObserver(uriObserver, 'xmpp-uri-invoked', false);
     channel.release();
 }
+
+// OBSERVER REACTIONS
+// ----------------------------------------------------------------------
+
+var uriObserver = {
+    observe: function(subject, topic, data) {
+        try {
+            var entity = XMPP.entity(subject);
+            selectedContact(decodeURIComponent(entity.account), entity.address);
+        } catch(e) {
+            Cu.reportError(e)
+        }
+    }
+};
 
 
 // GUI REACTIONS
