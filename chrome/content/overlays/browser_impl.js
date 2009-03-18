@@ -60,6 +60,19 @@ window.addEventListener('load', function(event) {
     }
 }, false);
 
+
+// HACK: hot-patch toggleSidebar() so that when Firefox 'regular'
+// sidebar is open, SamePlace is closed.  Inverse is in show().
+
+if(pref.getCharPref('openMode') == 'sidebar') {
+    window.__wrapped_by_sameplace_toggleSidebar = toggleSidebar;
+    window.toggleSidebar = function() {
+        if(!sameplace.isHidden())
+            sameplace.hide();
+        window.__wrapped_by_sameplace_toggleSidebar.apply(null, arguments);
+    }
+}
+
 function toggle() {
     if(isHidden())
         show();
@@ -99,6 +112,8 @@ function show() {
         break;
     case 'sidebar':
         loadAreas();
+        if(!document.getElementById('sidebar-box').hidden)
+            toggleSidebar();
         _('box').collapsed = false;
 
         if(_('button'))
