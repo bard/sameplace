@@ -125,7 +125,6 @@
           <iframe id="sameplace-stream"
                   flex="1"
                   src="chrome://sameplace/content/stream/stream.xul"/>
-          <tabpanel/>
         </tabpanels>
 
         <tabs id="sameplace-tabs" pack="center" align="center">
