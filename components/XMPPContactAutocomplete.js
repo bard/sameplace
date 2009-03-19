@@ -30,8 +30,84 @@
  */
 
 
+// DEFINITIONS
+// ----------------------------------------------------------------------
+
+const Cc = Components.classes;
+const Ci = Components.interfaces;
+const Cr = Components.results;
+const Cu = Components.utils;
+
+Cu.import('resource://gre/modules/XPCOMUtils.jsm');
 Cu.import('resource://xmpp4moz/xmpp.jsm');
 Cu.import('resource://xmpp4moz/namespaces.jsm');
+
+
+// IMPLEMENTATION
+// ----------------------------------------------------------------------
+
+function XMPPContactAutocomplete() { }
+
+XMPPContactAutocomplete.prototype = {
+    classDescription : 'XMPP Contact Autocomplete',
+
+    classID          : Components.ID('{acdc75ae-b3a7-4477-b09a-ed6656ab592b}'),
+
+    contractID       : '@mozilla.org/autocomplete/search;1?name=xmpp-contacts',
+
+    QueryInterface   : XPCOMUtils.generateQI([Ci.nsIAutoCompleteSearch]),
+
+    startSearch: function(searchString, searchParam, result, listener) {
+        // This autocomplete source assumes the developer attached a JSON string
+        // to the the "autocompletesearchparam" attribute or "searchParam" property
+        // of the <textbox> element. The JSON is converted into an array and used
+        // as the source of match data. Any values that match the search string
+        // are moved into temporary arrays and passed to the AutoCompleteResult
+
+        var results = [];
+        var comments = [];
+
+        var rosters = XMPP.cache.all(
+            XMPP.q()
+                .event('iq')
+                .direction('in')
+                .type('result')
+                .child('jabber:iq:roster', 'query'));
+
+        for each(let roster in rosters) {
+            for each(let xmlRosterItem in roster.stanza..ns_roster::item) {
+                let completion;
+                let jid = xmlRosterItem.@jid.toString();
+                let name = xmlRosterItem.@name.toString();
+
+                if(name.toLowerCase().indexOf(searchString) != -1)
+                    completion = name;
+                else if(jid.toLowerCase().indexOf(searchString) != -1)
+                    completion = jid;
+
+                if(completion) {
+                    results.push('xmpp://' + XMPP.JID(roster.account).address + '/' + jid);
+                    comments.push(name || jid);
+                }
+            }
+        }
+
+        if(searchParam == 'add' &&
+           !searchString.match(/^xmpp:/)) {
+            comments.push('Add new contact "' + searchString + '"');
+            results.push('xmpp:' + searchString + '?roster');
+        }
+
+        var newResult = new ContactAutocompleteResult(
+            searchString,
+            Ci.nsIAutoCompleteResult.RESULT_SUCCESS, 0, '', results, comments);
+
+        listener.onSearchResult(this, newResult);
+    },
+
+    stopSearch: function() {
+    }
+};
 
 function ContactAutocompleteResult(searchString, searchResult,
                                    defaultIndex, errorDescription,
@@ -136,73 +212,15 @@ ContactAutocompleteResult.prototype = {
         this._comments.splice(index, 1);
     },
 
-    QueryInterface: function(aIID) {
-        if(!aIID.equals(Ci.nsIAutoCompleteResult) && !aIID.equals(Ci.nsISupports))
-            throw Components.results.NS_ERROR_NO_INTERFACE;
-        return this;
-    }
+    QueryInterface: XPCOMUtils.generateQI([Ci.nsIAutoCompleteResult])
 };
 
 
-/*
-* Search for a given string and notify a listener (either synchronously
-* or asynchronously) of the result
-*
-* @param searchString - The string to search for
-* @param searchParam - An extra parameter
-* @param previousResult - A previous result to use for faster searchinig
-* @param listener - A listener to notify when the search is complete
-*/
-function startSearch(searchString, searchParam, result, listener) {
-    // This autocomplete source assumes the developer attached a JSON string
-    // to the the "autocompletesearchparam" attribute or "searchParam" property
-    // of the <textbox> element. The JSON is converted into an array and used
-    // as the source of match data. Any values that match the search string
-    // are moved into temporary arrays and passed to the AutoCompleteResult
+// REGISTRATION
+// ----------------------------------------------------------------------
 
-    var results = [];
-    var comments = [];
+var components = [XMPPContactAutocomplete];
 
-    var rosters = XMPP.cache.all(
-        XMPP.q()
-            .event('iq')
-            .direction('in')
-            .type('result')
-            .child('jabber:iq:roster', 'query'));
-
-    for each(let roster in rosters) {
-        for each(let xmlRosterItem in roster.stanza..ns_roster::item) {
-            let completion;
-            let jid = xmlRosterItem.@jid.toString();
-            let name = xmlRosterItem.@name.toString();
-
-            if(name.toLowerCase().indexOf(searchString) != -1)
-                completion = name;
-            else if(jid.toLowerCase().indexOf(searchString) != -1)
-                completion = jid;
-
-            if(completion) {
-                results.push('xmpp://' + XMPP.JID(roster.account).address + '/' + jid);
-                comments.push(name || jid);
-            }
-        }
-    }
-
-    if(searchParam == 'add' &&
-       !searchString.match(/^xmpp:/)) {
-        comments.push('Add new contact "' + searchString + '"');
-        results.push('xmpp:' + searchString + '?roster');
-    }
-
-    var newResult = new ContactAutocompleteResult(
-        searchString,
-        Ci.nsIAutoCompleteResult.RESULT_SUCCESS, 0, '', results, comments);
-
-    listener.onSearchResult(this, newResult);
-}
-
-/*
-* Stop an asynchronous search that is in progress
-*/
-function stopSearch() {
+function NSGetModule(compMgr, fileSpec) {
+    return XPCOMUtils.generateModule(components);
 }
