@@ -61,7 +61,7 @@ function loadedView() {
     $('#chats').removeEventListener('load', loadedView, true);
 
     $('#chats').contentDocument.getElementById('tabs').addEventListener('select', function(event) {
-        var xulPanel = event.target.linkedBrowser;
+        var xulPanel = event.target.selectedItem.linkedBrowser;
         $('#search').value = 'xmpp://' + xulPanel.getAttribute('account') + '/' + xulPanel.getAttribute('address');
     }, false);
 
