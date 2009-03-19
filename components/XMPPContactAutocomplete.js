@@ -67,6 +67,13 @@ XMPPContactAutocomplete.prototype = {
         var results = [];
         var comments = [];
 
+        // It would be much more efficient to do the full search in XPath, as in:
+        //
+        //     cache.all('//iq/roster:query/roster:item[contains(@name, str)]').snapshotItem(0)
+        //
+        // However, contains() is case sensitive and workarounds using
+        // translate() are not i18n-friendly.
+
         var rosters = XMPP.cache.all(
             XMPP.q()
                 .event('iq')
@@ -199,7 +206,20 @@ ContactAutocompleteResult.prototype = {
    * The return value is expected to be an URI to the image to display
    */
     getImageAt : function (index) {
-        return '';
+        var entity = XMPP.entity(this._results[index]);
+
+        if(entity.action)
+            return;
+
+        var presence = XMPP.presencesOf(entity.account, entity.address)[0];
+        if(!presence || presence.stanza.@type == 'unavailable')
+            return 'chrome://sameplace/skin/status16x16-unavailable.png';
+        else if(presence.stanza.show == 'away')
+            return 'chrome://sameplace/skin/status16x16-away.png';
+        else if(presence.stanza.show == 'dnd')
+            return 'chrome://sameplace/skin/status16x16-dnd.png';
+        else if(presence.stanza.@type == undefined)
+            return 'chrome://sameplace/skin/status16x16-available.png';
     },
 
     /**
