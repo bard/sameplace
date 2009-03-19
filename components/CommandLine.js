@@ -27,9 +27,9 @@ const Handler = {
         if(uri || cmdLine.handleFlag('sameplace', false)) {
             var windowWatcher = Cc['@mozilla.org/embedcomp/window-watcher;1']
             .getService(Ci.nsIWindowWatcher);
-            
+
             windowWatcher.openWindow(
-                null, 'chrome://sameplace/content/standalone/contacts.xul',
+                null, 'chrome://sameplace/content/standalone.xul',
                 'SamePlace:Contacts', 'chrome,toolbar=no', null)
 
             cmdLine.preventDefault = true;
