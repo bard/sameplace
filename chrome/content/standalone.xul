@@ -35,31 +35,33 @@
 
 <window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
         id="sameplace"
-        width="300"
+        width="640"
         height="480"
         title="SamePlace"
         windowtype="SamePlace"
-        persist="width height">
-  <tabbox flex="1" handleCtrlTab="false">
-    <tabpanels id="sameplace-panels"
-               flex="1"
-               style="padding: 0; border-width: 1px; border: none;">
+        persist="width height"
+        orient="horizontal">
+  <tabbox id="sameplace-box" flex="1" handleCtrlTab="false">
+    <tabpanels id="sameplace-panels" flex="1">
       <iframe id="sameplace-dashboard"
               flex="1"
               src="chrome://sameplace/content/dashboard/dashboard.xul"/>
-      <iframe id="sameplace-chats"
-              flex="1"
-              src="chrome://sameplace/content/conversations/chats.xul"/>
       <iframe id="sameplace-stream"
               flex="1"
               src="chrome://sameplace/content/stream/stream.xul"/>
-      <tabpanel/>
     </tabpanels>
 
     <tabs id="sameplace-tabs" pack="center" align="center">
       <tab id="sameplace-tab-dashboard" tooltiptext="Dashboard"/>
-      <tab id="sameplace-tab-chats" tooltiptext="Chats"/>
       <tab id="sameplace-tab-stream" tooltiptext="Stream"/>
     </tabs>
   </tabbox>
+
+  <splitter state="open"
+            resizebefore="closest"
+            resizeafter="closest"/>
+
+  <iframe id="sameplace-chats"
+          flex="3"
+          src="chrome://sameplace/content/conversations/chats.xul"/>
 </window>

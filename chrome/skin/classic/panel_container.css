@@ -71,6 +71,8 @@
 
 #sameplace-panels {
     padding: 0;
-    border-width: 1px;
     border: none;
+    -moz-appearance: none;
 }
+
+
