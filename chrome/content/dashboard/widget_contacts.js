@@ -212,7 +212,12 @@ contacts.updateContactItem = function(account, address, name, subscription) {
         return;
     }
 
-    // TODO: when adding a new contact, status isn't updated. (Still holds?)
+    // If contact isn't in our roster, we don't want to display it.
+    // (This isn't necessarily against malicious users -- for example,
+    // XMPP-compliant servers bounce our presence back when we sign
+    // on.)
+    if(this._getRosterItem(account, address) == undefined)
+        return;
 
     // Most of the logic below is for deducing whether this is a
     // rename or addition
