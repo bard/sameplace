@@ -118,7 +118,6 @@ accounts.update = function() {
 
         var xulAccount = $('#blueprints > .account').cloneNode(true);
         xulAccount.setAttribute('account', account.address);
-        xulAccount.setAttribute('key', account.key); // XXX still necessary?
         $(xulAccount, '> .address').setAttribute('value', account.address);
         if(accountPresence) {
             xulAccount.setAttribute('availability',
@@ -215,8 +214,8 @@ accounts.requestedRemove = function(xulAccountDescendant) {
 };
 
 accounts.requestedEdit = function(xulAccountDescendant) {
-    var accountKey = $(xulAccountDescendant, '^ .account').getAttribute('key');
-    dashboard.openPreferences('accounts-pane', accountKey)
+    dashboard.openPreferences('accounts-pane',
+                              $(xulAccountDescendant, '^ .account').getAttribute('account'));
 };
 
 accounts.requestedAdd = function() {

@@ -56,10 +56,10 @@ function init() {
     refresh();
 
     if(window.arguments && window.arguments[1]) {
-        var id = window.arguments[1];
-        if(typeof(id) != 'undefined') {
-            var account = find(accounts, function(a) a.id == id);
-            $('#accounts').selectedItem = $('#accounts .account[id="' + id + '"]');
+        var account = window.arguments[1];
+        if(typeof(account) != 'undefined') {
+            var account = find(accounts, function(a) a.address == account);
+            $('#accounts').selectedItem = $('#accounts .account[address="' + account.address + '"]');
             displayAccount(account);
         }
     }
@@ -91,7 +91,7 @@ function getCurrentAccount() {
 
 function addAccount(account) {
     var xulAccount = $('#blueprints > .account').cloneNode(true);
-    xulAccount.setAttribute('id', account.id);
+    xulAccount.setAttribute('address', account.address);
     xulAccount.setAttribute('service', account.service);
     xulAccount.setAttribute('category', account.category);
     xulAccount.setAttribute('type', account.type);
