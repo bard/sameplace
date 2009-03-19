@@ -68,3 +68,9 @@
 #sameplace-tab-stream {
     list-style-image: url(chrome://sameplace/skin/sort32x32.png)
 }
+
+#sameplace-panels {
+    padding: 0;
+    border-width: 1px;
+    border: none;
+}

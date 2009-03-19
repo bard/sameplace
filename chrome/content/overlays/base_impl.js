@@ -92,13 +92,6 @@ function init(event) {
         util.addToolbarButton('sameplace-button');
 
     updateStatusIndicator();
-
-    var xulPanels = _('panels');
-    xulPanels.addEventListener('custom/foreground', function(event) {
-        for(let i=0, l=xulPanels.childNodes.length; i<l; i++)
-            if(xulPanels.childNodes[i] == event.target)
-                xulPanels.parentNode.selectedIndex = i;
-    }, false);
 }
 
 function finish() {

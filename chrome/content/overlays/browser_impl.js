@@ -58,6 +58,13 @@ window.addEventListener('load', function(event) {
             _('install-scriptlet').hidden = !isJavaScriptLink(document.popupNode);
         }, false);
     }
+
+    var xulPanels = _('panels');
+    xulPanels.addEventListener('custom/foreground', function(event) {
+        for(let i=0, l=xulPanels.childNodes.length; i<l; i++)
+            if(xulPanels.childNodes[i] == event.target)
+                xulPanels.parentNode.selectedIndex = i;
+    }, false);
 }, false);
 
 
@@ -86,7 +93,7 @@ function isHidden() {
         return getMostRecentWindow('SamePlace') == null;
         break;
     case 'sidebar':
-        return _('box').collapsed;
+        return _('sidebar').collapsed;
         break;
     }
 }
@@ -96,7 +103,7 @@ function hide() {
     case 'standalone':
         break;
     case 'sidebar':
-        _('box').collapsed = true;
+        _('sidebar').collapsed = true;
         break;
     }
 }
@@ -114,7 +121,7 @@ function show() {
         loadAreas();
         if(!document.getElementById('sidebar-box').hidden)
             toggleSidebar();
-        _('box').collapsed = false;
+        _('sidebar').collapsed = false;
 
         if(_('button'))
             _('button').removeAttribute('pending-messages');

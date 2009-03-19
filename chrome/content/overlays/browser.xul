@@ -106,7 +106,7 @@
               resizebefore="closest"
               resizeafter="closest"/>
 
-    <vbox id="sameplace-box"
+    <vbox id="sameplace-sidebar"
           insertafter="sidebar-splitter"
           width="300"
           minwidth="65"
@@ -118,19 +118,11 @@
         <toolbarbutton class="tabs-closebutton" oncommand="sameplace.hide();"/>
       </sidebarheader>
 
-      <tabbox flex="1" handleCtrlTab="false">
-        <tabpanels id="sameplace-panels"
-                   flex="1"
-                   style="padding: 0; border-width: 1px; border: none;">
-          <iframe id="sameplace-dashboard"
-                  flex="1"
-                  src="chrome://sameplace/content/dashboard/dashboard.xul"/>
-          <iframe id="sameplace-chats"
-                  flex="1"
-                  src="chrome://sameplace/content/conversations/chats.xul"/>
-          <iframe id="sameplace-stream"
-                  flex="1"
-                  src="chrome://sameplace/content/stream/stream.xul"/>
+      <tabbox flex="1">
+        <tabpanels id="sameplace-panels" flex="1">
+          <iframe id="sameplace-dashboard" flex="1"/>
+          <iframe id="sameplace-chats" flex="1"/>
+          <iframe id="sameplace-stream" flex="1"/>
         </tabpanels>
 
         <tabs id="sameplace-tabs" pack="center" align="center">
