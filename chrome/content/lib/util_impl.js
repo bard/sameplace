@@ -120,10 +120,7 @@ function getDefaultAppUrl() {
     var url = pref.getCharPref('defaultAppUrl');
 
     if(url == 'default') {
-        if(hostAppIsMail())
-            return 'chrome://sameplace/content/app/chat.xhtml';
-        else
-            return 'http://apps.sameplace.cc/chat/chat.xhtml';
+        return 'resource://sameplace/chat/chat.xhtml';
     } else
         return url;
 }
