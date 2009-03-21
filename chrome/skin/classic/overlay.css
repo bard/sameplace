@@ -28,7 +28,3 @@
  * Author: Massimiliano Mirra, <bard [at] hyperstruct [dot] net>
  *
  */
-
-#sameplace-box[collapsed="true"] + splitter {
-    display: none;
-}

@@ -104,6 +104,7 @@ function hide() {
         break;
     case 'sidebar':
         _('sidebar').collapsed = true;
+        _('splitter').hidden = true;
         break;
     }
 }
@@ -122,6 +123,7 @@ function show() {
         if(!document.getElementById('sidebar-box').hidden)
             toggleSidebar();
         _('sidebar').collapsed = false;
+        _('splitter').hidden = false;
 
         if(_('button'))
             _('button').removeAttribute('pending-messages');

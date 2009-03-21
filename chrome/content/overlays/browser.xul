@@ -104,7 +104,9 @@
     <splitter insertafter="sidebar-splitter"
               state="open"
               resizebefore="closest"
-              resizeafter="closest"/>
+              resizeafter="closest"
+              id="sameplace-splitter"
+              hidden="true"/>
 
     <vbox id="sameplace-sidebar"
           insertafter="sidebar-splitter"
