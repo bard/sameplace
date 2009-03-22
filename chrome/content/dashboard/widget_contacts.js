@@ -58,50 +58,45 @@ contacts.init = function() {
 
     this._channel = XMPP.createChannel();
 
-    this._channel.on({
-        event     : 'iq',
-        direction : 'in',
-        stanza    : function(s) {
-            return s.ns_roster::query != undefined;
-        }
-    }, function(iq) {
-        for each(var item in iq.stanza..ns_roster::item) {
-            contacts.updateContactItem(iq.account,
-                                       item.@jid.toString(),
-                                       item.@name.toString(),
-                                       item.@subscription.toString());
-        }
-    });
+    this._channel.on(
+        function(ev) (ev.name == 'iq' &&
+               ev.dir == 'in' &&
+               ev.xml.ns_roster::query != null),
+        function(iq) {
+            for each(var item in iq.stanza..ns_roster::item) {
+                contacts.updateContactItem(iq.account,
+                                           item.@jid.toString(),
+                                           item.@name.toString(),
+                                           item.@subscription.toString());
+            }
+        });
 
-    this._channel.on({
-        event     : 'presence',
-        direction : 'in',
-        stanza    : function(s) {
-            return (
-                    // We're not interested in "presence commands" (e.g. type="subscribe")
-                    (s.@type == 'unavailable' || s.@type == undefined) &&
-                    // We're not interested in presences from chatrooms, either
-                    s.ns_muc_user::x == undefined &&
-                    // Server echoing back our presence to us, ignore.
-                    XMPP.JID(s.ns_x4m_in::meta.@account).address != XMPP.JID(s.@from).address);
-        }
-    }, function(presence) contacts.receivedContactPresence(presence));
+    this._channel.on(
+        function(ev) (ev.name == 'presence' &&
+               ev.dir == 'in' &&
+               (ev.type == 'unavailable' || !ev.type)),
+        function(presence) contacts.receivedContactPresence(presence));
 
-    this._channel.on({
-        event     : 'presence',
-        direction : 'in',
-        stanza    : function(s) s.@type == 'subscribe',
-    }, function(presence) contacts.receivedSubscriptionRequest(presence));
+    this._channel.on(
+        function(ev) (ev.name == 'presence' &&
+               ev.dir == 'in' &&
+               ev.type == 'subscribe'),
+        function(presence) contacts.receivedSubscriptionRequest(presence));
 
-    this._channel.on({
-        event     : 'connector'
-    }, function(connector) {
-        if(connector.state == 'disconnected' &&
-           XMPP.accounts.every(XMPP.isDown))
-            $('#widget-contacts').setAttribute('minimized', 'true');
-        else if(connector.state == 'active')
+    this._channel.on(
+        function(ev) (ev.name == 'connector' &&
+               ev.state == 'active'),
+        function(connector) {
             $('#widget-contacts').setAttribute('minimized', 'false');
-    });
+        });
+
+    this._channel.on(
+        function(ev) (ev.name == 'connector' &&
+               ev.state == 'disconnected'),
+        function(connector) {
+            if(XMPP.accounts.every(XMPP.isDown))
+                $('#widget-contacts').setAttribute('minimized', 'true');
+        });
 
     this._displayMode = $('#widget-contacts-display-mode').value;
     this._refreshList();
