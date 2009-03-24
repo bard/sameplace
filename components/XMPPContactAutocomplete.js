@@ -99,8 +99,13 @@ XMPPContactAutocomplete.prototype = {
             }
         }
 
-        if(searchParam == 'add' &&
-           !searchString.match(/^xmpp:/)) {
+        var searchParams = searchParam.split(',');
+        if(searchParams.indexOf('join') != -1) {
+                comments.push('Join chatroom "' + searchString + '"');
+                results.push('xmpp:' + searchString + '?join');
+        }
+
+        if(searchParams.indexOf('add') != -1) {
             comments.push('Add new contact "' + searchString + '"');
             results.push('xmpp:' + searchString + '?roster');
         }

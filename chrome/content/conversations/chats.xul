@@ -56,7 +56,7 @@
              type="autocomplete"
              autocompletesearch="xmpp-contacts"
              autocompletepopup="completions"
-             autocompletesearchparam=""
+             autocompletesearchparam="join"
              showcommentcolumn="true"
              emptytext="Search contacts"
              tabscrolling="true"
