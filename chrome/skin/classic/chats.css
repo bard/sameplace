@@ -8,3 +8,12 @@
     border-width: 1px;
     -moz-appearance: none;
 }
+
+#search .autocomplete-icon {
+
+}
+
+.ac-url {
+    font-size: smaller;
+    color: gray;
+}
