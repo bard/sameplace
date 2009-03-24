@@ -189,7 +189,8 @@ var uriObserver = {
     observe: function(subject, topic, data) {
         try {
             var entity = XMPP.entity(subject);
-            selectedContact(decodeURIComponent(entity.account), entity.address);
+            if(entity.account && entity.address)
+                selectedContact(decodeURIComponent(entity.account), entity.address);
         } catch(e) {
             Cu.reportError(e)
         }
@@ -393,7 +394,7 @@ function getCurrent() {
 
 function sentMUCJoinPresence(presence) {
     var room = XMPP.JID(presence.stanza.@to);
-    var account = presence.session.name;
+    var account = presence.account;
     var address = room.address;
 
     if(!get(account, address))
