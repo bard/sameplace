@@ -49,16 +49,6 @@ window.addEventListener('load', function(event) {
             _('button').setAttribute('pending-messages', 'true');
     });
 
-    // In page context menu (if available), only display the "install
-    // scriptlet" option if user clicked on what could be a scriptlet.
-
-    var pageMenu = document.getElementById('contentAreaContextMenu');
-    if(pageMenu) {
-        pageMenu.addEventListener('popupshowing', function(event) {
-            _('install-scriptlet').hidden = !isJavaScriptLink(document.popupNode);
-        }, false);
-    }
-
     var xulPanels = _('panels');
     xulPanels.addEventListener('custom/foreground', function(event) {
         for(let i=0, l=xulPanels.childNodes.length; i<l; i++)
