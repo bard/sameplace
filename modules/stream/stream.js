@@ -170,8 +170,8 @@ translators.push({
             displayFilters).toXMLString();
         var originAddress, targetAddress, account, direction;
 
-        account   = stanza.ns_x4m_in::meta.@account.toString();
-        direction = stanza.ns_x4m_in::meta.@direction.toString();
+        account   = stanza.@ns_x4m_in::account.toString();
+        direction = stanza.@ns_x4m_in::direction.toString();
 
         var event = $('#blueprints > .event')
             .clone()
@@ -216,7 +216,7 @@ translators.push({
             return false;
         if(stanza.status.text() == '')
             return false;
-        if(stanza.ns_x4m_in::meta.@direction == 'in' &&
+        if(stanza.@ns_x4m_in::direction == 'in' &&
            // XXX maybe should use names
            JID(stanza.@from).address in storage.load('conf').muted)
             return false;
@@ -230,7 +230,7 @@ translators.push({
         // status message, thereby sending out the same presence for
         // each.
 
-        var origin = (stanza.ns_x4m_in::meta.@direction == 'in' ?
+        var origin = (stanza.@ns_x4m_in::direction == 'in' ?
                       JID(stanza.@from).address : 'me');
         if(origin in this._lastSeen &&
            this._lastSeen[origin] == stanza.status.text())
@@ -244,8 +244,8 @@ translators.push({
             stanza.status.text(),
             displayFilters).toXMLString();
 
-        var account = stanza.ns_x4m_in::meta.@account;
-        var direction = stanza.ns_x4m_in::meta.@direction;
+        var account = stanza.@ns_x4m_in::account;
+        var direction = stanza.@ns_x4m_in::direction;
 
         var event = $('#blueprints > .event')
             .clone()
@@ -256,7 +256,7 @@ translators.push({
             .end();
 
         if(direction == 'in') {
-            var originAddress = (stanza.ns_x4m_in::meta.@direction == 'in' ?
+            var originAddress = (stanza.@ns_x4m_in::direction == 'in' ?
                                  JID(stanza.@from).address : 'me');
 
             event.find('.origin')
@@ -265,9 +265,9 @@ translators.push({
                 .end();
 
             var me = this;
-            xmpp.send(<iq type='get' to={originAddress}>
+            xmpp.send(<iq type='get' to={originAddress} xmlns:x4m={ns_x4m_in}
+                      x4m:account={account}>
                       <vCard xmlns={ns_vcard}/>
-                      <meta xmlns={ns_x4m_in} account={account}/>
                       <cache-control xmlns={ns_x4m_in}/>
                       </iq>, function(stanza) {
                           var xmlPhoto = stanza..ns_vcard::PHOTO;
@@ -365,101 +365,62 @@ function getName(address) {
 
 function simulate() {
     xmpp._receive(
-            <iq from="test@localhost/SamePlace" to="test@localhost/SamePlace" id="_12360120459721002" type="result">
+            <iq from="test@localhost/SamePlace" to="test@localhost/SamePlace" id="_12360120459721002" type="result"
+        xmlns:x4m={ns_x4m_in} x4m:account="test@localhost" x4m:direction="in">
             <query xmlns="jabber:iq:roster">
             <item ask="subscribe" subscription="none" jid="foo@localhost"/>
             <item ask="subscribe" subscription="none" name="Fido" jid="fido@localhost"/>
             </query>
-            <meta account="test@localhost" direction="in" xmlns="http://hyperstruct.net/xmpp4moz/protocol/internal"/>
             </iq>);
 
     var stanzas = [];
     for(var i=0; i<4; i++) {
-        stanzas.push(<presence from="fido@localhost/Test">
-                     <meta
-                     xmlns="http://hyperstruct.net/xmpp4moz/protocol/internal"
-                     direction="in" account="test@localhost"/>
+        stanzas.push(<presence from="fido@localhost/Test" xmlns:x4m={ns_x4m_in} x4m:direction="in" x4m:account="test@localhost">
                      <status>@jenny feeling good, and you aoeu ao98e gua8oeurcaho ercuha roche uracohercu ahorceh uracohercuhaorchrao cherucahoer ucaohrcehu ao reuaho rceh uarcoheurc bracohe urcaohercu?</status>
                      </presence>);
 
-        stanzas.push(<message to="fido@localhost/Test" type="chat">
-                     <meta
-                     xmlns="http://hyperstruct.net/xmpp4moz/protocol/internal"
-                     direction="out" account="test@localhost"/>
+        stanzas.push(<message to="fido@localhost/Test" type="chat" xmlns:x4m={ns_x4m_in} x4m:direction="out" x4m:account="test@localhost">
                      <body>hello back!</body>
                      </message>);
-        stanzas.push(<message to="fido@localhost/Test" type="chat">
-                     <meta
-                     xmlns="http://hyperstruct.net/xmpp4moz/protocol/internal"
-                     direction="out" account="test@localhost"/>
+        stanzas.push(<message to="fido@localhost/Test" type="chat" xmlns:x4m={ns_x4m_in} x4m:direction="out" x4m:account="test@localhost">
                      <body>hello back!</body>
                      </message>);
-        stanzas.push(<message to="fido@localhost/Test" type="chat">
-                     <meta
-                     xmlns="http://hyperstruct.net/xmpp4moz/protocol/internal"
-                     direction="out" account="test@localhost"/>
+        stanzas.push(<message to="fido@localhost/Test" type="chat" xmlns:x4m={ns_x4m_in} x4m:direction="out" x4m:account="test@localhost">
                      <body>hello back!</body>
                      </message>);
 
 
-        stanzas.push(<message from="fido@localhost/Test" type="chat">
-                     <meta
-                     xmlns="http://hyperstruct.net/xmpp4moz/protocol/internal"
-                     direction="in" account="test@localhost"/>
+        stanzas.push(<message from="fido@localhost/Test" type="chat" xmlns:x4m={ns_x4m_in} x4m:direction="in" x4m:account="test@localhost">
                      <body>hello, bard! see www.google.com</body>
                      </message>);
-        stanzas.push(<message from="fido@localhost/Test" type="chat">
-                     <meta
-                     xmlns="http://hyperstruct.net/xmpp4moz/protocol/internal"
-                     direction="in" account="test@localhost"/>
+        stanzas.push(<message from="fido@localhost/Test" type="chat" xmlns:x4m={ns_x4m_in} x4m:direction="in" x4m:account="test@localhost">
                      <body>boom!</body>
                      </message>);
 
-        stanzas.push(<presence from="fido@localhost/Test">
-                     <meta
-                     xmlns="http://hyperstruct.net/xmpp4moz/protocol/internal"
-                     direction="in" account="test@localhost"/>
+        stanzas.push(<presence from="fido@localhost/Test" xmlns:x4m={ns_x4m_in} x4m:direction="in" x4m:account="test@localhost">
                      <status>aaaah</status>
                      </presence>);
 
-        stanzas.push(<presence>
-                     <meta
-                     xmlns="http://hyperstruct.net/xmpp4moz/protocol/internal"
-                     direction="out" account="test@localhost"/>
+        stanzas.push(<presence xmlns:x4m={ns_x4m_in} x4m:direction="out" x4m:account="test@localhost">
                      <status>see me at http://www.sameplace.cc</status>
                      </presence>);
-        stanzas.push(<presence>
-                     <meta
-                     xmlns="http://hyperstruct.net/xmpp4moz/protocol/internal"
-                     direction="out" account="test@localhost"/>
+        stanzas.push(<presence xmlns:x4m={ns_x4m_in} x4m:direction="out" x4m:account="test@localhost">
                      <status>see me at http://www.sameplace.cc</status>
                      </presence>);
 
 
 
-        stanzas.push(<message from="jimbo@localhost/Test" type="chat">
-                     <meta
-                     xmlns="http://hyperstruct.net/xmpp4moz/protocol/internal"
-                     direction="in" account="test@localhost"/>
+        stanzas.push(<message from="jimbo@localhost/Test" type="chat" xmlns:x4m={ns_x4m_in} x4m:direction="in" x4m:account="test@localhost">
                      <body>grrrr</body>
                      </message>);
-        stanzas.push(<message from="jimbo@localhost/Test" type="chat">
-                     <meta
-                     xmlns="http://hyperstruct.net/xmpp4moz/protocol/internal"
-                     direction="in" account="test@localhost"/>
+        stanzas.push(<message from="jimbo@localhost/Test" type="chat" xmlns:x4m={ns_x4m_in} x4m:direction="in" x4m:account="test@localhost">
                      <body>grrrr</body>
                      </message>);
-        stanzas.push(<message from="jimbo@localhost/Test" type="chat">
-                     <meta
-                     xmlns="http://hyperstruct.net/xmpp4moz/protocol/internal"
-                     direction="in" account="test@localhost"/>
+        stanzas.push(<message from="jimbo@localhost/Test" type="chat" xmlns:x4m={ns_x4m_in} x4m:direction="in" x4m:account="test@localhost">
                      <body>grrrr</body>
                      </message>);
 
-        stanzas.push(<presence>
-                     <meta
-                     xmlns="http://hyperstruct.net/xmpp4moz/protocol/internal"
-                     direction="out" account="test@localhost"/>
+        stanzas.push(<presence xmlns:x4m={ns_x4m_in} x4m:direction="out" x4m:account="test@localhost">
                      <status>see me at http://www.sameplace.cc</status>
                      </presence>);
 
@@ -478,9 +439,9 @@ function simulate() {
 
 
 function autoReply(stanza) {
-    xmpp.send(<message to={stanza.@from} type={stanza.@type.toString() || 'normal'}>
+    xmpp.send(<message to={stanza.@from} type={stanza.@type.toString() || 'normal'}
+              xmlns:x4m={ns_x4m_in} x4m:account={stanza.@ns_x4m_in::account}>
               <body>autoreply</body>
-              <meta xmlns={ns_x4m_in} account={stanza.ns_x4m_in::meta.@account}/>
               </message>);
 }
 
