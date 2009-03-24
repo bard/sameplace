@@ -48,6 +48,7 @@
       orient="vertical">
 
   <script type="application/x-javascript" src="../lib/getElementsBySelector.js"/>
+  <script type="application/x-javascript" src="patches.js"/>
   <script type="application/x-javascript" src="chats.js"/>
 
   <vbox id="main" flex="1">
@@ -59,7 +60,8 @@
              showcommentcolumn="true"
              emptytext="Search contacts"
              tabscrolling="true"
-             ontextentered="enteredSearchText(this);"/>
+             ontextentered="enteredSearchText(this);"
+             sizetopopup="none"/>
 
     <panel id="completions"
            type="autocomplete-richlistbox"
