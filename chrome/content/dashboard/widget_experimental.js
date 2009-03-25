@@ -89,7 +89,8 @@ experimental.createDesktopShortcut = function() {
             .convertChromeURL(
                 Cc['@mozilla.org/network/io-service;1']
                     .getService(Ci.nsIIOService)
-                    .newURI(url, null, null)).spec;
+                    .newURI(url, null, null))
+            .QueryInterface(Ci.nsIFileURL);
     }
 
     function makeShortcutCommand(targetPath, iconPath, name, arguments) {
@@ -123,7 +124,7 @@ experimental.createDesktopShortcut = function() {
     shortcutFile.append('SamePlace.desktop');
     var shortcutCommand = makeShortcutCommand(
         appBinaryFile.path,
-        chromeToFileUrl('chrome://sameplace/skin/logo32x32.png'),
+        chromeToFileUrl('chrome://sameplace/skin/logo32x32.png').file.path,
         'SamePlace',
         '-sameplace');
     save(shortcutCommand, shortcutFile);
