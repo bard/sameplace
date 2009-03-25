@@ -70,9 +70,10 @@
 
   <keyset id="mainKeyset">
     <key id="sameplace-toggle-key" command="sameplace-toggle" keycode="VK_F9"/>
-
+    <!-- for mac -->
+    <key id="sameplace-toggle-key-mac" command="sameplace-toggle" keycode="VK_F9" modifiers="control"/>
     <!-- development only -->
-    <key id="sameplace-reload-key" command="sameplace-reload" keycode="VK_F9" modifiers="control"/>
+    <key id="sameplace-reload-key" command="sameplace-reload" keycode="VK_F9" modifiers="alt"/>
   </keyset>
 
   <!-- MENUS -->
