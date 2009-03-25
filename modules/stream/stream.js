@@ -14,7 +14,13 @@ var translators = [];
 
 // Functions to apply to text nodes in messages body, presence status
 // (and possibly others) before displaying
-var displayFilters = [filters.processURLs];
+var displayFilters = [filters.processURLs, filters.processImageBinds];
+
+var applyFilters = compose(
+    filters.processURLs,
+    filters.processImageBinds
+);
+
 
 // Defaults
 var defaultConf = {
@@ -165,9 +171,10 @@ translators.push({
     },
 
     process: function(stanza) {
-        var content = filter.applyTextProcessors(
-            stanza.body.text(),
-            displayFilters).toXMLString();
+        var content = applyFilters(stanza.body, displayFilters)
+            .children()
+            .toXMLString();
+
         var originAddress, targetAddress, account, direction;
 
         account   = stanza.@ns_x4m_in::account.toString();
@@ -240,9 +247,9 @@ translators.push({
     },
 
     process: function(stanza) {
-        var content = filter.applyTextProcessors(
-            stanza.status.text(),
-            displayFilters).toXMLString();
+        var content = applyFilters(stanza.status, displayFilters)
+            .children()
+            .toXMLString();
 
         var account = stanza.@ns_x4m_in::account;
         var direction = stanza.@ns_x4m_in::direction;

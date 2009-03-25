@@ -71,34 +71,31 @@ filters.processSample = function(xmlMessageBody) {
     });
 };
 
-filters.processURLs = function(xmlMessageBody) {
+filters.processURLs = function(xmlElement) {
     var regexp = /(https?:\/\/|xmpp:|www\.)[^ \t\n\f\r"<>|()]*[^ \t\n\f\r"<>|,.!?(){}]/g;
 
-    return xml.mapTextNodes(xmlMessageBody, function(textNode) {
-        return text
-            .mapMatch(textNode.toString(), regexp, function(url, protocol) {
-                switch(protocol) {
-                case 'http://':
-                case 'https://':
-                case 'xmpp:':
-                    return <a href={url}>{url}</a>;
-                    break;
-                default:
-                    return <a href={'http://' + url}>{url}</a>;
-                }
-            })
-            .reduce(function(acc, item) acc.appendChild(item), <dummy/>)
-            .children();
+    return xml.mapTextNodes(xmlElement, function(textNode) {
+        return text.mapMatch(textNode.toString(), regexp, function(url, protocol) {
+            switch(protocol) {
+            case 'http://':
+            case 'https://':
+            case 'xmpp:':
+                return <a href={url}>{url}</a>;
+                break;
+            default:
+                return <a href={'http://' + url}>{url}</a>;
+            }
+        });
     });
 };
 
-filters.processEmoticons = function(xmlMessageBody) {
+filters.processImageBinds = function(xmlElement) {
     function makeMatcher(listOfStrings) {
         return new RegExp(listOfStrings.map(escape).join('|'), 'g');
     }
 
     function escape(string) {
-        return string.replace(/(\(|\)|\*|\|)/g, '\\$1');
+        return string.replace(/([.*+?^${}()|[\]\\])/g, '\\$1');
     }
 
     function getKeys(object) {
@@ -138,16 +135,16 @@ filters.processEmoticons = function(xmlMessageBody) {
         '<3':	 'heart',
         'B-)':   'cool',
         'B)':    'cool'
-   };
+    };
     _.regexp = _.regexp || makeMatcher(getKeys(_.emoticons));
 
-    return xml.mapTextNodes(xmlMessageBody, function(textNode) {
+    return xml.mapTextNodes(xmlElement, function(textNode) {
         return text.mapMatch(
             textNode.toString(), _.regexp,
             function(emoticonSymbol) {
-                var url = 'emoticons/' + _.emoticons[emoticonSymbol] + '.png';
+                var url = 'images/emoticons/' + _.emoticons[emoticonSymbol] + '.png';
                 var cls = "smiley smiley-" + _.emoticons[emoticonSymbol];
-                return <span class={cls}>{emoticonSymbol}</span>;
+                return <img class='inline-image' alt={emoticonSymbol} src={url}/>;
             });
     });
 };

@@ -386,6 +386,8 @@ filter.xhtmlIM.keepRecommended = function(xhtml) {
  *           action: function(match) { return ':-)'; } }
  *     ];
  *
+ * DEPRECATED in favour of compose(filter1, filter2, ...)
+ *
  */
 
 filter.applyTextProcessors = function(xmlFragment, textProcessors) {
