@@ -284,7 +284,3 @@ img {
 .event.toggleable.expanded > .toggle:after {
     content: "▲";
 }
-
-
-/*.body { background: red; }*/
-
