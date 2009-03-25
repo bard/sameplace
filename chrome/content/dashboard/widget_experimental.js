@@ -126,6 +126,7 @@ experimental.createDesktopShortcut = function() {
         chromeToFileUrl('chrome://sameplace/skin/logo32x32.png'),
         'SamePlace',
         '-sameplace');
+    save(shortcutCommand, shortcutFile);
 
     this._prompt.alert(null, 'Notification', 'Shortcut saved as ' + shortcutFile.path);
 };
