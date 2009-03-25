@@ -98,7 +98,7 @@ experimental.createDesktopShortcut = function() {
         cmd += 'Name=' + name + '\n';
         cmd += 'Type=Application\n';
         cmd += 'Comment=Instant Messenger\n';
-        cmd += 'Exec=\'' + targetPath + '\' ' + arguments + '\n';
+        cmd += 'Exec=\'' + targetPath + '\' ' + arguments.join(' ') + '\n';
         cmd += 'Icon=' + iconPath + '\n';
         return cmd;
     }
@@ -126,7 +126,7 @@ experimental.createDesktopShortcut = function() {
         appBinaryFile.path,
         chromeToFileUrl('chrome://sameplace/skin/logo32x32.png').file.path,
         'SamePlace',
-        '-sameplace');
+        ['-sameplace']);
     save(shortcutCommand, shortcutFile);
 
     this._prompt.alert(null, 'Notification', 'Shortcut saved as ' + shortcutFile.path);
