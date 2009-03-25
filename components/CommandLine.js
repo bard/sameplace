@@ -26,11 +26,17 @@ const Handler = {
 
         if(uri || cmdLine.handleFlag('sameplace', false)) {
             var windowWatcher = Cc['@mozilla.org/embedcomp/window-watcher;1']
-            .getService(Ci.nsIWindowWatcher);
+                .getService(Ci.nsIWindowWatcher);
+            var windowMediator = Cc['@mozilla.org/appshell/window-mediator;1']
+                .getService(Ci.nsIWindowMediator)
 
-            windowWatcher.openWindow(
-                null, 'chrome://sameplace/content/standalone.xul',
-                'SamePlace:Contacts', 'chrome,toolbar=no', null)
+            var window = windowMediator.getMostRecentWindow('SamePlace');
+            if(window)
+                window.focus();
+            else
+                windowWatcher.openWindow(
+                    null, 'chrome://sameplace/content/standalone.xul',
+                    'SamePlace', 'chrome,toolbar=no', null)
 
             cmdLine.preventDefault = true;
         }
