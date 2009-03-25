@@ -46,7 +46,7 @@
 
 <?xul-overlay href="chrome://sameplace/content/dashboard/widget_accounts.xul"?>
 <?xul-overlay href="chrome://sameplace/content/dashboard/widget_contacts.xul"?>
-<?xul-overlay href="chrome://sameplace/content/dashboard/widget_settings.xul"?>
+<?xul-overlay href="chrome://sameplace/content/dashboard/widget_experimental.xul"?>
 
 <!-- localization -->
 

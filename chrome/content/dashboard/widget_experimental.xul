@@ -31,26 +31,27 @@
 -->
 
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-  <script type="application/x-javascript" src="widget_settings.js"/>
+  <script type="application/x-javascript" src="widget_experimental.js"/>
 
   <vbox id="widgets">
-    <widget id="widget-settings"
-            title="Settings"
-            image="chrome://sameplace/skin/dashboard/widget_settings_icon.png"
+    <widget id="widget-experimental"
+            title="Experimental"
+            image="chrome://sameplace/skin/dashboard/widget_experimental_icon.png"
             minimized="true">
 
       <hbox align="center" style="font-size: 11px;">
         <label value="Open:" class="small-margin"/>
-        <radiogroup id="widget-settings-open-mode" orient="horizontal"
+        <radiogroup id="widget-experimental-open-mode" orient="horizontal"
                     value=""
-                    onclick="settings.changedOpenMode(event);">
+                    onclick="experimental.changedOpenMode(event);">
           <radio label="in browser" value="sidebar" class="small-margin"/>
           <radio label="on desktop" value="standalone" class="small-margin"/>
         </radiogroup>
       </hbox>
 
-      <hbox align="center" style="font-size: 11px;" hidden="true">
-        <checkbox label="Display button on browser toolbar"/>
+      <hbox class="link-entry">
+        <label value="Create desktop shortcut" class="text-link" crop="end"
+               onclick="this.blur(); experimental.createDesktopShortcut();"/>
       </hbox>
     </widget>
   </vbox>
