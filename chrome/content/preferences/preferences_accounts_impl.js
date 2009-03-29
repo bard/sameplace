@@ -86,7 +86,7 @@ function refresh() {
 function getCurrentAccount() {
     var xulAccount = $('#accounts').selectedItem;
     if(xulAccount)
-        return find(accounts, function(a) a.id == xulAccount.getAttribute('id'));
+        return find(accounts, function(a) a.address == xulAccount.getAttribute('address'));
 }
 
 function addAccount(account) {
@@ -125,7 +125,7 @@ function updatedField(xulField) {
 }
 
 function requestedDeleteAccount() {
-    deleteAccount(getCurrentAccount().id);
+    deleteAccount(getCurrentAccount().address);
 }
 
 function requestedAddAccount() {
@@ -138,7 +138,7 @@ function requestedAddAccount() {
 }
 
 function selectedAccount(event) {
-    var account = find(accounts, function(account) account.id == event.target.selectedItem.id)
+    var account = find(accounts, function(account) account.address == event.target.selectedItem.getAttribute('address'))
     displayAccount(account);
 }
 
