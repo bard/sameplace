@@ -50,7 +50,6 @@ experimental.init = function() {
 };
 
 experimental.finish = function() {
-    this._channel.release();
 };
 
 
