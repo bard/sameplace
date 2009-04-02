@@ -239,8 +239,7 @@ translators.push({
 
         var origin = (stanza.@ns_x4m_in::direction == 'in' ?
                       JID(stanza.@from).address : 'me');
-        if(origin in this._lastSeen &&
-           this._lastSeen[origin] == stanza.status.text())
+        if(this._alreadySeen(origin, stanza.status.text()))
             return false;
 
         return true;
@@ -282,11 +281,20 @@ translators.push({
                               me._updateAvatar(event, xmlPhoto);
                       });
 
-            this._lastSeen[originAddress] = stanza.status.text();
+            this._remember(originAddress, stanza.status.text());
         } else
-            this._lastSeen['me'] = stanza.status.text();
+            this._remember('me', stanza.status.text());
 
         return event;
+    },
+
+    _remember: function(origin, text) {
+        this._lastSeen[origin] = text;
+    },
+
+    _alreadySeen: function(origin, text) {
+        return (origin in this._lastSeen &&
+                this._lastSeen[origin] == text);
     },
 
     _lastSeen: { __proto__: null },
