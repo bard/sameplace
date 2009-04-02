@@ -61,6 +61,19 @@ contacts.init = function() {
     this._channel.on(
         function(ev) (ev.name == 'iq' &&
                ev.dir == 'in' &&
+               ev.type == 'result' &&
+               ev.xml..ns_vcard::PHOTO != null),
+        function(iq) {
+            var xulConcreteContact = contacts._findConcreteContact(iq.account, XMPP.JID(iq.from).address);
+            var xulAvatar = $(xulConcreteContact, '^ .contact .avatar');
+            var xmlPhoto = iq.xml..ns_vcard::PHOTO;
+            xulAvatar.setAttribute('src', 'data:' + xmlPhoto.ns_vcard::TYPE + ';base64,' +
+                                   xmlPhoto.ns_vcard::BINVAL);
+        });
+
+    this._channel.on(
+        function(ev) (ev.name == 'iq' &&
+               ev.dir == 'in' &&
                ev.xml.ns_roster::query != null),
         function(iq) {
             for each(var item in iq.stanza..ns_roster::item) {
@@ -70,6 +83,40 @@ contacts.init = function() {
                                            item.@subscription.toString());
             }
         });
+
+    // this._channel.on(
+    //     function(ev) (ev.name == 'iq' &&
+    //            ev.dir == 'in' &&
+    //            ev.xml.ns_roster::query != null &&
+    //            (ev.type == 'result' ||
+    //             // Don't accept roster pushes from strangers
+    //             (ev.type == 'set' && ev.from == ev.account))),
+    //     function(iq) {
+    //         for each(var item in iq.xml..ns_roster::item) {
+    //             switch(item.@subscription.toString()) {
+    //             case 'both':
+    //             case 'to':
+    //                 views.roster['xmpp://' + iq.account + '/' + item.@jid] = item;
+    //                 break;
+    //             default:
+    //                 delete views.roster['xmpp://' + iq.account + '/' + item.@jid];
+    //                 break;
+    //             }
+    //         }
+    //     });
+
+    // this._channel.on(
+    //     function(ev) (ev.name == 'presence' &&
+    //            ev.dir == 'in' &&
+    //            (!ev.type || ev.type == 'unavailable')),
+    //     function(presence) {
+    //         var uri = 'xmpp://' + presence.account + '/' + XMPP.JID(presence.from).address;
+    //         if(!(uri in views.presence))
+    //             views.presence[uri] = [];
+
+    //         views.presence[uri].unshift(presence.xml);
+    //     }
+    // )
 
     this._channel.on(
         function(ev) (ev.name == 'presence' &&
@@ -382,17 +429,17 @@ contacts.requestedRenameContact = function(event, useNickAsPreset) {
 // ----------------------------------------------------------------------
 
 contacts.receivedContactPresence = function(presence) {
-    this.updateContactPresence(
-        XMPP.presencesOf(
-            presence.account,
-            XMPP.JID(presence.stanza.@from).address)[0] || presence);
-
     if(this._displayMode == 'online') {
         var account = presence.account;
         var address = XMPP.JID(presence.stanza.@from).address;
         var name = this._getRosterItem(account, address).@name.toString();
         this.updateContactItem(account, address, name);
     }
+
+    this.updateContactPresence(
+        XMPP.presencesOf(
+            presence.account,
+            XMPP.JID(presence.stanza.@from).address)[0] || presence);
 };
 
 contacts.receivedSubscriptionRequest = delayAndAccumulate(function(argSets) {
@@ -402,7 +449,6 @@ contacts.receivedSubscriptionRequest = delayAndAccumulate(function(argSets) {
                      'subscription-request',
                      null,
                      'info_high',
-                     xulNotify.PRIORITY_INFO_HIGH,
                      [{label: 'View', accessKey: 'V', callback: viewRequest}]);
 
     function viewRequest() {
@@ -601,7 +647,7 @@ contacts.showingContactPopup = function(xulPopup) {
         var iq = yield XMPP.req(
             account,
                 <iq to={address} type='get'>
-                <connection xmlns={ns_x4m_in} control='cache,remote-if-online'/>
+                <connection xmlns={ns_x4m_in} control='cache,remote-if-online'/> // XXX should be last element?
                 <vCard xmlns='vcard-temp'/>
                 </iq>);
 
@@ -755,6 +801,10 @@ contacts._makeConcreteContact = function(account, address) {
 };
 
 contacts._getRosterItem = function(account, address) {
+    // return XMPP.view(ns_roster)
+    //     .get('xmpp://' + account + '/' + account)
+    //     .stanza..ns_roster::item.(@jid == address);
+
     var roster = XMPP.cache.first(
         XMPP.q()
             .event('iq')
@@ -785,13 +835,16 @@ contacts.taskdef_initList = function(receive) {
                                    item.@name.toString());
     }
 
+    // XMPP.view('presence/in/account').get(account)
+    //     .forEach(function(presence) contacts.receivedContactPresence(presence));
+
     XMPP.cache
         .all(XMPP.q()
              .event('presence')
              .direction('in')
              .account(account))
         .forEach(function(presence) contacts.receivedContactPresence(presence));
-}
+};
 
 
 // LAB AREA
@@ -806,6 +859,9 @@ XMPP.req = function(account, stanza) {
         XMPP.sendPseudoSync(account, stanza, function(reply) resume(reply));
     }
 };
+
+
+
 
 XMPP.sendPseudoSync = function(account, stanza, replyHandler) {
     var connectionControl = stanza.ns_x4m_in::connection.@control.toString();
@@ -895,4 +951,71 @@ XMPP.packet = function(xmlStanza) {
     }
 };
 
+XMPP.get = function() {
+    var localRequest = stanza.ns_x4m_in::query;
+    if(localRequest.@type == 'presence') {
+        let reply =
+            <iq type='result' from={account}>
+            <query xmlns={ns_x4m_in}/>
+            </iq>;
 
+        let presences = XMPP.cache
+            .all(XMPP.q()
+                 .event('presence')
+                 .direction('in')
+                 .account(account));
+
+        for each(var presence in presences) {
+            reply.ns_x4m_in::query.appendChild(presence.stanza);
+        }
+
+        replyHandler(reply);
+        return;
+    }
+};
+
+XMPP.view = function(name) {
+    // These should be pre-generated.  But just for prototyping, we
+    // derive them from the cache or other means.
+    switch(name) {
+    case ns_roster:
+        return {
+            get: function(uri) {
+                return XMPP.cache.first(
+                    XMPP.q()
+                        .event('iq')
+                        .direction('in')
+                        .account(XMPP.entity(uri).account)
+                        .child(ns_roster, 'query'));
+            }
+        }
+        break;
+    case 'presence/in/account':
+        return {
+            get: function(account) {
+                return XMPP.cache.all(
+                    XMPP.q()
+                        .event('presence')
+                        .direction('in')
+                        .account(account));
+            }
+        }
+        break;
+
+// XMPP.view(ns_roster)
+//     .get('xmpp://' + account + '/' + address);
+// XMPP.view(ns_vcard)
+//     .get('xmpp://' + account + '/' + address);
+// XMPP.view('presence')
+//     .get('xmpp://' + account + '/' + address);
+// XMPP.view(ns_bookmarks)
+
+// XMPP.view('muc')
+//     .get('')
+
+// for each(var bookmark in XMPP.view(ns_bookmarks)) {
+
+// }
+
+    }
+};
