@@ -1,3 +1,18 @@
+
+
+if(typeof(JSON) == 'undefined') {
+    var JSON = {
+        parse: function(string) {
+            return $.evalJSON(string);
+        },
+
+        stringify: function(object) {
+            return $.toJSON(object);
+        }
+    }
+}
+
+
 // Storage wrapper.  Uses custom events and DOM areas in the current
 // implementation and requires cooperation from chrome.  Wouldn't be
 // needed if DOM storage worked for file:// URIs.
