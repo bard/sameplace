@@ -647,8 +647,8 @@ contacts.showingContactPopup = function(xulPopup) {
         var iq = yield XMPP.req(
             account,
                 <iq to={address} type='get'>
-                <connection xmlns={ns_x4m_in} control='cache,remote-if-online'/> // XXX should be last element?
                 <vCard xmlns='vcard-temp'/>
+                <connection xmlns={ns_x4m_in} control='cache,remote-if-online'/>
                 </iq>);
 
         if(iq.stanza.@type == 'error') {
