@@ -171,14 +171,13 @@ accounts.requestedStatusChange = function(xulAccountDescendant, xulStatus) {
 
 accounts.changeStatus = function(account, availability, show) {
     function previousPresenceStanza(account) {
-        var p = XMPP.cache.fetch({
-            event     : 'presence',
-            account   : account,
-            direction : 'out',
-            stanza    : function(s) { return s.ns_muc::x == undefined; }
-        })[0];
-
-        return p ? p.stanza : null;
+        var accountPresence = XMPP.cache.first(
+            XMPP.q()
+                .event('presence')
+                .account(account.jid)
+                .direction('out')
+                .xpath('[not(@to)]'));
+        return accountPresence ? accountPresence.stanza : null;
     }
 
     var newPresenceStanza = (previousPresenceStanza(account) || <presence/>).copy();
