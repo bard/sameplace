@@ -194,3 +194,77 @@ function _(id) {
 function v(id) {
     return typeof(_(id).checked) == 'undefined' ? _(id).value : _(id).checked;
 }
+
+
+// (MUC) BOOKMARK UTILITIES
+// ----------------------------------------------------------------------
+
+/**
+ * Retrieves from cache bookmarks belonging to _account_.
+ *
+ */
+
+function getMUCBookmarks(account) {
+    var iq = XMPP.cache.fetch({
+        event     : 'iq',
+        direction : 'in',
+        account   : account,
+        stanza    : function(s) {
+                return s.ns_private::query.ns_bookmarks::storage != undefined;
+            }})[0];
+
+    if(iq)
+        return iq.stanza.ns_private::query.copy();
+}
+
+/**
+ * Checks cache to see if MUC identified by _account_, _address_ is
+ * bookmarked.
+ *
+ */
+
+function isMUCBookmarked(account, address) {
+    var query = getMUCBookmarks(account);
+    var bookmark = query.ns_bookmarks::storage.ns_bookmarks::conference.(@jid == address);
+    return bookmark != undefined;
+}
+
+/**
+ * Retrieves from cache the bookmark for MUC identified by _account_
+ * and _address_ (if any).
+ *
+ *
+ */
+
+function getMUCBookmark(account, address) {
+    var query = getMUCBookmarks(account);
+    if(query)
+        return query.ns_bookmarks::storage.ns_bookmarks::conference.(@jid == address);
+}
+
+/**
+ * Removes a MUC bookmark from a <query xmlns="jabber:iq:private"/>
+ * element.  Doesn't modiy original query, return new one.
+ *
+ */
+
+function delMUCBookmark(address, query) {
+    query = query.copy();
+    var bookmark = query.ns_bookmarks::storage.ns_bookmarks::conference.(@jid == address);
+    if(bookmark != undefined)
+        delete query.ns_bookmarks::storage.ns_bookmarks::conference[bookmark.childIndex()];
+    return query;
+}
+
+/**
+ * Puts a MUC bookmark into a <query xmlns="jabber:iq:private"/>
+ * element, possibly replacing one with some address.  Doesn't modiy
+ * original query, return new one.
+ *
+ */
+
+function putMUCBookmark(bookmark, query) {
+    query = delMUCBookmark(bookmark.@jid, query);
+    query.ns_bookmarks::storage.appendChild(bookmark);
+    return query;
+}
