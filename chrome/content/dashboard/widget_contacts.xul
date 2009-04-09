@@ -154,6 +154,7 @@
                flex="1"
                onclick="contacts.clickedContact(this);"/>
         <spacer flex="100"/>
+        <image class="avatar" src="" width="16" height="16"/>
       </hbox>
 
       <label class="status-message"
