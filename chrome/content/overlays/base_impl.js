@@ -40,12 +40,13 @@ const pref = Cc['@mozilla.org/preferences-service;1']
 .getService(Ci.nsIPrefService)
 .getBranch('extensions.sameplace.');
 
+Cu.import('resource://sameplace/util.jsm');
+
 
 // GLOBAL STATE
 // ----------------------------------------------------------------------
 
 var channel;
-var util = load('chrome://sameplace/content/lib/util_impl.js', {});
 
 
 // INITIALIZATION
@@ -89,7 +90,10 @@ function init(event) {
         }, 1);
 
     if(pref.getBoolPref('addToolbarButton'))
-        util.addToolbarButton('sameplace-button');
+        util.addToolbarButton(document.getElementById('nav-bar') ||
+                              document.getElementById('mail-bar') ||
+                              document.getElementById('mail-bar2'),
+                              'sameplace-button');
 
     updateStatusIndicator();
 }
@@ -186,29 +190,6 @@ function openURL(url) {
             .loadUrl(Cc['@mozilla.org/network/io-service;1']
                      .getService(Ci.nsIIOService)
                      .newURI(url, null, null));
-}
-
-function load(url, context) {
-    var loader = Cc['@mozilla.org/moz/jssubscript-loader;1']
-        .getService(Ci.mozIJSSubScriptLoader);
-
-    if(!context)
-        // load everything in current context
-        loader.loadSubScript(url);
-    else if(arguments.length == 2) {
-        // load everything in specified context and also return it
-        loader.loadSubScript(url, context);
-        return context;
-    } else {
-        // load some things in current or specified context
-        context = context || this;
-        var tmpContext = {};
-        loader.loadSubScript(url, tmpContext);
-        for each(var name in Array.slice(arguments, 2)) {
-            this[name] = tmpContext[name];
-        }
-        return context;
-    }
 }
 
 function getMostRecentWindow(type) {

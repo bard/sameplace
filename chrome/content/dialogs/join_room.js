@@ -35,9 +35,12 @@
 
 const Cc = Components.classes;
 const Ci = Components.interfaces;
+const Cu = Components.utils;
 
 var xmpp = xmpp || {};
 xmpp.ui = xmpp.ui || {};
+
+Cu.import('resource://sameplace/util.jsm');
 
 
 // INITIALIZATION

@@ -43,7 +43,6 @@
 
   <script type="application/x-javascript" src="../lib/getElementsBySelector.js"/>
   <script type="application/x-javascript" src="hide-scrollbar.js"/>
-  <script type="application/x-javascript" src="../lib/util.js"/>
   <script type="application/x-javascript" src="stream.js"/>
 
   <vbox id="main" flex="1">

@@ -69,13 +69,6 @@
     <scrollbox id="main" flex="1" orient="vertical">
       <description id="widgets-toolbar" class="toolbar">
         <toolbarspring flex="1"/>
-        <toolbaritem flex="1" hidden="true">
-          <label id="more-widgets" class="text-link" value="More &#187;"
-                 href="http://www.sameplace.cc/download"
-                 tooltiptext="More &#187;"
-                 crop="end"
-                 flex="1"/>
-        </toolbaritem>
       </description>
 
       <vbox id="widgets" flex="1"/>

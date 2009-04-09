@@ -71,11 +71,6 @@ dashboard.init = function() {
         $('#widgets-toolbar > button[control="' + event.target.getAttribute('id') + '"]').checked = false;
     }, false);
 
-    $('#more-widgets').open = function(event) {
-        event.target.blur();
-        util.openURL(event.target.getAttribute('href'));
-    };
-
     // Let widgets know that we finished loading.  Widget will listen
     // to this instead of 'load' event on window because when window
     // loads, 'sameplace' global object might not have been

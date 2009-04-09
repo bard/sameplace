@@ -30,50 +30,60 @@
  */
 
 
+// EXPORTS
+// ----------------------------------------------------------------------
+
+var EXPORTED_SYMBOLS = [
+    'util'
+];
+
+
 // DEFINITIONS
 // ----------------------------------------------------------------------
 
 var Cc = Components.classes;
 var Ci = Components.interfaces;
 var Cu = Components.utils;
-var pref = Cc['@mozilla.org/preferences-service;1']
-    .getService(Ci.nsIPrefService)
-    .getBranch('extensions.sameplace.');
 var srvWindowMediator = Cc['@mozilla.org/appshell/window-mediator;1']
     .getService(Ci.nsIWindowMediator);
 var srvIO = Cc['@mozilla.org/network/io-service;1']
     .getService(Ci.nsIIOService);
+var pref = Cc['@mozilla.org/preferences-service;1']
+    .getService(Ci.nsIPrefService)
+    .QueryInterface(Ci.nsIPrefBranch);
+
+
+Cu.import('resource://xmpp4moz/xmpp.jsm');
+
+var util = {};
 
 
 // UTILITIES - GENERIC - NON-GUI
 // ----------------------------------------------------------------------
 
-function chromeToFileUrl(url) {
+util.chromeToFileUrl = function(url) {
     return Cc['@mozilla.org/chrome/chrome-registry;1']
     .getService(Ci.nsIChromeRegistry)
     .convertChromeURL(
         Cc['@mozilla.org/network/io-service;1']
         .getService(Ci.nsIIOService)
         .newURI(url, null, null)).spec;
-}
+};
 
-function getExtensionVersion(id) {
+util.getExtensionVersion = function(id) {
     return Cc['@mozilla.org/extensions/manager;1']
         .getService(Ci.nsIExtensionManager)
         .getItemForID(id).version;
-}
+};
 
-function upgradeCheck(id, versionPref, actions, ignoreTrailingParts) {
-    const pref = Cc['@mozilla.org/preferences-service;1']
-    .getService(Ci.nsIPrefService);
-
+util.upgradeCheck = function(id, versionPref, actions, ignoreTrailingParts) {
     function compareVersions(a, b) {
         return Cc['@mozilla.org/xpcom/version-comparator;1']
         .getService(Ci.nsIVersionComparator)
         .compare(a, b);
     }
 
-    var curVersion = getExtensionVersion(id);
+    var curVersion = util.getExtensionVersion(id);
     if(curVersion) {
         var prevVersion = pref.getCharPref(versionPref);
         try {
@@ -98,78 +108,13 @@ function upgradeCheck(id, versionPref, actions, ignoreTrailingParts) {
             pref.savePrefFile(null);
         }
     }
-}
-
-function hostAppIsMail() {
-    return (Components.classes['@mozilla.org/xre/app-info;1']
-            .getService(Components.interfaces.nsIXULAppInfo)
-            .ID == '{3550f703-e582-4d05-9a08-453d09bdfdc6}');
-}
-
-function hostAppIsSongbird() {
-    return (Components.classes['@mozilla.org/xre/app-info;1']
-            .getService(Components.interfaces.nsIXULAppInfo)
-            .ID == 'songbird@songbirdnest.com');
-}
-
-
-// UTILITIES - SPECIFIC - NON-GUI
-// ----------------------------------------------------------------------
-
-function getDefaultAppUrl() {
-    var url = pref.getCharPref('defaultAppUrl');
-
-    if(url == 'default') {
-        return 'resource://sameplace/chat/chat.xhtml';
-    } else
-        return url;
-}
-
-function getChatOverlayName() {
-    var overlayName = pref.getCharPref('chatArea');
-    if(overlayName)
-        return overlayName;
-    else if(hostAppIsMail())
-        return 'messagepane';
-    else if(hostAppIsSongbird())
-        return 'external';
-    else
-        return 'sidebar';
-}
-
-function getChatWindow() {
-    switch(getChatOverlayName()) {
-    case 'sidebar':
-        var enumWindows = srvWindowMediator.getEnumerator('');
-        while(enumWindows.hasMoreElements()) {
-            var window = enumWindows.getNext();
-            var xulFrame = window.document.getElementById('sameplace-frame');
-            if(xulFrame && xulFrame.contentDocument.location.href != 'about:blank')
-                return xulFrame.contentDocument.getElementById('conversations').contentWindow;
-        }
-        break;
-    case 'messagepane':
-        var enumWindows = srvWindowMediator.getEnumerator('');
-        while(enumWindows.hasMoreElements()) {
-            var window = enumWindows.getNext();
-            if(window.document.getElementById('sameplace-conversations'))
-                return window.conversations;
-        }
-        
-        break;
-    case 'external':
-        return Cc['@mozilla.org/appshell/window-mediator;1']
-            .getService(Ci.nsIWindowMediator)
-            .getMostRecentWindow('SamePlace:Conversations');
-        break;
-    }
-}
+};
 
 
 // UTILITIES - GENERIC - GUI
 // ----------------------------------------------------------------------
 
-function openURL(spec) {
+util.openURL = function(spec) { // XXX DUP
     var navigator =  Cc['@mozilla.org/appshell/window-mediator;1']
         .getService(Ci.nsIWindowMediator)
         .getMostRecentWindow('navigator:browser');
@@ -188,42 +133,42 @@ function openURL(spec) {
         .loadUrl(Cc['@mozilla.org/network/io-service;1']
                  .getService(Ci.nsIIOService)
                  .newURI(spec, null, null));
-}
+};
 
-function setClass(xulElement, aClass, state) {
+util.setClass = function(xulElement, aClass, state) {
     if(state)
         addClass(xulElement, aClass);
     else
         removeClass(xulElement, aClass);
-}
+};
 
-function toggleClass(xulElement, aClass) {
+util.toggleClass = function(xulElement, aClass) {
     if(hasClass(xulElement, aClass))
         removeClass(xulElement, aClass);
     else
         addClass(xulElement, aClass);
-}
+};
 
-function hasClass(xulElement, aClass) {
+util.hasClass = function(xulElement, aClass) {
     return xulElement.getAttribute('class').split(/\s+/).indexOf(aClass) != -1;
-}
+};
 
-function addClass(xulElement, newClass) {
+util.addClass = function(xulElement, newClass) {
     var classes = xulElement.getAttribute('class').split(/\s+/);
     if(classes.indexOf(newClass) == -1)
         xulElement.setAttribute('class', classes.concat(newClass).join(' '));
-}
+};
 
-function removeClass(xulElement, oldClass) {
+util.removeClass = function(xulElement, oldClass) {
     var classes = xulElement.getAttribute('class').split(/\s+/);
     var oldClassIndex = classes.indexOf(oldClass);
     if(oldClassIndex != -1) {
         classes.splice(oldClassIndex, 1);
         xulElement.setAttribute('class', classes.join(' '));
     }
-}
+};
 
-function afterLoad(xulPanel, action) {
+util.afterLoad = function(xulPanel, action) { // XXX DUP; RM-CANDIDATE
     xulPanel.addEventListener(
         'load', function(event) {
             if(event.target != xulPanel.contentDocument)
@@ -239,17 +184,9 @@ function afterLoad(xulPanel, action) {
 
             xulPanel.removeEventListener('load', arguments.callee, true);
         }, true);
-}
+};
 
-function modifyToolbarButtons(modifier) {
-    var toolbar =
-        document.getElementById('nav-bar') ||
-        document.getElementById('mail-bar') ||
-        document.getElementById('mail-bar2');
-
-    if(!toolbar)
-        return;
-
+util.modifyToolbarButtons = function(toolbar, modifier) {
     if(toolbar.getAttribute('customizable') == 'true') {
         var newSet = modifier(toolbar.currentSet);
         if(!newSet)
@@ -260,49 +197,33 @@ function modifyToolbarButtons(modifier) {
         toolbar.ownerDocument.persist(toolbar.id, 'currentset');
         try { BrowserToolboxCustomizeDone(true); } catch (e) {}
     }
-}
+};
 
-function removeToolbarButton(buttonId) {
-    modifyToolbarButtons(function(set) {
+util.removeToolbarButton = function(toolbar, buttonId) {
+    util.modifyToolbarButtons(toolbar, function(set) {
         if(set.indexOf(buttonId) != -1)
             return set.replace(buttonId, '');
     });
-}
+};
 
-function addToolbarButton(buttonId) {
-    modifyToolbarButtons(function(set) {
+util.addToolbarButton = function(toolbar, buttonId) {
+    util.modifyToolbarButtons(toolbar, function(set) {
         if(set.indexOf(buttonId) == -1)
             return set.replace(/(urlbar-container|separator)/,
                                buttonId + ',$1');
     });
-}
+};
 
 
 // UTILITIES - XMPP
 // ----------------------------------------------------------------------
 
-function getJoinPresence(account, address) {
+util.getJoinPresence = function(account, address) { // XXX GLOBAL; RM-CANDIDATE
     return XMPP.cache.first(XMPP.q()
                             .event('presence')
                             .account(account)
                             .direction('out')
                             .to(address)
                             .child(ns_muc, 'x'));
-}
-
-
-// UTILITIES - DEVELOPMENT
-// ----------------------------------------------------------------------
-
-function getStackTrace() {
-    var frame = Components.stack.caller;
-    var str = "<top>";
-
-    while (frame) {
-        str += '\n' + frame;
-        frame = frame.caller;
-    }
-
-    return str;
-}
+};
 

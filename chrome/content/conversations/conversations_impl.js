@@ -45,8 +45,8 @@ var srvObserver = Cc["@mozilla.org/observer-service;1"]
 
 var MAX_MESSAGE_CACHE = 100;
 
-var util = load('chrome://sameplace/content/lib/util_impl.js', {});
 Cu.import('resource://xmpp4moz/namespaces.jsm');
+Cu.import('resource://sameplace/util.jsm');
 
 
 // STATE
@@ -345,7 +345,7 @@ function create(account, address, nextAction) {
 
     xulPanel.setAttribute('account', account);
     xulPanel.setAttribute('address', address);
-    xulPanel.setAttribute('src', util.getDefaultAppUrl());
+    xulPanel.setAttribute('src', 'resource://sameplace/chat/chat.xhtml');
 
     return xulPanel;
 }
@@ -470,33 +470,3 @@ function getContact(message) {
                     message.stanza.@from : message.stanza.@to);
 }
 
-
-// GUI UTILITIES
-// ----------------------------------------------------------------------
-
-
-// UTILITIES
-// ----------------------------------------------------------------------
-
-function load(url, context) {
-    var loader = Cc['@mozilla.org/moz/jssubscript-loader;1']
-        .getService(Ci.mozIJSSubScriptLoader);
-
-    if(!context)
-        // load everything in current context
-        loader.loadSubScript(url);
-    else if(arguments.length == 2) {
-        // load everything in specified context and also return it
-        loader.loadSubScript(url, context);
-        return context;
-    } else {
-        // load some things in current or specified context
-        context = context || this;
-        var tmpContext = {};
-        loader.loadSubScript(url, tmpContext);
-        for each(var name in Array.slice(arguments, 2)) {
-            this[name] = tmpContext[name];
-        }
-        return context;
-    }
-}
