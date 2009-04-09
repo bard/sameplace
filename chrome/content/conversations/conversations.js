@@ -72,13 +72,13 @@ window.addEventListener('DOMContentLoaded', function(event) {
 
     if(window.isStandAlone()) {
         // This must come after initialization, or channel won't be there.
-        channel.on({
-            event     : 'message',
-            direction : 'in',
-            stanza    : function(s) { return s.body != undefined; }
-        }, function(message) {
-            popUp();
-        });
+        channel.on(
+            function(ev) (ev.name == 'message' &&
+                          ev.dir == 'in' &&
+                          ev.xml.body != undefined),
+            function(message) {
+                popUp();
+            });
 
         srvWindowWatcher.registerNotification(windowObserver);
     }

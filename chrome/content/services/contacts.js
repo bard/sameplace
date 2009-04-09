@@ -57,14 +57,12 @@ function init() {
 
     channel = XMPP.createChannel();
 
-    channel.on({
-        event     : 'message',
-        direction : 'out',
-        stanza    : function(s) {
-            return (s.body != undefined ||
-                    s.ns_xhtml_im::html.ns_xhtml::body != undefined);
-        }
-    }, function(m) { sentChatMessage(m); });
+    channel.on(
+        function(ev) (ev.name == 'message' &&
+                      ev.dir == 'out' &&
+                      (ev.xml.body != undefined ||
+                       ev.xml.ns_xhtml_im::html.ns_xhtml::body != undefined)),
+        function(m) sentChatMessage(m));
 }
 
 function finish() {

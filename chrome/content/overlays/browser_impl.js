@@ -32,22 +32,17 @@
 window.addEventListener('load', function(event) {
     const ns_http_auth  = 'http://jabber.org/protocol/http-auth';
 
-    channel.on({
-        event     : 'message',
-        direction : 'in',
-        stanza    : function(s) {
-            // Allow non-error messages with readable body [1] or
-            // error messages in general [2] but not auth requests [3]
-            return (((s.@type != 'error' && s.body.text() != undefined) || // [1]
-                     (s.@type == 'error')) && // [2]
-                    (s.ns_http_auth::confirm == undefined)) // [3]
-            }
-    }, function(message) {
-        if(!_('button'))
-            return;
-        if(isHidden())
-            _('button').setAttribute('pending-messages', 'true');
-    });
+    channel.on(
+        function(ev) (ev.name == 'message' &&
+                      ev.dir == 'in' &&
+                      ((ev.type != 'error' && ev.xml.body.text() != undefined) ||
+                       ev.type == 'error')),
+        function(message) {
+            if(!_('button'))
+                return;
+            if(isHidden())
+                _('button').setAttribute('pending-messages', 'true');
+        });
 
     var xulPanels = _('panels');
     xulPanels.addEventListener('custom/foreground', function(event) {

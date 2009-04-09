@@ -52,41 +52,40 @@ accounts.init = function() {
 
     this._channel = XMPP.createChannel();
 
-    this._channel.on({
-        event     : 'presence',
-        direction : 'out',
-        stanza    : function(s) {
-            return (s.@type == undefined || s.@type == 'unavailable') &&
-                s.ns_muc_user::x == undefined;
-        }
-    }, function(presence) {
-        var xulAccount = $('#accounts .account[account="' + presence.account + '"]');
-        xulAccount.setAttribute(
-            'availability', presence.stanza.@type == undefined ?
-                'available' : 'unavailable');
-        xulAccount.setAttribute(
-            'show', presence.stanza.show.toString());
+    this._channel.on(
+        function(ev) (ev.name == 'presence' &&
+               ev.dir == 'out' &&
+               (!ev || ev.type == 'unavailable') &&
+               !ev.to),
+        function(presence) {
+            var xulAccount = $('#accounts .account[account="' + presence.account + '"]');
+            xulAccount.setAttribute(
+                'availability', presence.stanza.@type == undefined ?
+                    'available' : 'unavailable');
+            xulAccount.setAttribute(
+                'show', presence.stanza.show.toString());
+            
+            $(xulAccount, '> .state-indicator').setAttribute(
+                'progress', 'false');
+        });
 
-        $(xulAccount, '> .state-indicator').setAttribute(
-            'progress', 'false');
-    });
-
-    this._channel.on({
-        event : 'connector',
-    }, function(connector) {
-        var xulAccount = $('#accounts .account[account="' + connector.account + '"]');
-        var xulStatus = $(xulAccount, '> .state-indicator');
-        switch(connector.state) {
-        case 'disconnected':
-        case 'error':
-            xulStatus.setAttribute('progress', 'false');
-            xulAccount.setAttribute('availability', 'unavailable');
-            break;
-        case 'connecting':
-            xulStatus.setAttribute('progress', 'true');
-            break;
-        }
-    });
+    this._channel.on(
+        function(ev) (ev.name == 'connector' &&
+               ['disconnected', 'error', 'connecting'].indexOf(ev.state) != -1),
+        function(connector) {
+            var xulAccount = $('#accounts .account[account="' + connector.account + '"]');
+            var xulStatus = $(xulAccount, '> .state-indicator');
+            switch(connector.state) {
+            case 'disconnected':
+            case 'error':
+                xulStatus.setAttribute('progress', 'false');
+                xulAccount.setAttribute('availability', 'unavailable');
+                break;
+            case 'connecting':
+                xulStatus.setAttribute('progress', 'true');
+                break;
+            }
+        });
 
     this.update();
 

@@ -81,15 +81,13 @@ function loadedView(event) {
 
     view = event.currentTarget.contentWindow;
 
-    channel.on({
-        event: 'message',
-        stanza: function(s) s.body != undefined
-    }, function(message) forwardEvent(message));
+    channel.on(function(ev) (ev.name == 'message' &&
+                             ev.xml.body != undefined),
+               function(message) forwardEvent(message));
 
-    channel.on({
-        event: 'presence',
-        stanza: function(s) s.status.text() != undefined
-    }, function(presence) forwardEvent(presence));
+    channel.on(function(ev) (ev.name == 'presence' &&
+                             ev.xml.status.text() != undefined),
+               function(presence) forwardEvent(presence));
 
     // XXX should stream view get this for itself?
 

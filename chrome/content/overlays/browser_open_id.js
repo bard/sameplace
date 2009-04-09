@@ -33,16 +33,14 @@
 window.addEventListener('load', function(event) {
     const ns_http_auth  = 'http://jabber.org/protocol/http-auth';
 
-    sameplace.channel.on({
-        event     : 'message',
-        direction : 'in',
-        stanza    : function(s) {
-            return s.ns_http_auth::confirm != undefined;
-        }
-    }, function(message) {
-        if(window == sameplace.getMostRecentWindow())
-            sameplace.receivedAuthConfirmRequest(message);
-    });
+    sameplace.channel.on(
+        function(ev) (ev.name == 'message' &&
+                      ev.dir == 'in' &&
+                      ev.xml.ns_http_auth::confirm != undefined),
+        function(message) {
+            if(window == sameplace.getMostRecentWindow())
+                sameplace.receivedAuthConfirmRequest(message);
+        });
 }, false);
 
 sameplace.receivedAuthConfirmRequest = function(message) {

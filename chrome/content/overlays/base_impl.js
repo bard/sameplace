@@ -101,27 +101,28 @@ function finish() {
 function initNetworkReactions() {
     channel = XMPP.createChannel();
 
-    channel.on({
-        event     : 'connector',
-    }, function(connector) {
-        switch(connector.state) {
-        case 'disconnected':
-        case 'active':
-            updateStatusIndicator();
-            break;
-        }
-    });
+    channel.on(
+        function(ev) ev.name == 'connector',
+        function(connector) {
+            switch(connector.state) {
+            case 'disconnected':
+            case 'active':
+                updateStatusIndicator();
+                break;
+            }
+        });
 
-    channel.on({
-        event     : 'message',
-        direction : 'in',
-        stanza    : function(s) { return s.@type == 'chat' && s.body.text() != undefined; }
-    }, function(message) {
-        if(window == getMostRecentWindow() &&
-           pref.getBoolPref('getAttentionOnMessage') &&
-           isActive())
-            window.getAttention();
-    });
+    channel.on(
+        function(ev) (ev.name == 'message' &&
+                      ev.dir == 'in' &&
+                      ev.type == 'chat' &&
+                      ev.xml.body.text != undefined),
+        function(message) {
+            if(window == getMostRecentWindow() &&
+               pref.getBoolPref('getAttentionOnMessage') &&
+               isActive())
+                window.getAttention();
+        });
 }
 
 

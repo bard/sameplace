@@ -79,73 +79,58 @@ function init(xulPanels, xulTabs) {
     
     channel = XMPP.createChannel();
 
-    channel.on({
-        event     : 'message',
-        direction : 'in',
-        stanza    : function(s) {
-            // Allow non-error messages with readable body [1] or
-            // error messages in general [2] but not auth requests [3]
-            return (((s.@type != 'error' && s.body.text() != undefined) || // [1]
-                     (s.@type == 'error')) && // [2]
-                    (s.ns_http_auth::confirm == undefined)) // [3]
-        }
-    }, function(message) {
-        cachePut(message);
-        seenDisplayableMessage(message);
-    });
+    channel.on(
+        // Allow non-error messages with readable body or
+        // error messages in general
+        function(ev) (ev.name == 'message' &&
+                      ev.dir == 'in' &&
+                      ((ev.type != 'error' && ev.xml.body.text() != undefined) ||
+                       (ev.type == 'error'))),
+        function(message) {
+            cachePut(message);
+            seenDisplayableMessage(message);
+        });
 
-    channel.on({
-        event     : 'message',
-        direction : 'out',
-        stanza    : function(s) {
-            // Allow messages with readable bodies [1], except if they
-            // belong to a groupchat [2] (we show those as they come
-            // back)
-            return (s.body.text() != undefined &&
-                    s.@type != 'groupchat');
-        }
-    }, function(message) {
-        cachePut(message);
-        seenDisplayableMessage(message);
-    });
+    channel.on(
+        // Allow messages with readable bodies, except if they belong
+        // to a groupchat (we show those as they come back)
+        function(ev) (ev.name == 'message' &&
+                      ev.dir == 'out' &&
+                      ev.type != 'groupchat' &&
+                      ev.xml.body.text() != undefined),
+        function(message) {
+            cachePut(message);
+            seenDisplayableMessage(message);
+        });
 
-    channel.on({
-        event     : 'message',
-        direction : 'out',
-        stanza    : function(s) {
-            return s.ns_chatstates::active != undefined;
-        }
-    }, function(message) {
-        sentChatActivation(message);
-    });
+    channel.on(
+        function(ev) (ev.name == 'message' &&
+                      ev.dir == 'out' &&
+                      ev.xml.ns_chatstates::active != undefined),
+        function(message) {
+            sentChatActivation(message);
+        });
 
-    channel.on({
-        event     : 'message',
-        direction : 'in',
-        stanza    : function(s) {
-            return (s.ns_event::x != undefined ||
-                    s.ns_chatstates::* != undefined);
-        }
-    }, function(message) {
-        receivedChatState(message);
-    });
+    channel.on(
+        function(ev) (ev.name == 'message' &&
+                      ev.dir == 'in' &&
+                      (ev.xml.ns_event::x != undefined ||
+                       ev.xml.ns_chatstates::* != undefined)),
+        function(message) receivedChatState(message));
 
-    channel.on({
-        event     : 'presence',
-        direction : 'out',
-        stanza    : function(s) {
-            return s.ns_muc::x != undefined && s.@type != 'unavailable'; 
-       }
-    }, function(presence) { sentMUCJoinPresence(presence) });
+    channel.on(
+        function(ev) (ev.name == 'presence' &&
+                      ev.dir == 'out' &&
+                      ev.type != 'unavailable' &&
+                      ev.xml.ns_muc::x != undefined),
+        function(presence) sentMUCJoinPresence(presence));
 
-    channel.on({
-        event     : 'presence',
-        direction : 'in',
-        stanza    : function(s) {
-            return (s.@type == undefined || s.@type == 'unavailable') &&
-                s.ns_muc_user::x == undefined;
-        }
-    }, receivedContactPresence);
+    channel.on(
+        function(ev) (ev.name == 'presence' &&
+                      ev.dir == 'in' &&
+                      (!ev.type || ev.type == 'unavailable') &&
+                      ev.xml.ns_muc_user::x == undefined),
+        function(presence) receivedContactPresence(presence));
 
     getTabs().addEventListener('select', function(event) {
         // It's important that this be a call-by-name rather than a

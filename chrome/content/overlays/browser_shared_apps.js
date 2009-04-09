@@ -33,16 +33,14 @@
 window.addEventListener('load', function() {
     const ns_x4m_ext = 'http://hyperstruct.net/xmpp4moz/protocol/external';
 
-    sameplace.channel.on({
-        event     : 'message',
-        stanza    : function(s) {
-            return (s.ns_x4m_ext::share != undefined &&
-                    s.@type != 'error');
-        }
-    }, function(message) {
-        if(window == sameplace.getMostRecentWindow('navigator:browser'))
-            sameplace.seenSharedAppNegotiation(message);
-    });
+    sameplace.channel.on(
+        function(ev) (ev.name == 'message' &&
+                      ev.type != 'error' &&
+                      ev.xml.ns_x4m_ext::share != undefined),
+        function(message) {
+            if(window == sameplace.getMostRecentWindow('navigator:browser'))
+                sameplace.seenSharedAppNegotiation(message);
+        });
 }, false);
 
 sameplace.seenSharedAppNegotiation = function(message) {

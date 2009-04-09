@@ -60,9 +60,9 @@ contacts.init = function() {
 
     this._channel.on(
         function(ev) (ev.name == 'iq' &&
-               ev.dir == 'in' &&
-               ev.type == 'result' &&
-               ev.xml..ns_vcard::PHOTO != null),
+                      ev.dir == 'in' &&
+                      ev.type == 'result' &&
+                      ev.xml..ns_vcard::PHOTO != null),
         function(iq) {
             var xulConcreteContact = contacts._findConcreteContact(iq.account, XMPP.JID(iq.from).address);
             var xulAvatar = $(xulConcreteContact, '^ .contact .avatar');
@@ -73,8 +73,8 @@ contacts.init = function() {
 
     this._channel.on(
         function(ev) (ev.name == 'iq' &&
-               ev.dir == 'in' &&
-               ev.xml.ns_roster::query != null),
+                      ev.dir == 'in' &&
+                      ev.xml.ns_roster::query != null),
         function(iq) {
             for each(var item in iq.stanza..ns_roster::item) {
                 contacts.updateContactItem(iq.account,
@@ -120,26 +120,26 @@ contacts.init = function() {
 
     this._channel.on(
         function(ev) (ev.name == 'presence' &&
-               ev.dir == 'in' &&
-               (ev.type == 'unavailable' || !ev.type)),
+                      ev.dir == 'in' &&
+                      (ev.type == 'unavailable' || !ev.type)),
         function(presence) contacts.receivedContactPresence(presence));
 
     this._channel.on(
         function(ev) (ev.name == 'presence' &&
-               ev.dir == 'in' &&
-               ev.type == 'subscribe'),
+                      ev.dir == 'in' &&
+                      ev.type == 'subscribe'),
         function(presence) contacts.receivedSubscriptionRequest(presence));
 
     this._channel.on(
         function(ev) (ev.name == 'connector' &&
-               ev.state == 'active'),
+                      ev.state == 'active'),
         function(connector) {
             $('#widget-contacts').setAttribute('minimized', 'false');
         });
 
     this._channel.on(
         function(ev) (ev.name == 'connector' &&
-               ev.state == 'disconnected'),
+                      ev.state == 'disconnected'),
         function(connector) {
             if(XMPP.accounts.every(XMPP.isDown))
                 $('#widget-contacts').setAttribute('minimized', 'true');

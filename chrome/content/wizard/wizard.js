@@ -371,13 +371,6 @@ function registerAccount(account, callbacks) {
     var resource = account.resource;
     var password = account.password;
 
-    var regChannel = XMPP.createChannel();
-    channel.on({
-        event: 'http://etherx.jabber.org/streams::error'
-    }, function(event) {
-        registrationFailed();
-    });
-    
     function start() {
         XMPP.open({
             domain   : service,
@@ -576,20 +569,18 @@ function waitForSubscription(transportAddress, continuation) {
         }
     }, 7500);
 
-    var reaction = channel.on({
-        event     : 'presence',
-        direction : 'in',
-        stanza    : function(s) {
-            return (s.@type == 'subscribe' &&
-                    s.@from == transportAddress);
-        }
-    }, function(presence) {
-        channel.forget(reaction);
-        XMPP.send(presence.account,
-                  <presence to={presence.stanza.@from} type='subscribed'/>);
-        if(!done) {
-            done = true;
-            continuation();
-        }
-    });
+    var reaction = channel.on(
+        function(ev) (ev.name == 'presence' &&
+                      ev.dir == 'in' &&
+                      ev.type == 'subscribe' &&
+                      ev.from == transportAddress),
+        function(presence) {
+            channel.forget(reaction);
+            XMPP.send(presence.account,
+                      <presence to={presence.stanza.@from} type='subscribed'/>);
+            if(!done) {
+                done = true;
+                continuation();
+            }
+        });
 }
