@@ -45,7 +45,6 @@
         flex="1">
 
   <script type="application/x-javascript;version=1.7" src="chrome://xmpp4moz/content/xmpp.js"/>
-  <script type="application/x-javascript;version=1.7" src="../lib/namespaces.js"/>
   <script type="application/x-javascript;version=1.7" src="join_room.js"/>
 
   <dialogheader id="header" title="&join_room.dialog.title;"/>

@@ -40,6 +40,7 @@ const Cu = Components.utils;
 var xmpp = xmpp || {};
 xmpp.ui = xmpp.ui || {};
 
+Cu.import('resource://xmpp4moz/namespaces.jsm');
 Cu.import('resource://sameplace/util.jsm');
 
 

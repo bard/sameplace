@@ -1,3 +1,13 @@
+
+// DEFINITIONS
+// ----------------------------------------------------------------------
+
+Cu.import('resource://xmpp4moz/namespaces.jsm');
+
+
+// INITIALIZATION
+// ----------------------------------------------------------------------
+
 function init() {
     var request = window.arguments[0];
 
