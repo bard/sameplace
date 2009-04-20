@@ -65,6 +65,8 @@ contacts.init = function() {
                       ev.xml..ns_vcard::PHOTO != null),
         function(iq) {
             var xulConcreteContact = contacts._findConcreteContact(iq.account, XMPP.JID(iq.from).address);
+            if(!xulConcreteContact)
+                return;
             var xulAvatar = $(xulConcreteContact, '^ .contact .avatar');
             var xmlPhoto = iq.xml..ns_vcard::PHOTO;
             xulAvatar.setAttribute('src', 'data:' + xmlPhoto.ns_vcard::TYPE + ';base64,' +
