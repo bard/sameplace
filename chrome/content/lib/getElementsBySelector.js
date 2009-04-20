@@ -43,25 +43,31 @@ Cu.import('resource://sameplace/csstoxpath.jsm')
 /// API
 // ----------------------------------------------------------------------
 
-function $(first, second) {
-    var context, css;
-    if(second) {
-        context = first;
-        css = second;
-    } else {
-        context = document;
-        css = first;
+function $() {
+    var context, cssExpr;
+    switch(arguments.length) {
+    case 1:
+        [context, cssExpr] = [document, arguments[0]];
+        break;
+    case 2:
+        [context, cssExpr] = [arguments[0], arguments[1]];
+        break;
+    default:
+        throw new Error('Wrong argument count. (' + arguments.length + ')');
     }
 
-    var xpath = cssToXPath(css);
-    if(context == undefined) {
-        Components.utils.reportError(xpath);
-        Components.utils.reportError(css);
-        Components.utils.reportError(Components.stack.caller.caller)
+    var memo = arguments.callee.memo || (arguments.callee.memo = {});
+    var xpathExpr;
+    if(cssExpr in memo)
+        xpathExpr = memo[cssExpr];
+    else {
+        xpathExpr = document.createExpression(cssToXPath(cssExpr), null);
+        memo[cssExpr] = xpathExpr;
     }
-    return document.evaluate(xpath, context, null,
-                             Components.interfaces.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE, null)
-        .singleNodeValue;
+
+    return xpathExpr.evaluate(context,
+                              Ci.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE,
+                              null).singleNodeValue;
 }
 
 function $$(first, second) {
