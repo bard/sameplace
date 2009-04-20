@@ -55,7 +55,7 @@ accounts.init = function() {
     this._channel.on(
         function(ev) (ev.name == 'presence' &&
                ev.dir == 'out' &&
-               (!ev || ev.type == 'unavailable') &&
+               (!ev.type || ev.type == 'unavailable') &&
                !ev.to),
         function(presence) {
             var xulAccount = $('#accounts .account[account="' + presence.account + '"]');
