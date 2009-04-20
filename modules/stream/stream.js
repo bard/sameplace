@@ -21,22 +21,7 @@ var applyFilters = compose(
     filters.processImageBinds
 );
 
-
-// Defaults
-var defaultConf = {
-    // For internal use of the storage system
-    _id: 'conf',
-
-    // Every ten seconds, check how many events we're displaying and
-    // remove older ones so that 100 events are left
-    maxEvents: 100,
-    cleanupInterval: 10000,
-
-    muted: {},
-
-    version: '0.10'
-};
-
+var conf;
 
 XML.prettyPrinting = false;
 XML.ignoreWhitespace = false;
@@ -47,13 +32,28 @@ XML.ignoreWhitespace = false;
 
 // Initialize components that don't need the DOM right away
 
-storage.init({conf: defaultConf});
 vcards = { __proto__: null };
 rosters = new XMLList();
 
 // Initialize DOM-dependent components when DOM is ready
 
 $(document).ready(function() {
+    conf =
+        PersistedObject.get('conf', true) ||
+        PersistedObject.create({
+            // For internal use of the storage system
+            _id: 'conf',
+
+            // Every ten seconds, check how many events we're displaying and
+            // remove older ones so that 100 events are left
+            maxEvents: 100,
+            cleanupInterval: 10000,
+
+            muted: {},
+
+            version: 1
+        }, true);
+
     // Initialize xmpp forwarding
 
     xmpp.init();
@@ -114,13 +114,9 @@ $(document).ready(function() {
 
     // Initialize periodic tasks
 
-    // XXX race condition here, custom config isn't necessarily
-    // available here.
-
-    var conf = storage.load('conf');
     window.setInterval(cleanup, conf.cleanupInterval);
 
-    //    simulate();
+// simulate();
 
     // $(window).bind('custom/blur', function() {
     //     $('#stream > .event.reading-cue').removeClass('reading-cue');
@@ -224,8 +220,7 @@ translators.push({
         if(stanza.status.text() == '')
             return false;
         if(stanza.@ns_x4m_in::direction == 'in' &&
-           // XXX maybe should use names
-           JID(stanza.@from).address in storage.load('conf').muted)
+           JID(stanza.@from).address in conf.muted)
             return false;
         if(stanza.@type == 'error')
             return;
@@ -338,7 +333,6 @@ function prepareReply(recipient) {
 
 function cleanup() {
     var events = $('#stream').children();
-    var conf = storage.load('conf');
     if(events.length > conf.maxEvents)
         events.slice(0, events.length-conf.maxEvents).remove();
 }
@@ -351,7 +345,6 @@ function mutePresence(eventDescendant) {
         .find('.origin')
         .attr('href');
 
-    var conf = storage.load('conf');
     conf.muted[entity(originURI).address] = true;
 
     $('#stream .event.presence').filter(function() {
