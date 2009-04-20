@@ -485,7 +485,7 @@ function registerToTransport(account, transportAddress,
 // ----------------------------------------------------------------------
 
 function getSamePlaceAccount() {
-    return XMPP.accounts.get(function(a) XMPP.JID(a).domain == 'sameplace.cc');
+    return XMPP.accounts.get(function(a) XMPP.JID(a.address).domain == 'sameplace.cc');
 }
 
 function saveAccount(account) {
