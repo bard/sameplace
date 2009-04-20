@@ -91,14 +91,20 @@ function loadServices() {
 // time the application was closed.
 
 function restoreOnlineState() {
-    XMPP.accounts
-        .forEach(function(account) {
+    var previouslyOnlineAccounts = XMPP.accounts
+        .filter(function(account) {
             var history = JSON.parse(account.presenceHistory || '[]');
+            if(history.length === 0)
+                return false;
 
             var lastPresenceStanza = new XML(history[history.length-1]);
-            if(lastPresenceStanza.@type != 'unavailable')
-                XMPP.up(account);
+            if(lastPresenceStanza.@type == 'unavailable')
+                return false;
+
+            return true;
         });
+
+    previouslyOnlineAccounts.forEach(XMPP.up);
 }
 
 
