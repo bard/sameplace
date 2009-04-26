@@ -401,7 +401,7 @@ contacts.requestedRemoveContact = function(event) {
 
 contacts.requestedRenameContact = function(event, useNickAsPreset) {
     var xulPopup = $('#contact-popup');
-    var xulContact = this._hoveredContact;
+    var xulContact = document.popupNode;
 
     xulPopup.hidePopup();
 
@@ -607,7 +607,7 @@ contacts.showingContactPopup = function(xulPopup) {
     // For some reason, document.popupNode isn't available when popup
     // was opened through openPopup()
 
-    var xulContact = this._hoveredContact;
+    var xulContact = $(document.popupNode, '^ .contact');
 
     $(xulPopup, '.name').setAttribute('value', $(xulContact, '.name').getAttribute('value'));
     $(xulPopup, '.status-message').textContent = $(xulContact, '.status-message').getAttribute('value');
@@ -680,49 +680,6 @@ contacts.showingContactPopup = function(xulPopup) {
     });
 
     retrieveVCardTask.start();
-};
-
-// hoveredContact, unhoveredContact, hoveredContactPopup,
-// unhoveredContactPopup handle interaction between contacts and their
-// "More info" popups.  Desired behaviour is:
-//
-// - if mouse stays on contact for longer than one second, bring up
-//   popup;
-//
-// - if mouse leaves contact for longer than one second and doesn't
-//   enter popup, hide popup;
-//
-// - if mouse enters popup and then leaves it for longer than one
-//   second, hide popup.
-
-contacts.hoveredContact = function(event) {
-    var xulContact = event.currentTarget;
-
-    this._showPopupTimeout = window.setTimeout(function() {
-        contacts._hoveredContact = xulContact;
-        $('#contact-popup').openPopup(xulContact, 'end_before', -80, -20, false, false);
-    }, 1000);
-};
-
-contacts.unhoveredContact = function(event) {
-    if(this._showPopupTimeout)
-        window.clearTimeout(this._showPopupTimeout);
-
-    if($('#contact-popup').state == 'open')
-        this._hidePopupTimeout = window.setTimeout(function() {
-            $('#contact-popup').hidePopup();
-        }, 1000);
-};
-
-contacts.hoveredContactPopup = function(xulPopup) {
-    if(this._hidePopupTimeout)
-        window.clearTimeout(this._hidePopupTimeout);
-};
-
-contacts.unhoveredContactPopup = function(xulPopup) {
-    this._hidePopupTimeout = window.setTimeout(function() {
-        xulPopup.hidePopup();
-    }, 1000);
 };
 
 

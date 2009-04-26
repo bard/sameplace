@@ -39,13 +39,12 @@
   <popupset id="popups">
     <panel id="contact-popup"
            onpopupshowing="contacts.showingContactPopup(this);"
-           onpopuphiding="contacts.hidingContactPopup(this);"
-           onmouseover="if(!eventFromDescendant(this, event)) contacts.hoveredContactPopup(this);"
-           onmouseout="if(!eventFromDescendant(this, event)) contacts.unhoveredContactPopup(this);">
+           onpopuphiding="contacts.hidingContactPopup(this);">
+
       <vbox class="contact" account="" address="">
         <hbox align="baseline">
           <label value="Chat »" class="text-link" style="font-size: 17px;"
-                 onclick="this.blur(); contacts.clickedContact(this);"/>
+                 onclick="this.blur(); contacts.clickedContact(document.popupNode);"/>
           <label value="Video »" class="text-link" style="font-size: 14px;" hidden="true"/>
           <label value="Share files »" class="text-link" style="font-size: 14px;" hidden="true"/>
         </hbox>
@@ -140,8 +139,6 @@
 
   <box id="blueprints">
     <richlistitem class="contact"
-                  onmouseover="if(!eventFromDescendant(this, event)) contacts.hoveredContact(event);"
-                  onmouseout="if(!eventFromDescendant(this, event)) contacts.unhoveredContact(event);"
                   availability="unavailable"
                   address=""
                   account=""
@@ -154,7 +151,10 @@
                flex="1"
                onclick="contacts.clickedContact(this);"/>
         <spacer flex="100"/>
+        
         <image class="avatar" src="" width="16" height="16"/>
+
+        <button class="options" type="menu" menu="contact-popup"/>
       </hbox>
 
       <label class="status-message"

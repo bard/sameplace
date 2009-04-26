@@ -86,3 +86,20 @@
     background: inherit;
     color: inherit;
 }
+
+.contact .options {
+    margin: 0;
+    padding: 0;
+    -moz-appearance: none;
+    border: none;
+    min-width: 0;
+    max-width: 0;
+    background: transparent;
+    -moz-border-radius: 3px;
+    background: #ddeeff;
+    opacity: 0.1;
+}
+
+.contact:hover .options {
+    opacity: 0.8;
+}
