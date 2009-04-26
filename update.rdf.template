@@ -16,6 +16,7 @@
                 <maxVersion>3.5.*</maxVersion>
                 <updateLink/>
                 <updateHash/>
+                <updateInfoURL>http://bard.github.com/sameplace/changelog.devel.xhtml</updateInfoURL>
               </r:Description>
             </targetApplication>
           </r:Description>
