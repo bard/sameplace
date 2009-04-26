@@ -138,7 +138,7 @@
   </vbox>
 
   <box id="blueprints">
-    <richlistitem class="contact"
+    <richlistitem class="list-item contact"
                   availability="unavailable"
                   address=""
                   account=""

@@ -106,3 +106,20 @@ widget[minimized="true"] .widget-body {
     margin-left: 15px;
 }
 */
+
+.list-item .options {
+    margin: 0;
+    padding: 0;
+    -moz-appearance: none;
+    border: none;
+    min-width: 0;
+    max-width: 0;
+    background: transparent;
+    -moz-border-radius: 3px;
+    background: #ddeeff;
+    opacity: 0.2;
+}
+
+.list-item:hover .options {
+    opacity: 0.8;
+}

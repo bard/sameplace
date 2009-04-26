@@ -73,14 +73,14 @@
         </columns>
 
         <rows id="accounts">
-          <row id="widget-accounts-all-accounts" class="pseudo-account" account="*" align="center"
+          <row id="widget-accounts-all-accounts" class="pseudo-account list-item" account="*" align="center"
                availability="unavailable">
             <image class="state-indicator"
                    onclick="accounts.switchState(this);"
                    tooltiptext="Click to switch accounts to their previous state"
                    availability="unavailable"/>
             <label value="All" crop="end"/>
-            <button class="account-options" type="menu" menu="account-popup"/>
+            <button class="options" type="menu" menu="account-popup"/>
           </row>
           <separator hidden="true"/>
         </rows>
@@ -93,13 +93,13 @@
   </vbox>
 
   <box id="blueprints">
-    <row class="account" align="center">
+    <row class="list-item  account" align="center">
       <image class="state-indicator"
              onclick="accounts.switchState(this);"
              tooltiptext="Click to connect/disconnect account"/>
       <label class="address" crop="end"
              onclick="accounts.switchState(this);"/>
-      <button class="account-options" type="menu" menu="account-popup"/>
+      <button class="options" type="menu" menu="account-popup"/>
     </row>
   </box>
 </overlay>
