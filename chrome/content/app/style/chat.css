@@ -410,8 +410,6 @@ body.icons-on .smiley {
     background-position: center bottom;
     display: -moz-inline-box;
     vertical-align: bottom;
-    overflow: hidden;
-    padding: 0px 0pt 0pt 32px;
     height: 32px;
     width: 32px;
     max-width: 32px;

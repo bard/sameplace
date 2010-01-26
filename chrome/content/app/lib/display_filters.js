@@ -143,7 +143,7 @@ function processEmoticons(xmlMessageBody) {
             function(emoticonSymbol) {
                 var url = 'emoticons/' + _.emoticons[emoticonSymbol] + '.png';
                 var cls = "smiley smiley-" + _.emoticons[emoticonSymbol];
-                return <span class={cls}>{emoticonSymbol}</span>;
+                return <span class={cls} alt={emoticonSymbol} title={emoticonSymbol}></span>;
             });
     });
 }
