@@ -64,6 +64,9 @@
     </popup>
   </popupset>
 
-  <tabs id="tabs" closebutton="true"/>
+  <hbox>
+    <tabs id="tabs" flex="1"/>
+    <toolbarbutton id="tabs-closebutton" label="x"/>
+  </hbox>
   <deck id="deck" flex="1" context="conversation-menu"/>
 </page>

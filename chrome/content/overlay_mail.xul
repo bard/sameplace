@@ -115,13 +115,17 @@
     <popup id="sameplace-conversations-popup">
       <menuitem label="&mail.context.copy.label;" accesskey="&mail.context.copy.accesskey;" oncommand="sameplace.requestedCopy(event);"/>
     </popup>
-    
-    <tabs id="sameplace-conversation-tabs" insertafter="messagepanebox"
-          closebutton="true"
-          mode="fake"
-          collapsed="true">
-      <tab label="Mail" class="mail"/>
-    </tabs>
+
+    <hbox>
+      <tabs id="sameplace-conversation-tabs" insertafter="messagepanebox"
+            mode="fake"
+            collapsed="true"
+            flex="1">
+        <tab label="Mail" class="mail"/>
+      </tabs>
+      <toolbarbutton id="sameplace-conversation-tabs-closebutton" label="x" collapsed="true"/>
+    </hbox>
+
     <deck id="sameplace-conversations" insertafter="messagepanebox" flex="1"
           collapsed="true"
           class="inset"

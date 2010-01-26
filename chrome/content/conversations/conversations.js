@@ -61,7 +61,7 @@ window.addEventListener('DOMContentLoaded', function(event) {
 
     // Make getPanels() + getTabs() into a sort-of <tabbrowser>
     // and kick-off initialization
-    tabbedArea($('#deck'), $('#tabs'));
+    tabbedArea($('#deck'), $('#tabs'), $('#tabs-closebutton'));
 
     // Initialize implementation (found in conversations_impl.js).
     init($('#deck'), $('#tabs'));

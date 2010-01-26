@@ -29,7 +29,7 @@
  *  
  */
 
-function tabbedArea(deck, tabs) {
+function tabbedArea(deck, tabs, closeButton) {
     
     // Connect tab events to deck reactions and viceversa.
 
@@ -54,20 +54,6 @@ function tabbedArea(deck, tabs) {
     tabs.addEventListener('select', function(event) {
         deck.selectedIndex = tabs.selectedIndex;
     }, false);
-
-    // Prevent click event from descending down to the close button,
-    // since that assumes it's being used in a <tabbrowser/>, and
-    // listening to command event instead.
-    
-    var closeButtonBox = document.getAnonymousElementByAttribute(
-        tabs, 'class', 'tabs-closebutton-box');
-
-    closeButtonBox.addEventListener('click', function(event) {
-        event.stopPropagation()
-    }, true);
-
-    var closeButton = document.getAnonymousElementByAttribute(
-        tabs, 'class', 'tabs-closebutton-box').firstChild;
 
     closeButton.addEventListener('command', function(event) {
         deck.removeTab(tabs.selectedItem);

@@ -35,6 +35,8 @@ window.addEventListener('load', function(event) {
 
     var xulPanels = document.getElementById('sameplace-conversations');
     var xulTabs = document.getElementById('sameplace-conversation-tabs');
+    var xulTabClosebutton = document.getElementById('sameplace-conversation-tabs-closebutton');
+    
     var xulMsgBox = document.getElementById('messagepanebox');
     var conversations = {};
     Components
@@ -43,19 +45,21 @@ window.addEventListener('load', function(event) {
         .loadSubScript('chrome://sameplace/content/conversations/conversations_impl.js',
                        conversations);
 
-    tabbedArea(xulPanels, xulTabs);
+    tabbedArea(xulPanels, xulTabs, xulTabClosebutton);
     conversations.init(xulPanels, xulTabs);
 
     xulPanels.addEventListener('conversation/close', function(event) {
         if(xulTabs.childNodes.length == 2) {
             xulPanels.collapsed = true;
-            xulTabs.collapsed = true;            
+            xulTabs.collapsed = true;
+            xulTabClosebutton.collapsed = true;
         }
     }, false);
 
     function switchToIM() {
         xulPanels.height = xulMsgBox.height;
         xulPanels.collapsed = false;
+        xulTabClosebutton.collapsed = false;
         xulMsgBox.collapsed = true;
     }
 
