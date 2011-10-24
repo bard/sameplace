@@ -59,7 +59,7 @@ function tabbedArea(deck, tabs) {
     // since that assumes it's being used in a <tabbrowser/>, and
     // listening to command event instead.
     
-    var closeButtonBox = document.getAnonymousElementByAttribute(
+/*    var closeButtonBox = document.getAnonymousElementByAttribute(
         tabs, 'class', 'tabs-closebutton-box');
 
     closeButtonBox.addEventListener('click', function(event) {
@@ -71,7 +71,7 @@ function tabbedArea(deck, tabs) {
 
     closeButton.addEventListener('command', function(event) {
         deck.removeTab(tabs.selectedItem);
-    }, false);
+    }, false); */
 
     // Add tabbrowser-like functions to deck
     

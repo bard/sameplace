@@ -323,7 +323,9 @@ function create(account, address, nextAction) {
     var xulPanel = xulConversations.getBrowserForTab(xulTab);
     xulTab.setAttribute('tooltiptext', address);
     xulPanel.tab = xulTab;
-
+var tabLabel = document.createElement('label');
+    tabLabel.setAttribute('value',address);
+    xulTab.appendChild(tabLabel);
     xulPanel.addEventListener('load', function(event) {
         xulPanel.removeEventListener('load', arguments.callee, true);
 

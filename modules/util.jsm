@@ -52,6 +52,7 @@ var pref = Cc['@mozilla.org/preferences-service;1']
     .getService(Ci.nsIPrefService)
     .QueryInterface(Ci.nsIPrefBranch);
 
+Components.utils.import("resource://gre/modules/AddonManager.jsm");
 
 Cu.import('resource://xmpp4moz/xmpp.jsm');
 
@@ -71,9 +72,25 @@ util.chromeToFileUrl = function(url) {
 };
 
 util.getExtensionVersion = function(id) {
-    return Cc['@mozilla.org/extensions/manager;1']
+/*   return Cc['@mozilla.org/extensions/manager;1']
         .getService(Ci.nsIExtensionManager)
         .getItemForID(id).version;
+*/
+try {
+    // firefox >= 4
+    Cu.import("resource://gre/modules/AddonManager.jsm");
+    AddonManager.getAddonByID(id, function(addon) {
+    // This is an asynchronous callback function that might not be called immediately
+    return  addon.version;
+});
+
+}
+catch (ex) {
+       // firefox < 4
+       return Cc['@mozilla.org/extensions/manager;1']
+        .getService(Ci.nsIExtensionManager)
+        .getItemForID(id).version;
+}
 };
 
 util.upgradeCheck = function(id, versionPref, actions, ignoreTrailingParts) {

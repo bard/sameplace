@@ -33,6 +33,7 @@
 <?xml-stylesheet href="chrome://sameplace/skin/dashboard/state_indicator.css" type="text/css"?>
 <?xml-stylesheet href="chrome://sameplace/skin/dashboard/widget_contacts.css" type="text/css"?>
 
+<!DOCTYPE overlay SYSTEM "chrome://sameplace/locale/status_overlay.dtd">
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script type="application/x-javascript" src="widget_contacts.js"/>
 
@@ -43,10 +44,10 @@
 
       <vbox class="contact" account="" address="">
         <hbox align="baseline">
-          <label value="Chat »" class="text-link" style="font-size: 17px;"
+          <label value="&widget.contacts.chat;" class="text-link" style="font-size: 17px;"
                  onclick="this.blur(); contacts.clickedContact(document.popupNode);"/>
-          <label value="Video »" class="text-link" style="font-size: 14px;" hidden="true"/>
-          <label value="Share files »" class="text-link" style="font-size: 14px;" hidden="true"/>
+          <label value="&widget.contacts.video-label;" class="text-link" style="font-size: 14px;" hidden="true"/>
+          <label value="&widget.contacts.share-label;" class="text-link" style="font-size: 14px;" hidden="true"/>
         </hbox>
 
         <separator class="groove"/>
@@ -77,7 +78,7 @@
                     <description style="font-size: 10px;">
                       Chosen by contact.
                       <label class="text-link small-margin" style="font-size: 10px;"
-                             value="Use in my contact list"
+                             value="&widget.contacts.use-in-list;"
                              onclick="contacts.requestedRenameContact(event, true);"/>
                     </description>
                   </vbox>
@@ -85,10 +86,10 @@
               </rows>
             </grid>
 
-            <label value="Status message:"/>
+            <label value="&widget.contacts.status;"/>
             <description class="status-message" flex="1"/>
 
-            <label value="Connected as:"/>
+            <label value="&widget.contacts.connect;"/>
             <description class="concrete-contacts small-margin" style="padding-left: 1em;"/>
           </vbox>
         </hbox>
@@ -96,9 +97,9 @@
         <separator class="groove"/>
 
         <hbox>
-          <label value="Rename" class="text-link" onclick="contacts.requestedRenameContact(this);"/>
-          <label value="Hide" class="text-link" onclick="contacts.requestedHideContact(this);"/>
-          <label value="Remove" class="text-link" onclick="contacts.requestedRemoveContact(this);"/>
+          <label value="&widget.contacts.rename;" class="text-link" onclick="contacts.requestedRenameContact(this);"/>
+          <label value="&widget.contacts.hide;" class="text-link" onclick="contacts.requestedHideContact(this);"/>
+          <label value="&widget.contacts.remove;" class="text-link" onclick="contacts.requestedRemoveContact(this);"/>
         </hbox>
       </vbox>
     </panel>
@@ -106,7 +107,7 @@
 
   <vbox id="widgets">
     <widget id="widget-contacts"
-            title="My Contacts"
+            title="&widget.contacts.title;"
             image="chrome://sameplace/skin/dashboard/widget_contacts_icon.png">
       <panel id="widget-contacts-completions"
              type="autocomplete-richlistbox"
@@ -117,21 +118,21 @@
                autocompletepopup="widget-contacts-completions"
                autocompletesearchparam="add"
                showcommentcolumn="true"
-               emptytext="Search or add contact..."
+               emptytext="&widget.contacts.search-placeholder;"
                tabscrolling="true"
                style=""
                ontextentered="contacts.enteredSearchText(this.value);"/>
       <richlistbox class="list" disableKeyNavigation="true"/>
 
       <widget-footer align="center">
-        <label value="Show:" class="small-margin"/>
+        <label value="&widget.contacts.show;" class="small-margin"/>
         <radiogroup id="widget-contacts-display-mode"
                     orient="horizontal"
                     value="online" persist="value"
                     onclick="contacts.changeDisplayMode(event);">
-          <radio value="popular" label="popular" class="small-margin"/>
-          <radio value="online" label="online" class="small-margin"/>
-          <radio value="all" label="all" class="small-margin"/>
+          <radio value="populr" label="&widget.contacts.popular;" class="small-margin"/>
+          <radio value="online" label="&widget.contacts.online;" class="small-margin"/>
+          <radio value="all" label="&widget.contacts.all;" class="small-margin"/>
         </radiogroup>
       </widget-footer>
     </widget>

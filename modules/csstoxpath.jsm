@@ -40,7 +40,7 @@ var EXPORTED_SYMBOLS = [
 
 /// UTILITIES
 // ----------------------------------------------------------------------
-
+/*
 function memoize(fn, context) {
     if(typeof(fn) == 'string')
         fn = context[fn];
@@ -53,16 +53,22 @@ function memoize(fn, context) {
         m[arg] = fn(arg);
         return m[arg];
     }
+} */
+
+
+function memoize(f) {
+  return function (x) {
+      f.memo = f.memo || {};
+      return (x in f.memo)? f.memo[x] : f.memo[x] = f(x);
+  };
 }
-
-
 /// API
 // ----------------------------------------------------------------------
 
 function cssToXPath(cssSelector) {
     return selectorObjectToXPath(selectorToSelectorObject(cssSelector));
 }
-memoize(cssToXPath);
+cssToXPath = memoize(cssToXPath);
 
 
 /// INTERNALS

@@ -249,3 +249,5 @@ var components = [XMPPContactAutocomplete];
 function NSGetModule(compMgr, fileSpec) {
     return XPCOMUtils.generateModule(components);
 }
+
+NSGetFactory = XPCOMUtils.generateNSGetFactory(components);

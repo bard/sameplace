@@ -53,7 +53,11 @@ var pref = Cc['@mozilla.org/preferences-service;1']
     .getService(Ci.nsIPrefService)
     .getBranch('extensions.sameplace.panel.stream.');
 
+var alertsService = Components.classes["@mozilla.org/alerts-service;1"]
+                    .getService(Components.interfaces.nsIAlertsService);
 
+var sound = Components.classes["@mozilla.org/sound;1"]
+            .createInstance(Components.interfaces.nsISound);
 // STATE
 // ----------------------------------------------------------------------
 

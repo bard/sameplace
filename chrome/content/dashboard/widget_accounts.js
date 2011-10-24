@@ -117,6 +117,7 @@ accounts.update = function() {
 
         var xulAccount = $('#blueprints > .account').cloneNode(true);
         xulAccount.setAttribute('account', account.address);
+        xulAccount.setAttribute('key',account.key); 
         $(xulAccount, '> .address').setAttribute('value', account.address);
         if(accountPresence) {
             xulAccount.setAttribute('availability',

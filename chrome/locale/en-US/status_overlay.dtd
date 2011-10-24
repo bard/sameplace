@@ -3,3 +3,30 @@
 <!ENTITY menu.status-away.label "Away">
 <!ENTITY menu.status-busy.label "Busy">
 <!ENTITY menu.status-offline.label "Offline">
+
+<!ENTITY menu.account.edit "Edit...">
+<!ENTITY menu.account.delete "Delete">
+<!ENTITY widget.accounts.widget-title "My Accounts">
+<!ENTITY widget.accounts.switch-tooltip "Click to switch accounts to their previous state">
+<!ENTITY widget.accounts.disconect-tooltip "Click to connect/disconnect account">
+
+<!ENTITY widget.accounts.all-label "All">
+<!ENTITY widget.accounts.add-new-label "Add...">
+
+<!ENTITY widget.contacts.video-label "Video >>" >
+<!ENTITY widget.contacts.share-label "Share files >>" >
+<!ENTITY widget.contacts.chat "Chat">
+<!ENTITY widget.contacts.name "Name:">
+<!ENTITY widget.contacts.nick "Nickname:">
+<!ENTITY widget.contacts.use-in-list "Use in my contact list">
+<!ENTITY widget.contacts.status "Status message:">
+<!ENTITY widget.contacts.connect "Connected as:">
+<!ENTITY widget.contacts.rename "Rename">
+<!ENTITY widget.contacts.hide "Hide">
+<!ENTITY widget.contacts.remove "Remove">
+<!ENTITY widget.contacts.search-placeholder "Search or add contact...">
+<!ENTITY widget.contacts.title "My Contacts">
+<!ENTITY widget.contacts.popular "Popular">
+<!ENTITY widget.contacts.online "Online">
+<!ENTITY widget.contacts.all "All">
+<!ENTITY widget.contacts.show "Show:">

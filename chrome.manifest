@@ -12,3 +12,16 @@ overlay chrome://browser/content/browser.xul chrome://sameplace/content/overlays
 style chrome://global/content/customizeToolbar.xul chrome://sameplace/skin/toolbar-button.css
 
 resource sameplace modules/
+component {101008f2-4454-4bdb-9f3a-ae3b02eeb20d} components/ProtocolHandler.js
+contract @mozilla.org/network/protocol;1?name=xmpp {101008f2-4454-4bdb-9f3a-ae3b02eeb20d}
+
+
+component {2d12cfe5-8cdd-49bb-b766-e551343c1265} components/ProtocolHandler.js
+contract @mozilla.org/uriloader/content-handler;1?type=x-application-xmpp  {2d12cfe5-8cdd-49bb-b766-e551343c1265}
+
+
+component {2991c315-b871-42cd-b33f-bfee4fcbf682} components/CommandLine.js
+contract @mozilla.org/commandlinehandler/general-startup;1?type=sameplace {2991c315-b871-42cd-b33f-bfee4fcbf682}
+
+component {acdc75ae-b3a7-4477-b09a-ed6656ab592b} components/XMPPContactAutocomplete.js
+contract @mozilla.org/autocomplete/search;1?name=xmpp-contacts {acdc75ae-b3a7-4477-b09a-ed6656ab592b}

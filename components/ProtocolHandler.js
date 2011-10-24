@@ -38,14 +38,16 @@ const srvIO = Cc['@mozilla.org/network/io-service;1']
 const srvObserver = Cc['@mozilla.org/observer-service;1']
     .getService(Ci.nsIObserverService);
 
+Cu.import("resource://gre/modules/XPCOMUtils.jsm");
 function ProtocolHandler() {}
 
 ProtocolHandler.prototype = {
     scheme: kSCHEME,
-
+	classID : kPROTOCOL_CID,
+    contractID : kPROTOCOL_CONTRACTID,
     defaultPort: 5222,
 
-    protocolFlags: Ci.nsIProtocolHandler.URI_NORELATIVE,
+    protocolFlags: Ci.nsIProtocolHandler.URI_NORELATIVE | Ci.nsIProtocolHandler.URI_LOADABLE_BY_ANYONE ,
 
     allowPort: function(port, scheme) {
         return false;
@@ -71,13 +73,14 @@ ProtocolHandler.prototype = {
         return new Channel(uri);
     },
 
-    QueryInterface: function(iid) {
+   /* QueryInterface: function(iid) {
         if(!iid.equals(Ci.nsIProtocolHandler) &&
            !iid.equals(Ci.nsISupports))
             throw Cr.NS_ERROR_NO_INTERFACE;
 
         return this;
-    }
+    } */
+    QueryInterface: XPCOMUtils.generateQI([Components.interfaces.nsIProtocolHandler])
 };
 
 
@@ -87,13 +90,16 @@ ProtocolHandler.prototype = {
 function ContentHandler() {}
 
 ContentHandler.prototype = {
-    QueryInterface: function(iid) {
+ /*   QueryInterface: function(iid) {
         if(!iid.equals(Ci.nsIContentHandler))
             throw Cr.NS_ERROR_NO_INTERFACE;
 
         return this;
-    },
+    }, */
 
+    classID: kCONTENT_CID,
+    contractID : kCONTENT_CONTRACTID,
+    QueryInterface: XPCOMUtils.generateQI([Components.interfaces.nsIContentHandler]),
     handleContent: function (contentType, windowTarget, request, aRemovedArg) {
 
     }
@@ -109,15 +115,16 @@ function Channel(uri) {
 }
 
 Channel.prototype = {
-    QueryInterface: function(iid) {
+/*    QueryInterface: function(iid) {
         if(!iid.equals(Ci.nsIChannel) &&
            !iid.equals(Ci.nsIRequest) &&
            !iid.equals(Ci.nsISupports))
             throw Cr.NS_ERROR_NO_INTERFACE;
 
         return this;
-    },
+    }, */
 
+    QueryInterface: XPCOMUtils.generateQI([Components.interfaces.nsIChannel]),
     /* nsIChannel */
     loadAttributes: null,
     contentType: 'x-application-' + kSCHEME,
@@ -284,6 +291,7 @@ function NSGetModule(compMgr, fileSpec) {
 }
 
 
+const NSGetFactory = XPCOMUtils.generateNSGetFactory([ProtocolHandler,ContentHandler]);
 
 
 } catch(e) {

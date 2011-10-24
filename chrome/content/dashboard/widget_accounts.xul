@@ -55,14 +55,14 @@
                 availability="unavailable"
                 oncommand="accounts.requestedStatusChange(document.popupNode, this);"/>
       <menuseparator/>
-      <menuitem label="Edit..." oncommand="accounts.requestedEdit(document.popupNode);"/>
-      <menuitem label="Delete" oncommand="accounts.requestedRemove(document.popupNode);"/>
+      <menuitem label="&menu.account.edit;" oncommand="accounts.requestedEdit(document.popupNode);"/>
+      <menuitem label="&menu.account.delete;" oncommand="accounts.requestedRemove(document.popupNode);"/>
     </menupopup>
   </popupset>
 
   <vbox id="widgets">
     <widget id="widget-accounts"
-            title="My Accounts"
+            title="&widget.accounts.widget-title;"
             image="chrome://sameplace/skin/dashboard/widget_accounts_icon.png"
             extid="sameplace@hyperstruct.net">
       <grid>
@@ -77,9 +77,9 @@
                availability="unavailable">
             <image class="state-indicator"
                    onclick="accounts.switchState(this);"
-                   tooltiptext="Click to switch accounts to their previous state"
+                   tooltiptext="&widget.accounts.switch-tooltip;"
                    availability="unavailable"/>
-            <label value="All" crop="end"/>
+            <label value="&widget.accounts.all-label;" crop="end"/>
             <button class="options" type="menu" menu="account-popup"/>
           </row>
           <separator hidden="true"/>
@@ -87,7 +87,7 @@
       </grid>
 
       <widget-footer>
-        <label value="Add..." class="text-link" onclick="this.blur(); accounts.requestedAdd();"/>
+        <label value="&widget.accounts.add-new-label;" class="text-link" onclick="this.blur(); accounts.requestedAdd();"/>
       </widget-footer>
     </widget>
   </vbox>
@@ -96,7 +96,7 @@
     <row class="list-item  account" align="center">
       <image class="state-indicator"
              onclick="accounts.switchState(this);"
-             tooltiptext="Click to connect/disconnect account"/>
+             tooltiptext="&widget.accounts.disconect-tooltip;"/>
       <label class="address" crop="end"
              onclick="accounts.switchState(this);"/>
       <button class="options" type="menu" menu="account-popup"/>

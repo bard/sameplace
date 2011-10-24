@@ -7,16 +7,20 @@ const Ci = Components.interfaces;
 const Cr = Components.results;
 const CLASS_ID = Components.ID('{2991c315-b871-42cd-b33f-bfee4fcbf682}');
 
+Cu.import("resource://gre/modules/XPCOMUtils.jsm");
 const Handler = {
-    QueryInterface: function(iid) {
+   /* QueryInterface: function(iid) {
         if(iid.equals(Ci.nsICommandLineHandler) ||
            iid.equals(Ci.nsIFactory) ||
            iid.equals(Ci.nsISupports))
             return this;
 
         throw Cr.NS_ERROR_NO_INTERFACE;
-    },
+    }, */
 
+    contractID : CONTRACT_ID,
+    classID : CLASS_ID,
+    QueryInterface : XPCOMUtils.generateQI([Ci.nsICommandLineHandler]),
     handle: function(cmdLine) {
         var uri;
         try {
@@ -98,3 +102,4 @@ function NSGetModule(comMgr, fileSpec) {
     return Module;
 }
 
+const NSGetFactory = XPCOMUtils.generateNSGetFactory([Handler]);
