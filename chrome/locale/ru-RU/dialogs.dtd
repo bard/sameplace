@@ -1,0 +1,41 @@
+<!ENTITY add_contact.dialog.title "Добавить контакт">
+<!ENTITY add_contact.contact_address.label "Контакт:">
+<!ENTITY add_contact.contact_address.accesskey "C">
+<!ENTITY add_contact.contact_subscribe_to_presence.label "Показать мне, когда этот контакт в сети">
+<!ENTITY add_contact.contact_subscribe_to_presence.accesskey "S">
+<!ENTITY add_contact.user_account.label "Аккаунт:">
+<!ENTITY add_contact.user_account.accesskey "A">
+<!ENTITY contact_selection.dialog.title "ВЫбрать контакты">
+<!ENTITY contact_selection.list.header "Контакт">
+<!ENTITY join_room.dialog.title "Войти в чат">
+<!ENTITY join_room.room_name.label "Имя:">
+<!ENTITY join_room.room_name.accesskey "A">
+<!ENTITY join_room.user_nick.label "Ник:">
+<!ENTITY join_room.user_nick.accesskey "N">
+<!ENTITY join_room.user_account.label "Аккаунт:">
+<!ENTITY join_room.user_account.accesskey "c">
+<!ENTITY join_room.save.label "Сохранить в контак-лист">
+<!ENTITY join_room.save.accesskey "S">
+<!ENTITY join_room.autojoin.label "Присоединяться автоматически">
+<!ENTITY join_room.autojoin.accesskey "J">
+<!ENTITY open_conversation.dialog.title "Открыть диалог">
+<!ENTITY open_conversation.contact_address.label "Адрес:">
+<!ENTITY open_conversation.contact_address.accesskey "A">
+<!ENTITY open_conversation.user_account.label "Аккаунт:">
+<!ENTITY open_conversation.user_account.accesskey "c">
+<!ENTITY prompt_address.dialog.title "Ввдетие адрес">
+<!ENTITY prompt_address.address.label "Адрес:">
+<!ENTITY prompt_address.address.accesskey "A">
+<!ENTITY prompt_address.account.label "Аккаунт:">
+<!ENTITY prompt_address.account.accesskey "c">
+<!ENTITY report_bug.dialog.title "Отчет">
+<!ENTITY report_bug.close.label "Закрыть">
+<!ENTITY report_bug.close.accesskey "C">
+<!ENTITY report_bug.copy_to_clipboard.label "Копировать в буфер обмена">
+<!ENTITY report_bug.instructions "Пожалуйста, добавьте следующее в ваш отчет">
+
+<!ENTITY join_room.room_search.label "Поиск...">
+<!ENTITY join_room.room_server.label "Сервер:">
+<!ENTITY join_room.room_server.accesskey "S">
+<!ENTITY join_room.room_address.label "Адрес:">
+<!ENTITY join_room.join_tip.label "Если конференции не существует, она будет создана.">

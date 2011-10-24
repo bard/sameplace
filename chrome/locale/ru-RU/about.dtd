@@ -1,0 +1,26 @@
+<!ENTITY window.title "About SamePlace">
+<!ENTITY description_1.label "This program is free software; you can redistribute it and/or
+        modify it under the terms of the">
+<!ENTITY description_2.label "GNU General Public
+        License">
+<!ENTITY description_3.label " as published by the Free Software Foundation;
+        either version 3 of the License, or (at your option) any later
+        version.">
+<!ENTITY description_4.label "
+        This program is distributed in the hope that it will be
+        useful, but WITHOUT ANY WARRANTY; without even the implied
+        warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+        PURPOSE.  See the GNU General Public
+        License for more details.">
+<!ENTITY description_5.label "
+        The interactive user interfaces in modified source and object code
+        versions of this program must display Appropriate Legal Notices, as
+        required under Section 5 of the GNU General Public License version 3.">
+<!ENTITY description_6.label "
+        In accordance with Section 7(b) of the GNU General Public
+        License version 3, modified versions must display the">
+<!ENTITY description_7.label "Powered by SamePlace">
+<!ENTITY description_8.label " logo to users in
+        a legible manner and the GPLv3 text must be made available to
+        them.">
+

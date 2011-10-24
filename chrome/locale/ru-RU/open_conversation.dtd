@@ -1,0 +1,5 @@
+<!ENTITY dialog.title "Начать беседу">
+<!ENTITY contact_address.label "Адрес:">
+<!ENTITY contact_address.accesskey "А">
+<!ENTITY user_account.label "Учетная запись:">
+<!ENTITY user_account.accesskey "">

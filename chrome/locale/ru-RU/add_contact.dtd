@@ -1,0 +1,7 @@
+<!ENTITY dialog.add_contact.title "Добавить пользователя">
+<!ENTITY contact_address.label "Пользователь:">
+<!ENTITY contact_address.accesskey "П">
+<!ENTITY contact_subscribe_to_presence.label "Показывать, когда пользователь находится в Сети">
+<!ENTITY contact_subscribe_to_presence.accesskey "С">
+<!ENTITY user_account.label "Учетная запись:">
+<!ENTITY user_account.accesskey "">

@@ -1,0 +1,42 @@
+<!ENTITY sameplace.prefs.default_application_url.label "URL приложения по умолчанию:">
+<!ENTITY sameplace.prefs.default_application_url.accesskey "п">
+<!ENTITY sameplace.prefs.toggle_sidebar_hotkey "Горячая клавиша сворачивания бокового меню:">
+<!ENTITY sameplace.prefs.capture.label "Захватить">
+<!ENTITY sameplace.prefs.hotkey_help_text.label "(Горячие клавиши должны быть разными и отличаться от существующих.)">
+<!ENTITY sameplace.prefs.flash_taskbar.label "Мигать на панели задач при новых входящих сообщениях">
+<!ENTITY sameplace.prefs.flash_taskbar.accesskey "М">
+
+<!ENTITY window.title "Настройки SamePlace">
+<!ENTITY tab.accounts.label "Аккаунты">
+<!ENTITY tab.sameplace.label "SamePlace">
+
+<!ENTITY accounts.accounts_description.label "Выберете аккаунт из списка илил создайте новый.">
+<!ENTITY accounts.account_username.label "Имя пользователя:">
+<!ENTITY accounts.account_password.label "Пароль:">
+<!ENTITY accounts.account_service.label "Сервис:">
+<!ENTITY accounts.account_resource.label "Группа:">
+<!ENTITY accounts.account_resource_description.label "Например: Дом, Офис, ...">
+<!ENTITY accounts.account_server.label "Сервер:">
+<!ENTITY accounts.account_port.label "Порт:">
+<!ENTITY accounts.account_encryption.label "Шифровка:">
+<!ENTITY accounts.account_encryption.starttls.label "StartTLS">
+<!ENTITY accounts.account_encryption.ssl.label "SSL">
+<!ENTITY accounts.account_encryption.none.label "никакой">
+<!ENTITY accounts.add.label "Добавить аккаунт...">
+<!ENTITY accounts.add.accesskey "A">
+<!ENTITY accounts.delete.label "Удалить">
+<!ENTITY accounts.advanced.label "Расширенные...">
+<!ENTITY accounts.advanced.accesskey "d">
+
+<!ENTITY sameplace.chat_app.label "Чат:">
+<!ENTITY sameplace.chat_app.accesskey "a">
+<!ENTITY sameplace.chat_app_default.label "default">
+<!ENTITY sameplace.chat_app_custom.label "Свой URL...">
+
+<!ENTITY sameplace.add_button.label "Добавить иконку на тулбар:">
+<!ENTITY sameplace.open_chat.label "Открывать чаты в:">
+<!ENTITY sameplace.settings_alert.label "Изменения станут активны после перезагрузки.">
+<!ENTITY sameplace.open_chat.default.label "(стандарт)">
+<!ENTITY sameplace.open_chat.sidebar.label "Сайдбар">
+<!ENTITY sameplace.open_chat.extwindow.label "Дополнительное окно">
+<!ENTITY sameplace.open_chat.messagepane.label "панель сообщений (только Thunderbird)">

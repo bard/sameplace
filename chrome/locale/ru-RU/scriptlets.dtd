@@ -1,0 +1,18 @@
+<!ENTITY window.title "Менеджер SamePlace Scriptlet">
+<!ENTITY description.label "ДЛя установки перетащите ссылку с веб-страницы в список ниже. Первоначальный набор можно найти здесь - ">
+<!ENTITY description.url.label "http://sameplace.cc/addons/scriptlets">
+<!ENTITY warning_1.label "Внимание:">
+<!ENTITY warning_2.label "Источник должен быть надежным!">
+<!ENTITY create.label "Создать...">
+<!ENTITY create.accesskey "C">
+<!ENTITY close.label "Закрыть">
+<!ENTITY scriptlet_title.label "название">
+<!ENTITY scriptlet_version.label "версия">
+<!ENTITY scriptlet_filename.label "файл">
+<!ENTITY scriptlet.enabled.label "Включен">
+<!ENTITY scriptlet.reload.label "Перезапустить">
+<!ENTITY scriptlet.reload.accesskey "R">
+<!ENTITY scriptlet.edit.label "Редактировать">
+<!ENTITY scriptlet.edit.accesskey "E">
+<!ENTITY scriptlet.uninstall.label "Удалить">
+<!ENTITY scriptlet.uninstall.accesskey "U">

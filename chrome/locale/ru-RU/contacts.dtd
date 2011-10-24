@@ -1,0 +1,116 @@
+<!ENTITY popup.set_alias.label "Сменить имя...">
+<!ENTITY popup.remove.label "Удалить">
+<!ENTITY tooltip.contact_of.label "Контакт:">
+<!ENTITY tooltip.presence_notification.label "Оповещение о присутствии:">
+
+
+<!ENTITY command.add_contact.label "Добавить контакт...">
+<!ENTITY command.add_contact.tooltip "Добавить контакт в Ваш контак-лист">
+<!ENTITY command.open_conversation.label "Открыть диалог...">
+<!ENTITY command.open_conversation.accesskey "O">
+<!ENTITY command.open_conversation.tooltip "Открыть диалог">
+<!ENTITY command.join_room.label "Зайти/Создать конференцию...">
+<!ENTITY command.join_room.accesskey "r">
+<!ENTITY command.join_room.tooltip "Присоединиться к конференции">
+<!ENTITY command.switch_to_unread.label "Перейти к непрочитанной реплике">
+<!ENTITY command.switch_to_unread.tooltip "Перейти к диалогу с непрочитанными сообщениями">
+<!ENTITY command.switch_to_next.label "Перейти к следующему диалогу">
+<!ENTITY command.switch_to_next.tooltip "Перейти к следующему диалогу">
+<!ENTITY command.view_help_pages.label "Открыть помощь...">
+<!ENTITY command.view_help_pages.accesskey "h">
+<!ENTITY command.view_help_pages.tooltip "Открыть помощь">
+<!ENTITY command.run_wizard.label "Менеджер аккаунтов...">
+<!ENTITY command.run_wizard.accesskey "W">
+<!ENTITY command.visit_forum.label "Спросить на форуме">
+<!ENTITY command.visit_forum.tooltip "Открыть помощь">
+<!ENTITY command.visit_forum.accesskey "f">
+<!ENTITY command.report_bug.label "Сообщить о проблеме/Предложить новую возможность">
+<!ENTITY command.report_bug.tooltip "Сообщить о проблеме/Предложить новую возможность">
+<!ENTITY command.report_bug.accesskey "R">
+<!ENTITY command.join_users_room.label "Присоединиться к конференции пользователя">
+<!ENTITY command.join_users_room.tooltip "Присоединиться к конференции пользователя">
+<!ENTITY command.join_users_room.accesskey "s">
+<!ENTITY command.read_latest_news.label "Прочитать последние новости">
+<!ENTITY command.read_latest_news.accesskey "n">
+<!ENTITY command.hide.label "Убрать">
+<!ENTITY command.hide.tooltip "Убрать">
+<!ENTITY command.import_contacts.label "Импортировать контакты...">
+<!ENTITY command.import_contacts.accesskey "I">
+<!ENTITY menu.scriptlets.label "Scriptlets">
+<!ENTITY menu.scriptlets.manage.label "Manage...">
+<!ENTITY menu.scriptlets.manage.accesskey "M">
+<!ENTITY status_message.tooltip.label "Изменить ваше статусное сообщение">
+<!ENTITY popup.toggle_offline.label "Показывать/Скрывать оффлайн контакты">
+<!ENTITY popup.toggle_tiny_avatars.label "Изменить размер автара">
+<!ENTITY popup.toggle_tiny_avatars.accesskey "T">
+<!ENTITY popup.toggle_tiny_avatars.tooltip "Изменить размер автара">
+<!ENTITY toolbar.people.label "Люди">
+<!ENTITY toolbar.status.label "Статус">
+
+<!ENTITY menu.tools.preferences.label "Настройки">
+<!ENTITY menu.tools.preferences.accesskey "P">
+<!ENTITY menu.tools.wizard.label "Менеджер аккаунтов">
+<!ENTITY menu.tools.wizard.accesskey "W">
+<!ENTITY menu.tools.import_contacts.label "Импортировать контакты...">
+<!ENTITY menu.tools.import_contacts.accesskey "R">
+<!ENTITY menu.tools.about.label "О программе">
+<!ENTITY menu.tools.about.accesskey "b">
+<!ENTITY menu.tools.detach_sidebar.label "Отсоединить сайдбар (экспериментально!)">
+<!ENTITY menu.tools.detach_sidebar.accesskey "D">
+<!ENTITY menu.tools.save_log.label "Сохранить XMPP логи">
+<!ENTITY menu.tools.save_log.accesskey "L">
+
+<!ENTITY menu.help.ask_question.label "Поддержка онлайн - Задайте вопрос">
+<!ENTITY menu.help.ask_question.accesskey "Q">
+<!ENTITY menu.help.ask_question.tooltip "Поддержка онлайн - Задайте вопрос">
+<!ENTITY menu.help.report_bug.label "Поддержка онлайн - Сообщите об ошибке...">
+<!ENTITY menu.help.report_bug.accesskey "B">
+<!ENTITY menu.help.report_bug.tooltip "Поддержка онлайн - Сообщите об ошибке...">
+<!ENTITY menu.help.follow_twitter.label "Follow on Twitter">
+<!ENTITY menu.help.follow_twitter.accesskey "T">
+<!ENTITY menu.help.follow_twitter.tooltip "Follow on Twitter">
+<!ENTITY menu.help.blog.label "Посетите блог">
+<!ENTITY menu.help.blog.accesskey "B">
+<!ENTITY menu.help.blog.tooltip "Посетите блог">
+
+<!ENTITY menu.sort.radio.name.label "Имя">
+<!ENTITY menu.sort.radio.activity.label "Недавние действия">
+<!ENTITY menu.sort.radio.group.label "Группа">
+<!ENTITY menu.sort.radio.talks.label "Больше всего разговаривал с">
+<!ENTITY menu.sort.name.label "Сортировать по имени">
+<!ENTITY menu.sort.activity.label "Сортировать по активности">
+<!ENTITY menu.sort.group.label "Сортировать по группе">
+<!ENTITY menu.sort.popularity.label "Сортировать по популярности">
+
+<!ENTITY menu.people.label "Люди">
+<!ENTITY menu.people.helptext "Люди">
+<!ENTITY menu.sort.label "Сортировать">
+<!ENTITY menu.tools.label "Инструменты">
+<!ENTITY menu.tools.helptext "Инструменты">
+<!ENTITY menu.status.helptext "Статус">
+<!ENTITY menu.search.helptext "Поиск среди контаков (Control+Space)">
+<!ENTITY menu.search_tip.helptext "Введите часть ника">
+<!ENTITY menu.help.label "Помощь">
+<!ENTITY menu.help.helptext "Помощь">
+
+
+<!ENTITY popup.remove_room.label "Убрать">
+<!ENTITY popup.interact.label "Действовать:">
+<!ENTITY popup.current_page.label "Текущая страница">
+<!ENTITY status.placeholder "[ ваш статус здесь ]">
+
+<!ENTITY offlineDescription "Вы оффлайн.">
+<!ENTITY connectDescription "Соединиться »">
+
+<!ENTITY menu.popups.people.label "Люди">
+<!ENTITY menu.popups.sort_name.label "Сортировать по имени">
+<!ENTITY menu.popups.sort_activity.label "Сортировать по активности">
+<!ENTITY menu.popups.sort_group.label "Сортировать по группе">
+<!ENTITY menu.popups.sort_popularity.label "Сортировать по популярности">
+<!ENTITY menu.popups.sort.label "Сортировать">
+<!ENTITY menu.popups.sort_radio.name.label "Имя">
+<!ENTITY menu.popups.sort_radio.activity.label "Недавние действия">
+<!ENTITY menu.popups.sort_radio.group.label "Группа">
+<!ENTITY menu.popups.sort_radio.talks.label "Больше всего говорил с">
+<!ENTITY menu.popups.tools.label "Инструменты">
+<!ENTITY menu.popups.help.label "Помощь">

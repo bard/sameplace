@@ -1,0 +1,70 @@
+<!ENTITY title "Мастер Конфигурации SamePlace">
+
+<!ENTITY select.services.label "Выберите ваш сервис:">
+
+<!ENTITY page.select_service.gtalk.label "Gmail">
+<!ENTITY page.select_service.jabber.label "Jabber">
+<!ENTITY page.select_service.sameplace.label "SamePlace">
+<!ENTITY page.select_service.twitter.label "Twitter">
+<!ENTITY page.select_service.aim.label "AIM/ICQ">
+<!ENTITY page.select_service.msn.label "MSN">
+
+<!ENTITY page.select_service.gtalk_title.label "GMail/GTalk.">
+<!ENTITY page.select_service.gtalk.description "Сервис Google для Jabber ">
+<!ENTITY page.select_service.jabber.description "Jabber - открытая децентрализованная сеть. Соеднинения шифруются.">
+<!ENTITY page.select_service.jabber_not_sp_gmail.label "Выберите это если у вас есть аккаунт на сервисе отличном от Sameplace.cc или Gmail.com">
+
+<!ENTITY page.select_service.sameplace.description_1 "SamePlace">
+<!ENTITY page.select_service.sameplace.description_2 "Jabber сервис. Также содержит транспорты в другие сети : MSN, AIM">
+<!ENTITY page.select_service.twitter.description_1 "Twitter">
+<!ENTITY page.select_service.twitter.description_2 "Можно посылать короткие сообщения и получать их от друзей">
+<!ENTITY page.select_service.twitter_description_3.label "Работает к с сайтом, поэтому шифрования нет.">
+
+<!ENTITY page.select_service.msn_title.label "MSN.">
+<!ENTITY page.select_service.msn.description_1 "Сеть от Microsoft.">
+<!ENTITY page.select_service.msn.description_2 "MSN закрытая, проприетарная сеть. Шифрования нет.">
+
+<!ENTITY page.select_service.aim_title.label "AIM/ICQ.">
+<!ENTITY page.select_service.aim.description_1 "Сервис AOL.">
+<!ENTITY page.select_service.aim.description_2 "AIM/ICQ закрытая, проприетарная сеть. Шифрования нет. ">
+
+<!ENTITY page.jabber.description "Шаг 1: Настройте аккаунт (уже имеющийся или новый) на sameplace.cc. Это позволит вам использовать транспорты в другие сети ">
+
+<!ENTITY page.jabber.username.label "Имя:">
+<!ENTITY page.jabber.domain.label "Домен:">
+<!ENTITY page.jabber.gmail.domain_1.label "gmail.com">
+<!ENTITY page.jabber.gmail.domain_2.label "googlemail.com">
+<!ENTITY page.jabber.gmail.own_domain.label "Ваш собственный домен...">
+<!ENTITY page.jabber.sameplace.domain.label "sameplace.cc">
+<!ENTITY page.jabber.twitter.domain.label "twitter.x4m.localhost">
+
+<!ENTITY page.jabber.password.label "Пароль:">
+<!ENTITY page.jabber.confirm.label "Подтвердите пароль:">
+<!ENTITY page.jabber.result.label "Ваш ID">
+
+<!ENTITY page.jabber.success.label "Аккаунт проверен!">
+<!ENTITY page.jabber.failure.label "Ошибка. :-(">
+<!ENTITY page.jabber.failure.description "Если вы регистрируете новый аккаунт, то это имя уже занято. Если это уже готовый аккаунт, то вы возможно ошиблись в пароле. Если это не jabber-сервис он может не поддерживать регистрацию.">
+
+<!ENTITY page.jabber.advanced.resource.label "Группа:">
+<!ENTITY page.jabber.advanced.resource_example.label "Напр.: Дом, Офис, ...">
+<!ENTITY page.jabber.advanced.server.label "Сервер:">
+<!ENTITY page.jabber.advanced.port.label "Порт:">
+<!ENTITY page.jabber.advanced.encryption.label "Шифрование:">
+<!ENTITY page.jabber.advanced.encrypt.starttls "StartTLS">
+<!ENTITY page.jabber.advanced.encrypt.ssl "SSL">
+<!ENTITY page.jabber.advanced.encrypt.none "Никакого">
+<!ENTITY page.jabber.advanced.button.label "Расширенные...">
+
+
+<!ENTITY page.transport.description "Шаг 2: Настройте ваш внешний аккаунт.">
+<!ENTITY page.transport.username.label "Имя:">
+<!ENTITY page.transport.msn_example.label "Пример: john@hotmail.com">
+<!ENTITY page.transport.aim_example.label "Пример: john, mary">
+<!ENTITY page.transport.password.label "Пароль:">
+<!ENTITY page.transport.confirm.label "Подтвердите пароль:">
+
+<!ENTITY page.transport.done.label "Настроено!">
+<!ENTITY page.transport.done.description "Вам может быть необходимо выйти и зайти снова для правильной работы транспорта. Этот аккаунт на сервере и не будет показан в вашем контак-листе.">
+
+<!ENTITY page.finish.done.label "Готово!">

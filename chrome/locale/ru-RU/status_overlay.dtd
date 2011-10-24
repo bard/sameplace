@@ -1,0 +1,34 @@
+<!ENTITY menu.status-all-accounts.label "Все">
+<!ENTITY menu.status-online.label "В сети">
+<!ENTITY menu.status-away.label "Ушел">
+<!ENTITY menu.status-busy.label "Занят">
+<!ENTITY menu.status-offline.label "Оффлайн">
+
+<!ENTITY menu.account.edit "Редактировать">
+<!ENTITY menu.account.delete "Удалить">
+
+
+<!ENTITY widget.accounts.widget-title "Мои аккаунты">
+<!ENTITY widget.accounts.switch-tooltip "Кликните на ккаунт для изменения состояния">
+<!ENTITY widget.accounts.disconect-tooltip "Кликнтие для включения/выключения аккаунта">
+
+<!ENTITY widget.accounts.all-label "Все">
+<!ENTITY widget.accounts.add-new-label "Добавить">
+
+<!ENTITY widget.contacts.video-label "Видео >>" >
+<!ENTITY widget.contacts.share-label "Отправить файлы >>" >
+<!ENTITY widget.contacts.chat "Чат">
+<!ENTITY widget.contacts.name "Имя:">
+<!ENTITY widget.contacts.nick "Ник:">
+<!ENTITY widget.contacts.use-in-list "Добавить в контак-лист">
+<!ENTITY widget.contacts.status "Статус:">
+<!ENTITY widget.contacts.connect "Соединён как:">
+<!ENTITY widget.contacts.rename "Переименовать">
+<!ENTITY widget.contacts.hide "Спрятать">
+<!ENTITY widget.contacts.remove "Убрать">
+<!ENTITY widget.contacts.search-placeholder "Искать или добавить контакт...">
+<!ENTITY widget.contacts.title "Мои контакты">
+<!ENTITY widget.contacts.popular "Популярные">
+<!ENTITY widget.contacts.online "В сети">
+<!ENTITY widget.contacts.all "Все">
+<!ENTITY widget.contacts.show "Показывать:">

@@ -1,0 +1,49 @@
+<!ENTITY command.add_contact.label "Добавить контакт...">
+<!ENTITY command.add_contact.tooltip "Добавить контакт в свой контакт-лист">
+<!ENTITY command.open_conversation.label "Начать беседу...">
+<!ENTITY command.open_conversation.accesskey "б">
+<!ENTITY command.open_conversation.tooltip "Начать беседу">
+<!ENTITY command.join_room.label "Присоединиться к чат-комнате...">
+<!ENTITY command.join_room.accesskey "ч">
+<!ENTITY command.join_room.tooltip "Присоединиться или создать чат-комнату">
+<!ENTITY command.switch_to_unread.label "Перейти к следующей непрочитанной беседе">
+<!ENTITY command.switch_to_unread.tooltip "Переключиться к следующей в очереди беседе с непрочитанными сообщениями">
+<!ENTITY command.switch_to_next.label "Перейти к следующей беседе">
+<!ENTITY command.switch_to_next.tooltip "Переключиться к следующей беседе">
+<!ENTITY command.view_help_pages.label "Присоединиться или создать чат-комнату...">
+<!ENTITY command.view_help_pages.accesskey "а">
+<!ENTITY command.view_help_pages.tooltip "Присоединиться к чат-комнате">
+<!ENTITY command.run_wizard.label "Запустить мастер учетных записей...">
+<!ENTITY command.run_wizard.accesskey "м">
+<!ENTITY command.view_help_pages.label "Посмотреть справку">
+<!ENTITY command.view_help_pages.tooltip "Посмотреть справочные страницы">
+<!ENTITY command.view_help_pages.accesskey "а">
+<!ENTITY command.visit_forum.label "Спросить на форуме">
+<!ENTITY command.visit_forum.tooltip "Спросить на форуме">
+<!ENTITY command.visit_forum.accesskey "р">
+<!ENTITY command.report_bug.label "Сообщить об ошибке/пожелании">
+<!ENTITY command.report_bug.tooltip "Сообщить об ошибке/пожелании">
+<!ENTITY command.report_bug.accesskey "ь">
+<!ENTITY command.join_users_room.label "Посетить комнату поддержки">
+<!ENTITY command.join_users_room.tooltip "Посетить комнату поддержки">
+<!ENTITY command.join_users_room.accesskey "т">
+<!ENTITY command.read_latest_news.label "Прочитать последние новости">
+<!ENTITY command.read_latest_news.accesskey "н">
+<!ENTITY command.hide.label "Скрыть">
+<!ENTITY command.hide.tooltip "Скрыть">
+<!ENTITY command.import_contacts.label "Импортировать контакты...">
+<!ENTITY command.import_contacts.accesskey "ы">
+<!ENTITY command.open_standalon.label "Открыть отдельно (ЭКСПЕРИМЕНТАЛЬНО)">
+<!ENTITY command.open_standalon.accesskey "о">
+<!ENTITY menu.scriptlets.label "Скриптлеты">
+<!ENTITY menu.scriptlets.manage.label "Менеджер...">
+<!ENTITY menu.scriptlets.manage.accesskey "д">
+<!ENTITY status_message.tooltip.label "Изменить свое статусное сообщение">
+<!ENTITY popup.toggle_offline.label "Скрыть/Показать отключенных собеседников">
+<!ENTITY toolbar.people.label "People">
+<!ENTITY toolbar.status.label "Status">
+<!ENTITY menu.status-all-accounts.label "All">
+<!ENTITY menu.status-online.label "Online">
+<!ENTITY menu.status-away.label "Away">
+<!ENTITY menu.status-busy.label "Busy">
+<!ENTITY menu.status-offline.label "Offline">

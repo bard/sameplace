@@ -1,0 +1,19 @@
+<!ENTITY command.hide-show "Скрыть/Показать">
+<!ENTITY command.hide-show.accesskey "H">
+
+<!ENTITY command.show-accounts "Аккаунты">
+<!ENTITY menu.connect "Соединиться">
+
+<!ENTITY sameplace.label "SamePlace">
+<!ENTITY sameplace.accesskey "S">
+<!ENTITY toggle.accesskey "P">
+
+<!ENTITY sendlink.label "Послать ссылку...">
+<!ENTITY sendlink.accesskey "S">
+
+<!ENTITY mail.presence "Присутствие:">
+<!ENTITY mail.context.copy.label "Копировать">
+<!ENTITY mail.context.copy.accesskey "C">
+
+<!ENTITY context.install-scriptlet "Установить SamePlace scriptlet...">
+<!ENTITY context.install-scriptlet.accesskey "I">
