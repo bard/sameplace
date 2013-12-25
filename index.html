@@ -1,56 +1,74 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>SamePlace by bard</title>
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="javascripts/main.js"></script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="SamePlace : Mozilla-based instant messaging client " />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>SamePlace</title>
   </head>
+
   <body>
 
-      <header>
-        <h1>SamePlace</h1>
-        <p>Mozilla-based instant messaging client </p>
-      </header>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/bard/sameplace">View on GitHub</a>
 
-      <div id="banner">
-        <span id="logo"></span>
+          <h1 id="project_title">SamePlace</h1>
+          <h2 id="project_tagline">Mozilla-based instant messaging client </h2>
 
-        <a href="https://github.com/bard/sameplace" class="button fork"><strong>View On GitHub</strong></a>
-        <div class="downloads">
-          <span>Downloads:</span>
-          <ul>
-            <li><a href="https://github.com/bard/sameplace/zipball/master" class="button">ZIP</a></li>
-            <li><a href="https://github.com/bard/sameplace/tarball/master" class="button">TAR</a></li>
-          </ul>
-        </div>
-      </div><!-- end banner -->
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/bard/sameplace/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/bard/sameplace/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
 
-    <div class="wrapper">
-      <nav>
-        <ul></ul>
-      </nav>
-      <section>
-        <p>SamePlace is a <strong>simple, easy to use chat client</strong>. It sits in Firefox's sidebar and can be hidden at the press of a key.</p>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p>SamePlace was a research project started in 2005. It explored a novel way of designing real-time, multi-user applications by mixing the best bits of the web and instant messaging technologies.</p>
 
-<p>SamePlace lets you to chat with your contacts from GMail, and any service that supports the XMPP protocol, as well as contacts from legacy networks (MSN, AIM, ICQ, ...) through special gateways.</p>
+<p>It resulted in an extension for the Firefox browser (which became
+popular on its own as instant messaging client), a <a href="http://web.archive.org/web/20100705230501/http://2007.xtech.org/public/schedule/detail/97">research paper and
+talk for XTech 2007</a>,
+and a <a>grand prize in the Extend Firefox 2 contest</a>.</p>
 
-<h2>Install</h2>
+<p>Its features were:</p>
+
+<ul>
+<li><p>communication among users on a web page ("place") without the web page owner needing to provide infrastructure (or even permission) for it;</p></li>
+<li><p>an extended concept of "instant messaging application", generalizing chat and including <a href="http://www.youtube.com/watch?v=j7ZSQwqbELs">collaborative drawing</a>, <a href="http://www.youtube.com/watch?v=7uO0UPa6oEg">games</a>, <a href="http://hyperstruct.net/2007/01/06/give-presentations-over-the-web-in-real-time-with-sameplace-and-s5/">remote presentations</a>, co-browsing, and so on;</p></li>
+<li><p>a web-inspired delivery method, where the application developer (provider of functionality) works independently from the client developer (provider of access) and only distributes a URL, contrary to the fat-client plug-in approach of collaborative applications where the application developer distributes code.</p></li>
+</ul><p>Implementation-wise, it relied on XMPP as an application-<em>un</em>specific, "<a href="http://www.isen.com/stupid.html">stupid</a>" transport mechanism (think of it as a higher-level TCP/IP), with application-specific functionality defined at end points (the app being loaded by clients as a web page, or an automated agent taking part in the conversation) and carried by namespaced payloads within the three XMPP messaging primitives (<code>&lt;message/&gt;</code>, <code>&lt;iq/&gt;</code>, <code>&lt;presence/&gt;</code>).</p>
+
+<h3>
+<a name="current-status" class="anchor" href="#current-status"><span class="octicon octicon-link"></span></a>Current status</h3>
+
+<p>The project is no longer being developed. Ideas and a fair share of implementation choices may be useful for people researching the same space. Code does not run in current versions of Firefox and of the Mozilla platform, mainly due to support for E4X having being dropped.</p>
+
+<h3>
+<a name="related-work" class="anchor" href="#related-work"><span class="octicon octicon-link"></span></a>Related work</h3>
+
+<p>A few years later Google worked on similar concepts in the form of a <a href="http://googletalk.blogspot.com.ar/2009/05/attention-nerds-new-gadgets-api-for.html">real-time gadget API</a> for Talk, but then discontinued the effort. <a href="https://togetherjs.com/">TogetherJS</a> partly plays in the same space.</p>
+
+<h2>
+<a name="end-user-info-historical-interest-only" class="anchor" href="#end-user-info-historical-interest-only"><span class="octicon octicon-link"></span></a>End-user info (historical interest only)</h2>
+
+<h3>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h3>
 
 <p>SamePlace and its accompanying library xmpp4moz are available from the Firefox add-ons site.</p>
 
 <ul>
 <li><a href="https://addons.mozilla.org/en-US/firefox/addon/xmpp4moz/">install xmpp4moz</a></li>
 <li><a href="https://addons.mozilla.org/en-US/firefox/addon/sameplace-instant-messenger/">install SamePlace</a></li>
-</ul><h2>Features &amp; Screenshots</h2>
+</ul><h3>
+<a name="features--screenshots" class="anchor" href="#features--screenshots"><span class="octicon octicon-link"></span></a>Features &amp; Screenshots</h3>
 
 <ul>
 <li>Follow chats easily in the sidebar while browsing the web. No need to go back and forth between your navigation and a chat web site.</li>
@@ -70,26 +88,28 @@
 <p><img src="http://sameplace.hyperstruct.net/images/configuration-wizard.png" alt="Gateways"></p>
 </blockquote>
 
-<h2>Developers</h2>
+<h3>
+<a name="developers" class="anchor" href="#developers"><span class="octicon octicon-link"></span></a>Developers</h3>
 
 <p>See GitHub for <a href="http://github.com/bard/sameplace/">source code</a> and <a href="http://wiki.github.com/bard/sameplace/">developer documentation</a>.</p>
 
-<h2>Support</h2>
-
-<p>Community-based support is available on <a href="https://answers.launchpad.net/sameplace">Launchpad Answers</a>.</p>
-
-<h2>Contact</h2>
+<h3>
+<a name="contact" class="anchor" href="#contact"><span class="octicon octicon-link"></span></a>Contact</h3>
 
 <p>You can reach the author at hyperstruct, at, gmail, dot, com.</p>
 
 <hr><p>SamePlace is <a href="http://www.opensource.org/osd.html">Open Source Software</a> released under the <a href="http://github.com/bard/sameplace/raw/master/chrome/content/LICENSE">GPLv3</a> license with <a href="http://github.com/bard/sameplace/raw/master/chrome/content/LICENSE-ADDITIONAL">additions</a> as per Section 7b. Copyright ©2006-2010 by <a href="http://hyperstruct.net/">Massimiliano Mirra</a>.</p>
       </section>
-      <footer>
-        <p>Project maintained by <a href="https://github.com/bard">bard</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></small></p>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">SamePlace maintained by <a href="https://github.com/bard">bard</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+
               <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
@@ -100,6 +120,7 @@
             pageTracker._trackPageview();
             } catch(err) {}
           </script>
+
 
   </body>
 </html>
