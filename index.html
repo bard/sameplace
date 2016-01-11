@@ -2,9 +2,9 @@
 <html>
 
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="SamePlace : Mozilla-based instant messaging client " />
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="SamePlace : Mozilla-based instant messaging client ">
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
@@ -36,69 +36,81 @@
 <p>It resulted in an extension for the Firefox browser (which became
 popular on its own as instant messaging client), a <a href="http://web.archive.org/web/20100705230501/http://2007.xtech.org/public/schedule/detail/97">research paper and
 talk for XTech 2007</a>,
-and a <a>grand prize in the Extend Firefox 2 contest</a>.</p>
+and a <a href="https://blog.mozilla.org/extendfirefox/2008/03/12/announcing-the-extend-firefox-2-winners/">grand prize in the Extend Firefox 2 contest</a>.</p>
 
-<p>Its features were:</p>
+<p>Its features:</p>
 
 <ul>
 <li><p>communication among users on a web page ("place") without the web page owner needing to provide infrastructure (or even permission) for it;</p></li>
 <li><p>an extended concept of "instant messaging application", generalizing chat and including <a href="http://www.youtube.com/watch?v=j7ZSQwqbELs">collaborative drawing</a>, <a href="http://www.youtube.com/watch?v=7uO0UPa6oEg">games</a>, <a href="http://hyperstruct.net/2007/01/06/give-presentations-over-the-web-in-real-time-with-sameplace-and-s5/">remote presentations</a>, co-browsing, and so on;</p></li>
 <li><p>a web-inspired delivery method, where the application developer (provider of functionality) works independently from the client developer (provider of access) and only distributes a URL, contrary to the fat-client plug-in approach of collaborative applications where the application developer distributes code.</p></li>
-</ul><p>Implementation-wise, it relied on XMPP as an application-<em>un</em>specific, "<a href="http://www.isen.com/stupid.html">stupid</a>" transport mechanism (think of it as a higher-level TCP/IP), with application-specific functionality defined at end points (the app being loaded by clients as a web page, or an automated agent taking part in the conversation) and carried by namespaced payloads within the three XMPP messaging primitives (<code>&lt;message/&gt;</code>, <code>&lt;iq/&gt;</code>, <code>&lt;presence/&gt;</code>).</p>
+</ul>
+
+<p>Implementation-wise, it relied on XMPP as an application-<em>un</em>specific, "<a href="http://www.isen.com/stupid.html">stupid</a>" transport mechanism (think of it as a higher-level TCP/IP), with application-specific functionality defined at end points (the app being loaded by clients as a web page, or an automated agent taking part in the conversation) and carried by namespaced payloads within the three XMPP messaging primitives (<code>&lt;message/&gt;</code>, <code>&lt;iq/&gt;</code>, <code>&lt;presence/&gt;</code>).</p>
 
 <h3>
-<a name="current-status" class="anchor" href="#current-status"><span class="octicon octicon-link"></span></a>Current status</h3>
+<a id="current-status" class="anchor" href="#current-status" aria-hidden="true"><span class="octicon octicon-link"></span></a>Current status</h3>
 
 <p>The project is no longer being developed. Ideas and a fair share of implementation choices may be useful for people researching the same space. Code does not run in current versions of Firefox and of the Mozilla platform, mainly due to support for E4X having being dropped.</p>
 
 <h3>
-<a name="related-work" class="anchor" href="#related-work"><span class="octicon octicon-link"></span></a>Related work</h3>
+<a id="related-work" class="anchor" href="#related-work" aria-hidden="true"><span class="octicon octicon-link"></span></a>Related work</h3>
 
 <p>A few years later Google worked on similar concepts in the form of a <a href="http://readwrite.com/2009/05/28/google_releases_real-time_gadget_apis#awesm=%7Eor4dDygb5gBPz4">real-time gadget API</a> for Talk, but then discontinued the effort. <a href="https://togetherjs.com/">TogetherJS</a> partly plays in the same space.</p>
 
 <h2>
-<a name="end-user-info-historical-interest-only" class="anchor" href="#end-user-info-historical-interest-only"><span class="octicon octicon-link"></span></a>End-user info (historical interest only)</h2>
+<a id="end-user-info-historical-interest-only" class="anchor" href="#end-user-info-historical-interest-only" aria-hidden="true"><span class="octicon octicon-link"></span></a>End-user info (historical interest only)</h2>
 
 <h3>
-<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h3>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h3>
 
 <p>SamePlace and its accompanying library xmpp4moz are available from the Firefox add-ons site.</p>
 
 <ul>
 <li><a href="https://addons.mozilla.org/en-US/firefox/addon/xmpp4moz/">install xmpp4moz</a></li>
 <li><a href="https://addons.mozilla.org/en-US/firefox/addon/sameplace-instant-messenger/">install SamePlace</a></li>
-</ul><h3>
-<a name="features--screenshots" class="anchor" href="#features--screenshots"><span class="octicon octicon-link"></span></a>Features &amp; Screenshots</h3>
+</ul>
+
+<h3>
+<a id="features--screenshots" class="anchor" href="#features--screenshots" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features &amp; Screenshots</h3>
 
 <ul>
 <li>Follow chats easily in the sidebar while browsing the web. No need to go back and forth between your navigation and a chat web site.</li>
-</ul><blockquote>
-<p><img src="http://sameplace.hyperstruct.net/images/sidebar-client.png" alt="Sidebar"></p>
+</ul>
+
+<blockquote>
+<p><img src="https://dl.dropboxusercontent.com/u/19638867/sameplace/images/sidebar-client.png" alt="Sidebar"></p>
 </blockquote>
 
 <ul>
 <li>Drag and drop pictures from web sites right into your chats.</li>
-</ul><blockquote>
-<p><img src="http://sameplace.hyperstruct.net/images/picture-drag-and-drop.png" alt="Picture drag &amp; drop"></p>
+</ul>
+
+<blockquote>
+<p><img src="https://dl.dropboxusercontent.com/u/19638867/sameplace/images/picture-drag-and-drop.png" alt="Picture drag &amp; drop"></p>
 </blockquote>
 
 <ul>
 <li>Chat with GMail contacts, contacts on other Jabber-based networks, and contacs on legacy networks such as MSN or AIM through special transports. </li>
-</ul><blockquote>
-<p><img src="http://sameplace.hyperstruct.net/images/configuration-wizard.png" alt="Gateways"></p>
+</ul>
+
+<blockquote>
+<p><img src="https://dl.dropboxusercontent.com/u/19638867/sameplace/images/configuration-wizard.png" alt="Gateways"></p>
 </blockquote>
 
 <h3>
-<a name="developers" class="anchor" href="#developers"><span class="octicon octicon-link"></span></a>Developers</h3>
+<a id="developers" class="anchor" href="#developers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Developers</h3>
 
 <p>See GitHub for <a href="http://github.com/bard/sameplace/">source code</a> and <a href="http://wiki.github.com/bard/sameplace/">developer documentation</a>.</p>
 
 <h3>
-<a name="contact" class="anchor" href="#contact"><span class="octicon octicon-link"></span></a>Contact</h3>
+<a id="contact" class="anchor" href="#contact" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contact</h3>
 
 <p>You can reach the author at hyperstruct, at, gmail, dot, com.</p>
 
-<hr><p>SamePlace is <a href="http://www.opensource.org/osd.html">Open Source Software</a> released under the <a href="http://github.com/bard/sameplace/raw/master/chrome/content/LICENSE">GPLv3</a> license with <a href="http://github.com/bard/sameplace/raw/master/chrome/content/LICENSE-ADDITIONAL">additions</a> as per Section 7b. Copyright ©2006-2010 by <a href="http://hyperstruct.net/">Massimiliano Mirra</a>.</p>
+<hr>
+
+<p>SamePlace is <a href="http://www.opensource.org/osd.html">Open Source Software</a> released under the <a href="http://github.com/bard/sameplace/raw/master/chrome/content/LICENSE">GPLv3</a> license with <a href="http://github.com/bard/sameplace/raw/master/chrome/content/LICENSE-ADDITIONAL">additions</a> as per Section 7b. Copyright ©2006-2010 by <a href="http://hyperstruct.net/">Massimiliano Mirra</a>.</p>
       </section>
     </div>
 
@@ -106,7 +118,7 @@ and a <a>grand prize in the Extend Firefox 2 contest</a>.</p>
     <div id="footer_wrap" class="outer">
       <footer class="inner">
         <p class="copyright">SamePlace maintained by <a href="https://github.com/bard">bard</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>
 
